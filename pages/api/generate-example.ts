@@ -44,14 +44,14 @@ export default async function handler(
 
   if (!openaiApiKey) {
     console.error('OPENAI_API_KEY no està configurada');
-    return res.status(500).json({ 
-      error: 'OpenAI API key no configurada. Per a producció a Vercel, configura la variable d\'entorn OPENAI_API_KEY a Project Settings > Environment Variables.' 
+    return res.status(500).json({
+      error: 'OpenAI API key no configurada. Per a producció a Vercel, configura la variable d\'entorn OPENAI_API_KEY a Project Settings > Environment Variables.'
     });
   }
 
   try {
     // Obtenir article_id per buscar jurisprudència
-    const codi = detectCodiFromArticle(articleNumber, articleTitle) || 'civil';
+    const codi = detectCodiFromArticle(articleNumber, articleTitle) || 'constitucio';
     const articleId = getArticleIdByNumber(articleNumber, codi);
     const jurisprudencia = articleId ? getJurisprudenciaForArticle(articleId) : [];
 
@@ -62,8 +62,7 @@ export default async function handler(
         .slice(0, 3) // Limitar a les 3 més rellevants
         .map(
           (sent) =>
-            `- ${sent.tribunal} (${sent.data}): ${sent.resum}${
-              sent.articles_afectats.length > 0 ? ` (Articles: ${sent.articles_afectats.join(', ')})` : ''
+            `- ${sent.tribunal} (${sent.data}): ${sent.resum}${sent.articles_afectats.length > 0 ? ` (Articles: ${sent.articles_afectats.join(', ')})` : ''
             }`
         )
         .join('\n')}\n`;
