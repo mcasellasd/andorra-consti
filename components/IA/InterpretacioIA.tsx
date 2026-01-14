@@ -55,7 +55,14 @@ const InterpretacioIA: React.FC<InterpretacioIAProps> = ({ article, idioma, onTo
       });
 
       if (!resposta.ok) {
-        throw new Error('Error al generar la interpretació');
+        let errorMessage = 'Error al generar la interpretació';
+        try {
+          const errorData = await resposta.json();
+          if (errorData.error) errorMessage = errorData.error;
+        } catch (e) {
+          // Si falla el parseig JSON, mantenim el missatge per defecte
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await resposta.json();
