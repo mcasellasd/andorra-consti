@@ -13,7 +13,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { validarTotesLesPreguntes, ResultatValidacio } from '../../lib/evaluacio/validar-golden-standard';
 import { executarAprenentatgeAutomatic, AprenentatgeResultat } from '../../lib/aprenentatge/aprenentatge-automatic';
-import { preguntesGoldenStandard, PreguntaControl } from '../../data/preguntes-golden-standard';
+import { preguntesGoldenStandard } from '../../data/preguntes-golden-standard';
+import { PreguntaControl } from '../../data/preguntes-control';
 
 // Funció helper per obtenir resposta del sistema per a una pregunta
 async function obtenirRespostaSistema(pregunta: PreguntaControl): Promise<string> {
@@ -55,7 +56,7 @@ export default async function handler(
 
     if (mode === 'validacio' || mode === 'complet') {
       console.log('🔍 Iniciant validació amb Golden Standard...');
-      
+
       // Pas 1: Validar totes les preguntes
       const validacio = await validarTotesLesPreguntes(obtenirRespostaSistema);
 
@@ -95,7 +96,7 @@ export default async function handler(
 
       // Mode complet: retornar tot
       const validacio = await validarTotesLesPreguntes(obtenirRespostaSistema);
-      
+
       return res.status(200).json({
         mode: 'complet',
         validacio,
@@ -110,8 +111,8 @@ export default async function handler(
       });
     }
 
-    return res.status(400).json({ 
-      error: 'Mode invàlid. Utilitza: "validacio", "aprenentatge" o "complet"' 
+    return res.status(400).json({
+      error: 'Mode invàlid. Utilitza: "validacio", "aprenentatge" o "complet"'
     });
 
   } catch (error: any) {

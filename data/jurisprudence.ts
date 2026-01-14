@@ -1,4 +1,4 @@
-import type { BookId } from './articles';
+type BookId = string;
 
 export interface JurisprudenceCase {
   id: string;
@@ -527,7 +527,7 @@ export function getJurisprudenceForArticle(
     if (case_.relatedArticles.includes(articleId)) {
       return true;
     }
-    
+
     // Cerca per número d'article (si es proporciona)
     if (articleNumber) {
       const normalizedArticleNumber = articleNumber.replace(/Article\s+/i, '').trim();
@@ -537,7 +537,7 @@ export function getJurisprudenceForArticle(
         return relatedArticleNumber === normalizedArticleNumber;
       });
     }
-    
+
     return false;
   });
 }
@@ -549,25 +549,25 @@ export function getJurisprudenceForArticle(
  */
 export function searchJurisprudenceByKeywords(keywords: string[]): JurisprudenceCase[] {
   if (keywords.length === 0) return [];
-  
+
   const lowerKeywords = keywords.map(k => k.toLowerCase());
-  
+
   return jurisprudenceDatabase.filter((case_) => {
     // Cerca en títol
-    const titleMatch = lowerKeywords.some(keyword => 
+    const titleMatch = lowerKeywords.some(keyword =>
       case_.title.toLowerCase().includes(keyword)
     );
-    
+
     // Cerca en snippet
-    const snippetMatch = lowerKeywords.some(keyword => 
+    const snippetMatch = lowerKeywords.some(keyword =>
       case_.snippet.toLowerCase().includes(keyword)
     );
-    
+
     // Cerca en keywords
-    const keywordsMatch = case_.keywords?.some(keyword => 
+    const keywordsMatch = case_.keywords?.some(keyword =>
       lowerKeywords.some(k => keyword.toLowerCase().includes(k))
     );
-    
+
     return titleMatch || snippetMatch || keywordsMatch;
   });
 }

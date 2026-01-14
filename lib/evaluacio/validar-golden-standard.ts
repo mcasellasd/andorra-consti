@@ -67,7 +67,7 @@ export function validarContraGoldenStandard(
   // Extreure articles mencionats a la resposta
   const articlesMencionats = extreureArticles(respostaSistema);
   const articlesEsperats = preguntaGoldenStandard.articlesEsperats || [];
-  
+
   // Validar articles
   const articlesCorrectes: string[] = [];
   const articlesIncorrectes: string[] = [];
@@ -228,7 +228,7 @@ export function validarContraGoldenStandard(
  */
 function extreureArticles(text: string): string[] {
   const articleIds: string[] = [];
-  
+
   // Buscar patrons com "Article 94", "Article 101", "CONST_094", etc.
   const patterns = [
     /Article\s+(\d+)/gi,
@@ -285,7 +285,7 @@ function extreureContext(text: string, paraula: string, longitud: number = 100):
 
   const start = Math.max(0, index - longitud);
   const end = Math.min(text.length, index + paraula.length + longitud);
-  
+
   return text.substring(start, end);
 }
 
@@ -296,10 +296,10 @@ function calcularSimilitudTextual(text1: string, text2: string): number {
   // Similitud simple basada en paraules comunes
   const words1 = new Set(text1.toLowerCase().split(/\s+/));
   const words2 = new Set(text2.toLowerCase().split(/\s+/));
-  
-  const intersection = new Set([...words1].filter(x => words2.has(x)));
-  const union = new Set([...words1, ...words2]);
-  
+
+  const intersection = new Set(Array.from(words1).filter(x => words2.has(x)));
+  const union = new Set([...Array.from(words1), ...Array.from(words2)]);
+
   return union.size > 0 ? (intersection.size / union.size) * 100 : 0;
 }
 
