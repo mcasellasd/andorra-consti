@@ -21,12 +21,11 @@ async function loadModel() {
     // Import dinàmic per evitar que Next.js bundli aquest paquet durant la compilació
     const { pipeline, env } = await import('@xenova/transformers');
 
-    // Configuració específica per Vercel/Production
-    if (process.env.NODE_ENV === 'production') {
-      env.cacheDir = '/tmp/.cache';
-      env.allowLocalModels = false;
-      env.useBrowserCache = false;
-    }
+    // Configuració del directori de cache (Vercel només permet escriure a /tmp)
+    // Utilitzem /tmp tant a producció com a local per evitar problemes de permisos
+    env.cacheDir = '/tmp/.cache';
+    env.allowLocalModels = false;
+    env.useBrowserCache = false;
 
     embeddingPipeline = await pipeline('feature-extraction', MODEL_NAME, {
       quantized: true, // Utilitza versió quantitzada (més petita i ràpida)
