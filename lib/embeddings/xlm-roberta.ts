@@ -19,7 +19,15 @@ async function loadModel() {
   if (!embeddingPipeline) {
     console.log(`📦 Carregant model ${MODEL_NAME}...`);
     // Import dinàmic per evitar que Next.js bundli aquest paquet durant la compilació
-    const { pipeline } = await import('@xenova/transformers');
+    const { pipeline, env } = await import('@xenova/transformers');
+
+    // Configuració específica per Vercel/Production
+    if (process.env.NODE_ENV === 'production') {
+      env.cacheDir = '/tmp/.cache';
+      env.allowLocalModels = false;
+      env.useBrowserCache = false;
+    }
+
     embeddingPipeline = await pipeline('feature-extraction', MODEL_NAME, {
       quantized: true, // Utilitza versió quantitzada (més petita i ràpida)
     });
@@ -35,7 +43,7 @@ async function loadModel() {
  */
 export async function generateEmbedding(text: string): Promise<number[]> {
   const model = await loadModel();
-  
+
   // Generar l'embedding
   const output = await model(text, {
     pooling: 'mean', // Mitjana de tots els tokens
@@ -46,7 +54,7 @@ export async function generateEmbedding(text: string): Promise<number[]> {
   // Nota: A vegades el pooling retorna una forma incorrecta [1, vocab_size]
   // en lloc de [1, 768], per tant agafem només les primeres 768 dimensions
   const embedding = Array.from(output.data) as number[];
-  
+
   // Assegurar-nos que l'embedding té exactament 768 dimensions (XLM-RoBERTa-base)
   if (embedding.length > 768) {
     return embedding.slice(0, 768);
@@ -54,7 +62,7 @@ export async function generateEmbedding(text: string): Promise<number[]> {
     // Si és més petit, omplir amb zeros (no hauria de passar)
     return [...embedding, ...new Array(768 - embedding.length).fill(0)];
   }
-  
+
   return embedding;
 }
 
