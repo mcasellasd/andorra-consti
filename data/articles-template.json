@@ -1,0 +1,19 @@
+[
+  {
+    "id": "5",
+    "number": "Article 5",
+    "title": "Títol de l'article",
+    "section": "Capítol I: Disposicions Generals",
+    "content": "1. Primer paràgraf de l'article.\n\n2. Segon paràgraf de l'article.",
+    "summary": "Resum breu de l'article (opcional)"
+  },
+  {
+    "id": "6",
+    "number": "Article 6",
+    "title": "Un altre article",
+    "section": "Capítol I: Disposicions Generals",
+    "content": "1. Contingut de l'article.\n\n2. Més contingut.",
+    "summary": "Resum de l'article"
+  }
+]
+
