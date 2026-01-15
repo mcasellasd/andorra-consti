@@ -129,23 +129,38 @@ export default async function handler(
     // RAG FLOW: Recuperació de context amb XLM-RoBERTa
     // ============================================================================
 
-    // 1. Generar embedding de l'article amb XLM-RoBERTa
-    // Importem dinàmicament per evitar problemes
-    const { generateEmbedding } = await import('../../lib/embeddings/index');
-    const { retrieveTopMatches } = await import('../../lib/rag/corpus');
+    // ============================================================================
+    // RAG FLOW: Recuperació de context amb XLM-RoBERTa
+    // ============================================================================
 
     let ragContext = '';
+
+    // Executem RAG amb un timeout segur per evitar que la API falli (500) o trigui massa
     try {
-      console.log(`🧠 Generant embedding RAG per a article ${article_id} amb XLM-RoBERTa...`);
-      const embedding = await generateEmbedding(`${article?.titol || ''} ${text_oficial}`, 'xlm-roberta');
+      const runRag = async () => {
+        // 1. Imports dinàmics dins del try per evitar errors de càrrega
+        const { generateEmbedding } = await import('../../lib/embeddings/index');
+        const { retrieveTopMatches } = await import('../../lib/rag/corpus');
 
-      // 2. Recuperar context rellevant
-      const matches = retrieveTopMatches(embedding, 5); // Top 5 resultats
+        console.log(`🧠 Generant embedding RAG per a article ${article_id} amb XLM-RoBERTa...`);
+        const embedding = await generateEmbedding(`${article?.titol || ''} ${text_oficial}`, 'xlm-roberta');
 
-      if (matches.length > 0) {
+        // 2. Recuperar context rellevant
+        return retrieveTopMatches(embedding, 5); // Top 5 resultats
+      };
+
+      // Timeout de 4 segons (Vercel Serverless té límit, millor fallar ràpid i tornar resposta)
+      const timeoutPromise = new Promise<any[]>((_, reject) =>
+        setTimeout(() => reject(new Error('RAG Timeout (limite excedit)')), 4000)
+      );
+
+      // Cursa entre el RAG i el Timeout
+      const matches = await Promise.race([runRag(), timeoutPromise]);
+
+      if (matches && matches.length > 0) {
         ragContext = `\n\nCONTEXT ADDICIONAL RECUPERAT (RAG - XLM-RoBERTa):\nUtilitza aquest context per enriquir l'explicació, però prioritza el text oficial de l'article.\n`;
 
-        matches.forEach(m => {
+        matches.forEach((m: any) => {
           // Evitem duplicar l'article actual si surt als resultats
           if (m.entry.id !== article_id) {
             ragContext += `- [${m.entry.category}] ${m.entry.topic}: ${m.entry.content.substring(0, 300)}...\n`;
@@ -154,11 +169,11 @@ export default async function handler(
             }
           }
         });
+        console.log(`✅ RAG: ${matches.length} contextos recuperats`);
       }
-      console.log(`✅ RAG: ${matches.length} contextos recuperats`);
     } catch (ragError) {
-      console.error('⚠️ Error en flux RAG:', ragError);
-      // Continuem sense context RAG si falla
+      console.error('⚠️ RAG Omesa (Error o Timeout):', ragError instanceof Error ? ragError.message : ragError);
+      // Continuem sense context RAG si falla el timeout o el model
     }
 
     // ============================================================================
