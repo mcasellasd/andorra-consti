@@ -1,4 +1,4 @@
-# prudencia.ad · Portal d'Accessibilitat Jurídica Assistida per IA
+# dretplaner.ad · Portal d'Accessibilitat Jurídica Assistida per IA
 
 Portal web d'accés gratuït que democratitza el coneixement jurídic andorrà mitjançant intel·ligència artificial. El portal interpreta i explica la legislació andorrana de manera accessible per a ciutadans, expatriats i professionals.
 
@@ -24,7 +24,7 @@ Estructura jeràrquica: Codi > Llibre > Títol > Capítol > Article
 - **Diferències amb dret català/espanyol** (quan sigui rellevant)
 - **Toggle activable** per mostrar/amagar interpretació
 
-### 💬 Chatbot Prudència
+### 💬 Chatbot Dret Planer
 - Consultes en llenguatge natural sobre dret andorrà
 - Cerca automàtica en tots els codis simultàniament
 - Referències a articles específics amb enllaços directes
@@ -88,12 +88,12 @@ npm start
 ## 📁 Estructura del Projecte
 
 ```
-prudencia-ad/
+dret-planer/
 ├── components/
 │   ├── Layout.tsx              # Layout principal amb navegació i selector d'idiomes
 │   ├── IA/
 │   │   └── InterpretacioIA.tsx # Component d'interpretació assistida per IA
-│   ├── PrudenciaChatbot.tsx    # Chatbot integrat
+│   ├── UnifiedChatbot.tsx      # Chatbot integrat
 │   └── ...
 ├── data/
 │   ├── codis/                  # Estructura segons briefing
@@ -131,7 +131,7 @@ prudencia-ad/
 - [x] Sistema d'idiomes (i18n) - CA, ES, FR
 - [x] Component d'interpretació IA
 - [x] API endpoint per interpretació
-- [x] Layout adaptat per a prudencia.ad
+- [x] Layout adaptat per a dretplaner.ad
 - [x] Pàgina d'exemple per articles
 
 ### 🚧 En Desenvolupament
@@ -185,13 +185,13 @@ Projecte acadèmic per a tesi doctoral. Tots els drets reservats.
 
 ## 👥 Contacte
 
-- Email: contacte@prudencia.ad
-- Web: https://prudencia.ad (en desenvolupament)
+- Email: contacte@dretplaner.ad
+- Web: https://dretplaner.ad (en desenvolupament)
 
 ---
 
 **Versió**: 1.0.0  
 **Data**: Novembre 2024  
-**Autor**: Projecte prudencia.ad  
+**Autor**: Projecte dretplaner.ad  
 **Estat**: MVP en desenvolupament
 # andorra-consti

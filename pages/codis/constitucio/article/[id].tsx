@@ -180,7 +180,7 @@ const ArticleConstitucioPage: React.FC = () => {
     <>
       <Head>
         <title>
-          {article.numeracio}: {article.titol} - Constitució d&apos;Andorra
+          {article.numeracio}: {article.titol} - Constitució d&apos;Andorra | dretplaner.ad
         </title>
         <meta name="description" content={(article.idiomes?.[idioma] || article.text_oficial).substring(0, 160)} />
       </Head>

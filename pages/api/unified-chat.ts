@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { retrieveTopMatches, getArticleByNumber, getArticlesByIds } from '../../lib/rag/corpus';
+import { retrieveTopMatches, getArticleByNumber, getArticlesByIds, retrieveHybridMatches } from '../../lib/rag/corpus';
 import type { RetrievedContext } from '../../lib/rag/types';
 import { GUIA_CATALA_JURIDIC } from '../../lib/prompts/guia-catala-juridic';
 import { ASPECTES_JURISPRUDENCIA_ANDORRANA } from '../../lib/prompts/aspectes-jurisprudencia-andorra';
@@ -26,6 +26,7 @@ interface UnifiedChatResponse {
     title: string;
     number?: string;
     score?: number;
+    content?: string; // Afegim contingut per mostrar-lo al frontend
   }>;
   aiActCompliance?: {
     score: number;
@@ -194,32 +195,42 @@ async function generateChatCompletion(
   return answer.trim();
 }
 
-function buildContextBlock(constitucioMatches: RetrievedContext[]): string {
-  if (!constitucioMatches.length) {
-    return "No s'han trobat fonts rellevants de la Constitució d'Andorra.";
+function buildContextBlock(matches: RetrievedContext[]): string {
+  if (!matches.length) {
+    return "No s'han trobat fonts rellevants.";
   }
 
   const sections: string[] = [];
-  sections.push('=== CONSTITUCIÓ D\'ANDORRA ===');
 
-  constitucioMatches.forEach(({ entry }, index) => {
-    const details = [
-      `Font ${index + 1}: ${entry.topic} (${entry.id})`,
-      `Categoria: ${entry.category}`,
-      entry.legalReference ? `Referència legal: ${entry.legalReference}` : null,
-      entry.keyConcepts.length ? `Conceptes clau: ${entry.keyConcepts.join(', ')}` : null,
-      `Contingut: ${entry.content}`,
-      entry.implications ? `Implicacions: ${entry.implications}` : null,
-      entry.practicalUse ? `Ús pràctic: ${entry.practicalUse}` : null,
-      entry.historicalContext ? `Context històric: ${entry.historicalContext}` : null,
-      entry.enforcement ? `Aplicació i sancions: ${entry.enforcement}` : null,
-      entry.applicationFields?.length ? `Àmbits d'aplicació: ${entry.applicationFields.join(', ')}` : null,
-    ]
-      .filter(Boolean)
-      .join('\n');
+  // Agrupar per llibre per a millor estructura
+  const constitucioMatches = matches.filter(m => m.entry.category !== 'Doctrina' && m.entry.category !== 'Jurisprudència');
+  const doctrinaMatches = matches.filter(m => m.entry.category === 'Doctrina' || m.entry.category === 'jurisprudència' || m.entry.category === 'Jurisprudència');
 
-    sections.push(details);
-  });
+  if (constitucioMatches.length > 0) {
+    sections.push('=== CONSTITUCIÓ D\'ANDORRA ===');
+    constitucioMatches.forEach(({ entry }, index) => {
+      const details = [
+        `Article/Secció: ${entry.topic} (${entry.id})`,
+        `Categoria: ${entry.category}`,
+        `Contingut: ${entry.content}`,
+        entry.keyConcepts.length ? `Conceptes clau: ${entry.keyConcepts.join(', ')}` : null,
+      ].filter(Boolean).join('\n');
+      sections.push(details);
+    });
+  }
+
+  if (doctrinaMatches.length > 0) {
+    sections.push('\n=== DOCTRINA I JURISPRUDÈNCIA ===');
+    doctrinaMatches.forEach(({ entry }, index) => {
+      const details = [
+        `Títol: ${entry.topic} (${entry.id})`,
+        `Categoria: ${entry.category}`,
+        `Contingut: ${entry.content}`,
+        entry.keyConcepts.length ? `Conceptes clau: ${entry.keyConcepts.join(', ')}` : null,
+      ].filter(Boolean).join('\n');
+      sections.push(details);
+    });
+  }
 
   return sections.join('\n\n');
 }
@@ -303,10 +314,10 @@ export default async function handler(
       }
     }
 
-    // 3. Cerca semàntica amb nombre adaptat segons complexitat
+    // 3. Cerca híbrida (Vectors + BM25)
     const queryEmbedding = await generateEmbedding(message, embeddingProvider, openaiApiKey || undefined);
     const topK = complexity.suggestedTopK;
-    const semanticMatches = retrieveTopMatches(queryEmbedding, topK);
+    const semanticMatches = retrieveHybridMatches(queryEmbedding, message, topK);
 
     // Combinar resultats, evitant duplicats
     for (const match of semanticMatches) {
@@ -364,7 +375,16 @@ INSTRUCCIONS PER A PREGUNTES QUE REQUEREIXEN MÚLTIPLES ARTICLES:
 - No et limitis a un sol article si la pregunta requereix més informació`;
     }
 
-    const systemPromptBase = `Ets Prudència, un assistent jurídic especialitzat en la Constitució del Principat d'Andorra i la política constitucional.
+    const systemPromptBase = `Ets Dret Planer, un assistent jurídic especialitzat en la Constitució del Principat d'Andorra i la política constitucional.
+
+FORMAT DE CITACIÓ OBLIGATORI (MOLT IMPORTANT):
+- Cada vegada que utilitzis informació d'una font del context (sigui article o doctrina), has d'afegir la seva referència al final de la frase.
+- El format HA DE SER EXACTAMENT: [[ID]]
+- Exemples:
+  - "La sobirania resideix al poble andorrà [[CONST_003]]."
+  - "El Tribunal Constitucional ha establert que... [[DOCTRINA_025]]."
+- NO utilitzis notes al peu, parèntesis normals o altres formats. Només [[ID]].
+- Si una frase es basa en múltiples fonts, posa-les seguides: [[CONST_003]] [[CONST_004]].
 
 INFORMACIÓ BÀSICA SOBRE LA CONSTITUCIÓ D'ANDORRA:
 - La Constitució d'Andorra consta de 107 articles numerats (Article 1 a Article 107) més un preàmbul
@@ -494,14 +514,18 @@ ${ASPECTES_JURISPRUDENCIA_ANDORRANA}`;
     const sources: UnifiedChatResponse['sources'] = [];
 
     constitucioMatches.forEach(({ entry, score }) => {
+      // Determinar tipus i codi segons l'entrada
+      const isDoctrina = entry.id.startsWith('DOCTRINA') || entry.id.startsWith('DOC_');
+
       sources.push({
-        type: 'constitucio',
-        code: 'constitucio',
+        type: 'constitucio', // Mantenim el tipus base per compatibilitat amb el frontend actual
+        code: isDoctrina ? 'doctrina' : 'constitucio', // Utilitzem el camp code per diferenciar
         id: entry.id,
         title: entry.topic,
-        number: entry.numeracio,
+        number: isDoctrina ? 'Doctrina' : entry.numeracio,
+        content: entry.content, // Passem el contingut al frontend
         score
-      });
+      } as any); // Cast a any per evitar problemes de tipatge estricte si la interfície no està actualitzada
     });
 
     return res.status(200).json({

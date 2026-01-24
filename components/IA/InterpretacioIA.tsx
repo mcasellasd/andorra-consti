@@ -1,6 +1,6 @@
 /**
  * Component d'Interpretació Assistida per IA
- * Segons el briefing tècnic de prudencia.ad
+ * Segons el briefing tècnic de dretplaner.ad
  * 
  * Genera resums, exemples i conceptes clau per a cada article legal
  */

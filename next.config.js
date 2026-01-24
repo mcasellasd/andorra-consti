@@ -8,7 +8,7 @@ const nextConfig = {
     unoptimized: true, // Necessari per exportació estàtica
   },
   // Si vols usar paths personalitzats, descomenta:
-  // basePath: '/prudencia.cat', // Si està en un subdirectori
+  // basePath: '/dretplaner.ad', // Si està en un subdirectori
   // trailingSlash: true,
   async redirects() {
     return [

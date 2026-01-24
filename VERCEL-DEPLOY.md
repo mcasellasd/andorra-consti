@@ -1,4 +1,4 @@
-# Desplegament a Vercel - Prudència.cat Unificat
+# Desplegament a Vercel - dretplaner.ad Unificat
 
 ## ✅ Projecte Preparat per Vercel
 
@@ -19,7 +19,7 @@ Aquests fitxers garanteixen que:
 ## 📁 Estructura Final
 
 ```
-prudencia/
+dret-planer/
 ├── pages/
 │   ├── index.tsx                    # Pàgina principal (Codi Civil)
 │   ├── codi-consum/
@@ -48,7 +48,7 @@ prudencia/
 1. Accedeix a [Vercel Dashboard](https://vercel.com/dashboard)
 2. Clica "Add New Project"
 3. Connecta el teu repositori Git
-4. Selecciona el directori `prudencia` (si el repositori està a l'arrel)
+4. Selecciona el directori `dret-planer` (si el repositori està a l'arrel)
 
 ### 2. Configuració del Projecte
 
@@ -81,7 +81,7 @@ OPENAI_API_KEY=sk-la-teva-clau-api-aqui
 ### Domini Personalitzat
 
 1. Vés a Project Settings > Domains
-2. Afegeix el teu domini (ex: `prudencia.cat`)
+2. Afegeix el teu domini (ex: `dretplaner.ad`)
 3. Configura els DNS segons les instruccions de Vercel
 
 ### Variables d'Entorn Opcionals

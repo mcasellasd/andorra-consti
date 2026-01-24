@@ -1,6 +1,6 @@
 /**
  * API endpoint per generar interpretació assistida per IA
- * Segons el briefing tècnic de prudencia.ad
+ * Segons el briefing tècnic de dretplaner.ad
  * 
  * Utilitza Claude API (o OpenAI) per generar resums, exemples i conceptes clau
  */

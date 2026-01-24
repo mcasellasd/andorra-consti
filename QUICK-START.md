@@ -1,4 +1,4 @@
-# Quick Start - prudencia.ad
+# Quick Start - dretplaner.ad
 
 ## Pas 1: Obtenir el Codi Civil d'Andorra
 

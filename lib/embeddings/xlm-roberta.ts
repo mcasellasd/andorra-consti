@@ -1,3 +1,4 @@
+
 /**
  * Utilitat per generar embeddings amb XLM-RoBERTa-base
  * Model multilingüe que funciona localment sense necessitat d'API
@@ -19,7 +20,10 @@ async function loadModel() {
   if (!embeddingPipeline) {
     console.log(`📦 Carregant model ${MODEL_NAME}...`);
     // Import dinàmic per evitar que Next.js bundli aquest paquet durant la compilació
-    const { pipeline, env } = await import('@xenova/transformers');
+    // @ts-ignore
+    const transformers = await import('@xenova/transformers');
+
+    const { pipeline, env } = transformers;
 
     // Configuració del directori de cache (Vercel només permet escriure a /tmp)
     // Utilitzem /tmp tant a producció com a local per evitar problemes de permisos

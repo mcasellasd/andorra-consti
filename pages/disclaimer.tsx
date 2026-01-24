@@ -9,7 +9,7 @@ const LegalNoticePage: React.FC = () => {
         <title>Avís legal, privacitat i termes d&apos;ús</title>
         <meta
           name="description"
-          content="Avís legal, política de privacitat, ús de cookies i termes d'ús del projecte acadèmic prudencia.cat."
+          content="Avís legal, política de privacitat, ús de cookies i termes d'ús del projecte acadèmic dretplaner.ad."
         />
       </Head>
       <Layout>
@@ -19,14 +19,14 @@ const LegalNoticePage: React.FC = () => {
               <h1>Avís legal, privacitat i termes d&apos;ús</h1>
               <p className="legal-subtitle">
                 Transparència sobre la finalitat acadèmica del projecte, el tractament de dades i les condicions
-                d&apos;ús de prudencia.cat.
+                d&apos;ús de dretplaner.ad.
               </p>
             </header>
 
             <section className="legal-section">
               <h2>1. Projecte acadèmic individual</h2>
               <p>
-                prudencia.ad és una iniciativa personal d&apos;un estudiant de dret. El projecte té una finalitat exclusivament acadèmica i de recerca, sense ànim de lucre,
+                dretplaner.ad és una iniciativa personal d&apos;un estudiant de dret. El projecte té una finalitat exclusivament acadèmica i de recerca, sense ànim de lucre,
                 i explora l&apos;ús d&apos;intel·ligència artificial aplicada a la divulgació del Codi Civil d'Andorra.
               </p>
               <p>
@@ -53,8 +53,8 @@ const LegalNoticePage: React.FC = () => {
               <h2>3. Responsables i contacte</h2>
               <p>
                 Responsable: estudiant del Grau de Dret de la UOC (contacte:{' '}
-                <a href="mailto:contacte@prudencia.cat">contacte@prudencia.cat</a>). Per dubtes sobre privacitat
-                utilitza l&apos;adreça <a href="mailto:privacitat@prudencia.cat">privacitat@prudencia.cat</a>.
+                <a href="mailto:contacte@dretplaner.ad">contacte@dretplaner.ad</a>). Per dubtes sobre privacitat
+                utilitza l&apos;adreça <a href="mailto:privacitat@dretplaner.ad">privacitat@dretplaner.ad</a>.
               </p>
             </section>
 
@@ -83,7 +83,7 @@ const LegalNoticePage: React.FC = () => {
               </p>
               <p>
                 <strong>Drets.</strong> Pots exercir els drets d&apos;accés, rectificació, supressió, limitació, oposició i
-                portabilitat escrivint a <a href="mailto:privacitat@prudencia.cat">privacitat@prudencia.cat</a>. També pots
+                portabilitat escrivint a <a href="mailto:privacitat@dretplaner.ad">privacitat@dretplaner.ad</a>. També pots
                 presentar reclamacions davant l'autoritat de protecció de dades d'Andorra.
               </p>
             </section>
@@ -100,7 +100,7 @@ const LegalNoticePage: React.FC = () => {
             <section className="legal-section">
               <h2>6. Condicions d&apos;ús</h2>
               <p>
-                L&apos;accés a prudencia.cat és gratuït. L&apos;usuari es compromet a fer-ne un ús responsable, a no introduir
+                L&apos;accés a dretplaner.ad és gratuït. L&apos;usuari es compromet a fer-ne un ús responsable, a no introduir
                 continguts il·lícits ni dades de tercers i a respectar les indicacions de privacitat. Ens reservem el dret
                 de restringir l&apos;accés en cas d&apos;ús abusiu o fraudulent.
               </p>
@@ -122,7 +122,7 @@ const LegalNoticePage: React.FC = () => {
                 de l&apos;Intel·ligència Artificial (AI Act) i implementa validació automàtica per garantir la
                 transparència i el compliment legal en totes les respostes generades.
               </p>
-              
+
               <h3>7.1. Models utilitzats</h3>
               <ul>
                 <li>

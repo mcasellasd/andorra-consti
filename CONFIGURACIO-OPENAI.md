@@ -62,7 +62,7 @@ node scripts/generate-summaries-improved.js --limit=1
 ## Estructura del projecte
 
 ```
-prudencia.cat/
+dretplaner.ad/
 ├── .env              ← CREA AQUEST FITXER AQUÍ
 ├── .env.example      ← Fitxer d'exemple (no conté la clau real)
 ├── package.json
