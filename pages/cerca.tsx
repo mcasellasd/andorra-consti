@@ -44,7 +44,7 @@ const CercaPage: React.FC = () => {
 
     const queryLower = query.toLowerCase().trim();
     const paraules = queryLower.split(/\s+/).filter(p => p.length > 0);
-    
+
     const resultats: ResultatCerca[] = [];
 
     // Cercar en Constitució
@@ -53,26 +53,26 @@ const CercaPage: React.FC = () => {
       const titolArticle = getTitolArticle(article, idioma);
       const numeracio = article.numeracio.toLowerCase();
       const textComplet = `${titolArticle} ${textArticle} ${numeracio} ${article.tags?.join(' ') || ''}`.toLowerCase();
-      
+
       const coincidencies: string[] = [];
       let relevancia = 0;
 
       // Comptar coincidències
       paraules.forEach(paraula => {
         let comptador = 0;
-        
+
         // Cerca al títol (més rellevant)
         if (titolArticle.toLowerCase().includes(paraula)) {
           comptador += 5;
           coincidencies.push(`Títol: "${paraula}"`);
         }
-        
+
         // Cerca a la numeració
         if (numeracio.includes(paraula)) {
           comptador += 3;
           coincidencies.push(`Numeració: "${paraula}"`);
         }
-        
+
         // Cerca al text
         const index = textArticle.toLowerCase().indexOf(paraula);
         if (index !== -1) {
@@ -80,13 +80,13 @@ const CercaPage: React.FC = () => {
           // Bonus si està al principi del text
           if (index < 100) comptador += 1;
         }
-        
+
         // Cerca a tags
         if (article.tags?.some(tag => tag.toLowerCase().includes(paraula))) {
           comptador += 2;
           coincidencies.push(`Etiqueta: "${paraula}"`);
         }
-        
+
         relevancia += comptador;
       });
 
@@ -115,14 +115,14 @@ const CercaPage: React.FC = () => {
     const queryLower = query.toLowerCase();
     const textLower = text.toLowerCase();
     const index = textLower.indexOf(queryLower);
-    
+
     if (index === -1) {
       return text.substring(0, maxLength) + (text.length > maxLength ? '...' : '');
     }
 
     const start = Math.max(0, index - 50);
     const end = Math.min(text.length, index + query.length + 150);
-    
+
     let snippet = text.substring(start, end);
     if (start > 0) snippet = '...' + snippet;
     if (end < text.length) snippet = snippet + '...';
@@ -160,7 +160,7 @@ const CercaPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>{t(idioma, 'cerca.titol')} - prudencia.ad</title>
+        <title>{t(idioma, 'cerca.titol')} - dretplaner.ad</title>
         <meta name="description" content={t(idioma, 'cerca.descripcio')} />
       </Head>
       <Layout>
@@ -168,9 +168,9 @@ const CercaPage: React.FC = () => {
           <div className="content" style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
             {/* Header */}
             <div style={{ marginBottom: '2rem' }}>
-              <h1 style={{ 
-                fontSize: '2.5rem', 
-                marginBottom: '0.5rem', 
+              <h1 style={{
+                fontSize: '2.5rem',
+                marginBottom: '0.5rem',
                 color: '#1a1a1a',
                 fontWeight: 700,
               }}>
@@ -182,9 +182,9 @@ const CercaPage: React.FC = () => {
 
               {/* Formulari de cerca */}
               <form onSubmit={handleSubmit} style={{ marginBottom: '1.5rem' }}>
-                <div style={{ 
-                  display: 'flex', 
-                  gap: '1rem', 
+                <div style={{
+                  display: 'flex',
+                  gap: '1rem',
                   flexWrap: 'wrap',
                   alignItems: 'flex-end',
                 }}>
@@ -221,7 +221,7 @@ const CercaPage: React.FC = () => {
                       autoFocus
                     />
                   </div>
-                  
+
 
                   <button
                     type="submit"
@@ -249,7 +249,7 @@ const CercaPage: React.FC = () => {
             {/* Resultats */}
             {cercaFet && query.trim() && (
               <div>
-                <div style={{ 
+                <div style={{
                   marginBottom: '1.5rem',
                   padding: '1rem',
                   backgroundColor: '#f8f9fa',
@@ -257,7 +257,7 @@ const CercaPage: React.FC = () => {
                   border: '1px solid #e5e7eb',
                 }}>
                   <strong style={{ fontSize: '1.1rem', color: '#374151' }}>
-                    {resultats.length === 0 
+                    {resultats.length === 0
                       ? t(idioma, 'cerca.noResultats')
                       : `${resultats.length} ${resultats.length === 1 ? t(idioma, 'cerca.resultat') : t(idioma, 'cerca.resultats')}`
                     }
@@ -341,7 +341,7 @@ const CercaPage: React.FC = () => {
                             fontSize: '0.95rem',
                             lineHeight: '1.6',
                           }}>
-                            <div dangerouslySetInnerHTML={{ 
+                            <div dangerouslySetInnerHTML={{
                               __html: getSnippet(text, query, 250)
                             }} />
                           </div>

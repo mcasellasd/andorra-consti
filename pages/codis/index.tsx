@@ -15,7 +15,7 @@ const CodisPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Constitució d&apos;Andorra | prudencia.ad</title>
+        <title>Constitució d&apos;Andorra | dretplaner.ad</title>
         <meta
           name="description"
           content="Navega per la Constitució del Principat d'Andorra amb interpretació assistida per IA."
@@ -36,10 +36,10 @@ const CodisPage: React.FC = () => {
 
           {/* Constitució */}
           <section style={{ marginBottom: '3rem' }}>
-            <div style={{ 
-              background: 'white', 
-              borderRadius: '12px', 
-              padding: '2rem', 
+            <div style={{
+              background: 'white',
+              borderRadius: '12px',
+              padding: '2rem',
               boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
               border: '1px solid #e2e8f0'
             }}>
@@ -57,8 +57,8 @@ const CodisPage: React.FC = () => {
                     {articlesConstitucio.length} {idioma === 'ca' ? 'articles' : idioma === 'es' ? 'artículos' : 'articles'}
                   </p>
                 </div>
-                <Link 
-                  href="/codis/constitucio" 
+                <Link
+                  href="/codis/constitucio"
                   style={{
                     padding: '0.75rem 1.5rem',
                     background: '#3b82f6',

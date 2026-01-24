@@ -1,5 +1,5 @@
 {
-  "name": "prudencia-ad",
+  "name": "dret-planer",
   "version": "1.0.0",
   "description": "Portal d'Accessibilitat Jurídica Assistida per IA per al Principat d'Andorra",
   "private": true,
@@ -71,6 +71,7 @@
     "@xenova/transformers": "^2.17.2",
     "autoprefixer": "^10.4.20",
     "dotenv": "^16.6.1",
+    "eslint": "^9.39.2",
     "pdf-parse": "^2.4.5",
     "postcss": "^8.5",
     "tailwindcss": "^3.4.0",

@@ -7,7 +7,7 @@ const PaperIndexPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Índex del Paper Acadèmic · Prudència.ad</title>
+        <title>Índex del Paper Acadèmic · dretplaner.ad</title>
         <meta
           name="description"
           content="Índex de l'estructura del paper acadèmic sobre la capacitat de la IA per adaptar els preceptes constitucionals andorrans al llenguatge natural."
@@ -33,7 +33,7 @@ const PaperIndexPage: React.FC = () => {
                   <li style={{ marginLeft: '1rem' }}>└─ Dades: 48% immigrants, multilingüisme, complexitat jurídica</li>
                   <li>├─ 1.2. Justificació: Llei 6/2024 + dret a comprendre</li>
                   <li style={{ marginLeft: '1rem' }}>└─ Literatura bàsica: Fuller (1964), Tamanaha (2004)</li>
-                  <li>├─ 1.3. Objectiu: demostrar viabilitat tècnica de Prudència.ad</li>
+                  <li>├─ 1.3. Objectiu: demostrar viabilitat tècnica de dretplaner.ad</li>
                   <li>└─ 1.4. Limitació fonamental: no substituir l'advocat, sinó ajudar a comprendre</li>
                   <li style={{ marginLeft: '1rem' }}>└─ La IA com a eina d'assistència, no de substitució</li>
                 </ul>
@@ -56,7 +56,7 @@ const PaperIndexPage: React.FC = () => {
                   <li style={{ marginLeft: '1rem' }}>├─ Marc andorrà: Llei 29/2021 (protecció de dades)</li>
                   <li style={{ marginLeft: '1rem' }}>├─ Futura Agència d'Intel·ligència de la Dada d'Andorra</li>
                   <li style={{ marginLeft: '1rem' }}>├─ AI Act (UE): aplicabilitat i referència</li>
-                  <li style={{ marginLeft: '1rem' }}>└─ Classificació de Prudència.ad: risc limitat</li>
+                  <li style={{ marginLeft: '1rem' }}>└─ Classificació de dretplaner.ad: risc limitat</li>
                 </ul>
               </div>
 

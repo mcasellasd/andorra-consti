@@ -53,7 +53,7 @@ export default async function handler(
     // Si només és una pregunta, executar-la directament
     if (preguntesAExecutar.length === 1 && !executarTotes) {
       const pregunta = preguntesAExecutar[0];
-      
+
       // Cridar l'API del chatbot
       const chatResponse = await fetch(`${req.headers.origin || 'http://localhost:3000'}/api/unified-chat`, {
         method: 'POST',
@@ -68,9 +68,12 @@ export default async function handler(
         })
       });
 
-      if (!chatResponse.ok) {
-        const errorData = await chatResponse.json();
-        throw new Error(errorData.error || `HTTP ${chatResponse.status}`);
+      const contentType = chatResponse.headers.get("content-type");
+      if (!chatResponse.ok || !contentType || !contentType.includes("application/json")) {
+        const text = await chatResponse.text();
+        // Intentar extreure un missatge d'error del HTML si és possible, o mostrar els primers caràcters
+        const errorSnippet = text.substring(0, 200).replace(/\n/g, ' ');
+        throw new Error(`Error cridant unified-chat (${chatResponse.status}): ${errorSnippet}...`);
       }
 
       const chatData = await chatResponse.json();
@@ -102,9 +105,10 @@ export default async function handler(
           })
         });
 
-        if (!chatResponse.ok) {
-          const errorData = await chatResponse.json();
-          throw new Error(errorData.error || `HTTP ${chatResponse.status}`);
+        const contentType = chatResponse.headers.get("content-type");
+        if (!chatResponse.ok || !contentType || !contentType.includes("application/json")) {
+          const text = await chatResponse.text();
+          throw new Error(`Error unified-chat (${chatResponse.status}): ${text.substring(0, 100)}...`);
         }
 
         const chatData = await chatResponse.json();

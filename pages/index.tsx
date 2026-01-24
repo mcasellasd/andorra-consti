@@ -13,7 +13,7 @@ const IndexPage: React.FC = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const storedConsent = window.localStorage.getItem('prudencia.chat.consentAccepted');
+      const storedConsent = window.localStorage.getItem('dretplaner.chat.consentAccepted');
       if (storedConsent === 'true') {
         setHomeConsent(true);
       }
@@ -24,7 +24,7 @@ const IndexPage: React.FC = () => {
     (rawQuestion: string) => {
       const trimmed = rawQuestion.trim();
       if (!trimmed.length) {
-        setHomeError('Introdueix una consulta per Prudència.');
+        setHomeError('Introdueix una consulta per Dret Planer.');
         return;
       }
 
@@ -37,8 +37,8 @@ const IndexPage: React.FC = () => {
       setHomeQuery('');
       // Obrir el chatbot unificat amb la pregunta
       if (typeof window !== 'undefined') {
-        const event = new CustomEvent('openUnifiedChat', { 
-          detail: { question: trimmed, autoSubmit: true } 
+        const event = new CustomEvent('openUnifiedChat', {
+          detail: { question: trimmed, autoSubmit: true }
         });
         window.dispatchEvent(event);
       }
@@ -65,7 +65,7 @@ const IndexPage: React.FC = () => {
     (checked: boolean) => {
       setHomeConsent(checked);
       if (checked && typeof window !== 'undefined') {
-        window.localStorage.setItem('prudencia.chat.consentAccepted', 'true');
+        window.localStorage.setItem('dretplaner.chat.consentAccepted', 'true');
       }
     },
     []
@@ -74,7 +74,7 @@ const IndexPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Prudència.ad · Constitució d&apos;Andorra</title>
+        <title>Dret Planer · Constitució d&apos;Andorra</title>
         <meta
           name="description"
           content="Plataforma interactiva per explorar la Constitució del Principat d'Andorra amb navegació assistida per IA, resums contextuals i exemples pràctics."
@@ -85,7 +85,7 @@ const IndexPage: React.FC = () => {
           {/* Hero Section */}
           <section className="hero-section hero-section--minimal">
             <div className="hero-header">
-              <span className="hero-kicker">Prudència.ad · Constitució d&apos;Andorra</span>
+              <span className="hero-kicker">Dret Planer · Constitució d&apos;Andorra</span>
               <h1>La Constitució d&apos;Andorra explicada amb claredat</h1>
               <p>
                 Text oficial consolidat, interpretació assistida amb IA i un chatbot especialitzat perquè
@@ -93,17 +93,17 @@ const IndexPage: React.FC = () => {
               </p>
               <div className="hero-actions">
                 <Link href="#constitucio" className="hero-primary">Explora la Constitució</Link>
-                <button 
+                <button
                   onClick={() => {
                     if (typeof window !== 'undefined') {
                       const event = new CustomEvent('openUnifiedChat', { detail: { question: '' } });
                       window.dispatchEvent(event);
                     }
-                  }} 
+                  }}
                   className="hero-secondary"
                   style={{ cursor: 'pointer', border: 'none', background: 'transparent', color: 'inherit', font: 'inherit', textDecoration: 'underline' }}
                 >
-                  Parla amb Prudència
+                  Parla amb Dret Planer
                 </button>
               </div>
             </div>
@@ -121,7 +121,7 @@ const IndexPage: React.FC = () => {
             <div className="search-bar">
               <h2>Per on comencem?</h2>
               <form className="search-bar__form" role="search" onSubmit={handleHomeSearch}>
-                <label htmlFor="home-search" className="visually-hidden">Escriu la teva consulta per Prudència</label>
+                <label htmlFor="home-search" className="visually-hidden">Escriu la teva consulta per Dret Planer</label>
                 <div className="search-bar__input">
                   <input
                     id="home-search"

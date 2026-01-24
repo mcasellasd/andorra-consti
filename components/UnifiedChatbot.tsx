@@ -10,6 +10,7 @@ type Source = {
   title: string;
   number?: string;
   score?: number;
+  content?: string;
 };
 
 interface Message {
@@ -40,7 +41,7 @@ export default function UnifiedChatbot({
   // Carregar missatges des de sessionStorage al carregar el component
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const storedMessages = window.sessionStorage.getItem('prudencia.chat.messages');
+      const storedMessages = window.sessionStorage.getItem('dretplaner.chat.messages');
       if (storedMessages) {
         try {
           const parsedMessages = JSON.parse(storedMessages) as Message[];
@@ -58,7 +59,7 @@ export default function UnifiedChatbot({
   useEffect(() => {
     if (typeof window !== 'undefined' && messages.length > 0) {
       try {
-        window.sessionStorage.setItem('prudencia.chat.messages', JSON.stringify(messages));
+        window.sessionStorage.setItem('dretplaner.chat.messages', JSON.stringify(messages));
       } catch (error) {
         console.error('Error al guardar missatges del xat:', error);
       }
@@ -68,7 +69,7 @@ export default function UnifiedChatbot({
   // Carregar consentiment de privacitat des de localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const storedConsent = window.localStorage.getItem('prudencia.chat.consentAccepted');
+      const storedConsent = window.localStorage.getItem('dretplaner.chat.consentAccepted');
       if (storedConsent === 'true') {
         setPrivacyAccepted(true);
       }
@@ -78,7 +79,7 @@ export default function UnifiedChatbot({
   // Guardar consentiment quan canvia
   useEffect(() => {
     if (privacyAccepted && typeof window !== 'undefined') {
-      window.localStorage.setItem('prudencia.chat.consentAccepted', 'true');
+      window.localStorage.setItem('dretplaner.chat.consentAccepted', 'true');
     }
   }, [privacyAccepted]);
 
@@ -202,7 +203,7 @@ export default function UnifiedChatbot({
   const handleClearChat = () => {
     setMessages([]);
     if (typeof window !== 'undefined') {
-      window.sessionStorage.removeItem('prudencia.chat.messages');
+      window.sessionStorage.removeItem('dretplaner.chat.messages');
     }
   };
 
@@ -219,6 +220,64 @@ export default function UnifiedChatbot({
     return `CONST`;
   };
 
+  const renderMessageContent = (message: Message) => {
+    return message.content.split('\n').map((paragraph, pIndex) => {
+      // Si la línia està buida, no la renderitzem o posem un espai
+      if (!paragraph.trim()) return <div key={pIndex} style={{ height: '0.5rem' }} />;
+
+      // Regex per trobar cites [[ID]]
+      const parts = paragraph.split(/(\[\[.*?\]\])/g);
+
+      return (
+        <p key={pIndex} style={{ marginBottom: '0.5rem', lineHeight: '1.6' }}>
+          {parts.map((part, partIndex) => {
+            const match = part.match(/^\[\[(.*?)\]\]$/);
+            if (match) {
+              const id = match[1];
+              const source = message.sources?.find(s => s.id === id);
+              if (source) {
+                // Trobem la font, mostrem etiqueta interactiva
+                const label = source.number ?
+                  (source.number === 'Doctrina' ? 'Doctrina' : `Art. ${source.number}`) :
+                  'Font';
+
+                // Retallem el contingut per al tooltip
+                const contentPreview = source.content
+                  ? (source.content.length > 200 ? source.content.substring(0, 200) + '...' : source.content)
+                  : `${source.title}`;
+
+                return (
+                  <span
+                    key={partIndex}
+                    className="citation-tag"
+                    data-preview={contentPreview}
+                    title={contentPreview} // Fallback natiu
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // Opcional: Fer scroll cap a la font a sota
+                      const link = document.querySelector(`a[href*="${id}"]`);
+                      link?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      link?.parentElement?.animate([
+                        { backgroundColor: 'rgba(255, 255, 0, 0.3)' },
+                        { backgroundColor: 'transparent' }
+                      ], { duration: 2000 });
+                    }}
+                  >
+                    {label}
+                  </span>
+                );
+              }
+              // Si no trobem la font però té format [[ID]], ho mostrem net o igual
+              return null; // Ocultem l'ID cru si no trobem la font, per neteja
+            }
+            // Text normal
+            return part;
+          })}
+        </p>
+      );
+    });
+  };
+
   return (
     <>
       {/* Bombolla flotant */}
@@ -226,7 +285,7 @@ export default function UnifiedChatbot({
         <button
           onClick={() => setIsOpen(true)}
           className="chatbot-bubble"
-          aria-label="Obrir chatbot Prudència"
+          aria-label="Obrir chatbot Dret Planer"
         >
           <svg
             width="24"
@@ -254,7 +313,7 @@ export default function UnifiedChatbot({
             <div className="chatbot-header-content">
               <div className="chatbot-title">
                 <span className="chatbot-icon">💬</span>
-                <span>Prudència</span>
+                <span>Dret Planer</span>
               </div>
               <div className="chatbot-header-actions">
                 {messages.length > 0 && (
@@ -300,7 +359,7 @@ export default function UnifiedChatbot({
             {messages.length === 0 && (
               <div className="chatbot-welcome">
                 <p>
-                  <strong>Hola! Sóc Prudència.</strong>
+                  <strong>Hola! Sóc Dret Planer.</strong>
                 </p>
                 <p>
                   Sóc un assistent jurídic especialitzat en la <strong>Constitució del Principat d&apos;Andorra</strong>.
@@ -320,11 +379,7 @@ export default function UnifiedChatbot({
                 className={`chatbot-message chatbot-message-${message.role}`}
               >
                 <div className="chatbot-message-content">
-                  {message.content.split('\n').map((paragraph, index) => (
-                    <p key={index} style={{ marginBottom: '0.5rem' }}>
-                      {paragraph}
-                    </p>
-                  ))}
+                  {renderMessageContent(message)}
 
                   {message.sources && message.sources.length > 0 && (
                     <div className="chatbot-sources">
@@ -735,6 +790,67 @@ export default function UnifiedChatbot({
             min-width: 36px;
             justify-content: center;
           }
+        }
+
+        /* Citation Styles */
+        .citation-tag {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(15, 61, 62, 0.1);
+          color: #0f3d3e;
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          margin: 0 4px;
+          cursor: help;
+          border: 1px solid rgba(15, 61, 62, 0.2);
+          transition: all 0.2s ease;
+          position: relative;
+        }
+
+        .citation-tag:hover {
+          background: #0f3d3e;
+          color: white;
+          border-color: #0f3d3e;
+        }
+        
+        /* Custom Tooltip */
+        .citation-tag:hover::after {
+          content: attr(data-preview);
+          position: absolute;
+          bottom: 100%;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 250px;
+          padding: 8px 12px;
+          background: #333;
+          color: white;
+          font-size: 0.75rem;
+          font-weight: 400;
+          border-radius: 6px;
+          pointer-events: none;
+          z-index: 100;
+          margin-bottom: 8px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+          white-space: normal;
+          line-height: 1.4;
+          text-align: left;
+        }
+        
+        /* Triangle for tooltip */
+        .citation-tag:hover::before {
+          content: '';
+          position: absolute;
+          bottom: 100%;
+          left: 50%;
+          transform: translateX(-50%);
+          border-width: 6px;
+          border-style: solid;
+          border-color: #333 transparent transparent transparent;
+          margin-bottom: -4px;
+          z-index: 100;
         }
       `}</style>
     </>

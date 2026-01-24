@@ -32,7 +32,7 @@ export const traduccions = {
       comEstaFet: 'Com està fet',
     },
     footer: {
-      titol: 'prudencia.ad',
+      titol: 'dretplaner.ad',
       descripcio: 'Portal d\'Accessibilitat Jurídica Assistida per IA per al Principat d\'Andorra.',
       avis: 'Avís',
       avisText: 'La informació és orientativa i no constitueix assessorament legal. Per a consultes específiques, adreça\'t a professionals titulats.',
@@ -95,7 +95,7 @@ export const traduccions = {
       comEstaFet: 'Cómo está hecho',
     },
     footer: {
-      titol: 'prudencia.ad',
+      titol: 'dretplaner.ad',
       descripcio: 'Portal de Accesibilidad Jurídica Asistida por IA para el Principado de Andorra.',
       avis: 'Aviso',
       avisText: 'La información es orientativa y no constituye asesoramiento legal. Para consultas específicas, dirígete a profesionales titulados.',
@@ -159,7 +159,7 @@ export const traduccions = {
       comEstaFet: 'Comment c\'est fait',
     },
     footer: {
-      titol: 'prudencia.ad',
+      titol: 'dretplaner.ad',
       descripcio: 'Portail d\'Accessibilité Juridique Assistée par IA pour la Principauté d\'Andorre.',
       avis: 'Avis',
       avisText: 'Les informations sont indicatives et ne constituent pas un conseil juridique. Pour des consultations spécifiques, adressez-vous à des professionnels titulaires.',
@@ -221,7 +221,7 @@ export function getIdiomaActual(): Idioma {
   }
 
   // Intentar obtenir de localStorage
-  const stored = localStorage.getItem('prudencia.idioma');
+  const stored = localStorage.getItem('dretplaner.idioma');
   if (stored && idiomesDisponibles.includes(stored as Idioma)) {
     return stored as Idioma;
   }
@@ -235,7 +235,7 @@ export function getIdiomaActual(): Idioma {
  */
 export function setIdioma(idioma: Idioma): void {
   if (typeof window === 'undefined') return;
-  localStorage.setItem('prudencia.idioma', idioma);
+  localStorage.setItem('dretplaner.idioma', idioma);
 }
 
 /**

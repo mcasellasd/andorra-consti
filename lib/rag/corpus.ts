@@ -4,6 +4,7 @@
  */
 
 import type { EmbeddingEntry, KnowledgeEntry, RetrievedContext } from './types';
+import { BM25 } from './bm25';
 
 // Intentar carregar el corpus unificat, si no existeix, carregar només la Constitució
 let constitucioKnowledge: any;
@@ -11,18 +12,33 @@ let constitucioEmbeddings: any;
 
 try {
   // @ts-ignore - Dynamic import per permetre fallback
-  constitucioKnowledge = require('@/data/rag/constitucio-unified.json');
+  constitucioKnowledge = require('../../data/rag/constitucio-unified.json');
   // @ts-ignore
-  constitucioEmbeddings = require('@/data/rag/constitucio-unified-embeddings.json');
+  constitucioEmbeddings = require('../../data/rag/constitucio-unified-embeddings.json');
 } catch {
   // Si no existeix el corpus unificat, utilitzar només la Constitució
   try {
-    constitucioKnowledge = require('@/data/rag/constitucio.json');
-    constitucioEmbeddings = require('@/data/rag/constitucio-embeddings.json');
+    constitucioKnowledge = require('../../data/rag/constitucio.json');
+    constitucioEmbeddings = require('../../data/rag/constitucio-embeddings.json');
   } catch {
     constitucioKnowledge = [];
     constitucioEmbeddings = [];
   }
+}
+
+// Carregar doctrina
+let doctrinaKnowledge: any;
+let doctrinaEmbeddings: any;
+
+try {
+  // @ts-ignore
+  doctrinaKnowledge = require('../../data/rag/doctrina/20-anys.json');
+  // @ts-ignore
+  doctrinaEmbeddings = require('../../data/rag/doctrina/20-anys-embeddings.json');
+} catch (e) {
+  console.error("Error carregant doctrina:", e);
+  doctrinaKnowledge = [];
+  doctrinaEmbeddings = [];
 }
 
 interface NormalizedEmbedding extends EmbeddingEntry {
@@ -35,8 +51,19 @@ interface CorpusData {
   embeddings: NormalizedEmbedding[];
 }
 
-// Carregar només la Constitució
-const corpus: CorpusData = loadCorpus(constitucioKnowledge, constitucioEmbeddings);
+// Carregar Constitució i Doctrina
+const corpus: CorpusData = loadCorpus(
+  [...(constitucioKnowledge as KnowledgeEntry[]), ...(doctrinaKnowledge as KnowledgeEntry[])],
+  [...(constitucioEmbeddings as EmbeddingEntry[]), ...(doctrinaEmbeddings as EmbeddingEntry[])]
+);
+
+// Inicialitzar índex de cerca híbrida (BM25)
+const bm25 = new BM25();
+bm25.buildIndex(corpus.knowledge.map(entry => ({
+  id: entry.id,
+  content: entry.content,
+  topic: entry.topic
+})));
 
 function loadCorpus(
   knowledgeRaw: unknown,
@@ -64,8 +91,8 @@ function loadCorpus(
 }
 
 export function getAvailableBooks(): string[] {
-  // Retornem només 'CONSTITUCIO' per indicar que només treballem amb la Constitució
-  return corpus.knowledge.length > 0 ? ['CONSTITUCIO'] : [];
+  // Retornem també DOCTRINA si n'hi ha
+  return corpus.knowledge.length > 0 ? ['CONSTITUCIO', 'DOCTRINA'] : [];
 }
 
 export function getKnowledgeEntries(): KnowledgeEntry[] {
@@ -103,7 +130,7 @@ export function getArticleByNumber(articleNumber: string): KnowledgeEntry | null
     .replace(/^Article\s+/i, '')
     .trim()
     .padStart(3, '0'); // "19" -> "019"
-  
+
   const articleId = `CONST_${normalizedNumber}`;
   return corpus.knowledgeById.get(articleId) || null;
 }
@@ -142,13 +169,99 @@ export function retrieveTopMatches(
   for (const { id, score } of scored) {
     const entry = corpus.knowledgeById.get(id);
     if (entry) {
+      // Determinar l'ID del llibre segons l'ID de l'entrada
+      let bookId: 'CONSTITUCIO' | 'DOCTRINA' = 'CONSTITUCIO';
+      if (entry.id.startsWith('DOC_') || entry.category === 'Doctrina') {
+        bookId = 'DOCTRINA';
+      }
+
       results.push({
-        bookId: 'CONSTITUCIO' as const,
+        bookId,
         entry,
         score
       });
     }
   }
+  return results;
+}
+
+/**
+ * Cerca híbrida combinant vectors (semàntica) i BM25 (paraules clau)
+ * Utilitza Reciprocal Rank Fusion (RRF) per combinar els resultats
+ */
+export function retrieveHybridMatches(
+  queryEmbedding: number[],
+  queryText: string,
+  topK = 5
+): RetrievedContext[] {
+  const queryNorm = vectorNorm(queryEmbedding);
+  const k = 60; // Constant RRF estàndard
+
+  // 1. Obtenir resultats semàntics (Top 50)
+  // Reutilitzem la lògica de retrieveTopMatches però interna
+  const semanticScores = new Map<string, number>();
+  if (queryNorm !== 0 && corpus.embeddings.length > 0) {
+    corpus.embeddings
+      .map(entry => ({
+        id: entry.id,
+        score: cosineSimilarity(queryEmbedding, queryNorm, entry.embedding, entry.norm)
+      }))
+      .filter(item => item.score > 0.1) // Filtrar soroll
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 50)
+      .forEach((item, rank) => {
+        // Guardem el rank semàntic (0-indexed)
+        semanticScores.set(item.id, rank);
+      });
+  }
+
+  // 2. Obtenir resultats BM25 (Top 50)
+  const bm25Results = bm25.search(queryText, 50);
+  const bm25Scores = new Map<string, number>();
+  bm25Results.forEach((item, rank) => {
+    bm25Scores.set(item.id, rank); // Guardem el rank BM25
+  });
+
+  // 3. Fusionar amb RRF
+  // Score = 1/(k + rank_sem) + 1/(k + rank_bm25)
+  const allIds = Array.from(new Set([...Array.from(semanticScores.keys()), ...Array.from(bm25Scores.keys())]));
+  const fusedResults: Array<{ id: string, score: number, debug?: string }> = [];
+
+  allIds.forEach(id => {
+    const semanticRank = semanticScores.has(id) ? semanticScores.get(id)! : 1000; // Penalització si no hi és
+    const bm25Rank = bm25Scores.has(id) ? bm25Scores.get(id)! : 1000;
+
+    const rrfScore = (1 / (k + semanticRank)) + (1 / (k + bm25Rank));
+
+    // Normalitzar score per ser semblant a cosine (0-1) encara que RRF és petit
+    // Simplement passem el RRF score, però l'ordenem bé
+    fusedResults.push({ id, score: rrfScore });
+  });
+
+  // Ordenar i agafar Top K
+  const topResults = fusedResults
+    .sort((a, b) => b.score - a.score)
+    .slice(0, topK);
+
+  // Construir resposta final
+  const results: RetrievedContext[] = [];
+  for (const { id, score } of topResults) {
+    const entry = corpus.knowledgeById.get(id);
+    if (entry) {
+      // Determinar ID del llibre
+      let bookId: 'CONSTITUCIO' | 'DOCTRINA' = 'CONSTITUCIO';
+      if (entry.id.startsWith('DOCTRINA') || entry.id.startsWith('DOC_') || entry.category === 'Doctrina' || entry.category === 'jurisprudència' || entry.category === 'Jurisprudència') {
+        bookId = 'DOCTRINA';
+      }
+
+      results.push({
+        bookId,
+        entry,
+        score: score * 100 // Escalem per tenir números més llegibles, tot i que el valor absolut no importa tant en RRF
+      });
+    }
+  }
+
   return results;
 }
 

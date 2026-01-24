@@ -171,7 +171,7 @@ Similar a Vercel:
 
 ## Configuració per subdirectori
 
-Si la web està en un subdirectori (ex: `prudencia.cat/llibre-cinquè`):
+Si la web està en un subdirectori (ex: `dretplaner.ad/llibre-cinquè`):
 
 1. Edita `next.config.js`:
    ```javascript

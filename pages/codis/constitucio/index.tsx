@@ -16,7 +16,7 @@ const ConstitucioPage: React.FC = () => {
   const estructura = articlesConstitucio.reduce((acc, article) => {
     const titol = article.titol;
     const capitol = article.capitol || 'Sense capítol';
-    
+
     if (!acc[titol]) {
       acc[titol] = {};
     }
@@ -30,7 +30,7 @@ const ConstitucioPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Constitució d&apos;Andorra | prudencia.ad</title>
+        <title>Constitució d&apos;Andorra | dretplaner.ad</title>
         <meta
           name="description"
           content="Navega per la Constitució del Principat d'Andorra amb interpretació assistida per IA."
@@ -60,9 +60,9 @@ const ConstitucioPage: React.FC = () => {
           </header>
 
           {articlesConstitucio.length === 0 ? (
-            <div style={{ 
-              background: '#f8fafc', 
-              borderRadius: '12px', 
+            <div style={{
+              background: '#f8fafc',
+              borderRadius: '12px',
               padding: '3rem',
               textAlign: 'center',
               border: '1px dashed #cbd5e1'
@@ -77,9 +77,9 @@ const ConstitucioPage: React.FC = () => {
                 {idioma === 'es' && 'Para procesar la Constitución, ejecuta:'}
                 {idioma === 'fr' && 'Pour traiter la Constitution, exécutez:'}
               </p>
-              <code style={{ 
-                display: 'block', 
-                marginTop: '1rem', 
+              <code style={{
+                display: 'block',
+                marginTop: '1rem',
                 padding: '1rem',
                 background: 'white',
                 borderRadius: '8px',
@@ -94,27 +94,27 @@ const ConstitucioPage: React.FC = () => {
               const ordenarTitols = (titols: string[]): string[] => {
                 const preambul = titols.find(t => t === 'Preàmbul');
                 const altres = titols.filter(t => t !== 'Preàmbul');
-                
+
                 // Extreure número de títol per ordenar
                 const altresOrdenats = altres.sort((a, b) => {
                   const numA = a.match(/Títol\s+([IVX]+)/i)?.[1];
                   const numB = b.match(/Títol\s+([IVX]+)/i)?.[1];
-                  
+
                   if (!numA && !numB) return a.localeCompare(b);
                   if (!numA) return 1;
                   if (!numB) return -1;
-                  
+
                   // Convertir números romans a números per comparar
                   const romanToNum: Record<string, number> = { I: 1, II: 2, III: 3, IV: 4, V: 5, VI: 6, VII: 7, VIII: 8, IX: 9, X: 10 };
                   const numAVal = romanToNum[numA] || 999;
                   const numBVal = romanToNum[numB] || 999;
-                  
+
                   return numAVal - numBVal;
                 });
-                
+
                 return preambul ? [preambul, ...altresOrdenats] : altresOrdenats;
               };
-              
+
               return ordenarTitols(Object.keys(estructura)).map((titol) => {
                 const capitols = estructura[titol];
                 return (
@@ -122,71 +122,72 @@ const ConstitucioPage: React.FC = () => {
                     <h2 style={{ fontSize: '1.75rem', fontWeight: 600, marginBottom: '1.5rem' }}>
                       {titol}
                     </h2>
-                  
-                  {Object.keys(capitols).map((capitol) => {
-                    const articles = capitols[capitol];
-                    return (
-                      <div 
-                        key={capitol}
-                        style={{
-                          background: 'white',
-                          borderRadius: '12px',
-                          padding: '1.5rem',
-                          marginBottom: '1.5rem',
-                          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                          border: '1px solid #e2e8f0'
-                        }}
-                      >
-                        {capitol !== 'Sense capítol' && (
-                          <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '1rem', color: '#1e293b' }}>
-                            {capitol}
-                          </h3>
-                        )}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '0.75rem' }}>
-                          {articles.map((article) => (
-                            <Link
-                              key={article.id}
-                              href={`/codis/constitucio/article/${article.id}`}
-                              style={{
-                                padding: '0.75rem 1rem',
-                                background: '#f8fafc',
-                                borderRadius: '8px',
-                                border: '1px solid #e2e8f0',
-                                textDecoration: 'none',
-                                color: 'inherit',
-                                display: 'block',
-                                transition: 'all 0.2s ease'
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.background = '#f1f5f9';
-                                e.currentTarget.style.borderColor = '#3b82f6';
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.background = '#f8fafc';
-                                e.currentTarget.style.borderColor = '#e2e8f0';
-                              }}
-                            >
-                              <div style={{ fontWeight: 600, marginBottom: '0.25rem', color: '#3b82f6' }}>
-                                {article.numeracio}
-                              </div>
-                              {article.text_oficial && (
-                                <div style={{ fontSize: '0.875rem', color: '#475569', marginTop: '0.5rem', 
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  display: '-webkit-box',
-                                  WebkitLineClamp: 2,
-                                  WebkitBoxOrient: 'vertical'
-                                }}>
-                                  {article.text_oficial.substring(0, 150)}...
+
+                    {Object.keys(capitols).map((capitol) => {
+                      const articles = capitols[capitol];
+                      return (
+                        <div
+                          key={capitol}
+                          style={{
+                            background: 'white',
+                            borderRadius: '12px',
+                            padding: '1.5rem',
+                            marginBottom: '1.5rem',
+                            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                            border: '1px solid #e2e8f0'
+                          }}
+                        >
+                          {capitol !== 'Sense capítol' && (
+                            <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '1rem', color: '#1e293b' }}>
+                              {capitol}
+                            </h3>
+                          )}
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '0.75rem' }}>
+                            {articles.map((article) => (
+                              <Link
+                                key={article.id}
+                                href={`/codis/constitucio/article/${article.id}`}
+                                style={{
+                                  padding: '0.75rem 1rem',
+                                  background: '#f8fafc',
+                                  borderRadius: '8px',
+                                  border: '1px solid #e2e8f0',
+                                  textDecoration: 'none',
+                                  color: 'inherit',
+                                  display: 'block',
+                                  transition: 'all 0.2s ease'
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.background = '#f1f5f9';
+                                  e.currentTarget.style.borderColor = '#3b82f6';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.background = '#f8fafc';
+                                  e.currentTarget.style.borderColor = '#e2e8f0';
+                                }}
+                              >
+                                <div style={{ fontWeight: 600, marginBottom: '0.25rem', color: '#3b82f6' }}>
+                                  {article.numeracio}
                                 </div>
-                              )}
-                            </Link>
-                          ))}
+                                {article.text_oficial && (
+                                  <div style={{
+                                    fontSize: '0.875rem', color: '#475569', marginTop: '0.5rem',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    display: '-webkit-box',
+                                    WebkitLineClamp: 2,
+                                    WebkitBoxOrient: 'vertical'
+                                  }}>
+                                    {article.text_oficial.substring(0, 150)}...
+                                  </div>
+                                )}
+                              </Link>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </section>
+                      );
+                    })}
+                  </section>
                 );
               });
             })()

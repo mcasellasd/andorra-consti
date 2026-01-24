@@ -33,7 +33,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <header className="header">
         <div className="header-content">
           <Link href="/" className="logo">
-            prudencia.ad
+            dretplaner.ad
           </Link>
           <nav className="nav">
             <Link href="/">{t(idioma, 'nav.inici')}</Link>
@@ -77,12 +77,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </p>
             <p className="footer-text">
               {t(idioma, 'footer.contacte')}:{' '}
-              <a href="mailto:contacte@prudencia.ad">contacte@prudencia.ad</a>
+              <a href="mailto:contacte@dretplaner.ad">contacte@dretplaner.ad</a>
             </p>
           </div>
         </div>
         <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} prudencia.ad · Tots els drets reservats.</span>
+          <span>© {new Date().getFullYear()} dretplaner.ad · Tots els drets reservats.</span>
         </div>
       </footer>
       <UnifiedChatbot />

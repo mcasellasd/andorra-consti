@@ -1,4 +1,4 @@
-# Resum de la Fusió: Prudència.cat Unificat
+# Resum de la Fusió: dretplaner.ad Unificat
 
 ## ✅ Completat
 
@@ -78,13 +78,13 @@ El chatbot unificat utilitza la mateixa clau per:
 4. **Commit inicial**:
    ```bash
    git add .
-   git commit -m "Initial commit: Unified Prudència.cat platform"
+   git commit -m "Initial commit: Unified dretplaner.ad platform"
    ```
 
 ## 📚 Estructura Final
 
 ```
-prudencia/
+dret-planer/
 ├── components/
 │   ├── UnifiedChatbot.tsx  ← NOU: Chatbot unificat
 │   ├── Layout.tsx         ← ACTUALITZAT: Navegació unificada
