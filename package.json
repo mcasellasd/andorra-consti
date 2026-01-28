@@ -72,7 +72,7 @@
     "autoprefixer": "^10.4.20",
     "dotenv": "^16.6.1",
     "eslint": "^9.39.2",
-    "pdf-parse": "^2.4.5",
+    "pdf-parse": "^1.1.1",
     "postcss": "^8.5",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.0.0"

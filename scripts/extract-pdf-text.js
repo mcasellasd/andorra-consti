@@ -10,6 +10,16 @@
 
 const fs = require('fs');
 const path = require('path');
+
+// Polyfill for DOMMatrix to fix pdf-parse issue in newer Node versions
+if (!global.DOMMatrix) {
+  global.DOMMatrix = class DOMMatrix {
+    constructor() { 
+      this.a = 1; this.b = 0; this.c = 0; this.d = 1; this.e = 0; this.f = 0; 
+    }
+  };
+}
+
 const pdf = require('pdf-parse');
 
 const [,, pdfArg, outputArg] = process.argv;

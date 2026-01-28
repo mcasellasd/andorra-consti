@@ -38,8 +38,8 @@ export default async function handler(
 
   try {
     const provider = getEmbeddingProvider();
-    const apiKey = process.env.OPENAI_API_KEY;
-    const queryEmbedding = await generateEmbedding(query, provider, apiKey);
+    // Utilitzem XLM-RoBERTa per defecte, no necessitem OpenAI API key
+    const queryEmbedding = await generateEmbedding(query, provider);
     
     const matches = retrieveTopMatches(
       queryEmbedding,

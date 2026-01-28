@@ -39,6 +39,160 @@ const DOCUMENTS = {
     date: '2020',
     category: 'doctrina',
     codi: 'constitucio'
+  },
+  // Nous documents
+  'constitucionalisme-codificacio': {
+    file: 'nous/00000042.txt',
+    title: 'Constitucionalisme i codificació',
+    author: 'Desconegut',
+    publication: 'Doctrina',
+    date: '2024',
+    category: 'doctrina',
+    codi: 'constitucio'
+  },
+  'usos-costums': {
+    file: 'nous/00000043.txt',
+    title: 'Sobre usos, costums i el codi',
+    author: 'Desconegut',
+    publication: 'Doctrina',
+    date: '2024',
+    category: 'doctrina',
+    codi: 'constitucio'
+  },
+  'ponencia-45': {
+    file: 'nous/00000045.txt',
+    title: 'Ponència sobre codificació i veritat',
+    author: 'Antoni Pol / Desconegut',
+    publication: 'Doctrina',
+    date: '2024',
+    category: 'doctrina',
+    codi: 'constitucio'
+  },
+  'manual-digest-tedh': {
+    file: 'nous/00000050.txt',
+    title: 'El Manual Digest i el Tribunal Europeu dels Drets Humans',
+    author: 'Desconegut',
+    publication: 'Doctrina',
+    date: '2024',
+    category: 'doctrina',
+    codi: 'constitucio'
+  },
+  'comunicacio-lopez': {
+    file: 'nous/COMUNICACIÓLopez-B.-VD.txt',
+    title: 'Comunicació Lopez B.',
+    author: 'Lopez B.',
+    publication: 'Doctrina',
+    date: '2024',
+    category: 'doctrina',
+    codi: 'constitucio'
+  },
+  'relacions-internacionals': {
+    file: 'nous/Les relacions internacionals d’Andorra des de la Constituci.txt',
+    title: 'Les relacions internacionals d’Andorra des de la Constitució',
+    author: 'Desconegut',
+    publication: 'Doctrina',
+    date: '2024',
+    category: 'doctrina',
+    codi: 'constitucio'
+  },
+  'dret-processal-civil': {
+    file: 'nous/LlibreCompletDretProcessalCivil.txt',
+    title: 'Llibre Complet Dret Processal Civil',
+    author: 'Desconegut',
+    publication: 'Doctrina',
+    date: '2024',
+    category: 'doctrina',
+    codi: 'civil'
+  },
+  'memoria-2023': {
+    file: 'nous/MEMÒRIA 2023 DEFINITIVA.txt',
+    title: 'Memòria 2023 del Tribunal Constitucional',
+    author: 'Tribunal Constitucional',
+    publication: 'Memòria',
+    date: '2023',
+    category: 'jurisprudència',
+    codi: 'constitucio'
+  },
+  'memoria-2024': {
+    file: 'nous/MEMÒRIA 2024-3.txt',
+    title: 'Memòria 2024',
+    author: 'Tribunal Constitucional',
+    publication: 'Memòria',
+    date: '2024',
+    category: 'jurisprudència',
+    codi: 'constitucio'
+  },
+  'aplicacio-directa-normes': {
+    file: 'nous/aplicació directa de les normes constitucionals.txt',
+    title: 'L\'aplicació directa de les normes constitucionals',
+    author: 'Desconegut',
+    publication: 'Doctrina',
+    date: '2024',
+    category: 'doctrina',
+    codi: 'constitucio'
+  },
+  'burniol': {
+    file: 'nous/burniol.txt',
+    title: 'Article Burniol sobre sobirania',
+    author: 'Burniol',
+    publication: 'Doctrina',
+    date: '2024',
+    category: 'doctrina',
+    codi: 'constitucio'
+  },
+  'joan-marti-alanis': {
+    file: 'nous/joan-marti-alanis.txt',
+    title: 'Joan Martí Alanis, bisbe',
+    author: 'Desconegut',
+    publication: 'Doctrina',
+    date: '2024',
+    category: 'doctrina',
+    codi: 'constitucio'
+  },
+  'sollicitud-bisbes-urgell': {
+    file: 'nous/sollicitud-bisbes-urgell.txt',
+    title: 'La sol·licitud dels bisbes d\'Urgell',
+    author: 'Desconegut',
+    publication: 'Doctrina',
+    date: '2024',
+    category: 'doctrina',
+    codi: 'constitucio'
+  },
+  'rec5-2019': {
+    file: 'nous/rec5-2019.txt',
+    title: 'REC5 2019',
+    author: 'Desconegut',
+    publication: 'Doctrina',
+    date: '2019',
+    category: 'doctrina',
+    codi: 'constitucio'
+  },
+  'llarga-resistencia': {
+    file: 'LA LLARGA RESISTÈNCIA DEL PRINCIPAT D’AN.txt',
+    title: 'De la consuetud a l’Estat de dret. La llarga resistència del Principat d’Andorra a la modernització política',
+    author: 'Pere Soler Parício',
+    publication: 'Doctrina',
+    date: '2010',
+    category: 'doctrina',
+    codi: 'constitucio'
+  },
+  'joan-marti-alanis-b': {
+    file: 'Joan Martí Alanis, bisbe d\'Urgell, prínc.txt',
+    title: 'Joan Martí Alanis, bisbe d\'Urgell, príncep d\'Andorra',
+    author: 'Joan Bassegoda Nonell',
+    publication: 'Doctrina',
+    date: '2009',
+    category: 'doctrina',
+    codi: 'constitucio'
+  },
+  'emergencia-reconeixement': {
+    file: 'Emergencia i reconeixement d\'Andorra.txt',
+    title: 'Emergencia i reconeixement d\'Andorra com a Estat',
+    author: 'Joan BECAT',
+    publication: 'Doctrina',
+    date: '1993',
+    category: 'doctrina',
+    codi: 'constitucio'
   }
 };
 

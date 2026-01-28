@@ -2,7 +2,7 @@
 
 **Resum Executiu**
 
-Aquest article presenta una prova pilot que avalua la viabilitat tècnica d'un sistema d'intel·ligència artificial (Prudència.ad) per adaptar els preceptes jurídics de la Constitució del Principat d'Andorra al llenguatge natural, amb l'objectiu de millorar l'accessibilitat jurídica. El sistema processa 107 articles constitucionals i el preàmbul (108 entrades en total), utilitzant arquitectura RAG (Retrieval-Augmented Generation) amb models d'embeddings i generació de text. El corpus s'ha expandit amb 254 fragments de doctrina jurídica i recomanacions d'aprenentatge automàtic, creant un corpus unificat de més de 360 entrades. La prova pilot utilitza un sistema de validació basat en 43 preguntes de control distribuïdes en quatre categories, incloent preguntes del "golden standard" acadèmic, i incorpora un sistema d'aprenentatge automàtic que millora contínuament la qualitat de les respostes. Els resultats confirmen que la intel·ligència artificial pot assistir en la comprensió del dret constitucional, sempre mantenint la necessitat de supervisió humana per a l'assessorament legal professional.
+Aquest article presenta una prova pilot que avalua la viabilitat tècnica d'un sistema d'intel·ligència artificial (Dret Planer) per adaptar els preceptes jurídics de la Constitució del Principat d'Andorra al llenguatge natural, amb l'objectiu de millorar l'accessibilitat jurídica. El sistema processa 107 articles constitucionals i el preàmbul (108 entrades en total), utilitzant arquitectura RAG (Retrieval-Augmented Generation) amb models d'embeddings i generació de text. El corpus s'ha expandit amb 254 fragments de doctrina jurídica i recomanacions d'aprenentatge automàtic, creant un corpus unificat de més de 360 entrades. La prova pilot utilitza un sistema de validació basat en 43 preguntes de control distribuïdes en quatre categories, incloent preguntes del "golden standard" acadèmic, i incorpora un sistema d'aprenentatge automàtic que millora contínuament la qualitat de les respostes. Els resultats confirmen que la intel·ligència artificial pot assistir en la comprensió del dret constitucional, sempre mantenint la necessitat de supervisió humana per a l'assessorament legal professional.
 
 **Paraules clau**: Accessibilitat jurídica, democratització del dret, intel·ligència artificial, Constitució d'Andorra, RAG, comprensió jurídica.
 
@@ -28,9 +28,9 @@ En el context andorrà, la Llei 6/2024 sobre llenguatge accessible en l'administ
 
 Aquest marc normatiu justifica la necessitat d'eines que facilitin la comprensió del text jurídic, sempre mantenint la precisió i fidelitat al text original.
 
-### 1.3. Objectiu: demostrar viabilitat tècnica de Prudència.ad
+### 1.3. Objectiu: demostrar viabilitat tècnica de Dret Planer
 
-L'objectiu d'aquest article és demostrar la viabilitat tècnica d'un sistema d'intel·ligència artificial (Prudència.ad) per adaptar els preceptes constitucionals andorrans al llenguatge natural. Es tracta d'una prova pilot que utilitza la Constitució d'Andorra com a cas d'estudi, processant els 107 articles constitucionals i el preàmbul (108 entrades en total), organitzats en 9 títols.
+L'objectiu d'aquest article és demostrar la viabilitat tècnica d'un sistema d'intel·ligència artificial (Dret Planer) per adaptar els preceptes constitucionals andorrans al llenguatge natural. Es tracta d'una prova pilot que utilitza la Constitució d'Andorra com a cas d'estudi, processant els 107 articles constitucionals i el preàmbul (108 entrades en total), organitzats en 9 títols.
 
 El sistema utilitza una arquitectura RAG (Retrieval-Augmented Generation) que combina la recuperació de continguts rellevants del corpus constitucional amb la generació d'explicacions accessibles. La prova pilot avalua la capacitat del sistema per mantenir la fidelitat al text original mentre millora la comprensió, utilitzant un sistema de validació basat en preguntes de control.
 
@@ -38,7 +38,7 @@ Els resultats de la prova pilot han de permetre determinar si el concepte és vi
 
 ### 1.4. Limitació fonamental: no substituir l'advocat, sinó ajudar a comprendre
 
-És essencial deixar clar des del principi que la intel·ligència artificial, en aquest context, actua com a eina d'assistència i comprensió, no de substitució del professional del dret. Prudència.ad no constitueix un sistema d'assessorament legal, sinó una eina que facilita la comprensió del text jurídic.
+És essencial deixar clar des del principi que la intel·ligència artificial, en aquest context, actua com a eina d'assistència i comprensió, no de substitució del professional del dret. Dret Planer no constitueix un sistema d'assessorament legal, sinó una eina que facilita la comprensió del text jurídic.
 
 La supervisió humana sempre és necessària per a l'assessorament legal professional, especialment en casos complexos o quan es prenen decisions jurídiques, econòmiques o patrimonials importants. El sistema inclou advertències explícites sobre aquesta limitació i recomana sempre consultar professionals titulats per a assessorament legal específic.
 
@@ -96,11 +96,11 @@ El Programa de Transformació Digital d'Andorra (PdTDA) preveu la creació d'una
 
 Encara que Andorra no és membre de la Unió Europea, el Reglament (UE) 2024/1689 sobre intel·ligència artificial (AI Act) serveix com a referència i marc orientatiu. L'AI Act estableix el primer marc regulatori integral per a la intel·ligència artificial a la UE, classificant els sistemes segons el seu nivell de risc (mínim, limitat, alt, inacceptable) i establint obligacions específiques per a cada categoria.
 
-Per a sistemes d'ús general (com Prudència.ad), l'AI Act estableix obligacions de transparència, incloent la divulgació que el contingut ha estat generat per IA, advertències adequades sobre les limitacions del sistema, i recomanació de supervisió humana.
+Per a sistemes d'ús general (com Dret Planer), l'AI Act estableix obligacions de transparència, incloent la divulgació que el contingut ha estat generat per IA, advertències adequades sobre les limitacions del sistema, i recomanació de supervisió humana.
 
-**Classificació de Prudència.ad: risc limitat**
+**Classificació de Dret Planer: risc limitat**
 
-Prudència.ad es classifica com a sistema de risc limitat perquè:
+Dret Planer es classifica com a sistema de risc limitat perquè:
 
 - És un sistema d'ús general que proporciona informació jurídica accessible
 - No pren decisions automàtiques que afectin drets fonamentals
@@ -137,9 +137,11 @@ El sistema utilitza una arquitectura RAG (Retrieval-Augmented Generation) que co
 
 El sistema utilitza dos tipus de models:
 
-**Embeddings**: Per a la recuperació semàntica de continguts rellevants del corpus, el sistema utilitza models d'embeddings que transformen el text en representacions vectorials. Aquestes representacions permeten la cerca semàntica, trobant articles constitucionals rellevants basant-se en el significat, no només en paraules clau.
+**Embeddings (Fase 1 - Prova pilot)**: Per a la recuperació semàntica de continguts rellevants del corpus, la prova pilot utilitza el model XLM-RoBERTa-base, un model multilingüe que funciona localment sense necessitat d'API externa. Aquest model transforma el text en representacions vectorials de 768 dimensions, permetent la cerca semàntica basada en el significat, no només en paraules clau.
 
-**Generació de text**: Per a la generació d'explicacions accessibles, el sistema utilitza models de llenguatge gran que transformen el text jurídic recuperat en explicacions en llenguatge natural, mantenint la fidelitat al contingut original.
+**Embeddings (Fase 2 - Millora prevista)**: Com a fase 2 del projecte, es preveu migrar al model `roberta-base-ca-v2` del Projecte AINA (projecte-aina/roberta-base-ca-v2), un model específicament entrenat per al català. Aquest model ha estat entrenat amb un corpus de 34.89 GB de text català, incloent documents governamentals, notícies, Wikipedia i altres fonts rellevants. L'ús d'un model específic per al català s'espera que millori significativament la qualitat de la recuperació semàntica per a text jurídic en català, ja que el model ha estat exposat a un vocabulari i estructures lingüístiques més properes al llenguatge jurídic català que els models multilingües genèrics.
+
+**Generació de text**: Per a la generació d'explicacions accessibles, el sistema utilitza models de llenguatge gran que transformen el text jurídic recuperat en explicacions en llenguatge natural, mantenint la fidelitat al contingut original. En la prova pilot, la generació amb **Salamandra-7b-instruct** s’ha executat en un entorn de computació accelerada (Google Colab) amb **GPU NVIDIA A100**, per garantir latència i capacitat de memòria adequades a un model de 7B. Aquest detall d’infraestructura forma part de l’“adequació tecnològica” del sistema: la garantia no depèn només del disseny RAG i del control de fonts, sinó també de disposar d’un entorn d’execució prou robust perquè el model funcioni de manera estable i reproduïble.
 
 La combinació d'aquests dos tipus de models permet al sistema recuperar els articles constitucionals rellevants per a cada qüestió plantejada i generar explicacions accessibles basades en aquests articles.
 
@@ -159,7 +161,7 @@ Aquesta decisió arquitectural implica limitacions d'escalabilitat: per a corpus
 
 **Stack tècnic**
 
-El sistema està implementat utilitzant Next.js com a framework web, desplegat a Vercel. Aquesta elecció tècnica ofereix avantatges en termes de rendiment, escalabilitat i facilitat de desplegament, mentre que permet una integració eficient amb les APIs necessàries per als models d'embeddings i generació de text.
+El sistema està implementat utilitzant Next.js com a framework web, desplegat a Vercel. Aquesta elecció tècnica ofereix avantatges en termes de rendiment, escalabilitat i facilitat de desplegament, mentre que permet una integració eficient amb les APIs necessàries per als models d'embeddings i generació de text. La interfície d'usuari, anomenada **Hermes** (en honor al déu grec de la comunicació i la interpretació), permet als usuaris interactuar amb el sistema mitjançant un sistema de xat que facilita la comprensió del text constitucional.
 
 ### 3.2. Corpus: Constitució d'Andorra
 
@@ -220,7 +222,7 @@ El sistema incorpora un mecanisme d'aprenentatge basat en l'avaluació de pregun
 **Procés d'aprenentatge**:
 1. **Execució de preguntes de control**: El sistema executa totes les preguntes de control (43 preguntes en la versió actual) i avalua les respostes generades.
 2. **Anàlisi de resultats**: S'identifiquen punts forts i febles, problemes específics per categoria i dificultat, i errors recurrents.
-3. **Generació de recomanacions**: El sistema genera recomanacions prioritzades per millorar els prompts del xat i la interpretació, basant-se en l'evidència dels resultats d'avaluació.
+3. **Generació de recomanacions**: El sistema genera recomanacions prioritzades per millorar els prompts d'Hermes (el sistema de xat) i la interpretació, basant-se en l'evidència dels resultats d'avaluació.
 4. **Incorporació al corpus**: Les recomanacions d'aprenentatge es converteixen en entrades de coneixement indexades, permetent que el sistema utilitzi aquest coneixement per millorar futures respostes.
 
 **Unificació del corpus**
@@ -400,6 +402,8 @@ Les limitacions identificades suggereixen diverses àrees de millora:
 
 **Sistema d'aprenentatge automàtic**: El sistema d'aprenentatge implementat permet millorar contínuament la qualitat de les respostes mitjançant l'anàlisi sistemàtica de resultats d'avaluació i la generació automàtica de recomanacions de millora. Aquest mecanisme s'ha incorporat al corpus, permetent que el sistema utilitzi les millores identificades per optimitzar futures respostes.
 
+**Millora de models d'embeddings (Fase 2)**: La prova pilot utilitza el model multilingüe XLM-RoBERTa-base, que, tot i ser funcional, no està optimitzat específicament per al català. Com a fase 2 del projecte, es preveu migrar al model `roberta-base-ca-v2` del Projecte AINA, específicament entrenat per al català amb un corpus de 34.89 GB que inclou documents governamentals i fonts rellevants per al context jurídic. Aquesta migració s'espera que millori significativament la qualitat de la recuperació semàntica per a text jurídic en català, especialment en la identificació de termes jurídics específics i la comprensió de matisos lingüístics propis del llenguatge jurídic català.
+
 ---
 
 ## 6. CONCLUSIONS
@@ -438,7 +442,9 @@ Les perspectives futures inclouen:
 
 **Investigació continua**: La investigació continua sobre les millores en models d'IA, arquitectures RAG, i metodologies de validació que poden millorar la qualitat i efectivitat del sistema.
 
-Aquesta prova pilot constitueix una primera fase d'un projecte més ampli que pretén contribuir a la democratització del coneixement jurídic a Andorra, sempre mantenint el principi fonamental que la intel·ligència artificial actua com a eina d'assistència a la comprensió, no de substitució del professional del dret.
+**Fase 2: Migració a model d'embeddings específic per al català**: Com a segona fase del projecte, es preveu migrar del model multilingüe XLM-RoBERTa-base al model `roberta-base-ca-v2` del Projecte AINA, específicament entrenat per al català. Aquesta migració s'espera que millori significativament la qualitat de la recuperació semàntica per a text jurídic en català, ja que el model ha estat entrenat amb un corpus extens de text català que inclou documents governamentals i fonts rellevants per al context jurídic. El model d'AINA, amb aproximadament 125M paràmetres i una mida de ~500MB (quantitzat), pot ser executat completament en local sense necessitat d'API externa, garantint privacitat i control total sobre el processament.
+
+Aquesta prova pilot constitueix la primera fase d'un projecte més ampli que pretén contribuir a la democratització del coneixement jurídic a Andorra, sempre mantenint el principi fonamental que la intel·ligència artificial actua com a eina d'assistència a la comprensió, no de substitució del professional del dret.
 
 ---
 
@@ -469,6 +475,7 @@ Aquesta prova pilot constitueix una primera fase d'un projecte més ampli que pr
 - Retrieval-Augmented Generation (RAG) en aplicacions jurídiques
 - Models de llenguatge gran (Large Language Models) aplicats al dret
 - Sistemes d'avaluació de qualitat en aplicacions d'IA jurídica
+- Projecte AINA: projecte-aina/roberta-base-ca-v2. Hugging Face. Disponible a: https://huggingface.co/projecte-aina/roberta-base-ca-v2
 
 ---
 
