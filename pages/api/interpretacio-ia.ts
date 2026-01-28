@@ -21,6 +21,9 @@ interface InterpretacioRequest {
   idioma: 'ca' | 'es' | 'fr';
 }
 
+// Configurar timeout màxim per Vercel (Pro: 300s, Hobby: 10s -> 60s amb config)
+export const maxDuration = 60;
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<InterpretacioIA | { error: string }>
@@ -196,7 +199,9 @@ IMPORTANT: NO repeteixis el text literal de l'article. Adapta el contingut utili
 
 La interpretació IA es mostra en tres seccions del sidebar:
 1. **RESUM**: Resum molt concret en COM A MÀXIM 3 frases curtes i clares (utilitzant llenguatge planer diferent al text legal).
-2. **EXEMPLES**: Exactament 2 o 3 exemples pràctics quotidians que il·lustrin l'aplicació de l'article. Cada exemple ha de començar amb el text "Exemple aplicat:" seguit de la situació concreta (1-2 frases per exemple).
+2. **EXEMPLES**: Exactament 2 o 3 exemples pràctics quotidians.
+   - ⚠️ REGLA D'OR: L'exemple ha de ser sobre un tema que l'article regula EXPLÍCITAMENT. Si l'article parla de detenció, no parlis d'impostos.
+   - Cada exemple ha de començar amb "Exemple aplicat:" seguit de la situació concreta derivada directament del text legal.
 3. **DOCTRINA**: Comentari jurídic breu (1-3 frases) basat en el text de l’article:
    - Sempre escriu un comentari jurídic basat en el text literal (abast, límits, obligacions/drets i conseqüències pràctiques).
    - Si el context inclou jurisprudència o doctrina rellevant, integra-la com a suport en 1 frase (sense inventar ni exagerar).
@@ -246,7 +251,9 @@ IMPORTANTE: NO repitas el texto literal del artículo. Adapta el contenido utili
 
 La interpretación IA se muestra en tres secciones del sidebar:
 1. **RESUMEN**: Resumen muy concreto de COMO MÁXIMO 3 frases cortas y claras (utilizando lenguaje llano diferente al texto legal).
-2. **EJEMPLOS**: Exactamente 2 o 3 ejemplos prácticos cotidianos que ilustren la aplicación del artículo. Cada ejemplo debe empezar con el texto "Ejemplo aplicado:" seguido de la situación concreta (1-2 frases por ejemplo).
+2. **EJEMPLOS**: Exactamente 2 o 3 ejemplos prácticos cotidianos.
+   - ⚠️ REGLA DE ORO: El ejemplo debe ser sobre un tema que el artículo regula EXPLÍCITAMENTE. Si el artículo habla de detención, no hables de impuestos.
+   - Cada ejemplo debe empezar con "Ejemplo aplicado:" seguido de la situación concreta derivada directamente del texto legal.
 3. **DOCTRINA**: Comentario jurídico breve (1-3 frases) basado en el texto del artículo:
    - Escribe siempre un comentario jurídico basado en el texto literal (alcance, límites, obligaciones/derechos y consecuencias prácticas).
    - Si el contexto incluye jurisprudencia o doctrina relevante, intégrala como apoyo en 1 frase (sin inventar ni exagerar).
@@ -293,7 +300,9 @@ IMPORTANT: NE répète PAS le texte littéral de l'article. Adapte le contenu en
 
 L'interprétation IA s'affiche dans trois sections de la barre latérale:
 1. **RÉSUMÉ**: Résumé très concret en AU MAXIMUM 3 phrases courtes et claires (en utilisant un langage simple différent du texte légal).
-2. **EXEMPLES**: Exactement 2 ou 3 exemples pratiques quotidiens qui illustrent l'application de l'article. Chaque exemple doit commencer par le texte "Exemple appliqué:" suivi de la situation concrète (1-2 phrases par exemple).
+2. **EXEMPLES**: Exactement 2 ou 3 exemples pratiques quotidiens.
+   - ⚠️ RÈGLE D'OR: L'exemple doit porter sur un sujet que l'article régit EXPLICITEMENT. Si l'article parle de détention, ne parle pas d'impôts.
+   - Chaque exemple doit commencer par "Exemple appliqué:" suivi de la situation concrète directement dérivée du texte légal.
 3. **DOCTRINE**: Commentaire juridique bref (1-3 phrases) basé sur le texte de l'article:
    - Écris toujours un commentaire juridique basé sur le texte littéral (portée, limites, obligations/droits et conséquences pratiques).
    - Si le contexte contient une jurisprudence ou une doctrine pertinente, intègre-la comme appui en 1 phrase (sans inventer ni exagérer).
@@ -521,7 +530,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
     try {
       answer = await generateText(messages, {
         maxTokens: 600,
-        temperature: 0.25,
+        temperature: 0.1, // Molt baixa per evitar al·lucinacions als exemples
         dateString
       });
     } catch (error: any) {
