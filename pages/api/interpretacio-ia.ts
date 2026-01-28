@@ -138,7 +138,7 @@ export default async function handler(
       };
 
       const timeoutPromise = new Promise<any[]>((_, reject) =>
-        setTimeout(() => reject(new Error('RAG Timeout (limite excedit)')), 5000)
+        setTimeout(() => reject(new Error('RAG Timeout (limite excedit)')), 8000)
       );
 
       // Cursa entre el RAG i el Timeout
