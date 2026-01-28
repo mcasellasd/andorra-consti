@@ -137,9 +137,8 @@ export default async function handler(
         return retrieveTopMatches(embedding, 5); // Top 5 resultats
       };
 
-      // Timeout de 2 segons (reduït per accelerar)
       const timeoutPromise = new Promise<any[]>((_, reject) =>
-        setTimeout(() => reject(new Error('RAG Timeout (limite excedit)')), 2000)
+        setTimeout(() => reject(new Error('RAG Timeout (limite excedit)')), 5000)
       );
 
       // Cursa entre el RAG i el Timeout
@@ -474,22 +473,22 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 
       return { resum, exemples, doctrina: doctrinePara };
     };
-    
+
     // Funció helper per parsejar JSON amb múltiples estratègies
     const parseJSONResponse = (text: string): Record<string, unknown> | null => {
       if (!text || !text.trim()) return null;
-      
+
       // 1. Intentar extreure JSON si està envoltat de markdown
       const jsonMatch = text.match(/```json\n([\s\S]*?)\n```/) || text.match(/```\n([\s\S]*?)\n```/);
       const jsonString = jsonMatch ? jsonMatch[1].trim() : text.trim();
-      
+
       try {
         return JSON.parse(jsonString) as Record<string, unknown>;
       } catch {
         // 2. Intentar extreure objecte JSON brut (primer { ... darrer })
         const firstBrace = jsonString.indexOf('{');
         const lastBrace = jsonString.lastIndexOf('}');
-        
+
         if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
           try {
             return JSON.parse(jsonString.substring(firstBrace, lastBrace + 1)) as Record<string, unknown>;
@@ -590,13 +589,13 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
     // Intento 2: Si no s'ha obtingut JSON vàlid, retry amb prompt més estricte
     if (!parsedContent || typeof parsedContent !== 'object') {
       console.warn('⚠️ Primer intent: Salamandra ha retornat text pla. Intentant retry amb prompt més estricte...');
-      
+
       const retryPrompt = idioma === 'ca'
         ? `${prompt}\n\n⚠️ ATENCIÓ: La teva resposta anterior NO era JSON vàlid. Respon ÚNICAMENT amb el JSON demanat. El primer caràcter ha de ser { i l'últim }. Cap text abans ni després. ⚠️`
         : idioma === 'es'
           ? `${prompt}\n\n⚠️ ATENCIÓN: Tu respuesta anterior NO era JSON válido. Responde ÚNICAMENTE con el JSON solicitado. El primer carácter debe ser { y el último }. Nada antes ni después. ⚠️`
           : `${prompt}\n\n⚠️ ATTENTION: Ta réponse précédente N'ÉTAIT PAS un JSON valide. Réponds UNIQUEMENT avec le JSON demandé. Le premier caractère doit être { et le dernier }. Rien avant ni après. ⚠️`;
-      
+
       const retryMessages = [
         { role: 'system', content: systemMessage },
         { role: 'user', content: retryPrompt },
@@ -695,7 +694,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
       const rawResum = answer.length > 6000 ? answer.slice(0, 5997) + '...' : answer;
 
       const extracted = extractFromPlainText(rawResum, idioma);
-      
+
       const interpretacio: InterpretacioIA = {
         article_id,
         resum: {
@@ -730,7 +729,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
       idioma
     );
     const conceptesArr = Array.isArray(parsedContent.conceptes_clau) ? (parsedContent.conceptes_clau as string[]) : [];
-    
+
     const interpretacio: InterpretacioIA = {
       article_id,
       resum: {

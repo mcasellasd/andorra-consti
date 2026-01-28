@@ -30,22 +30,9 @@ try {
 
 // Carregar doctrina (només si no tenim el corpus unificat, per evitar duplicats i permetre fallback)
 // Nota: El corpus unificat JA inclou la doctrina processada.
-// Aquest bloc legacy només carrega '20-anys.json' si estem en mode fallback.
+// Hem eliminat la càrrega legacy de '20-anys.json' per evitar errors de build si no existeix.
 let doctrinaKnowledge: any = [];
 let doctrinaEmbeddings: any = [];
-
-if (!unifiedLoaded) {
-  try {
-    // @ts-ignore
-    doctrinaKnowledge = require('../../data/rag/doctrina/20-anys.json');
-    // @ts-ignore
-    doctrinaEmbeddings = require('../../data/rag/doctrina/20-anys-embeddings.json');
-  } catch (e) {
-    console.error("Error carregant doctrina legacy:", e);
-    doctrinaKnowledge = [];
-    doctrinaEmbeddings = [];
-  }
-}
 
 interface NormalizedEmbedding extends EmbeddingEntry {
   norm: number;
