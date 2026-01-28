@@ -121,25 +121,49 @@ export default async function handler(
 
     // ============================================================================
     // RAG FLOW: Recuperació de context amb XLM-RoBERTa
-    // DESACTIVAT PER VERCEL: Estalvi de memòria i temps (evitar OOM/Timeout)
-    // El corpus està buit a producció de totes maneres.
     // ============================================================================
 
     let ragContext = '';
 
-    /* DESACTIVAT TEMPORALMENT
     // Executem RAG amb un timeout segur per evitar que la API falli (500) o trigui massa
     try {
       const runRag = async () => {
-        // ... (codi original)
-        return [];
+        // 1. Imports dinàmics dins del try per evitar errors de càrrega
+        const { generateEmbedding } = await import('../../lib/embeddings/index');
+        const { retrieveTopMatches } = await import('../../lib/rag/corpus');
+
+        console.log(`🧠 Generant embedding RAG per a article ${article_id} amb XLM-RoBERTa...`);
+        const embedding = await generateEmbedding(`${article?.titol || ''} ${text_oficial}`, 'xlm-roberta');
+
+        // 2. Recuperar context rellevant
+        return retrieveTopMatches(embedding, 5); // Top 5 resultats
       };
-      
-      // ... lògica RAG original ...
+
+      const timeoutPromise = new Promise<any[]>((_, reject) =>
+        setTimeout(() => reject(new Error('RAG Timeout (limite excedit)')), 15000) // 15s a local està bé
+      );
+
+      // Cursa entre el RAG i el Timeout
+      const matches = await Promise.race([runRag(), timeoutPromise]);
+
+      if (matches && matches.length > 0) {
+        ragContext = `\n\nCONTEXT ADDICIONAL RECUPERAT (RAG - XLM-RoBERTa):\nUtilitza aquest context per enriquir l'explicació, però prioritza el text oficial de l'article.\n`;
+
+        matches.forEach((m: any) => {
+          // Evitem duplicar l'article actual si surt als resultats
+          if (m.entry.id !== article_id) {
+            ragContext += `- [${m.entry.category}] ${m.entry.topic}: ${m.entry.content.substring(0, 300)}...\n`;
+            if (m.entry.implications) {
+              ragContext += `  Implicacions: ${m.entry.implications.substring(0, 200)}...\n`;
+            }
+          }
+        });
+        console.log(`✅ RAG: ${matches.length} contextos recuperats`);
+      }
     } catch (ragError) {
       console.error('⚠️ RAG Omesa (Error o Timeout):', ragError instanceof Error ? ragError.message : ragError);
+      // Continuem sense context RAG si falla el timeout o el model
     }
-    */
 
     // ============================================================================
 
@@ -346,12 +370,12 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 }
 `;
 
-    // SYSTEM PROMPT MINIMIZAT PER RAPIDESA (Evitar Timeout 60s)
+    // SYSTEM PROMPT COMPLET (Qualitat màxima a costa de temps)
     const systemMessage = idioma === 'ca'
-      ? `Ets un assistent jurídic expert en dret andorrà. Respon SEMPRE en format JSON vàlid.\n\n${CONST_NOMES}\n\n⚠️ REGLA CRÍTICA — FORMAT JSON OBLIGATORI ⚠️\n- Respon EXACTAMENT amb aquest JSON i RES MÉS:\n{\n  "resum": "Resum breu (màx 3 frases)",\n  "exemples": [{"cas": "Exemple aplicat: ...", "idioma": "ca"}],\n  "doctrina_jurisprudencia": "Comentari jurídic breu"\n}`
+      ? `Ets un assistent expert en dret andorrà. Respon SIEMPRE en format JSON vàlid.\n\n${CONST_NOMES}\n\n⚠️ REGLA CRÍTICA — FORMAT JSON OBLIGATORI ⚠️\n- La teva resposta HA DE SER ÚNICAMENT un objecte JSON vàlid. CAP text abans ni després.\n- El primer caràcter HA DE SER { i l'últim HA DE SER }. Sense introduccions, conclusions, enllaços, preguntes, explicacions ni "Espero haver ajudat".\n- NO escriguis res fora del JSON. NO afegeixis comentaris ni explicacions.\n- Mantén cada camp concís: resum MÀXIM 3 frases; cada exemple ha de començar amb "Exemple aplicat:" i tenir 1–2 frases; doctrina_jurisprudencia 1–3 frases.\n- EXEMPLE DE FORMAT CORRECTE (copia aquesta estructura exacta):\n{\n  "resum": "...",\n  "exemples": [{"cas": "Exemple aplicat: ...", "idioma": "ca"}],\n  "doctrina_jurisprudencia": "..."\n}\n\n${GUIA_CATALA_JURIDIC}\n${ASPECTES_JURISPRUDENCIA_ANDORRANA}`
       : idioma === 'es'
-        ? `Eres un asistente experto en derecho andorrano. Responde SIEMPRE en formato JSON válido.\n\n${CONST_NOMES_ES}\n\n⚠️ REGLA CRÍTICA — FORMATO JSON OBLIGATORIO ⚠️\n- Responde EXACTAMENTE con este JSON y NADA MÁS:\n{\n  "resum": "Resumen breve",\n  "exemples": [{"cas": "Ejemplo aplicado: ...", "idioma": "es"}],\n  "doctrina_jurisprudencia": "Comentario jurídico breve"\n}`
-        : `Tu es un assistant expert en droit andorran. Réponds TOUJOURS en format JSON valide.\n\n${CONST_NOMES_FR}\n\n⚠️ RÈGLE CRITIQUE — FORMAT JSON OBLIGATOIRE ⚠️\n- Réponds EXACTEMENT avec ce JSON et RIEN D'AUTRE:\n{\n  "resum": "Résumé bref",\n  "exemples": [{"cas": "Exemple appliqué: ...", "idioma": "fr"}],\n  "doctrina_jurisprudencia": "Commentaire juridique bref"\n}`;
+        ? `Eres un asistente experto en derecho andorrano. Responde SIEMPRE en formato JSON válido.\n\n${CONST_NOMES_ES}\n\n⚠️ REGLA CRÍTICA — FORMATO JSON OBLIGATORIO ⚠️\n- Tu respuesta DEBE SER ÚNICAMENTE un objeto JSON válido.\n- El primer carácter DEBE SER { y el último DEBE SER }.\n- NADA antes ni después del JSON. Sin introducciones, conclusiones, enlaces ni preguntas.\n\n${REGLA_JSON_ES}`
+        : `Tu es un assistant expert en droit andorran. Réponds TOUJOURS en format JSON valide.\n\n${CONST_NOMES_FR}\n\n⚠️ RÈGLE CRITIQUE — FORMAT JSON OBLIGATOIRE ⚠️\n- Ta réponse DOIT ÊTRE UNIQUEMENT un objet JSON valide.\n- Le premier caractère DOIT ÊTRE { et le dernier DOIT ÊTRE }.\n- RIEN avant ni après le JSON. Pas d'introduction, conclusion, liens ni questions.\n\n${REGLA_JSON_FR}`;
 
     const messages = [
       { role: 'system', content: systemMessage },
