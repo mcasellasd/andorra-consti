@@ -117,46 +117,54 @@ const ComEstaFetPage: React.FC = () => {
             <section className="legal-section">
               <h2>4. Models d&apos;intel·ligència artificial utilitzats</h2>
               <p>
-                El sistema utilitza diferents models d&apos;IA, cadascun optimitzat per a la seva funció específica:
+                El sistema utilitza una combinació avançada de models d&apos;IA de l&apos;ecosistema OpenAI,
+                cadascun seleccionat per a la seva funció específica:
               </p>
 
               <h3>4.1. Models d&apos;embeddings</h3>
               <p>
                 <strong>text-embedding-3-large</strong> (OpenAI): Transforma el text en representacions vectorials
-                que permeten la cerca semàntica. Aquest model és especialitzat en entendre el significat del text,
-                no només les paraules.
+                de 3072 dimensions per a la cerca semàntica d&apos;alta precisió.
+              </p>
+              <p style={{ marginTop: '0.5rem' }}>
+                <strong>XLM-RoBERTa</strong>: Model multilingüe que s&apos;executa localment per a tasques específiques
+                de recuperació de context i anàlisi de similitud, actuant com a complement per garantir robustesa.
               </p>
 
               <h3>4.2. Models de generació de text</h3>
               <p>
-                <strong>GPT-4o-mini</strong> (OpenAI): Genera les explicacions accessibles a partir de la informació
-                recuperada. Aquest model s&apos;ha entrenat específicament per generar text comprensible i fidel a les fonts.
+                <strong>GPT-4o-mini</strong> (OpenAI): Genera les explicacions accessibles, resums i respostes del xat.
+                És un model optimitzat per a la rapidesa i la capacitat de raonament jurídic.
               </p>
 
               <p style={{ marginTop: '1.5rem' }}>
-                Tots els models utilitzats compleixen amb les normatives de privacitat i transparència de la
-                Unió Europea (AI Act), i el sistema indica clarament quan les respostes són generades per IA.
+                Aquesta arquitectura híbrida permet combinar la potència dels grans models al núvol amb
+                l&apos;agilitat i privacitat dels models locals, complint sempre amb l&apos;AI Act.
               </p>
             </section>
 
             <section className="legal-section">
               <h2>5. Tecnologies i infraestructura</h2>
               <p>
-                El sistema està construït utilitzant tecnologies modernes i estàndards de la indústria:
+                El projecte s&apos;ha desenvolupat utilitzant un stack tecnològic modern que prioritza
+                el rendiment, l&apos;accessibilitat i l&apos;escalabilitat:
               </p>
 
               <ul>
                 <li>
-                  <strong>Next.js</strong>: Framework web que permet crear pàgines ràpides i interactives
+                  <strong>Next.js</strong>: Framework React que permet el renderitzat híbrid i una experiència d&apos;usuari fluida.
                 </li>
                 <li>
-                  <strong>TypeScript</strong>: Llenguatge de programació que garanteix més fiabilitat i qualitat del codi
+                  <strong>Tailwind CSS</strong>: Framework d&apos;estils que permet un disseny net, responsive i altament personalitzable.
                 </li>
                 <li>
-                  <strong>OpenAI API</strong>: Servei que proporciona accés als models d&apos;IA utilitzats
+                  <strong>TypeScript</strong>: Aporta tipatge estàtic al codi, reduint errors i millorant la mantenibilitat del sistema.
                 </li>
                 <li>
-                  <strong>Vercel</strong>: Plataforma de desplegament que garanteix disponibilitat i rendiment
+                  <strong>Vercel</strong>: Infraestructura al núvol que assegura un desplegament global d&apos;alta disponibilitat.
+                </li>
+                <li>
+                  <strong>OpenAI API</strong>: Motor d&apos;intel·ligència artificial per al processament del llenguatge natural.
                 </li>
               </ul>
             </section>
@@ -164,51 +172,51 @@ const ComEstaFetPage: React.FC = () => {
             <section className="legal-section">
               <h2>6. Corpus i dades</h2>
               <p>
-                El sistema treballa amb un corpus estructurat de documents legals que inclou:
+                La base de coneixement del sistema (Corpus) està formada per documents oficials i acadèmics
+                processats i vectoritzats:
               </p>
 
               <ul>
                 <li>
-                  <strong>Constitució d&apos;Andorra</strong>: 107 articles i el preàmbul, estructurats per títols i capítols
+                  <strong>Constitució d&apos;Andorra</strong>: El text fonamental sencer, estructurat per títols, capítols i articles.
                 </li>
                 <li>
-                  <strong>Codi Civil d&apos;Andorra</strong>: Articles organitzats per llibres, títols i capítols
+                  <strong>Doctrina de Dret Processal Civil</strong>: Manuals i textos de referència sobre el procediment civil andorrà,
+                  incloent l&apos;obra coordinada per la Universitat d&apos;Andorra.
                 </li>
                 <li>
-                  <strong>Doctrina jurídica</strong>: Fragments de publicacions acadèmiques relacionades amb els articles
+                  <strong>Articles Doctrinals</strong>: Selecció d&apos;articles acadèmics (p.ex. sobre sobirania, drets fonamentals)
+                  que enriqueixen la interpretació de la norma.
                 </li>
                 <li>
-                  <strong>Jurisprudència</strong>: Sentències dels tribunals que interpreten els articles legals
+                  <strong>Jurisprudència (Experimental)</strong>: Integració progressiva de sentències rellevants del Tribunal Constitucional
+                  i del Tribunal Superior de Justícia.
                 </li>
               </ul>
 
               <p style={{ marginTop: '1.5rem' }}>
-                Tots aquests documents s&apos;han processat i estructurat per permetre una cerca precisa i la generació
-                d&apos;explicacions contextualitzades.
+                Mitjançant vectors semàntics, el sistema pot relacionar una pregunta de l&apos;usuari amb
+                fragments específics d&apos;aquests documents, encara que no comparteixin les mateixes paraules clau.
               </p>
             </section>
 
             <section className="legal-section">
               <h2>7. Transparència i limitacions</h2>
               <p>
-                És important entendre que aquest sistema:
+                És fonamental utilitzar aquesta eina amb responsabilitat:
               </p>
 
               <ul>
                 <li>
-                  <strong>No substitueix</strong> l&apos;assessorament professional d&apos;un advocat o notari
+                  <strong>Eina de suport</strong>: Aquest sistema està dissenyat per facilitar la recerca i la comprensió,
+                  però <strong>no substitueix</strong> el criteri d&apos;un professional del dret.
                 </li>
                 <li>
-                  <strong>No pren decisions</strong> per l&apos;usuari, només proporciona informació i explicacions
+                  <strong>Possibles al·lucinacions</strong>: Tot i els controls, els models de llenguatge poden ocasionalment
+                  generar informació inexacta. Sempre cal verificar les fonts originals (enllaçades a cada resposta).
                 </li>
                 <li>
-                  <strong>Indica clarament</strong> quan les respostes són generades per IA
-                </li>
-                <li>
-                  <strong>Recomana sempre</strong> consultar professionals per a casos específics o decisions importants
-                </li>
-                <li>
-                  <strong>Poden existir errors</strong> o simplificacions, per la qual cosa la informació és orientativa
+                  <strong>Informació no vinculant</strong>: Les interpretacions generades no tenen validesa jurídica oficial.
                 </li>
               </ul>
             </section>
@@ -216,43 +224,37 @@ const ComEstaFetPage: React.FC = () => {
             <section className="legal-section">
               <h2>8. Millora contínua</h2>
               <p>
-                El sistema incorpora mecanismes de millora contínua:
+                Aquest projecte està viu i en constant evolució. Incorporem periòdicament:
               </p>
 
               <ul>
-                <li>
-                  <strong>Sistema de validació</strong>: Preguntes de control que avaluen la qualitat de les respostes
-                </li>
-                <li>
-                  <strong>Aprendre dels errors</strong>: El sistema identifica problemes i genera recomanacions de millora
-                </li>
-                <li>
-                  <strong>Expansió del corpus</strong>: S&apos;afegeixen nous documents i fonts de manera sistemàtica
-                </li>
-                <li>
-                  <strong>Actualització de models</strong>: Es manté la tecnologia actualitzada amb les últimes millores
-                </li>
+                <li>Nous documents i sentències al corpus.</li>
+                <li>Millores en els algoritmes de cerca (RAG) per augmentar la precisió.</li>
+                <li>Optimitzacions de la interfície basades en el feedback dels usuaris.</li>
               </ul>
             </section>
 
             <section className="legal-section" style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid #e5e7eb' }}>
-              <h2>Més informació</h2>
+              <h2>Referència acadèmica</h2>
               <p>
-                Per a més detalls tècnics, pots consultar el{' '}
+                Aquest projecte forma part d&apos;una investigació doctoral a la Universitat d&apos;Andorra.
+                Per conèixer els detalls metodològics i científics, podeu consultar la secció{' '}
                 <a
-                  href="/paper"
-                  style={{ color: '#2563eb', textDecoration: 'underline' }}
+                  href="/com-esta-fet" // Self-link or keep text without link if specific paper page is hidden/removed
+                  style={{ color: '#2563eb', textDecoration: 'underline', cursor: 'default' }}
                 >
-                  document acadèmic del projecte
-                </a>
-                {' '}o el{' '}
+                  metodològica
+                </a>{' '}
+                o contactar amb l&apos;equip de recerca.
+              </p>
+              <p style={{ marginTop: '1rem', fontSize: '0.9em', color: '#6b7280' }}>
+                També pots consultar l&apos;{' '}
                 <a
                   href="/disclaimer"
                   style={{ color: '#2563eb', textDecoration: 'underline' }}
                 >
                   avís legal i política de privacitat
-                </a>
-                .
+                </a>.
               </p>
             </section>
           </article>

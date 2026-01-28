@@ -6,6 +6,7 @@ import { ASPECTES_JURISPRUDENCIA_ANDORRANA } from '../../lib/prompts/aspectes-ju
 import { checkAIActCompliance, getAIActCompliancePrompt } from '../../lib/rag/quality-assessment';
 import { generateEmbedding, getEmbeddingProvider } from '../../lib/embeddings';
 import { detectComplexity, detectArticleReference, detectArticleByKeywords } from '../../lib/rag/detect-complexity';
+import { generateText } from '../../lib/llm';
 
 interface UnifiedChatRequest {
   message: string;
@@ -37,7 +38,7 @@ interface UnifiedChatResponse {
 }
 
 const EMBEDDING_MODEL = process.env.OPENAI_EMBEDDINGS_MODEL || 'text-embedding-3-large';
-const CHAT_MODEL = process.env.OPENAI_CHAT_MODEL || 'gpt-4o-mini';
+// Utilitzem Salamandra via lib/llm, no OpenAI
 
 /**
  * Valida si una pregunta és sobre la Constitució d'Andorra o temes relacionats
@@ -163,36 +164,17 @@ function validateResponseIsAboutConstitution(response: string): boolean {
   return true;
 }
 
+// Funció helper per generar text amb Salamandra (substituint OpenAI)
 async function generateChatCompletion(
-  apiKey: string,
+  apiKey: string | undefined,
   messages: Array<{ role: string; content: string }>,
   options: { model: string; maxTokens: number; temperature: number }
 ): Promise<string> {
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`
-    },
-    body: JSON.stringify({
-      model: options.model,
-      messages,
-      max_tokens: options.maxTokens,
-      temperature: options.temperature
-    })
+  // Utilitzar Salamandra via lib/llm (ignorem apiKey i model, utilitzem Salamandra)
+  return generateText(messages, {
+    maxTokens: options.maxTokens,
+    temperature: options.temperature,
   });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Error generant la resposta (${response.status}): ${errorText}`);
-  }
-
-  const data = await response.json();
-  const answer = data?.choices?.[0]?.message?.content;
-  if (!answer) {
-    throw new Error('Resposta de l\'API sense contingut.');
-  }
-  return answer.trim();
 }
 
 function buildContextBlock(matches: RetrievedContext[]): string {
@@ -477,17 +459,11 @@ ${ASPECTES_JURISPRUDENCIA_ANDORRANA}`;
 
     messages.push({ role: 'user', content: message });
 
-    // Generar resposta (encara necessitem OpenAI per al chat)
-    if (!openaiApiKey) {
-      return res.status(500).json({
-        error: 'OPENAI_API_KEY és necessària per generar respostes del chatbot. XLM-RoBERTa només s\'utilitza per a embeddings.'
-      });
-    }
-
-    const answer = await generateChatCompletion(openaiApiKey, messages, {
-      model: CHAT_MODEL,
-      maxTokens,
-      temperature
+    // Generar resposta amb Salamandra (no necessitem OpenAI)
+    const answer = await generateChatCompletion(undefined, messages, {
+      model: 'salamandra', // Ignorat, utilitzem Salamandra
+      maxTokens: Math.min(Math.max(maxTokens || 400, 150), 400), // Clamp entre 150-400
+      temperature: Math.min(Math.max(temperature || 0.3, 0), 0.3) // Clamp entre 0-0.3
     });
 
     // Validar que la resposta parla de la Constitució o política constitucional

@@ -39,7 +39,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <Link href="/">{t(idioma, 'nav.inici')}</Link>
             <Link href="/codis/constitucio">{t(idioma, 'nav.constitucio')}</Link>
             <Link href="/preguntes-control">{t(idioma, 'nav.preguntesControl')}</Link>
-            <Link href="/paper">{t(idioma, 'nav.paper')}</Link>
+            {/* <Link href="/paper">{t(idioma, 'nav.paper')}</Link> */}
             <Link href="/com-esta-fet">{t(idioma, 'nav.comEstaFet')}</Link>
             <Link href="/about">{t(idioma, 'nav.about')}</Link>
             <div className="lang-selector">

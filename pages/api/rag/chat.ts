@@ -4,6 +4,7 @@ import { retrieveTopMatches } from '@/lib/rag/corpus';
 import { RetrievedContext } from '@/lib/rag/types';
 import { GUIA_CATALA_JURIDIC } from '@/lib/prompts/guia-catala-juridic';
 import { generateEmbedding, getEmbeddingProvider } from '@/lib/embeddings';
+import { generateText } from '@/lib/llm';
 
 interface ChatRequestBody {
   message?: string;
@@ -26,7 +27,7 @@ interface ChatResponseBody {
   error?: string;
 }
 
-const CHAT_MODEL = process.env.OPENAI_CHAT_MODEL || 'gpt-4o-mini';
+// Utilitzem Salamandra via lib/llm, no OpenAI
 
 export default async function handler(
   req: NextApiRequest,
@@ -58,35 +59,16 @@ export default async function handler(
     });
   }
 
-  const openaiApiKey = process.env.OPENAI_API_KEY;
   const provider = getEmbeddingProvider();
-  
-  // Si utilitzem OpenAI però no hi ha clau API, donar error
-  if (provider === 'openai' && !openaiApiKey) {
-    console.error('OPENAI_API_KEY no està configurada');
-    return res.status(500).json({
-      error:
-        "OpenAI API key no configurada. Defineix OPENAI_API_KEY a les variables d'entorn, o configura EMBEDDING_PROVIDER=xlm-roberta per utilitzar el model local."
-    });
-  }
-
-  // Per al chat, encara necessitem OpenAI per generar respostes
-  if (!openaiApiKey) {
-    return res.status(500).json({
-      error:
-        "OPENAI_API_KEY és necessària per generar respostes del chatbot. XLM-RoBERTa només s'utilitza per a embeddings."
-    });
-  }
 
   try {
-    const queryEmbedding = await generateEmbedding(message, provider, openaiApiKey);
+    const queryEmbedding = await generateEmbedding(message, provider);
     const matches = retrieveTopMatches(queryEmbedding, 3);
 
     const contextBlock = buildContextBlock(matches);
     const chatMessages = buildChatMessages(message, history, contextBlock);
 
-    const answer = await generateChatCompletion(openaiApiKey, chatMessages, {
-      model: CHAT_MODEL,
+    const answer = await generateChatCompletion(chatMessages, {
       maxTokens,
       temperature
     });
@@ -204,38 +186,16 @@ ${GUIA_CATALA_JURIDIC}`;
   return messages;
 }
 
+// Funció helper per generar text amb Salamandra (substituint OpenAI)
 async function generateChatCompletion(
-  apiKey: string,
   messages: Array<{ role: string; content: string }>,
-  options: { model: string; maxTokens: number; temperature: number }
+  options: { maxTokens: number; temperature: number }
 ): Promise<string> {
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`
-    },
-    body: JSON.stringify({
-      model: options.model,
-      messages,
-      max_tokens: options.maxTokens,
-      temperature: options.temperature
-    })
+  // Utilitzar Salamandra via lib/llm
+  return generateText(messages, {
+    maxTokens: options.maxTokens,
+    temperature: options.temperature,
   });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(
-      `Error generant la resposta (${response.status}): ${errorText}`
-    );
-  }
-
-  const data = await response.json();
-  const answer = data?.choices?.[0]?.message?.content;
-  if (!answer) {
-    throw new Error("Resposta de l'API sense contingut.");
-  }
-  return answer.trim();
 }
 
 const articleIndex = buildArticleIndex();

@@ -1,3 +1,6 @@
+# generated data
+data/rag/**
+!data/rag/.keep
 # dependencies
 node_modules
 .pnp
@@ -24,10 +27,18 @@ yarn-debug.log*
 ts-debug.log*
 
 # local env files
+.env
 .env*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
+
+# generated data
+data/rag/*.json

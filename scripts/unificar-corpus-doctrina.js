@@ -118,8 +118,10 @@ function main() {
 }
 
 if (typeof require !== 'undefined' && require.main === module) {
-  main().catch(error => {
+  try {
+    main();
+  } catch (error) {
     console.error('❌ Error inesperat:', error);
     process.exit(1);
-  });
+  }
 }

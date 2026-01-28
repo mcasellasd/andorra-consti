@@ -1,0 +1,1955 @@
+MEMÒRIA 2023
+
+Edita 
+Tribunal Constitucional del Principat d’Andorra
+Imprimeix 
+Impremta Envalira
+Dipòsit legal 
+AND.602-1997
+
+3
+PRESENTACIÓ
+La lectura de la memòria del Tribunal Constitucional de l’any 2023 permet 
+una anàlisi detallada de l’activitat jurisdiccional del Tribunal, així com de 
+la  seva  activitat  institucional,  tant  des  d’un  punt  de  vista  nacional,  com  
+internacional.
+Aquesta memòria anual també permet observar les evolucions d’aquestes 
+activitats,  de  posar-ne  en  relleu  alguns  elements  essencials  i  de  formular  
+observacions que mereixen reflexions per al futur.
+Pel  que  fa  a  l’any  2023,  en  primer  lloc,  cal  destacar  que  s’han  presentat  
+exclusivament recursos d’empara, concretament 88, xifra que se situa en la 
+mitjana dels cinc darrers anys, la qual arriba als 90.
+L’activitat del Tribunal es consolida, doncs, en un nivell estable en relació 
+amb el seu passat recent.
+No obstant això, és interessant notar una evolució a l’alça d’aquesta acti-
+vitat en un període de temps més llarg. Efectivament, la mitjana anyal de 
+l’activitat per períodes de cinc anys progressa de la manera següent:
+Del 2009 al 2013: 40
+Del 2014 al 2018: 60
+Del 2019 al 2023: 90
+Aquesta evolució que afecta quasi exclusivament al recurs d’empara, con-
+firma l’efectivitat d’aquesta via de recurs, garantia del respecte dels drets 
+constitucionals de tota persona.
+En segon lloc, observem que sobre 82 recursos presentats i examinats pel 
+Tribunal l’any 2023 (als quals s’afegeixen 11 recursos enregistrats al final 
+de l’any 2022 i examinats a principis del 2023), 49 van ser declarats inad-
+missibles a tràmit i 33 admissibles a tràmit, dels quals en 16 l’empara va 
+ser estimada.
+Aquesta  repartició  se  situa  en  uns  nivells  totalment  comparables  als  dels  
+anys anteriors.
+
+4
+En tercer lloc, cal constatar que respecte de les 49 inadmissions a tràmit, 21 
+van ser objecte de recurs de súplica.
+Aquesta constatació, així com el fet que la jurisprudència del Tribunal en 
+la matèria està ben consolidada, pot dur a una reflexió sobre la pertinència 
+d’una precisió legislativa sobre aquest procediment que no és en puritat un 
+recurs, sinó la possibilitat d’un reexamen sobre la base d’elements de fet o 
+de dret nous respecte de la presentació del recurs d’empara inicial.
+Per acabar, és interessant recalcar que dels 13 recursos d’empara presentats 
+per la vulneració del dret a un procés de durada raonable durant l’any 2023, 
+als quals cal afegir els 2 presentats a finals del 2022 i tractats l’any 2023, es 
+va acordar l’empara en 12 ocasions.
+Si bé es van enregistrar 23 recursos d’empara per aquest motiu l’any 2021, 
+15 l’any 2022 i que la disminució sembla que continua amb 13 l’any 2023.
+Aquesta progressió mereix ser complimentada com al resultat d’una millora 
+en el funcionament de l’Administració de la Justícia.
+Tanmateix,  el  nombre  important  que  representen  les  empares  acordades  
+per raó de les dilacions indegudes (12) en relació amb el nombre total de 
+les empares estimades durant aquest any (16) ens porta a suggerir algunes 
+reflexions que podrien dur sobre diferents punts relatius a aquest tipus de 
+recurs i a les seves conseqüències.
+Efectivament, la vulneració del dret a un judici de durada irraonable és una 
+vulneració  continuada,  la  qual,  una  vegada  constatada,  mitjançant  la  sen-
+tència del Tribunal, només s’interromp per la intervenció d’una decisió de 
+la jurisdicció ordinària.
+Així doncs, quina pot ser la durada acceptable entre la decisió del Tribunal 
+Constitucional i la decisió de la justícia ordinària que posi fi a la vulneració 
+del dret constitucional?
+Aquesta pregunta també equival a demanar-se quin serà el nou termini en 
+què un nou recurs d’empara pel mateix motiu i pel mateix recurrent podria 
+tornar a ser declarat admissible a tràmit.
+També  volem  posar  en  relleu  que,  actualment,  el  Tribunal  Constitucional  
+no  està  formalment  informat  de  la  decisió  adoptada  per  l’òrgan  judicial  
+
+5
+després de l’atorgament de l’empara i que ha de fer cessar la vulneració dels 
+drets constitucionals del recurrent.
+Finalment,  si  bé  és  cert  que  la  jurisprudència  del  Tribunal  Constitucional  
+està ben establerta respecte d’aquesta matèria, no és menys cert que la di-
+mensió subjectiva de l’apreciació del caràcter irraonable de la durada po-
+dria estar simplificada en nombrosos supòsits per un emmarcament legis-
+latiu dels terminis de resolució dels actes de certs procediments.
+Aquestes reflexions i les decisions que podrien derivar-ne no corresponen 
+a les prerrogatives del Tribunal Constitucional, tanmateix la seva memòria 
+anyal és incontestablement el mitjà de subratllar-ne l’interès.
+Jean-Yves Caullet 
+President del Tribunal Constitucional
+
+
+7
+INTRODUCCIÓ
+L’article 24 e) de la Llei qualificada del Tribunal Constitucional, del 3 de 
+setembre de 1993 (d’ara endavant, LQTC), imposa a aquest Tribunal l’obli-
+gació de trametre al Consell General una memòria anual sobre la situació de 
+la justícia constitucional a Andorra.
+En compliment d’aquest precepte, la memòria s’estructura en els punts se-
+güents:
+               I. De l’activitat jurisdiccional del Tribunal Constitucional
+             II. Dels quadres estadístics referents a l’activitat del Tribunal
+            III. De les activitats institucionals no jurisdiccionals
+     IV.          Dels magistrats constitucionals i de la resta dels serveis   
+del Tribunal
+               V. Del pressupost
+            VI. De l’aprovació de la memòria
+
+8
+I.     DE L’ACTIVITAT JURISDICCIONAL DEL TRIBUNAL 
+CONSTITUCIONAL
+En  el  decurs  de  l’any  2023,  el  Tribunal  Constitucional  ha  enregistrat  88  
+causes.
+Ha resolt, d’acord amb els procediments establerts en la Constitució i regu-
+lats per la Llei qualificada del Tribunal Constitucional, 8 recursos d’empara 
+admesos  a  tràmit  l’any  anterior  i  que  estaven  pendents  de  sentència  i  82  
+recursos d’empara constitucional. D’aquestes causes considerades conjun-
+tament, 49 van ser inadmeses a tràmit i 33 van ser admeses a tràmit.
+També s’han resolt 21 recursos de súplica, 2 demandes de desistiment de 
+dos recursos d’empara i 1 demanda d’aclariment d’una sentència. I també 
+es van arxivar 3 recursos d’empara per manca sobrevinguda d’objecte.
+Així mateix, actualment, es troben pendents de resolució 12 recursos d’em-
+para. Convé destacar que 6 d’ells ja han estat admesos a tràmit i que, per 
+tant, la seva resolució en el fons recaurà durant l’any 2024.
+Causa 2022-57-RE
+Recurs d’empara interposat per la representació processal del Sr. I. G. C., 
+contra la sentència del 19 de maig del 2022, dictada pel Tribunal de Corts, 
+i, contra la sentència del 15 de setembre del mateix any, dictada per la Sala 
+Penal del Tribunal Superior de Justícia, per una presumpta vulneració dels 
+drets a la jurisdicció, a un procés degut, a la defensa i a la presumpció d’in-
+nocència, reconeguts a l’article 10 de la Constitució. El recurs va ser inter-
+posat el 4 d’octubre del 2022. Va ser admès a tràmit per aute del Tribunal 
+Constitucional el 14 de novembre del 2022. El ponent de la causa va ser el 
+Sr. Jean-Yves Caullet.
+El 9 de febrer del 2023, el Tribunal Constitucional va dictar una sentència 
+que estimava parcialment l’empara sol·licitada per la part recurrent.
+El 16 de febrer del 2023, la representació processal de S. M. M. va interpo-
+sar un recurs d’aclariment contra la sentència recaiguda en la causa 2022-
+57-RE, i, el 13 de març del 2023, el Tribunal Constitucional va dictar un 
+aute que declarava no procedent aquest recurs d’aclariment.
+
+9
+Causa 2022-60-RE
+Recurs d’empara interposat per la representació processal de M. S. V., per-
+sona perjudicada en la causa anomenada Cas Valora, SA, pel manteniment 
+de la inactivitat de la Batllia en relació amb els autes penals 8000080/2015 
+que  derivaria  en  una  presumpta  vulneració  del  dret  a  un  judici  de  durada  
+raonable, reconegut a l’article 10 de la Constitució. El recurs va ser inter-
+posat el 26 d’octubre del 2022. Va ser admès a tràmit per aute del Tribunal 
+Constitucional el 14 de novembre del 2022. El ponent de la causa va ser el 
+Sr. Josep-D. Guàrdia Canela.
+El 17 de gener del 2023, el Tribunal Constitucional va dictar una sentència 
+que estimava l’empara sol·licitada per la part recurrent.
+Causa 2022-62-RE
+Recurs  d’empara  interposat  per  la  representació  processal  dels  Srs.  Lluis  
+Comella  Figuera,  Dolors  Terrés  Puigdemasa  i  Salvador  Comella  Terrés,  
+contra la sentència de l’11 d’octubre del 2022, dictada per la Sala Civil del 
+Tribunal Superior de Justícia, per una presumpta vulneració del dret a obte-
+nir una decisió fonamentada en Dret, reconegut a l’article 10 de la Consti-
+tució. El recurs va ser interposat el 31 d’octubre del 2022. Va ser inadmès a 
+tràmit per aute del Tribunal Constitucional el 20 de desembre del 2022. El 
+ponent de la causa va ser el Sr. Dominique Rousseau.
+El  12  de  gener  del  2023,  la  part  recurrent  va  presentar  -en  aplicació  de  
+l’article 38 de la Llei qualificada del Tribunal Constitucional- un recurs de 
+súplica contra l’aute d’inadmissió a tràmit esmentat. El recurs de súplica va 
+ser desestimat per aute del Tribunal Constitucional el 9 de febrer del 2023. 
+Causa 2022-63-RE
+Recurs d’empara interposat per la representació processal del Sr. Enric Dol-
+sa Font, contra els autes de l’11 de març i del 5 de setembre del 2022, dictats 
+per  la  Secció  de  Contenciós-Administratiu  1  de  la  Batllia,  i  contra  l’aute  
+del  17  d’octubre  del  2022,  dictat  per  la  Sala  Administrativa  del  Tribunal  
+Superior de Justícia, per una presumpta “vulneració del dret fonamental a 
+
+10
+obtenir una resolució judicial motivada i fonamentada en dret, congruent, 
+no arbitrària, i que no produeixi indefensió efectiva, i conforme al principi 
+de legalitat”. El recurs va ser interposat el 8 de novembre del 2022. Va ser 
+inadmès a tràmit per aute del Tribunal Constitucional el 20 de desembre del 
+2022. El ponent de la causa va ser el Sr. Joan Manel Abril Campoy.
+El  16  de  gener  del  2023,  la  part  recurrent  va  presentar  -en  aplicació  de  
+l’article 38 de la Llei qualificada del Tribunal Constitucional- un recurs de 
+súplica contra l’aute d’inadmissió a tràmit esmentat. El recurs de súplica va 
+ser desestimat per aute del Tribunal Constitucional el 9 de febrer del 2023. 
+Causa 2022-64-RE
+Recurs d’empara interposat per la representació processal de F. B., contra 
+la sentència del 20 d’octubre del 2022, dictada per la Sala Administrativa 
+del Tribunal Superior de Justícia, en el marc del procediment urgent i pre-
+ferent,  per  una  presumpta  vulneració  dels  drets  a  l’accés  a  la  justícia,  “a 
+una tutela judicial efectiva” i a obtenir una decisió fonamentada en Dret, i, 
+per una incongruència omissiva, reconeguts a l’article 10 de la Constitució, 
+així  com  per  una  presumpta  vulneració  dels  drets  a  la  intimitat,  a  la  vida  
+privada i familiar i a l’honor, reconeguts a l’article 14 de la Constitució. El 
+recurs va ser interposat el 14 de novembre del 2022. Va ser admès a tràmit 
+per aute del Tribunal Constitucional el 20 de desembre del 2022. El ponent 
+de la causa va ser el Sr. Josep-D. Guàrdia Canela.
+El 17 d’abril del 2023, el Tribunal Constitucional va dictar una sentència 
+que desestimava l’empara sol·licitada per la part recurrent.
+Causa 2022-65 i 67-RE
+Recurs d’empara interposat per la representació processal de la Sra. Cristina 
+Lozano  Bonet,  contra  la  sentència  del  25  d’octubre  del  2022,  dictada  per  
+la Sala Administrativa del Tribunal Superior de Justícia, per una presumpta 
+vulneració del dret a la jurisdicció, en el seu vessant del dret a obtenir una 
+decisió fonamentada en Dret, reconegut a l’article 10 de la Constitució. El 
+recurs va ser interposat el 15 de novembre del 2022. Va ser admès a tràmit 
+per aute del Tribunal Constitucional el 20 de desembre del 2022. El ponent 
+de la causa va ser el Sr. Jean-Yves Caullet.
+
+11
+Recurs d’empara interposat per la representació processal dels Srs. Santiago 
+de Rosselló Piera i Francisco Javier Campos Tomas, contra la sentència del 
+25 d’octubre del 2022, dictada per la Sala Administrativa del Tribunal Su-
+perior de Justícia, per una presumpta vulneració dels drets a la no retroac-
+tivitat de les disposicions restrictives de drets individuals o que comportin 
+un efecte o estableixin una sanció desfavorables, d’interdicció de tota arbi-
+trarietat, d’igualtat de tothom davant la llei i els poders públics, de no poder 
+ser  condemnat  o  sancionat  per  accions  o  omissions  que  en  el  moment  de  
+produir-se no constitueixin delicte, falta o infracció, a la presumpció d’in-
+nocència, a ser informat de l’acusació i a la defensa, reconeguts als articles 
+3, 9 i 10 de la Constitució. El recurs va ser interposat el 15 de novembre del 
+2022. Va ser admès a tràmit per aute del Tribunal Constitucional el 20 de 
+desembre del 2022. El ponent de la causa va ser el Sr. Jean-Yves Caullet.
+El 17 d’abril del 2023, el Tribunal Constitucional va dictar una sentència 
+que desestimava l’empara sol·licitada per les parts recurrents.
+Causa 2022-68-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Ángel  
+Rodríguez  Montes,  contra  la  sentència  del  26  d’octubre  del  2022,  dicta-
+da  per  la  Sala  Civil  del  Tribunal  Superior  de  Justícia,  per  una  presumpta  
+“vulneració del dret fonamental a obtenir una resolució judicial motivada 
+i fonamentada en dret i no arbitrària, i que no produeixi indefensió efec-
+tiva”, reconegut a l’article 10 de la Constitució. El recurs va ser interposat 
+el 16 de novembre del 2022. Va ser inadmès a tràmit per aute del Tribunal 
+Constitucional el 20 de desembre del 2022. El ponent de la causa va ser el 
+Sr. Joan Manel Abril Campoy.
+El  16  de  gener  del  2023,  la  part  recurrent  va  presentar  -en  aplicació  de  
+l’article 38 de la Llei qualificada del Tribunal Constitucional- un recurs de 
+súplica contra l’aute d’inadmissió a tràmit esmentat. El recurs de súplica va 
+ser desestimat per aute del Tribunal Constitucional el 9 de febrer del 2023. 
+Causa 2022-69-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Frederick  
+Scott Salyer, contra la sentència del 30 de març del 2022, dictada pel Tribunal 
+
+12
+de Corts, i, contra la sentència del 28 d’octubre del mateix any, dictada per 
+la Sala Penal del Tribunal Superior de Justícia, per una presumpta vulneració 
+dels drets a la presumpció d’innocència, a obtenir una decisió fonamentada 
+en Dret i a la defensa, així com del principi de no retroactivitat desfavorable 
+d’una  norma,  reconeguts  a  l’article  10  de  la  Constitució.  El  recurs  va  ser  
+interposat  el  17  de  novembre  del  2022.  Va  ser  admès  a  tràmit  per  aute  del  
+Tribunal Constitucional el 20 de desembre del 2022. El ponent de la causa va 
+ser el Sr. Josep-D. Guàrdia Canela.
+El 17 d’abril del 2023, el Tribunal Constitucional va dictar una sentència 
+que desestimava l’empara sol·licitada per la part recurrent.
+Causa 2022-71-RE
+Recurs  d’empara  interposat  pel  Ministeri  Fiscal  contra  la  sentència  del  28  
+d’octubre del 2022, dictada per la Sala Penal del Tribunal Superior de Jus-
+tícia, per una presumpta vulneració del dret a la jurisdicció, en els seus ves-
+sants  dels  drets  a  la  defensa  i  a  obtenir  una  decisió  fonamentada  en  Dret  
+(aquesta última derivada de la infracció del principi d’igualtat), reconeguts a 
+l’article 10 de la Constitució. El recurs va ser interposat el 17 de novembre 
+del 2022. Va ser admès a tràmit per aute del Tribunal Constitucional el 20 de 
+desembre del 2022. El ponent de la causa va ser el Sr. Dominique Rousseau.
+El 13 de març del 2023, el Tribunal Constitucional va dictar una sentència 
+que desestimava l’empara sol·licitada per la part recurrent.
+Causa 2022-72-RE
+Recurs d’empara interposat per la representació processal del Sr. José Luis 
+Orobitg Jiménez i de la societat Orobitg Arquitectura i Enginyeria, SL, con-
+tra l’aute del 25 de gener del 2022, dictat per la Secció d’Instrucció 1 de la 
+Batllia, i contra els autes del 2 d’agost i del 2 de novembre del 2022, dictats 
+pel president del Tribunal de Corts, per una presumpta vulneració dels drets 
+a  la  jurisdicció,  a  un  procés  degut,  a  obtenir  una  decisió  fonamentada  en  
+Dret i a un judici de durada raonable, reconeguts a l’article 10 de la Consti-
+tució. El recurs va ser interposat el 24 de novembre del 2022. Va ser admès 
+parcialment a tràmit per aute del Tribunal Constitucional el 20 de desembre 
+del 2022. El ponent de la causa va ser el Sr. Joan Manel Abril Campoy.
+
+13
+El 9 de febrer del 2023, el Tribunal Constitucional va dictar una sentència 
+que estimava l’empara sol·licitada per la part recurrent.
+Causa 2022-73-RE
+Recurs d’empara interposat per la representació processal dels Srs. Antoni, 
+Immaculada i Anna Maria Font Piguillem, contra l’aute del 14 de novembre 
+del 2022, dictat per la Secció d’Instrucció Especialitzada 1 de la Batllia, per 
+una presumpta vulneració dels drets a la llibertat, a la jurisdicció en els seus 
+vessants dels drets a obtenir una decisió fonamentada en Dret, a un procés 
+degut i a la defensa, a la intimitat i a la inviolabilitat del domicili, recone-
+guts als articles 9, 10, 14 i 15 de la Constitució. El recurs va ser interposat 
+l’1  de  desembre  del  2022.  Va  ser  inadmès  a  tràmit  per  aute  del  Tribunal  
+Constitucional el 17 de gener del 2023. El ponent de la causa va ser el Sr. 
+Josep-D. Guàrdia Canela.
+Causa 2022-76-RE
+Recurs d’empara interposat per la representació processal de la Sra. Madelin 
+Díaz Ramos, contra la sentència del 23 de novembre del 2022, dictada per 
+la Sala Civil del Tribunal Superior de Justícia, per una presumpta vulnera-
+ció  del  dret  a  la  jurisdicció,  reconegut  a  l’article  10  de  la  Constitució.  El  
+recurs va ser interposat el 14 de desembre del 2022. Va ser inadmès a tràmit 
+per aute del Tribunal Constitucional el 9 de febrer del 2023. El ponent de la 
+causa va ser el Sr. Joan Manel Abril Campoy.
+Causa 2022-77-RE
+Recurs d’empara interposat per la representació processal del Sr. Joan Ra-
+món  Palanca  Gómez,  contra  la  sentència  del  28  de  novembre  del  2022,  
+dictada  per  la  Sala  Penal  del  Tribunal  Superior  de  Justícia,  per  una  pre-
+sumpta vulneració dels drets a la jurisdicció, a obtenir una decisió fona-
+mentada en Dret, a un procés degut substanciat per un tribunal imparcial 
+i a la defensa, reconeguts a l’article 10 de la Constitució. El recurs va ser 
+interposat el 15 de desembre del 2022. Va ser inadmès a tràmit per aute del 
+
+14
+Tribunal Constitucional el 17 de gener del 2023. El ponent de la causa va 
+ser el Sr. Josep-D. Guàrdia Canela.
+Causa 2022-78-RE
+Recurs d’empara interposat per la representació processal de la Sra. Rosa 
+Bernat Castells, titular administrativa de la societat Pintures Pi, contra l’au-
+te del 23 de novembre del 2022, dictat per la Sala Civil del Tribunal Supe-
+rior de Justícia, per una presumpta vulneració dels drets a la jurisdicció, a la 
+defensa i a un procés degut, reconeguts a l’article 10 de la Constitució. El 
+recurs va ser interposat el 19 de desembre del 2022. Va ser admès a tràmit 
+per aute del Tribunal Constitucional el 17 de gener del 2023. El ponent de 
+la causa va ser el Sr. Jean-Yves Caullet.
+El 13 de març del 2023, el Tribunal Constitucional va dictar una sentència 
+que desestimava l’empara sol·licitada per la part recurrent.
+Causa 2022-79-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Ángel  
+Rodríguez Montes, contra l’aute del 28 de novembre del 2022, dictat per la 
+Sala Civil del Tribunal Superior de Justícia, per una presumpta “vulneració 
+del dret fonamental a obtenir una resolució judicial motivada i fonamenta-
+da en dret i no arbitrària, i que no produeixi indefensió efectiva”, reconegut 
+a l’article 10 de la Constitució. El recurs va ser interposat el 20 de desembre 
+del 2022. Va ser inadmès a tràmit per aute del Tribunal Constitucional el 9 
+de febrer del 2023. El ponent de la causa va ser el Sr. Dominique Rousseau.
+El  21  de  febrer  del  2023,  la  part  recurrent  va  presentar  -en  aplicació  de  
+l’article 38 de la Llei qualificada del Tribunal Constitucional- un recurs de 
+súplica contra l’aute d’inadmissió a tràmit esmentat. El recurs de súplica va 
+ser desestimat per aute del Tribunal Constitucional el 13 de març del 2023. 
+Causa 2023-1-RE
+Recurs d’empara interposat per la representació processal de la societat 
+EM-T  Enginyeria  i  Muntatges  Tècnics,  SA,  contra  la  inactivitat  de  la  
+
+15
+jurisdicció ordinària en relació amb les Diligències Prèvies 800002/2022 
+que derivaria en una presumpta vulneració del dret a un procés degut, en 
+els seus vessants dels drets a obtenir una decisió fonamentada en Dret i a 
+un judici de durada raonable, reconeguts a l’article 10 de la Constitució. 
+El recurs va ser interposat l’11 de gener del 2023. Va ser admès a tràmit 
+per aute del Tribunal Constitucional el 9 de febrer del 2023. El ponent de 
+la causa va ser el Sr. Joan Manel Abril Campoy.
+El 17 d’abril del 2023, el Tribunal Constitucional va dictar una sentència 
+que estimava l’empara sol·licitada per la part recurrent.
+Causa 2023-2-RE
+Recurs d’empara interposat per la representació processal de la societat Ha-
+bitatges Premium S. T. Andorra, SL, contra la sentència processal del 20 de 
+desembre del 2022, dictada per la Sala Civil del Tribunal Superior de Jus-
+tícia, per una presumpta vulneració dels drets a la jurisdicció, a un procés 
+degut i a la defensa, reconeguts a l’article 10 de la Constitució. El recurs 
+va ser interposat el 16 de gener del 2023. El ponent de la causa va ser el Sr. 
+Josep-D. Guàrdia Canela.
+El  7  de  setembre  del  2023,  el  Tribunal  Constitucional  va  dictar  un  aute  
+que declarava que el recurs d’empara 2023-2-RE quedava sense contingut 
+ni efecte a causa de la declaració de nul·litat de la sentència del 20 de de-
+sembre del 2022, dictada per la Sala Civil del Tribunal Superior de Justícia 
+per manca sobrevinguda d’objecte i va pronunciar l’arxivament de la causa 
+2023-2-RE.
+Causa 2023-3-RE
+Recurs d’empara interposat per la representació processal dels Srs. Higini 
+i Ramon Cierco Noguer, contra l’aute del 20 de desembre del 2022, dictat 
+per la Sala Civil del Tribunal Superior de Justícia, per una presumpta vul-
+neració del dret a la jurisdicció, reconegut a l’article 10 de la Constitució 
+i a l’article 6 del Conveni per a la salvaguarda dels drets humans i de les 
+llibertats fonamentals, en els seus vessants dels drets a obtenir una decisió 
+fonamentada en Dret, a la defensa, al procés degut, a la seguretat jurídica i a 
+la prohibició de discriminació garantida per l’article 14 del mateix Conveni 
+
+16
+i a l’article primer del Protocol núm. 12. El recurs va ser interposat el 20 de 
+gener del 2023. El ponent de la causa va ser el Sr. Jean-Yves Caullet.
+El  17  d’abril  del  2023,  el  Tribunal  Constitucional  va  dictar  un  aute  que  
+declarava  que  el  recurs  d’empara  2023-3-RE  quedava  sense  contingut  ni  
+efecte a causa de la declaració de nul·litat de l’aute del 20 de desembre del 
+2022, dictat per la Sala Civil del Tribunal Superior de Justícia per manca so-
+brevinguda d’objecte i va pronunciar l’arxivament de la causa 2023-3-RE.
+Causa 2023-4-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Ali  La-
+badna,  contra  l’aute  del  20  de  desembre  del  2022,  dictat  pel  Tribunal  de  
+Corts, per una presumpta vulneració dels drets a la defensa, a la presumpció 
+d’innocència i a la llibertat, reconeguts als articles 10 i 9 de la Constitució. 
+El recurs va ser interposat el 23 de gener del 2023. Va ser admès a tràmit 
+per aute del Tribunal Constitucional el 13 de març del 2023. El ponent de la 
+causa va ser el Sr. Dominique Rousseau.
+El 18 de maig del 2023, el Tribunal Constitucional va dictar una sentència 
+que estimava l’empara sol·licitada per la part recurrent.
+Causa 2023-5-RE
+Recurs d’empara interposat per la representació processal de la Sra. Paula 
+Cristina  Felisberto  Da  Graça,  contra  la  inactivitat  del  Tribunal  de  Corts  
+en relació amb la causa recursos de l’Art. 194 CPP 0000096/2021 (origen 
+8000002/2021) que derivaria en una presumpta vulneració del dret a un ju-
+dici de durada raonable, reconegut a l’article 10 de la Constitució. El recurs 
+va ser interposat el 24 de gener del 2023. Va ser admès a tràmit per aute del 
+Tribunal Constitucional el 9 de febrer del 2023. El ponent de la causa va ser 
+el Sr. Joan Manel Abril Campoy.
+El 17 d’abril del 2023, el Tribunal Constitucional va dictar una sentència 
+que estimava l’empara sol·licitada per la part recurrent.
+
+17
+Causa 2023-6-RE
+Recurs  d’empara  interposat  per  la  representació  processal  de  la  societat  
+SSMM, SLU, contra la sentència del 20 de desembre del 2022, dictada per 
+la Sala Civil del Tribunal Superior de Justícia, per una presumpta vulnera-
+ció dels drets a la jurisdicció, a una tutela efectiva i a obtenir una resolució 
+fonamentada en Dret, reconeguts a l’article 10 de la Constitució. El recurs 
+va ser interposat el 24 de gener del 2023. El ponent de la causa va ser el Sr. 
+Josep-D. Guàrdia Canela.
+El 17 d’abril del 2023, el Tribunal Constitucional va dictar un aute que de-
+clarava que el recurs d’empara 2023-6-RE quedava sense contingut ni efec-
+te a causa de la declaració de nul·litat de la sentència del 20 de desembre del 
+2022, dictada per la Sala Civil del Tribunal Superior de Justícia per manca 
+sobrevinguda d’objecte i va pronunciar l’arxivament de la causa 2023-6-RE.
+Causa 2023-7-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Higini  
+Cierco  Noguer,  contra  l’aute  del  4  de  gener  del  2023,  dictat  per  la  Sala  
+Penal del Tribunal Superior de Justícia, per una presumpta vulneració del 
+dret a la jurisdicció i a l’accés a un tribunal, reconeguts a l’article 10 de la 
+Constitució,  i,  per  l’article  6  del  Conveni  per  a  la  salvaguarda  dels  drets  
+humans  i  de  les  llibertats  fonamentals,  en  els  seus  vessants  dels  drets  a  
+obtenir una decisió fonamentada en Dret, a la defensa, al procés degut, a la 
+seguretat jurídica i a la prohibició de discriminació garantida per l’article 
+14 del mateix Conveni i per article primer del Protocol núm. 12. El recurs 
+va ser interposat el 26 de gener del 2023. Va ser inadmès a tràmit per aute 
+del Tribunal Constitucional el 13 de març del 2023. El ponent de la causa 
+va ser el Sr. Jean-Yves Caullet.
+El 17 de març del 2023, la part recurrent va presentar -en aplicació de l’ar-
+ticle 38 de la Llei qualificada del Tribunal Constitucional- un recurs de 
+súplica contra l’aute d’inadmissió a tràmit esmentat. El recurs de súplica va 
+ser desestimat per aute del Tribunal Constitucional el 17 d’abril del 2023.
+
+18
+Causa 2023-8-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Quirze  
+Font  Pla,  contra  la  sentència  del  22  de  desembre  del  2022,  dictada  per  la  
+Sala Civil del Tribunal Superior de Justícia, per una presumpta vulneració 
+dels drets a la jurisdicció, a un procés degut, a un judici de durada raonable 
+i a obtenir una resolució judicial congruent, reconeguts a l’article 10 de la 
+Constitució. El recurs va ser interposat el 26 de gener del 2023. Va ser ad-
+mès a tràmit per aute del Tribunal Constitucional el 13 de març del 2023. El 
+ponent de la causa va ser el Sr. Dominique Rousseau.
+El 18 de maig del 2023, el Tribunal Constitucional va dictar una sentència 
+que estimava parcialment l’empara sol·licitada per la part recurrent.
+Causa 2023-9-RE
+Recurs d’empara interposat per la representació processal del Sr. Josep Ma-
+ria Dabad Ortuño, contra la sentència del 20 de desembre del 2022, dictada 
+per la Sala Civil del Tribunal Superior de Justícia, per una presumpta vulne-
+ració del dret a la jurisdicció, en el seu vessant del dret a obtenir una resolu-
+ció fonamentada en Dret substanciada per un tribunal imparcial, reconegut 
+a l’article 10 de la Constitució. El recurs va ser interposat el 30 de gener del 
+2023. Va ser admès a tràmit per aute del Tribunal Constitucional el 9 de fe-
+brer del 2023. El ponent de la causa va ser el Sr. Joan Manel Abril Campoy.
+El 17 d’abril del 2023, el Tribunal Constitucional va dictar una sentència 
+que desestimava l’empara sol·licitada per la part recurrent.
+Causa 2023-10-RE
+Recurs d’empara interposat per la representació processal de la Sra. Anna 
+Isabel Rubia Martínez, contra l’aute del 17 de gener del 2023, dictat per la 
+Sala Civil del Tribunal Superior de Justícia, per una presumpta vulneració 
+dels drets a la jurisdicció, a un procés degut i a obtenir una resolució fona-
+mentada en Dret, reconeguts a l’article 10 de la Constitució. El recurs va 
+ser interposat el 6 de febrer del 2023. Va ser inadmès a tràmit per aute del 
+Tribunal Constitucional el 17 d’abril del 2023. El ponent de la causa va ser 
+el Sr. Josep-D. Guàrdia Canela.
+
+19
+Causa 2023-11-RE
+Recurs d’empara interposat per la representació processal del Sr. Albert Gu-
+tiérrez Palau, contra la sentència del 27 de gener del 2023, dictada per la Sala 
+Penal del Tribunal Superior de Justícia, i per extensió contra la sentència del 
+8 de juny del 2022, dictada pel Tribunal de Corts, per una presumpta vulne-
+ració dels drets a la jurisdicció i a la presumpció d’innocència, reconeguts a 
+l’article 10 de la Constitució. El recurs va ser interposat el 10 de febrer del 
+2023. Va ser inadmès a tràmit per aute del Tribunal Constitucional el 13 de 
+març del 2023. El ponent de la causa va ser el Sr. Jean-Yves Caullet.
+Causa 2023-12-RE
+Recurs d’empara interposat per la representació processal de la Sra. Maria 
+Dolors  Griful  Rius,  contra  l’aute  del  17  de  gener  del  2023,  dictat  per  la  
+Secció Civil 4 de la Batllia, així com contra la interlocutòria de la secretària 
+judicial d’aquesta Secció del 18 de novembre del 2022, per una presumpta 
+vulneració dels drets a un procés degut substanciat per un tribunal predeter-
+minat per la llei i a obtenir una resolució fonamentada en Dret, reconeguts 
+a l’article 10 de la Constitució. El recurs va ser interposat el 13 de febrer 
+del 2023. Va ser inadmès a tràmit per aute del Tribunal Constitucional el 13 
+de març del 2023. El ponent de la causa va ser el Sr. Dominique Rousseau.
+Causa 2023-13-RE
+Recurs d’empara interposat per la representació processal de la Sra. Zuleima 
+Milagros Cordova Serna, contra la sentència del 7 de febrer del 2023, dic-
+tada pel Ple del Tribunal Superior de Justícia, per una presumpta vulneració 
+del dret a obtenir una resolució fonamentada en Dret i sense errors mate-
+rials, reconegut a l’article 10 de la Constitució. El recurs va ser interposat 
+el 28 de febrer del 2023. Va ser admès a tràmit per aute del Tribunal Cons-
+titucional el 13 de març del 2023. El ponent de la causa va ser el Sr. Joan 
+Manel Abril Campoy.
+El 18 de maig del 2023, el Tribunal Constitucional va dictar una sentència 
+que estimava el recurs d’empara presentat per la part recurrent.
+
+20
+Causa 2023-14-RE
+Recurs d’empara interposat per la representació processal de la Sra. Fabienne 
+Isabelle  Ibrouchene,  contra  la  sentència  del  7  de  febrer  del  2023,  dictada  
+pel Ple del Tribunal Superior de Justícia, per una presumpta vulneració dels 
+drets a obtenir una resolució fonamentada en Dret i a la defensa, reconeguts 
+a l’article 10 de la Constitució. El recurs va ser interposat el 6 de març del 
+2023.  Va  ser  inadmès  a  tràmit  per  aute  del  Tribunal  Constitucional  el  17  
+d’abril del 2023. El ponent de la causa va ser el Sr. Josep-D. Guàrdia Canela.
+El 27 d’abril del 2023, la part recurrent va presentar -en aplicació de l’ar-
+ticle 38 de la Llei qualificada del Tribunal Constitucional- un recurs de 
+súplica contra l’aute d’inadmissió a tràmit esmentat. El recurs de súplica va 
+ser desestimat per aute del Tribunal Constitucional el 18 de maig del 2023.
+Causa 2023-15-RE
+Recurs d’empara interposat per la representació processal del Sr. Francisco 
+Javier Beltran Gonzàlez, contra els autes del 3 i del 15 de febrer del 2023, 
+dictats per la Secció Civil 5 de la Batllia, per una presumpta vulneració dels 
+drets a la defensa, a un procés degut i a l’assistència tècnica d’un lletrat, re-
+coneguts a l’article 10 de la Constitució. El recurs va ser interposat el 13 de 
+març del 2023. Va ser inadmès a tràmit per aute del Tribunal Constitucional 
+el 17 d’abril del 2023. El ponent de la causa va ser el Sr. Jean-Yves Caullet.
+Causa 2023-16-RE
+Recurs d’empara interposat per la representació processal dels Srs. Antoni, 
+Enric, M. Dolors, Àngel, M. Mercè i Josep M. Torres Torres, contra l’aute 
+del 8 de març del 2023, dictat per la Sala Civil del Tribunal Superior de Jus-
+tícia, per una presumpta vulneració dels drets a la jurisdicció, a la defensa, 
+a un procés degut i a l’assistència tècnica d’un lletrat, reconeguts a l’article 
+10 de la Constitució. El recurs va ser interposat el 22 de març del 2023. Va 
+ser inadmès a tràmit per aute del Tribunal Constitucional el 17 d’abril del 
+2023. El ponent de la causa va ser el Sr. Dominique Rousseau.
+El 26 d’abril del 2023, la part recurrent va presentar -en aplicació de l’ar-
+ticle 38 de la Llei qualificada del Tribunal Constitucional- un recurs de 
+
+21
+súplica contra l’aute d’inadmissió a tràmit esmentat. El recurs de súplica va 
+ser desestimat per aute del Tribunal Constitucional el 18 de maig del 2023.
+Causa 2023-17-RE
+Recurs d’empara interposat per la representació processal de la Sra. Paula 
+Cristina Felisberto Da Graça, contra la sentència del 3 de març del 2023, 
+dictada  per  la  Sala  Administrativa  del  Tribunal  Superior  de  Justícia,  per  
+una presumpta vulneració dels drets a la jurisdicció, a un procés degut i a 
+la defensa, reconeguts a l’article 10 de la Constitució. El recurs va ser inter-
+posat el 28 de març del 2023. Va ser inadmès a tràmit per aute del Tribunal 
+Constitucional  el  17  d’abril  del  2023.  El  ponent  de  la  causa  va  ser  el  Sr.  
+Joan Manel Abril Campoy.
+El 27 d’abril del 2023, la part recurrent va presentar -en aplicació de l’ar-
+ticle 38 de la Llei qualificada del Tribunal Constitucional- un recurs de 
+súplica contra l’aute d’inadmissió a tràmit esmentat. El recurs de súplica va 
+ser desestimat per aute del Tribunal Constitucional el 18 de maig del 2023.
+Causa 2023-18-RE
+Recurs  d’empara  interposat  per  la  representació  processal  dels  Srs.  Josep  
+(substituït pel Sr. Josep Ribera Baztán), Joan, Alfons, Elena i Ramon Ribera 
+Gispert, contra la sentència del 7 de març del 2023, dictada per la Sala Civil 
+del Tribunal Superior de Justícia, per una presumpta vulneració dels drets 
+a la jurisdicció, a un procés degut i a obtenir una decisió fonamentada en 
+Dret, reconeguts a l’article 10 de la Constitució. El recurs va ser interposat 
+el 28 de març del 2023. Va ser admès a tràmit per aute del Tribunal Consti-
+tucional el 17 d’abril del 2023. El ponent de la causa va ser el Sr. Josep-D. 
+Guàrdia Canela.
+El 12 de juny del 2023, el Tribunal Constitucional va dictar una sentència 
+que desestimava l’empara sol·licitada per la part recurrent.
+
+22
+Causa 2023-19-RE
+Recurs d’empara interposat per la representació processal de la Sra. Gemma 
+Prat Vidal, contra l’aute del 10 de maig del 2022, dictat per la Secció Civil 
+2  de  la  Batllia,  i,  contra  l’aute  del  7  de  març  del  2023,  dictat  per  la  Sala  
+Civil  del  Tribunal  Superior  de  Justícia,  per  una  presumpta  vulneració  del  
+dret a la jurisdicció, reconegut a l’article 10 de la Constitució. El recurs va 
+ser  interposat  el  29  de  març  del  2023.  Va  ser  admès  a  tràmit  per  aute  del  
+Tribunal Constitucional el 17 d’abril del 2023. El ponent de la causa va ser 
+el Sr. Jean-Yves Caullet.
+El 12 de juny del 2023, el Tribunal Constitucional va dictar una sentència 
+que estimava l’empara sol·licitada per la part recurrent.
+Causa 2023-20-RE
+Recurs  d’empara  interposat  per  la  representació  processal  de  la  Sra.  Ca-
+rine Montaner Raynaud, contra l’aute del 19 de gener del 2023, dictat pel 
+Tribunal de Corts, i, contra l’aute del 17 de març del mateix any, dictat per 
+la Sala Penal del Tribunal Superior de Justícia, per una presumpta vulne-
+ració dels drets a obtenir una resolució judicial motivada i fonamentada en 
+Dret, congruent, no arbitrària, i que no produeixi indefensió efectiva i a la 
+defensa, reconeguts a l’article 10 de la Constitució. El recurs va ser inter-
+posat el 31 de març del 2023. Va ser inadmès a tràmit per aute del Tribunal 
+Constitucional el 18 de maig del 2023. El ponent de la causa va ser el Sr. 
+Dominique Rousseau.
+Causa 2023-21-RE
+Recurs d’empara interposat per la representació processal del Sr. José Da-
+niel Valencia León, contra la sentència del 24 de gener del 2023, dictada per 
+la Sala Administrativa del Tribunal Superior de Justícia, per una presumpta 
+vulneració dels drets a la jurisdicció i a la defensa, reconeguts a l’article 10 
+de la Constitució. El recurs va ser interposat el 3 d’abril del 2023. Va ser 
+admès a tràmit per aute del Tribunal Constitucional el 17 d’abril del 2023. 
+El ponent de la causa va ser el Sr. Joan Manel Abril Campoy.
+
+23
+El 12 de juny del 2023, el Tribunal Constitucional va dictar una sentència 
+que desestimava l’empara sol·licitada per la part recurrent.
+Causa 2023-22-RE
+Recurs d’empara interposat per la representació processal de la Sra. Paula 
+Cristina Felisberto Da Graça, contra l’aute del 30 de gener del 2023, dictat 
+pel Tribunal de Corts, i, contra l’aute del 17 de març del mateix any, dictat 
+per la Sala Penal del Tribunal Superior de Justícia, per una presumpta vul-
+neració dels drets a obtenir una resolució judicial motivada i fonamentada 
+en Dret, congruent, no arbitrària i que no produeixi indefensió efectiva i a 
+la defensa, reconeguts a l’article 10 de la Constitució. El recurs va ser in-
+terposat el 6 d’abril del 2023. Va ser inadmès a tràmit per aute del Tribunal 
+Constitucional el 18 de maig del 2023. El ponent de la causa va ser el Sr. 
+Josep-D. Guàrdia Canela.
+El 30 de maig del 2023, la part recurrent va presentar -en aplicació de l’ar-
+ticle 38 de la Llei qualificada del Tribunal Constitucional- un recurs de 
+súplica contra l’aute d’inadmissió a tràmit esmentat. El recurs de súplica va 
+ser desestimat per aute del Tribunal Constitucional el 12 de juny del 2023.
+Causa 2023-23-RE
+Recurs d’empara interposat per la representació processal de la Sra. Zuleima 
+Milagros Cordova Serna, contra la sentència del 27 de març del 2023, dic-
+tada per la Sala Penal del Tribunal Superior de Justícia, per una presumpta 
+vulneració  del  dret  a  la  jurisdicció,  en  els  seus  vessants  dels  drets  a  un  
+procés  degut,  a  la  defensa  i  a  obtenir  una  resolució  fonamentada  en  Dret  
+i sense errors, reconeguts a l’article 10 de la Constitució. El recurs va ser 
+interposat el 17 d’abril del 2023. Va ser admès a tràmit per aute del Tribunal 
+Constitucional  el  8  de  maig  del  2023.  El  ponent  de  la  causa  va  ser  el  Sr.  
+Jean-Yves Caullet.
+El 14 de juliol del 2023, el Tribunal Constitucional va dictar una sentència 
+que desestimava l’empara sol·licitada per la part recurrent.
+
+24
+Causa 2023-24-RE
+Recurs  d’empara  interposat  per  la  representació  processal  de  la  societat  
+Montmantell, SL, contra la sentència del 24 de març del 2023, dictada per 
+la Sala Administrativa del Tribunal Superior de Justícia, per una presumpta 
+vulneració  del  dret  a  obtenir  una  decisió  fonamentada  en  Dret,  reconegut  
+a l’article 10 de la Constitució. El recurs va ser interposat el 19 d’abril del 
+2023. Va ser inadmès a tràmit per aute del Tribunal Constitucional el 18 de 
+maig del 2023. El ponent de la causa va ser el Sr. Dominique Rousseau.
+Causa 2023-25-RE
+Recurs  d’empara  interposat  per  la  representació  processal  dels  Srs.  Higini  
+i Ramon Cierco Noguer, contra l’aute del 17 d’abril del 2023, dictat per la 
+Sala Civil del Tribunal Superior de Justícia, per una presumpta vulneració 
+del dret a la jurisdicció, reconegut a l’article 10 de la Constitució, i a l’article 
+6 del Conveni per a la salvaguarda dels drets humans i de les llibertats fo-
+namentals, en els seus vessants dels drets a la defensa, a obtenir una decisió 
+fonamentada en Dret, al procés degut, a la seguretat jurídica i a la prohibició 
+de  discriminació  garantida  per  l’article  14  del  mateix  Conveni  i  a  l’article  
+primer  del  Protocol  núm.  12.  El  recurs  va  ser  interposat  el  25  d’abril  del  
+2023.  Va  ser  admès  a  tràmit  per  aute  del  Tribunal  Constitucional  el  18  de  
+maig del 2023. El ponent de la causa va ser el Sr. Joan Manel Abril Campoy.
+El 14 de juliol del 2023, el Tribunal Constitucional va dictar una sentència 
+que desestimava l’empara sol·licitada per la part recurrent.
+Causa 2023-26-RE
+Recurs d’empara interposat per la representació processal del Sr. Juan An-
+tonio Capel Gallego, contra la sentència del 30 de març del 2023, dictada 
+per  la  Sala  Administrativa  del  Tribunal  Superior  de  Justícia,  per  una  pre-
+sumpta vulneració dels drets a la jurisdicció, a un procés degut i a obtenir 
+una resolució fonamentada en Dret, reconeguts a l’article 10 de la Constitu-
+ció. El recurs va ser interposat el 26 d’abril del 2023. Va ser admès a tràmit 
+per aute del Tribunal Constitucional el 18 de maig del 2023. El ponent de la 
+causa va ser el Sr. Josep-D. Guàrdia Canela.
+
+25
+El 14 de juliol del 2023, el Tribunal Constitucional va dictar una sentència 
+que desestimava l’empara sol·licitada per la part recurrent.
+Causa 2023-27-RE
+Recurs  d’empara  interposat  per  la  representació  processal  de  la  societat  
+SSMM,  SLU,  contra  la  sentència  del  17  d’abril  del  2023,  dictada  per  la  
+Sala Civil del Tribunal Superior de Justícia, per una presumpta vulneració 
+dels  drets  a  la  jurisdicció,  a  una  tutela  efectiva  i  a  obtenir  una  resolució  
+fonamentada en Dret, reconeguts a l’article 10 de la Constitució. El recurs 
+va ser interposat el 4 de maig del 2023. Va ser inadmès a tràmit per aute del 
+Tribunal Constitucional el 18 de maig del 2023. El ponent de la causa va ser 
+el Sr. Josep-D. Guàrdia Canela.
+Causa 2023-28-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  David  
+Solanes  Colell,  contra  la  sentència  del  18  d’abril  del  2023,  dictada  per  la  
+Sala Civil del Tribunal Superior de Justícia, per una presumpta vulneració 
+dels drets a obtenir una decisió fonamentada en Dret i a un procés degut, 
+reconeguts a l’article 10 de la Constitució. El recurs va ser interposat el 8 de 
+maig del 2023. Va ser inadmès a tràmit per aute del Tribunal Constitucional 
+el 12 de juny del 2023. El ponent de la causa va ser el Sr. Jean-Yves Caullet.
+Causa 2023-29-RE
+Recurs  d’empara  interposat  per  la  representació  processal  de  la  societat  
+Banca Privada d’Andorra, SAU (BPA, SAU), contra l’aute del 18 d’abril 
+del 2023, dictat per la Sala Civil del Tribunal Superior de Justícia, per una 
+presumpta vulneració del dret a la jurisdicció, en els seus vessants dels drets 
+a un procés degut, a obtenir una decisió fonamentada en Dret, a la defensa 
+i a un judici de durada raonable, reconeguts a l’article 10 de la Constitució. 
+El recurs va ser interposat el 8 de maig del 2023. Va ser inadmès a tràmit 
+per aute del Tribunal Constitucional el 12 de juny del 2023. El ponent de la 
+causa va ser el Sr. Dominique Rousseau.
+
+26
+Causa 2023-30-RE
+Recurs d’empara interposat per la representació processal del Sr. Sebastià 
+Moral  Martos,  contra  la  sentència  del  18  d’abril  del  2023,  dictada  per  la  
+Sala Civil del Tribunal Superior de Justícia, per una presumpta vulneració 
+dels drets a la jurisdicció i a un judici de durada raonable, reconeguts a l’ar-
+ticle 10 de la Constitució. El recurs va ser interposat el 9 de maig del 2023. 
+Va ser admès a tràmit per aute del Tribunal Constitucional el 18 de maig del 
+2023. El ponent de la causa va ser el Sr. Joan Manel Abril Campoy.
+El 14 de juliol del 2023, el Tribunal Constitucional va dictar una sentència 
+que estimava l’empara sol·licitada per la part recurrent.
+Causa 2023-31-RE
+Recurs  d’empara  interposat  per  la  representació  processal  de  la  societat  
+Apartaments i Hotels 3000, SLU, contra l’aute del 20 de setembre del 2022, 
+dictat per la Secció Civil 3 de la Batllia, i, contra l’aute del 18 d’abril del 
+2023, dictat per la Sala Civil del Tribunal Superior de Justícia, per una pre-
+sumpta vulneració del dret a la jurisdicció, en els seus vessants del dret a la 
+defensa i dels principis processals d’audiència i de contradicció, d’igualtat 
+processal i de bona fe processal, reconeguts a l’article 10 de la Constitució. 
+El recurs va ser interposat el 9 de maig del 2023. Va ser admès a tràmit per 
+aute  del  Tribunal  Constitucional  el  18  de  maig  del  2023.  El  ponent  de  la  
+causa va ser el Sr. Josep-D. Guàrdia Canela.
+El 14 de juliol del 2023, el Tribunal Constitucional va dictar una sentència 
+que desestimava l’empara sol·licitada per la part recurrent.
+Causa 2023-32-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Daniel  
+Buyo  Gine  i  de  la  Societat  Anònima  d’Equipament  Turístic-Esportiu  de  
+la  parròquia  d’Encamp  (SAETDE),  contra  la  sentència  del  18  d’abril  del  
+2023,  dictada  per  la  Sala  Civil  del  Tribunal  Superior  de  Justícia,  per  una  
+presumpta  vulneració  del  dret  a  la  jurisdicció,  en  el  seu  vessant  del  dret  
+a  obtenir  una  decisió  fonamentada  en  Dret,  reconegut  a  l’article  10  de  la  
+
+27
+Constitució. El recurs va ser interposat el 9 de maig del 2023. Va ser inad-
+mès a tràmit per aute del Tribunal Constitucional el 12 de juny del 2023. El 
+ponent de la causa va ser el Sr. Jean-Yves Caullet.
+Causa 2023-33-RE
+Recurs d’empara interposat per la representació processal del Sr. Boris Me-
+léndez Fernández, contra la sentència del 18 d’abril del 2023, dictada per 
+la Sala Administrativa del Tribunal Superior de Justícia, per una presump-
+ta vulneració dels drets a la jurisdicció, a un procés degut i a obtenir una 
+decisió  fonamentada  en  Dret,  reconeguts  a  l’article  10  de  la  Constitució,  
+interpretats a la llum de l’article 3.2 d’aquest mateix text que reconeix els 
+principis de seguretat jurídica, d’interdicció de l’arbitrari i de presumpció 
+d’innocència.  El  recurs  va  ser  interposat  el  10  de  maig  del  2023.  Va  ser  
+admès a tràmit per aute del Tribunal Constitucional el 18 de maig del 2023. 
+El ponent de la causa va ser el Sr. Dominique Rousseau.
+El 14 de juliol del 2023, el Tribunal Constitucional va dictar una sentència 
+que desestimava l’empara sol·licitada per la part recurrent.
+Causa 2023-34-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Manuel  
+De Araujo Ribeiro Gomes, contra la sentència del 18 d’abril del 2023, dic-
+tada per la Sala Civil del Tribunal Superior de Justícia, per una presumpta 
+vulneració dels drets a un procés degut i a obtenir una decisió fonamentada 
+en Dret, i, del principi dispositiu, reconeguts a l’article 10 de la Constitució. 
+El recurs va ser interposat l’11 de maig del 2023. Va ser inadmès a tràmit 
+per aute del Tribunal Constitucional el 12 de juny del 2023. El ponent de la 
+causa va ser el Sr. Joan Manel Abril Campoy.
+Causa 2023-35-RE
+Recurs d’empara interposat per la representació processal del Sr. José Luis 
+Orobitg  Jiménez  i  de  la  societat  Orobitg  Arquitectura  i  Enginyeria,  SL,  
+contra l’aute del 18 d’abril del 2023, dictat per la Sala Penal del Tribunal 
+
+28
+Superior de Justícia, així com contra les anteriors resolucions dictades en el 
+marc de la mateixa causa per la Batllia i pel president del Tribunal de Corts, 
+per una presumpta vulneració dels drets a la jurisdicció, a un procés degut 
+i a obtenir una decisió fonamentada en Dret, reconeguts a l’article 10 de la 
+Constitució. El recurs va ser interposat el 15 de maig del 2023. Va ser inad-
+mès a tràmit per aute del Tribunal Constitucional el 12 de juny del 2023. El 
+ponent de la causa va ser el Sr. Josep-D. Guàrdia Canela.
+Causa 2023-36-RE
+Recurs  d’empara  interposat  per  la  representació  processal  de  la  Sra.  Co-
+rinne Millet, actuant en nom i representació propis i en representació de la 
+seva filla menor, i de la Sra. Charlotte Riom, contra la sentència del 2 de 
+maig del 2023, dictada per la Sala Penal del Tribunal Superior de Justícia, 
+per  una  presumpta  vulneració  del  dret  a  obtenir  una  decisió  fonamentada  
+en Dret, reconegut a l’article 10 de la Constitució. El recurs va ser interpo-
+sat el 19 de maig del 2023. Va ser inadmès a tràmit per aute del Tribunal 
+Constitucional el 12 de juny del 2023. El ponent de la causa va ser el Sr. 
+Jean-Yves Caullet.
+El 21 de juny del 2023, la part recurrent va presentar -en aplicació de l’ar-
+ticle 38 de la Llei qualificada del Tribunal Constitucional- un recurs de 
+súplica contra l’aute d’inadmissió a tràmit esmentat. El recurs de súplica va 
+ser desestimat per aute del Tribunal Constitucional el 14 de juliol del 2023.
+Causa 2023-37-RE
+Recurs d’empara interposat per la representació processal de la Sra. Sílvia 
+Teresa  Benítez,  contra  l’aute  del  3  de  maig  del  2023,  dictat  per  la  Sala  
+Administrativa  del  Tribunal  Superior  de  Justícia,  per  una  presumpta  vul-
+neració dels drets a un procés degut, a obtenir una decisió fonamentada en 
+Dret i a la defensa, reconeguts a l’article 10 de la Constitució. El recurs va 
+ser interposat el 23 de maig del 2023. Va ser inadmès a tràmit per aute del 
+Tribunal Constitucional el 14 de juliol del 2023. El ponent de la causa va ser 
+el Sr. Dominique Rousseau.
+
+29
+Causa 2023-38-RE
+Recurs  d’empara  interposat  per  la  representació  processal  de  la  societat  
+AXA Portugal, Companhia de Seguros, SA, contra la inactivitat en la causa 
+penal TC-030-3/10 (Túnel dels Dos Valires) que provoca la dilació en els 
+autes  civils  registrats  amb  el  núm.  0634-1/2011,  la  qual  derivaria  en  una  
+presumpta vulneració dels drets a un procés degut i a un judici de durada 
+raonable, reconeguts a l’article 10 de la Constitució. El recurs va ser inter-
+posat el 30 de maig del 2023. Va ser admès a tràmit per aute del Tribunal 
+Constitucional el 12 de juny del 2023. El ponent de la causa va ser el Sr. 
+Joan Manel Abril Campoy.
+El 7 de setembre del 2023, el Tribunal Constitucional va dictar una sentèn-
+cia que estimava l’empara sol·licitada per la part recurrent.
+Causa 2023-39-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Emili  
+Puig Ariet, contra la inactivitat en la causa Delictes Majors 4900011/2014, 
+la qual derivaria en una presumpta vulneració dels drets a un procés degut 
+i a un judici de durada raonable, reconeguts a l’article 10 de la Constitució. 
+El recurs va ser interposat el 30 de maig del 2023. Va ser admès a tràmit 
+per aute del Tribunal Constitucional el 12 de juny del 2023. El ponent de la 
+causa va ser el Sr. Josep-D. Guàrdia Canela.
+El 7 de setembre del 2023, el Tribunal Constitucional va dictar una sentèn-
+cia que estimava l’empara sol·licitada per la part recurrent.
+Causa 2023-40-RE
+Recurs d’empara interposat per la representació processal dels Srs. Eduard 
+Bajet  Royo  i  Eduardo  Mediavilla  Laso,  contra  l’aute  del  9  de  maig  del  
+2023,  dictat  per  la  Sala  Penal  del  Tribunal  Superior  de  Justícia,  i,  contra  
+l’aute  del  20  de  gener  del  mateix  any,  dictat  pel  Tribunal  de  Corts,  en  el  
+marc del procediment de l’incident de nul·litat de l’article 18 quater de la 
+Llei transitòria de procediments judicials; i, contra l’aute del 16 de novem-
+bre del 2022, dictat pel Tribunal de Corts, que resol el recurs d’apel·lació 
+
+30
+presentat  contra  l’aute  del  batlle  instructor  del  3  d’octubre  del  2022,  per  
+una presumpta vulneració dels principis de legalitat i de seguretat jurídica, 
+dels drets a la informació de les persones investigades en els processos pe-
+nals, a obtenir una decisió fonamentada, a la jurisdicció i a la presumpció 
+d’innocència,  reconeguts  a  l’article  10  de  la  Constitució.  El  recurs  va  ser  
+interposat el 30 de maig del 2023. Va ser inadmès a tràmit per aute del Tri-
+bunal Constitucional el 14 de juliol del 2023. El ponent de la causa va ser 
+el Sr. Jean-Yves Caullet.
+El 20 de juliol del 2023, la part recurrent va presentar -en aplicació de l’arti-
+cle 38 de la Llei qualificada del Tribunal Constitucional- un recurs de súplica 
+contra  l’aute  d’inadmissió  a  tràmit  esmentat.  El  recurs  de  súplica  va  ser  
+desestimat per aute del Tribunal Constitucional el 7 de setembre del 2023.
+Causa 2023-41-RE
+Recurs d’empara interposat per la representació processal de la Sra. Fa-
+bienne Isabelle Ibrouchene, contra l’aute del 20 de gener del 2023, dictat 
+pel Tribunal de Corts, i, contra l’aute del 16 de maig del mateix any, dictat 
+per  la  Sala  Penal  del  Tribunal  Superior  de  Justícia,  per  una  presumpta  
+vulneració dels drets a obtenir una resolució fonamentada en Dret i a la 
+defensa, reconeguts a l’article 10 de la Constitució. El recurs va ser inter-
+posat l’1 de juny del 2023. Va ser inadmès a tràmit per aute del Tribunal 
+Constitucional el 14 de juliol del 2023. El ponent de la causa va ser el Sr. 
+Dominique Rousseau.
+El 31 de juliol del 2023, la part recurrent va presentar -en aplicació de l’arti-
+cle 38 de la Llei qualificada del Tribunal Constitucional- un recurs de súplica 
+contra  l’aute  d’inadmissió  a  tràmit  esmentat.  El  recurs  de  súplica  va  ser  
+desestimat per aute del Tribunal Constitucional el 7 de setembre del 2023.
+Causa 2023-42-RE
+Recurs d’empara interposat per la representació processal del Sr. Pere Fortó 
+Camps,  contra  la  sentència  del  12  de  maig  del  2023,  dictada  per  la  Sala  
+Civil del Tribunal Superior de Justícia, per una presumpta vulneració dels 
+drets a obtenir una resolució fonamentada en Dret, a la defensa i al recurs, 
+reconeguts a l’article 10 de la Constitució. El recurs va ser interposat el 7 
+
+31
+de juny del 2023. Va ser admès a tràmit per aute del Tribunal Constitucio-
+nal el 7 de setembre del 2023. El ponent de la causa va ser el Sr. Josep-D. 
+Guàrdia Canela.
+El 20 de novembre del 2023, el Tribunal Constitucional va dictar una sen-
+tència que desestimava l’empara sol·licitada per la part recurrent.
+Causa 2023-43-RE
+Recurs d’empara interposat per la representació processal de la Sra. Mag-
+dalena Esteve Estefanell, contra l’aute del 5 de maig del 2023, dictat per la 
+Batllia de Guàrdia (Penal), per una presumpta vulneració del dret a la ju-
+risdicció, en el seu vessant del dret a obtenir una resolució fonamentada en 
+Dret, reconegut a l’article 10 de la Constitució. El recurs va ser interposat 
+el 9 de juny del 2023. La recurrent va presentar, el 19 de juny del 2023, un 
+escrit en què manifestava que la seva representació processal no tenia ins-
+truccions per fer el recurs d’empara contra l’aute del 5 de maig del 2023. El 
+desistiment va ser acceptat i la causa arxivada per aute del Tribunal Consti-
+tucional el 14 de juliol del 2023. El ponent de la causa va ser el Sr. Josep-D. 
+Guàrdia Canela.
+Causa 2023-44 i 45-RE
+Recursos d’empara interposats per la representació processal dels Srs. Mi-
+quel Àngel Adran Garcia i Carles Romero Puertas, contra les sentències del 
+29 de novembre del 2022 (86-2022 i 85-2022), dictades per la Sala Admi-
+nistrativa del Tribunal Superior de Justícia, per una presumpta vulneració 
+dels  drets  a  la  jurisdicció,  a  la  defensa,  a  un  procés  degut  i  a  obtenir  una  
+decisió fonamentada en Dret, reconeguts a l’article 10 de la Constitució, i, 
+dels principis de legalitat, de jerarquia, de publicitat de les normes jurídi-
+ques, de no retroactivitat de les disposicions restrictives de drets individuals 
+o que comportin un efecte o estableixin una sanció desfavorable, de segu-
+retat jurídica, de responsabilitat dels poders públics i d’interdicció de tota 
+arbitrarietat, establerts a l’article 3.2 de la Constitució. Els recursos van ser 
+interposats el 13 de juny del 2023. Van ser acumulats i la causa acumulada 
+inadmesa  a  tràmit  per  aute  del  Tribunal  Constitucional  el  14  de  juliol  del  
+2023. El ponent de la causa acumulada va ser el Sr. Jean-Yves Caullet.
+
+32
+Causa 2023-46-RE
+Recurs d’empara interposat per la representació processal del Sr. Òscar Aris-
+tot Borràs i de la companyia d’assegurances Axa-Patrimoine, contra l’aute 
+de l’1 de juny del 2023, dictat per la Sala Penal del Tribunal Superior de Jus-
+tícia, contra la sentència del 10 de març del 2023 i l’aute del 4 de juliol del 
+2022, dictats pel Tribunal de Corts, i, contra l’aute de conclusió de sumari 
+del 4 d’abril del 2022, dictat per la Secció d’Instrucció 5 de la Batllia, per 
+una presumpta vulneració del dret a la jurisdicció en el seu vessant del dret 
+a un procés degut per indeguda denegació de la prova sol·licitada, reconegut 
+a l’article 10 de la Constitució. El recurs va ser interposat el 14 de juny del 
+2023. Va ser inadmès a tràmit per aute del Tribunal Constitucional el 7 de 
+setembre del 2023. El ponent de la causa va ser el Sr. Dominique Rousseau.
+Causa 2023-47-RE
+Recurs d’empara interposat per la representació processal de la Sra. Mag-
+dalena Esteve Estefanell, contra l’aute del 30 de maig del 2023, dictat pel 
+Tribunal de Corts, per una presumpta vulneració del dret a la jurisdicció, en 
+els seus vessants del dret a obtenir una resolució fonamentada en Dret i del 
+dret al recurs, reconeguts a l’article 10 de la Constitució. El recurs va ser 
+interposat el 15 de juny del 2023. La recurrent va presentar, el 19 de juny 
+del 2023, un escrit en què manifestava que la seva representació processal 
+no tenia instruccions per fer el recurs d’empara, ja que no el considerava 
+suficientment capacitat per defensar-la a ella i al seu fill. El desistiment va 
+ser acceptat i la causa arxivada per aute del Tribunal Constitucional el 14 de 
+juliol del 2023. El ponent de la causa va ser el Sr. Josep-D. Guàrdia Canela.
+Causa 2023-48-RE
+Recurs d’empara interposat per la representació processal de la Companyia 
+Andorrana d’Empreses Generals, SL (CAEGSL), contra la sentència del 21 
+de juny del 2023, dictada per la Sala Administrativa del Tribunal Superior 
+de Justícia, en el marc del procediment urgent i preferent de l’article 41.1 de 
+la Constitució, per una presumpta vulneració del dret a la jurisdicció, en els 
+seus vessants dels drets a un procés degut i a un judici de durada raonable, 
+
+33
+reconeguts a l’article 10 de la Constitució. El recurs va ser interposat el 4 de 
+juliol del 2023. Va ser inadmès a tràmit per aute del Tribunal Constitucional 
+el 14 de juliol del 2023. El ponent de la causa va ser el Sr. Joan Manel Abril 
+Campoy.
+Causa 2023-49-RE
+Recurs d’empara interposat per la representació processal de la Sra. Esther 
+Delgado Mira, contra la sentència del 21 de juny del 2023, dictada per la 
+Sala  Administrativa  del  Tribunal  Superior  de  Justícia,  per  una  presumpta  
+vulneració del dret a la jurisdicció, en el seu vessant del dret a l’accés a la 
+jurisdicció, reconegut a l’article 10 de la Constitució. El recurs va ser inter-
+posat el 10 de juliol del 2023. Va ser admès a tràmit per aute del Tribunal 
+Constitucional el 7 de setembre del 2023. El ponent de la causa va ser el Sr. 
+Jean-Yves Caullet.
+El 20 de novembre del 2023, el Tribunal Constitucional va dictar una sen-
+tència que desestimava l’empara sol·licitada per la part recurrent.
+Causa 2023-50-RE
+Recurs d’empara interposat per la representació processal del Sr. Helder Fi-
+lipe Gomes Gonçalves, contra les sentències del 24 de novembre del 2017 
+i  del  23  de  novembre  del  2022,  dictades  pel  Tribunal  de  Corts,  contra  la  
+sentència  del  27  de  març  del  2023,  i  contra  els  autes  del  16  de  maig  del  
+2023 i del 21 de juny del mateix any, dictats per la Sala Penal del Tribunal 
+Superior de Justícia, per una presumpta vulneració del dret a la jurisdicció, 
+en els seus vessants dels drets a obtenir una resolució judicial motivada i 
+fonamentada en Dret i no arbitrària i que no produeixi indefensió efectiva i 
+a la presumpció d’innocència, reconeguts a l’article 10 de la Constitució. El 
+recurs va ser interposat l’11 de juliol del 2023. Va ser inadmès a tràmit per 
+aute del Tribunal Constitucional el 7 de setembre del 2023. El ponent de la 
+causa va ser el Sr. Dominique Rousseau.
+El 20 de setembre del 2023, la part recurrent va presentar -en aplicació de 
+l’article 38 de la Llei qualificada del Tribunal Constitucional- un recurs de 
+súplica contra l’aute d’inadmissió a tràmit esmentat. El recurs de súplica va 
+ser desestimat per aute del Tribunal Constitucional l’11 d’octubre del 2023.
+
+34
+Causa 2023-51-RE
+Recurs d’empara interposat pel Sr. Emili Campos Arauz, actuant en el seu 
+propi  nom  i  interès,  contra  la  sentència  del  30  de  juny  del  2023,  dictada  
+per la Sala Administrativa del Tribunal Superior de Justícia, en el marc del 
+procediment urgent i preferent de l’article 41.1 de la Constitució, per una 
+presumpta vulneració del dret a la jurisdicció, “en la seva vessant al dret a 
+la defensa, al procés degut i el dret al sufragi reconeguts en l’article 10 de 
+la Constitució. Les anteriors resolucions judicials també es troben en direc-
+ta i absoluta contradicció amb el dret de tota persona a que la seva causa 
+sigui vista equitativament per un tribunal independent e imparcial establert 
+per la llei, que decideixi, sigui controvèrsies sobre drets o obligacions de 
+caràcter civil, de disposar del temps i de les facilitats necessàries per pre-
+parar la seva defensa establerts en els articles 6.1, 6.3 i 17 de la Convenció 
+Europea per a la Salvaguarda dels Drets Humans i de les Llibertats Fona-
+mentals de data 4 de novembre de 1.950 i l’article 3 del Protocol número 1 
+a la Convenció (Dret a eleccions lliures)”. El recurs va ser interposat l’11 
+de juliol del 2023. Va ser admès a tràmit per aute del Tribunal Constitucio-
+nal el 7 de setembre del 2023. El ponent de la causa va ser el Sr. Joan Manel 
+Abril Campoy.
+El 20 de novembre del 2023, el Tribunal Constitucional va dictar una sen-
+tència que desestimava l’empara sol·licitada pel recurrent.
+El 24 de novembre del 2023, el recurrent va presentar un recurs de súplica 
+contra la sentència de desestimació esmentada. El recurs de súplica va ser 
+desestimat  per  improcedent  per  aute  del  Tribunal  Constitucional  el  19  de  
+desembre del 2023.
+Causa 2023-52-RE
+Recurs d’empara interposat per la representació processal del Sr. Jorge Torres 
+Culla, contra la sentència del 21 de juny del 2023, dictada per la Sala Admi-
+nistrativa del Tribunal Superior de Justícia, per una presumpta vulneració 
+dels drets a la jurisdicció i a un procés degut, reconeguts a l’article 10 de 
+la Constitució, així com del dret a la intimitat, reconegut a l’article 14 de 
+la Constitució. El recurs va ser interposat el 13 de juliol del 2023. Va ser 
+inadmès a tràmit per aute del Tribunal Constitucional el 7 de setembre del 
+2023. El ponent de la causa va ser el Sr. Joan Manel Abril Campoy.
+
+35
+Causa 2023-53-RE
+Recurs  d’empara  interposat  per  la  representació  processal  dels  Srs.  Ale-
+xandre Rosell Feliu, Joan Besolí Ribalta i Pedro Andrés Ramos González, 
+contra la inactivitat de la Secció d’Instrucció Especialitzada 1 de la Batllia, 
+en relació amb la causa Delictes Majors 8000150/2015 que derivaria en una 
+presumpta vulneració del dret a un judici de durada raonable, reconegut a 
+l’article 10 de la Constitució. El recurs va ser interposat el 14 de juliol del 
+2023.  Va  ser  admès  a  tràmit  per  aute  del  Tribunal  Constitucional  el  7  de  
+setembre del 2023. El ponent de la causa va ser el Sr. Jean-Yves Caullet.
+El 20 de novembre del 2023, el Tribunal Constitucional va dictar una sen-
+tència que estimava l’empara sol·licitada per la part recurrent.
+Causa 2023-54-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Tomàs  
+Pascual Casabosch, contra l’aute del 26 de juny del 2023, dictat per la Sala 
+Penal del Tribunal Superior de Justícia, per una presumpta vulneració dels 
+drets a un procés degut i a la jurisdicció, en els seus vessants dels drets a ob-
+tenir una resolució judicial motivada i fonamentada en Dret i no arbitrària 
+i que no produeixi indefensió efectiva, i a la presumpció d’innocència, re-
+coneguts a l’article 10 de la Constitució. El recurs va ser interposat el 14 de 
+juliol del 2023. Va ser inadmès a tràmit per aute del Tribunal Constitucional 
+el 7 de setembre del 2023. El ponent de la causa va ser el Sr. Dominique 
+Rousseau.
+Causa 2023-55-RE
+Recurs d’empara interposat per la representació processal de la Comunitat 
+de propietaris de la Primera Fase del Conjunt immobiliari “La Pleta de Sol-
+deu”, contra la inactivitat de la Secció Civil 1 de la Batllia, en relació amb 
+la causa Ordinari 1000065/2016 que derivaria en una presumpta vulneració 
+del dret a un judici de durada raonable, reconegut a l’article 10 de la Cons-
+titució. El recurs va ser interposat el 19 de juliol del 2023. Va ser admès a 
+tràmit  per  aute  del  Tribunal  Constitucional  el  7  de  setembre  del  2023.  El  
+ponent de la causa va ser el Sr. Joan Manel Abril Campoy.
+
+36
+El 20 de novembre del 2023, el Tribunal Constitucional va dictar una sen-
+tència que estimava l’empara sol·licitada per la part recurrent.
+Causa 2023-56-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Higini  
+Cierco  Noguer,  contra  l’aute  del  29  de  juny  del  2023,  dictat  per  la  Sala  
+Penal del Tribunal Superior de Justícia, per una presumpta vulneració del 
+dret a la jurisdicció, reconegut a l’article 10 de la Constitució, en els seus 
+vessants dels drets a obtenir una decisió fonamentada en Dret, a la defensa, 
+a un procés degut i a l’accés a un tribunal. El recurs va ser interposat el 20 
+de juliol del 2023. Va ser inadmès a tràmit per aute del Tribunal Constitu-
+cional l’11 d’octubre del 2023. El ponent de la causa va ser el Sr. Josep-D. 
+Guàrdia Canela.
+Causa 2023-57-RE
+Recurs d’empara interposat per la representació processal de la Sra. Isabel 
+Ruiz  Pelegrina,  contra  l’aute  del  17  de  juliol  del  2023,  dictat  per  la  Sala  
+Civil del Tribunal Superior de Justícia, i, contra la resta de resolucions re-
+caigudes en el marc de la causa Execució 5000058/2022, per una presumpta 
+vulneració dels drets a un procés degut i a la defensa, reconeguts a l’article 
+10 de la Constitució. El recurs va ser interposat el 26 de juliol del 2023. Va 
+ser admès a tràmit per aute del Tribunal Constitucional el 7 de setembre del 
+2023. El ponent de la causa va ser el Sr. Jean-Yves Caullet.
+El 20 de novembre del 2023, el Tribunal Constitucional va dictar una sen-
+tència que estimava parcialment l’empara sol·licitada per la part recurrent.
+Causa 2023-58-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Renato  
+Filipe Valente Barbosa, contra l’aute de l’11 de juliol del 2023, dictat pel 
+Tribunal  de  Corts,  per  una  presumpta  vulneració  dels  drets  a  la  defensa  i  
+a la llibertat, reconeguts als articles 10 i 9 de la Constitució. El recurs va 
+ser interposat el 31 de juliol del 2023. Va ser inadmès a tràmit per aute del 
+
+37
+Tribunal Constitucional el 7 de setembre del 2023. El ponent de la causa va 
+ser el Sr. Dominique Rousseau.
+El 27 de setembre del 2023, la part recurrent va presentar -en aplicació de 
+l’article 38 de la Llei qualificada del Tribunal Constitucional- un recurs de 
+súplica contra l’aute d’inadmissió a tràmit esmentat. El recurs de súplica va 
+ser desestimat per aute del Tribunal Constitucional l’11 d’octubre del 2023. 
+Causa 2023-59-RE
+Recurs d’empara interposat per la representació processal del Sr. Josep Par-
+ramon Llavet, contra l’aute del 6 de juliol del 2023, dictat per la Sala Penal 
+del Tribunal Superior de Justícia, per una presumpta vulneració del dret a 
+la jurisdicció en el seu vessant del dret a un procés degut, reconeguts a l’ar-
+ticle 10 de la Constitució. El recurs va ser interposat l’11 d’agost del 2023. 
+Va ser admès a tràmit per aute del Tribunal Constitucional el 7 de setembre 
+del 2023. El ponent de la causa va ser el Sr. Joan Manel Abril Campoy.
+El 20 de novembre del 2023, el Tribunal Constitucional va dictar una sen-
+tència que desestimava l’empara sol·licitada per la part recurrent.
+Causa 2023-60-RE
+Recurs d’empara interposat pel Sr. Emili Campos Arauz, actuant en el seu 
+propi nom i interès, contra la inactivitat de la Batllia en relació amb la causa 
+1500007/2008 que derivaria en una presumpta vulneració del dret a un ju-
+dici de durada raonable, reconegut a l’article 10 de la Constitució. El recurs 
+va ser interposat l’1 de setembre del 2023. Va ser admès a tràmit per aute 
+del Tribunal Constitucional el 7 de setembre del 2023. El ponent de la causa 
+va ser el Sr. Josep-D. Guàrdia Canela.
+El 20 de novembre del 2023, el Tribunal Constitucional va dictar una sen-
+tència que estimava l’empara sol·licitada pel recurrent.
+
+38
+Causa 2023-61 i 64-RE
+Recurs d’empara interposat per la representació processal de les Sres. Anna 
+Isabel i Francesca Font Fornàs, contra la sentència del 17 de juliol del 2023, 
+així com contra la providència del 8 de març del mateix any, i, l’aute de l’11 
+de juliol també del mateix any, dictats per la Sala Civil del Tribunal Supe-
+rior de Justícia, per una presumpta vulneració dels principis de legalitat, de 
+seguretat jurídica i de publicitat, així com per una vulneració dels drets a 
+la jurisdicció, a un procés degut, a la defensa, a obtenir una decisió fona-
+mentada en Dret, a un tribunal imparcial i a un judici de durada raonable, 
+reconeguts a l’article 10 de la Constitució. El recurs va ser interposat el 7 
+de setembre del 2023.
+Recurs d’empara interposat per la representació processal de les Sres. Anna 
+Isabel i Francesca Font Fornàs, contra la sentència del 17 de juliol del 2023, 
+així com contra la providència del 14 de juliol del 2022, i, l’aute del 21 de 
+novembre del mateix any, dictats per la Sala Civil del Tribunal Superior de 
+Justícia, per una presumpta vulneració dels principis de legalitat, de segure-
+tat jurídica i de publicitat, així com per una presumpta vulneració dels drets 
+a la jurisdicció, a un procés degut, a la defensa, a obtenir una decisió fona-
+mentada en Dret, a un tribunal imparcial i a un judici de durada raonable, 
+reconeguts a l’article 10 de la Constitució. El recurs va ser interposat el 15 
+de setembre del 2023.
+Van  ser  acumulats  i  la  causa  acumulada  inadmesa  a  tràmit  per  aute  del  
+Tribunal Constitucional l’11 d’octubre del 2023. El ponent de la causa acu-
+mulada va ser el Sr. Jean-Yves Caullet.
+El 20 d’octubre del 2023, la part recurrent va presentar -en aplicació de l’ar-
+ticle 38 de la Llei qualificada del Tribunal Constitucional- un recurs de sú-
+plica contra l’aute d’inadmissió a tràmit esmentat. El recurs de súplica va ser 
+desestimat per aute del Tribunal Constitucional el 20 de novembre del 2023.
+Causa 2023-62-RE
+Recurs  d’empara  interposat  per  la  representació  processal  de  la  societat  
+AERCO, SA, contra la sentència del 17 de juliol del 2023, dictada per la 
+Sala Civil del Tribunal Superior de Justícia, per una presumpta vulneració 
+dels drets a la jurisdicció, a obtenir una decisió fonamentada en Dret i a la 
+
+39
+defensa, reconeguts a l’article 10 de la Constitució, i, a l’article 6 del Con-
+veni per a la salvaguarda dels drets humans i de les llibertats fonamentals. 
+El  recurs  va  ser  interposat  el  7  de  setembre  del  2023.  Va  ser  inadmès  a  
+tràmit per aute del Tribunal Constitucional el 20 de novembre del 2023. El 
+ponent de la causa va ser el Sr. Dominique Rousseau.
+El 29 de novembre del 2023, la part recurrent va presentar -en aplicació de 
+l’article 38 de la Llei qualificada del Tribunal Constitucional- un recurs de sú-
+plica contra l’aute d’inadmissió a tràmit esmentat. El recurs de súplica va ser 
+desestimat per aute del Tribunal Constitucional el 19 de desembre del 2023.
+Causa 2023-63-RE
+Recurs d’empara interposat per la representació processal del Comú d’En-
+camp, contra la sentència del 24 de març del 2023, així com contra els autes 
+del 21 de juny i del 25 de juliol del mateix any, dictats per la Sala Admi-
+nistrativa del Tribunal Superior de Justícia, per una presumpta vulneració 
+dels drets a la jurisdicció i a un procés degut, reconeguts a l’article 10 de 
+la Constitució, així com del principi de legalitat, establert a l’article 3.2 del 
+mateix text. El recurs va ser interposat el 14 de setembre del 2023. Va ser 
+inadmès  a  tràmit  per  aute  del  Tribunal  Constitucional  l’11  d’octubre  del  
+2023. El ponent de la causa va ser el Sr. Joan Manel Abril Campoy.
+Causa 2023-65-RE
+Recurs d’empara interposat per la representació processal del Sr. Joan Ce-
+judo  Peña,  contra  l’aute  del  31  de  juliol  del  2023,  dictat  pel  Tribunal  de  
+Corts, i contra els autes del 22 de juny del 2023 i del 31 de març del mateix 
+any, dictats per la Secció d’Instrucció Especialitzada 1 de la Batllia, per una 
+presumpta vulneració dels drets a obtenir una decisió fonamentada en Dret, 
+a la presumpció d’innocència, a la intimitat i al secret de les comunicacions, 
+reconeguts als articles 10, 14 i 15 de la Constitució. El recurs va ser interpo-
+sat el 19 de setembre del 2023. Va ser inadmès a tràmit per aute del Tribunal 
+Constitucional l’11 d’octubre del 2023. El ponent de la causa va ser el Sr. 
+Josep-D. Guàrdia Canela.
+
+40
+Causa 2023-66-RE
+Recurs d’empara interposat per la representació processal del Sr. Mohammed 
+Bessaad, contra l’aute del 22 de setembre del 2023, dictat pel Tribunal de 
+Corts, per una presumpta vulneració del dret a la llibertat, reconegut a l’ar-
+ticle 9.1 de la Constitució, així com dels drets a la jurisdicció, a un procés 
+degut i a la defensa, reconeguts a l’article 10 de la Constitució. El recurs va 
+ser interposat el 28 de setembre del 2023. Va ser admès a tràmit per aute del 
+Tribunal Constitucional l’11 d’octubre del 2023. El ponent de la causa va 
+ser el Sr. Dominique Rousseau.
+El 19 de desembre del 2023, el Tribunal Constitucional va dictar una sen-
+tència que desestimava l’empara sol·licitada per la part recurrent.
+Causa 2023-68-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Andrés  
+Felipe Sánchez Vargas, contra l’aute de processament del 12 de setembre 
+del 2023, dictat per la Secció d’Instrucció 2 de la Batllia, i, contra l’aute del 
+3 d’octubre del mateix any, dictat pel Tribunal de Corts, per una presumpta 
+vulneració del dret a obtenir una decisió fonamentada en Dret, reconegut a 
+l’article 10 de la Constitució. El recurs va ser interposat el 16 d’octubre del 
+2023. Va ser inadmès a tràmit per aute del Tribunal Constitucional el 20 de 
+novembre  del  2023.  El  ponent  de  la  causa  va  ser  el  Sr.  Josep-D.  Guàrdia  
+Canela.
+El 29 de novembre del 2023, la part recurrent va presentar -en aplicació de 
+l’article 38 de la Llei qualificada del Tribunal Constitucional- un recurs de 
+súplica contra l’aute d’inadmissió a tràmit esmentat. El recurs de súplica va 
+ser desestimat per aute del Tribunal Constitucional el 19 de desembre del 
+2023.
+Causa 2023-69-RE
+Recurs  d’empara  interposat  per  la  representació  processal  de  la  societat  
+Centre Esportiu d’Anyós, SA (CEDASA), contra la sentència del 21 de se-
+tembre del 2023, dictada per la Sala Civil del Tribunal Superior de Justícia, 
+
+41
+per una presumpta vulneració del dret a la jurisdicció, en els seus vessants 
+dels drets a un procés degut i a obtenir una decisió fonamentada en Dret, 
+reconeguts a l’article 10 de la Constitució. El recurs va ser interposat el 16 
+d’octubre del 2023. Va ser inadmès a tràmit per aute del Tribunal Consti-
+tucional  el  20  de  novembre  del  2023.  El  ponent  de  la  causa  va  ser  el  Sr.  
+Jean-Yves Caullet.
+Causa 2023-70-RE
+Recurs  d’empara  interposat  per  la  representació  processal  de  la  societat  
+Augé Accountants, SLU, contra l’aute del 21 de setembre del 2023, dictat 
+per la Sala Civil del Tribunal Superior de Justícia, per una presumpta vul-
+neració del dret a la jurisdicció, en els seus vessants dels drets a un procés 
+substanciat per un tribunal imparcial i a obtenir una decisió fonamentada en 
+Dret, reconeguts a l’article 10 de la Constitució. El recurs va ser interposat 
+el  16  d’octubre  del  2023.  Va  ser  inadmès  a  tràmit  per  aute  del  Tribunal  
+Constitucional el 20 de novembre del 2023. El ponent de la causa va ser el 
+Sr. Dominique Rousseau.
+El 28 de novembre del 2023, la part recurrent va presentar -en aplicació de 
+l’article 38 de la Llei qualificada del Tribunal Constitucional- un recurs de 
+súplica contra l’aute d’inadmissió a tràmit esmentat. El recurs de súplica va 
+ser desestimat per aute del Tribunal Constitucional el 19 de desembre del 
+2023.
+Causa 2023-72-RE
+Recurs d’empara interposat per la representació processal de la Sra. Paula 
+Cristina Felisberto Da Graça, contra l’aute del 5 de juliol del 2021, dictat 
+per  la  Secció  d’Instrucció  Especialitzada  1  de  la  Batllia,  i,  contra  l’aute  
+del 3 d’octubre del 2023, dictat pel Tribunal de Corts, per una presumpta 
+vulneració del dret a la jurisdicció, en el seu vessant del dret a obtenir una 
+decisió fonamentada en Dret, reconegut a l’article 10 de la Constitució. El 
+recurs va ser interposat el 27 d’octubre del 2023. Va ser inadmès a tràmit 
+per aute del Tribunal Constitucional el 20 de novembre del 2023. El ponent 
+de la causa va ser el Sr. Josep-D. Guàrdia Canela.
+
+42
+El 12 de desembre del 2023, la part recurrent va presentar -en aplicació de 
+l’article 38 de la Llei qualificada del Tribunal Constitucional- un recurs de sú-
+plica contra l’aute d’inadmissió a tràmit esmentat. El recurs de súplica va ser 
+desestimat per aute del Tribunal Constitucional el 19 de desembre del 2023.
+Causa 2023-73 i 74-RE
+Recurs d’empara interposat per la representació processal del Sr. Francisco 
+José Garcia Santiago, contra la sentència del 27 de juny del 2022, dictada 
+per la Secció de Contenciós-Administratiu 2 de la Batllia, i, contra la sen-
+tència del 24 de març del 2023 i contra els autes del 21 de juliol i del 10 
+d’octubre  del  mateix  any,  dictats  per  la  Sala  Administrativa  del  Tribunal  
+Superior de Justícia, per una presumpta vulneració del dret a obtenir una re-
+solució judicial motivada i fonamentada en Dret, no arbitrària i que no pro-
+dueixi indefensió efectiva, reconegut a l’article 10 de la Constitució, per no 
+respectar l’efecte de cosa jutjada material, privant d’eficàcia les disposicions 
+d’una resolució judicial ferma relativa a mesures cautelars pronunciada en el 
+procés penal i perjudicant greument la seguretat jurídica.
+Recurs d’empara interposat per la representació processal del Sr. Francisco 
+José Garcia Santiago, contra la sentència del 22 de juny del 2022, dictada 
+per la Secció de Contenciós-Administratiu 2 de la Batllia, i, contra la sen-
+tència del 24 de març del 2023 i contra els autes del 21 de juliol i del 10 
+d’octubre  del  mateix  any,  dictats  per  la  Sala  Administrativa  del  Tribunal  
+Superior  de  Justícia,  per  una  presumpta  vulneració  del  dret  a  obtenir  una  
+resolució  judicial  motivada  i  fonamentada  en  Dret,  no  arbitrària  i  que  no  
+produeixi indefensió efectiva, reconegut a l’article 10 de la Constitució.
+Els recursos van ser interposats el 30 d’octubre del 2023. Van ser acumulats 
+i la causa acumulada inadmesa a tràmit per aute del Tribunal Constitucional 
+el 19 de desembre del 2023. El ponent de la causa acumulada va ser el Sr. 
+Jean-Yves Caullet.
+Causa 2023-75-RE
+Recurs d’empara interposat per la representació processal de la Sra. Beatriz 
+Martín  Sánchez,  contra  l’aute  de  l’11  d’octubre  del  2023  i  contra  la  sen-
+tència de l’11 de maig del mateix any, dictats per la Sala Civil del Tribunal 
+
+43
+Superior de Justícia, per una presumpta vulneració dels drets a la jurisdicció 
+i a un procés degut, reconeguts a l’article 10 de la Constitució. El recurs va 
+ser interposat el 2 de novembre del 2023. Va ser inadmès a tràmit per aute 
+del  Tribunal  Constitucional  el  20  de  novembre  del  2023.  El  ponent  de  la  
+causa va ser el Sr. Dominique Rousseau.
+Causa 2023-77-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Pablo  
+Sebastian  Navarro  Morales,  contra  la  sentència  del  28  d’abril  del  2023,  
+dictada  pel  Tribunal  de  Corts,  i,  contra  la  sentència  del  30  d’octubre  del  
+mateix any, dictada per la Sala Penal del Tribunal Superior de Justícia, per 
+una presumpta vulneració del dret a la jurisdicció en els seus vessants dels 
+drets  a  la  defensa,  a  la  presumpció  d’innocència  i  a  obtenir  una  decisió  
+fonamentada en Dret, reconeguts a l’article 10 de la Constitució. El recurs 
+va ser interposat el 17 de novembre del 2023. Va ser inadmès a tràmit per 
+aute del Tribunal Constitucional el 19 de desembre del 2023. El ponent de 
+la causa va ser el Sr. Josep-D. Guàrdia Canela.
+Causa 2023-78-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Enric  
+Dolsa Font, contra la sentència del 4 de març del 2023, dictada per la Secció 
+de  Contenciós-Administratiu  1  de  la  Batllia,  i,  contra  la  sentència  del  30  
+d’octubre  del  mateix  any,  dictada  per  la  Sala  Administrativa  del  Tribunal  
+Superior de Justícia, per una presumpta vulneració del dret d’accés a la ju-
+risdicció, fet que situaria al recurrent en una posició d’indefensió material 
+efectiva, per tal com se l’hauria privat de manera irraonable i desproporcio-
+nada  per  obtenir  un  pronunciament  sobre  el  fons  de  la  seva  pretensió.  El  
+recurs va ser interposat el 17 de novembre del 2023. Va ser inadmès a tràmit 
+per aute del Tribunal Constitucional el 19 de desembre del 2023. El ponent 
+de la causa va ser el Sr. Jean-Yves Caullet.
+
+44
+Causa 2023-81-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Helmut  
+Hartung, contra l’aute del 21 de setembre del 2023, dictat per la Sala Civil 
+del Tribunal Superior de Justícia, per una presumpta vulneració del dret a 
+un procés degut substanciat per un tribunal imparcial, reconegut a l’article 
+10  de  la  Constitució.  El  recurs  va  ser  interposat  el  27  de  novembre  del  
+2023.  Va  ser  inadmès  a  tràmit  per  aute  del  Tribunal  Constitucional  el  19  
+de desembre del 2023. El ponent de la causa va ser el Sr. Josep-D. Guàrdia 
+Canela.
+
+45
+Causes pendents de resolució
+En el moment de redactar aquest capítol de la memòria, el Tribunal es troba 
+coneixent de 12 causes judicials (6 causes admeses pendents de sentència 
+al 2024 i 6 causes pendents d’admissió o d’inadmissió):
+Causa 2023-67-RE
+Recurs d’empara interposat per la representació processal de la societat In-
+tergroup, SLU, contra la sentència del 26 de setembre del 2023, dictada per 
+la Sala Administrativa del Tribunal Superior de Justícia, per una presumpta 
+vulneració dels drets a un procés degut i a la jurisdicció, en els seus vessants 
+dels drets a obtenir una resolució judicial motivada i fonamentada, des d’un 
+punt de vista lògic i raonable, en Dret i no arbitrària i que no produeixi una 
+indefensió efectiva, reconeguts a l’article 10 de la Constitució, en relació 
+amb els principis de seguretat jurídica i de no retroactivitat de les disposi-
+cions restrictives de drets individuals o que comportin un efecte o establei-
+xin una sanció desfavorable, garantits en l’article 3.2 de la Constitució. El 
+recurs va ser interposat el 13 d’octubre del 2023. Va ser admès a tràmit per 
+aute del Tribunal Constitucional el 20 de novembre del 2023. El ponent de 
+la causa és el Sr. Joan Manel Abril Campoy.
+Causa 2023-71-RE
+Recurs d’empara interposat per la representació processal dels Srs. Laura 
+Ahrtz, Alejandra Cristina Ainoza, Héctor Alberto Alessandri, María Cristi-
+na Amoreo, Eduardo Honorio i Hernan Amui, Concepción Anapo, Alfredo 
+Javier i Fabián Martin Antoniucci, Antonio Maron Aon, Constanza Arge-
+rich, Nilda Nair Arriola, Maria Cristina Azzinnari, Margarita Monica i Leo-
+nardo  Luciano  Bagnato,  Pablo  Miguel  Angel  Baldini,  Carlos  Agustín  
+Bañon, Augusto Baratucci, Elisabetta Barbieri, Rubén Oscar, Gonzalo José 
+i Florencia Barciela, German Angel Barreiro, Elba Bellone, Mario Benedetti, 
+Damián Pablo Bernal, Míriam Angélica i Graciela lnés Berroa, Ana Paula 
+Berrojalvis,  Sergio  José  Bertoni,  Luis  Alberto  Bessone,  Alejandro  Luis  i  
+Karina Roxana Bidondo, Fernando Claudio i Rosana María Blanco, Fran-
+cisco Pedro i Jorge Antonio Boccanfuso, Roberto Victor, Marcelo Rubén i 
+Daniel  Rodolfo  Bonano,  Jorge  Eduardo  Borrelli,  Carlos  Marcelo  Bosso,  
+
+46
+Rosana Ethel Botia, Juan José Boubee, Esteban i Silvia Anahit Boymoucha-
+kian,  Osvaldo  Francisco  Brunini,  Maria  Carolina  Bruno  Ramayon  Vegetti,  
+Luis Emilio Cabrera, María Teresa Luján Cacchione, Graciela Laura Cafaro, 
+Ana  María  Calloni,  Susana  Elena  Camino,  Daniel  Antonio  Care,  Anibal  
+Ruben Caruso, Calogero Antonio i María del Carmen Casilli, Mauro Her-
+nan  Castro,  Gabriel  Guillermo  Castro  Fox,  Juan  Carlos  Cavo,  Irma  Ilda  
+Ceci, Nestor Omar Cejas, Cora Amalia Cellerino, Aaron Tadeo Centurion, 
+Ezequiel Raul Chamorro, Pablo Gustavo Chiflet, Pablo Martín Ciardi, Jorge 
+Esteban Ciarfaglia, Claudia Adriana Cimillo, Maria Silvina Cipolletta, An-
+drés Elías Cvitanovic, María Angélica Colavito, María Cecilia, María Flo-
+rencia i Mariano Ignacio Collado, Juan Ignacio Collar Lopez, Juana Collo-
+rafi (representada pel seu fill Aldo Materia), Arnaldo Martin i Lidia Lorena 
+Colombo, Marta Susana Columba, Mario Guillermo Comelli, Stella Maris 
+Concetti, Rosa Cristina Constantino, Ana María Cortes, Hector Eduardo i 
+Jimena Cosimi, Reinaldo Enrique Costa, Carlos Leonardo Cattaneo (repre-
+sentat pel Sr. Tettamanti), Jorge Luis i María Victoria Cozzoli, Carlos Ro-
+dolfo  Crespo,  Maria  Alejandra  Croppi,  Rodrigo  Danza,  Ivana  Carolina  
+D’Alessandro, Carmen Maria, Josefa i Rosa Lucía D’Arrigo, Luis Fernando 
+Dato, Carlos Nicolas, Maria Cristina i Nicolás Alejandro Dazeo, Silvia De 
+La Canal, Jorge Bernardino De Porras, Zeno Fernando Antonio De Rocca, 
+Aldo  Roberto  Del  Cul,  Luis  Aníbal  Del  Piero,  Maria  Silvina  Demagistri,  
+Alberto Domingo Desimone, Carlos Di Bona, Alberto i Filomena Di Iulio, 
+Maria  Laura  Di  Loreto,  Nelida  Dias,  Carlos  Alberto  Diaz,  Delia  Ester  i  
+Maria Luz Dominguez, Javier Eloy Doumic, Federico Mario Ecker, Carla 
+Fabiana Eguaras, Maria Amalia i Osvaldo Elefante, Melina Noel Elicabe, 
+Mario Eduardo Elinger, Micaela i Aldana Etcheverry, Maria Fernanda Fay, 
+Norma Susana Faguaga, Daniel Horacio Fais, Lilia Federico, Marisol, Ma-
+ría del Pilar i Paula Carolina Fernandez, Julio Cesar Fernandez Brañeiro, 
+Hector i Silvia Fernandez Iglesias, Alba Rosa Fernandez Jofre, Mirta Teresa 
+Clara  Ferrero,  María  Belén  Ferreiro,  Carlos  Atilio  Ferro,  Ana  Micaela  i  
+Federico  Carlos  Ferro  Orozco,  Carlos  Alberto  Fittipaldi,  Braian  Fontana,  
+Monica  Patricia  Fontanals,  Pablo  Ezequiel  Francisconi,  Marcelo  Frega,  
+Alejandro Frenkel, Mirta Erminia Fuoco, Alberto Anibal i Leandro Augusto 
+Gabas,  Gerardo  Gaffrey,  Mercedes  Gagliostro,  Eduardo  Héctor  i  Sergio  
+Mario Galleano, Gerardo Daniel Galotto, Alicia Ester, José Ignacio i Tomas 
+Andrés Garcia Navarro, Alberto Enrique i Marta Inés Garcia, Lucía Gari-
+botti,  Lorena  Gates,  María  de  las  Mercedes  Gattino,  Almendra  d’Ambro  
+Gaya, Norberto Amando Piero i Susana Gabriela Ghirardelli, Eugenio i Jorge 
+Osvaldo Gil, Maria Inés Giordano Echegoyen, María Inés Godio, Ricardo 
+Walter Gomez Marcon, Nelida, Gabriel Angel i María Emiliana Gonzalez, 
+
+47
+José Manuel Gonzalez Fontanals, María Dolores i María Guadalupe Gon-
+zalez  Patruchi,  Martin  Esteban  Goñi,  Alicia  Esther  Gorza,  Juan  Vicente  i  
+Luis Juan Grassi, Ruy Gratia, Susana Graciela Graziadio, Arnaldo Ezequiel 
+i  Fernando  Arnaldo  Grimaldi,  Monica  Juana  Grunthal,  Marcelo  Gugliel-
+metti, Alberto Juan, José Luis i Gabriela Monica Gutierrez, Guillermo Eduar-
+do  Halblaub,  Rosana  Elisabeth  Hernández,  Cristian  Victor  i  Victor  Abel  
+Huder,  Hilda  Rita  Ianuzzi,  Gustavo  René  Imaca  Solís,  Liliana  Dora  Iza,  
+Roberto Kovacs Vary, Marcela Silvana i Marcelo Luis Lecona, Celia Ra-
+quel  Leranoz,  Sebastian  Fernando  Lires  Alvarez,  María  Alejandra  Lopez  
+Moreno, Amelia Etelvina Lucero, Viviana Beatriz Marchal, Carlos Alberto 
+i Roque Alberto Macri, Melisa Soledad Magaña, Fernando Marcelo Mai-
+fredini, Florinda Celia Maldonado, Lucio Mambrilla Cimillo, Susana Bea-
+triz  Manazzoni,  Olga  Noemí  Mangini,  Dino  Gustavo  Manzin,  Virginia  
+Marcela Marchal, Maria Angelica i Eduardo Martin, Marcelo Horacio Mar-
+tinez,  Otilia  Martinez  Portas,  Hector  Alfredo  Mario,  Clara  Ester,  Julio  
+César, Marcelo Daniel, Pedro i Ricardo Juan Martinez, María Sol Mastran-
+gelo, Mariano Francisco Mateos, Leandro Ariel, Adrián Marcelo, Aldo An-
+tonio,  Ana  Cecilia,  Andrés  Esteban,  Esteban  Alberto,  Gustavo  Esteban,  
+Graciela, Ariadna, Diana, Marina Aida, i, María Laura i Mariano José Ma-
+teria  (hereus  del  Sr.  Manlio  José  Materia),  María  Rosa,  Víctor  i  Renato  
+Salvador  Materia,  Elvira  Medina  Arcas,  Alicia  Mabel  Melograno,  Hugo  
+Alberto Merlos, Hugo Alberto Mingozzi, Miguel Angel Moffa, María Rosa 
+Molina  Amado,  María  Luisa  Morandi,  Edmundo  Manuel  Muñoz,  María  
+Cristina Murias, Gabriel Gustavo Nattkemper, Enrique José Naudeau, Juan 
+Cruz Nefi, Marcela Fernanda Nilsson, Sergio Luis Ogueta Baza, María 
+Laura Omoldini, Ricardo César Ongaro, Dante Daniel Onufrovich, Elisa-
+beth  Daniela  i  María  Carla  Ostachi,  María  Pía  Ostera,  María  Agustina  i  
+María Florencia Otero, Claudia Susana Oyanguren, Daniel Marcelo Padin, 
+Nicolás Pagni, Daniel Domingo i Rubén Juan Palermo, Marisa Mabel Palo-
+meque, Fernando Antonio Pancani, Alejandro Daniel Papeo, Julio Alberto 
+Pardo, María Florencia Paredes, Estela Patriarca, Maria Fabiana Patruchi, 
+Maria Paula Patti, Silvia Matilde Pecorari, Claudia Fabiana Pellegrino, Pa-
+blo Javier Penacchietti, Amalia Angélica i Guillermo Ismael Pérez, Karina 
+Valeria Peric, Aldo Juan i Silvana Perrera, Jorgelina Pierangeli, Hugo Al-
+fonso Pignatta, Roberto Claudio Pistarini, Marcelo Cesar Poczinok, Martha 
+Susana Poujol (i/o De Brooke, representada per María Claudia Mirassou), 
+Claudia Susana Pritzker, Rita Rosa Pugliotti, María Gladis Quevedo, Ariel 
+Esteban Rearte, Adriana Celia Reyna, Silvana Vanesa Rinaldi, Nestor San-
+tiago  Roberto,  Lucia  Ivon  Rodriguez  Gimenez,  Luz  Cristina  Rodriguez  
+Soto, Ruben Dario Rodriguez, Felipe Alejandro Rodriguez Gimenez, Dante 
+
+48
+Gustavo  i  Silvia  Cristina  Roman,  Lilia  Graciela  Rosso,  Adrian  Edgardo  
+Roumec, Gustavo Henry Ruaben, Ana Maria i Susana Raquel Ruiz, Enri-
+que Eleuterio Rulin, Javier Adrian Sadigursky, María Hydee Sanchez, Jorge 
+Jose i María Victoria Sansi, Susana Beatriz Scheggia, Osvaldo Daniel Se-
+govia, Carlos Alberto Seligmann, María Angélica Florencia Selim, Mariana 
+Hebe  i  María  Dolores  Serrano,  Armando  José  Simonazzi,  Raul  Mariano  
+Solís,  Milagros  Natalia  Spinelli  Fernandez,  Osvaldo  Alejandro  Spinetta,  
+Rosa  Stabilito,  Liliana  Stellato,  Beatriz  Alicia  Tedeschini,  Mauro  Ariel  
+Thanos, Agustín Federico Tiribelli, Mario Gaspar Tiscornia, Sandra Gracie-
+la Toledo, María de las Mercedes Tomas, Nora Alejandra i Monica Gabriela 
+Torre, Susana Edith Trajtemberg, Carlos Alberto Tulli, María Elina Turbel, 
+Carlos Alberto Ulrich, Eduardo Esteban Uria, Juan José Urrutia, Teresa An-
+gelica  Varela,  Alba  Beatriz  Vatovec,  Fabian  Vazquez,  Elisa  Ana,  Javier  
+Gustavo i Jose Luis Vega, German Guillermo Ventimiglia, Luis Mariano i 
+María Paula Verdi, Jorge Luis i María Alejandra Villarreal, Mariela Laura 
+Vinagre, Horacio Rafael Viñas, Carolina Vita, Rita Gladys Viviani, Facundo 
+Vogel Cellerino, María Fernanda i Miguel Antonio Vuotto, Pablo Ernesto 
+Wehncke, Abraham Wolodarsky, Abraham Wolodarsky (fill), Alejandro Ja-
+vier Zalazar, Alfredo Alberto Zaneti, José Antonio Zanolin, Hugo Salvador 
+Zappulla  i  Yanina  Lorena  Zwenger,  contra  l’aute  del  22  de  setembre  del  
+2023, dictat per la Secció d’Instrucció Especialitzada 2 de la Batllia (notifi-
+cat el 9 d’octubre del mateix any), per una presumpta vulneració del dret a 
+la  jurisdicció,  en  els  seus  vessants  dels  drets  a  l’accés  a  la  justícia,  a  un  
+procés degut amb totes les garanties, a obtenir una decisió fonamentada en 
+Dret i a la interdicció d’indefensió, reconeguts a l’article 10 de la Constitu-
+ció.  El  recurs  va  ser  interposat  el  26  d’octubre  del  2023.  Va  ser  admès  a  
+tràmit per aute del Tribunal Constitucional el 20 de novembre del 2023. El 
+ponent de la causa és el Sr. Joan Manel Abril Campoy.
+Causa 2023-76-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Tomàs  
+Junquera Garcia, contra la inactivitat de la Batllia en relació amb la causa 
+7000004/2023 que derivaria en una presumpta vulneració del dret a un ju-
+dici de durada raonable, reconegut a l’article 10 de la Constitució. El recurs 
+va ser interposat el 15 de novembre del 2023. Va ser admès a tràmit per aute 
+del  Tribunal  Constitucional  el  20  de  novembre  del  2023.  El  ponent  de  la  
+causa és el Sr. Joan Manel Abril Campoy.
+
+49
+Causa 2023-79-RE
+Recurs d’empara interposat per la representació processal del Sr. Eric Et-
+chemendigaray Robert, contra la sentència del 28 d’abril del 2023, dictada 
+pel  Tribunal  de  Corts,  i,  contra  la  sentència  del  30  d’octubre  del  mateix  
+any,  dictada  per  la  Sala  Penal  del  Tribunal  Superior  de  Justícia,  per  una  
+presumpta vulneració del dret a la jurisdicció, reconegut a l’article 10 de la 
+Constitució. El recurs va ser interposat el 20 de novembre del 2023. 
+Causa 2023-80-RE
+Recurs d’empara interposat per la representació processal del Sr. Stanislas 
+Jean René Marie Chmielewski, contra la sentència del 6 de novembre del 
+2023, dictada per la Sala Administrativa del Tribunal Superior de Justícia, 
+per una presumpta vulneració del dret a la jurisdicció, en el seu vessant de 
+prohibició d’indefensió, reconegut a l’article 10 de la Constitució. El recurs 
+va  ser  interposat  el  27  de  novembre  del  2023.  Va  ser  admès  a  tràmit  per  
+aute del Tribunal Constitucional el 19 de desembre del 2023. El ponent de 
+la causa és el Sr. Joan Manel Abril Campoy.
+Causa 2023-82-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Tomàs  
+Pascual Casabosch, contra la sentència del 29 de juny del 2023, dictada per 
+la Secció de Contenciós-Administratiu 1 de la Batllia, i, contra la sentència 
+del 22 de novembre del mateix any, dictada per la Sala Administrativa del 
+Tribunal  Superior  de  Justícia,  per  una  presumpta  vulneració  dels  drets  a  
+la jurisdicció i a un procés degut, en el seu vessant del dret a obtenir una 
+resolució judicial motivada i fonamentada en Dret, complerta i congruent 
+amb les pretensions de les parts i no arbitrària, i que no produeixi indefen-
+sió  material  efectiva,  reconegut  a  l’article  10  de  la  Constitució,  així  com  
+del dret fonamental a la vida familiar, reconegut als articles 13.2 i 14 de la 
+Constitució. El recurs va ser interposat el 12 de desembre del 2023. Va ser 
+admès a tràmit per aute del Tribunal Constitucional el 19 de desembre del 
+2023. El ponent de la causa és el Sr. Jean-Yves Caullet.
+
+50
+Causa 2023-83-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Agustín  
+Alfonso Sánchez, contra la inactivitat de la Secció Civil 3 de la Batllia en 
+relació amb la causa laboral 3000657/2020 que derivaria en una presumpta 
+vulneració del dret a un judici de durada raonable, reconegut a l’article 10 
+de la Constitució. El recurs va ser interposat el 12 de desembre del 2023. Va 
+ser admès a tràmit per aute del Tribunal Constitucional el 19 de desembre 
+del 2023. El ponent de la causa és el Sr. Dominique Rousseau.
+Causa 2023-84-RE
+Recurs d’empara interposat per la representació processal de la Sra. Zuleima 
+Milagros Cordova Serna, contra la sentència del 20 de novembre del 2023, 
+dictada pel Ple del Tribunal Superior de Justícia, per una presumpta vulne-
+ració del dret a la jurisdicció, en el seu vessant del dret a obtenir una decisió 
+fonamentada en fets i en Dret i sense errors materials, reconegut a l’article 
+10 de la Constitució. El recurs va ser interposat el 13 de desembre del 2023. 
+Causa 2023-85-RE
+Recurs d’empara interposat per la representació processal dels Srs. Higini 
+i Ramon Cierco Noguer, contra l’aute del 27 de novembre del 2023, dictat 
+per la Sala Penal del Tribunal Superior de Justícia, per una presumpta vul-
+neració del dret a la jurisdicció, en els seus vessants dels drets a la defensa, 
+a obtenir una decisió fonamentada en Dret, a un procés degut, a la seguretat 
+jurídica i a no ser discriminat, reconeguts a l’article 10 de la Constitució, 
+així  com  la  dels  drets  a  la  intimitat,  a  l’honor  i  a  la  pròpia  imatge,  reco-
+neguts a l’article 14 de la Constitució. El recurs va ser interposat el 15 de 
+desembre del 2023.
+Causa 2023-86-RE
+Recurs d’empara interposat per la representació processal del Sr. Bernardo 
+Quintana Kawage, contra la inactivitat de la Secció d’Instrucció Especia-
+litzada 2 de la Batllia en relació amb els autes penals 9000121/2018 que 
+derivaria en una presumpta vulneració del dret a un judici de durada rao-
+nable, reconegut a l’article 10 de la Constitució. El recurs va ser interposat 
+el 15 de desembre del 2023.
+
+51
+Causa 2023-87-RE
+Recurs  d’empara  interposat  per  la  representació  processal  del  Sr.  Aurelio  
+Reñones  Morla  i  de  la  Sra.  Nadia  Cheroud  Begdouri,  contra  la  sentència  
+del 5 de desembre del 2023, dictada per la Sala Civil del Tribunal Superior 
+de  Justícia,  per  una  presumpta  vulneració  dels  drets  a  la  jurisdicció,  a  un  
+procés degut sense indefensió i a obtenir una decisió fonamentada en Dret, 
+reconeguts a l’article 10 de la Constitució. El recurs va ser interposat el 29 
+de desembre del 2023.
+Causa 2023-88-RE
+Recurs  d’empara  interposat  per  la  representació  processal  de  la  societat  
+Calda Mont, SA, contra la sentència del 6 de desembre del 2023, dictada 
+pel  Ple  del  Tribunal  Superior  de  Justícia  en  el  marc  d’una  acció  en  res-
+ponsabilitat  patrimonial  de  l’Estat  per  errors  judicials,  per  una  presumpta  
+vulneració dels drets a la jurisdicció, a un procés degut sense indefensió i 
+a obtenir una decisió fonamentada en Dret, reconeguts a l’article 10 de la 
+Constitució. El recurs va ser interposat el 29 de desembre del 2023.
+
+52
+II.  DELS QUADRES ESTADÍSTICS REFERENTS  
+A L’ACTIVITAT DEL TRIBUNAL
+■ Quadre núm. 1
+Assumptes presentats al registre de la Secretaria General del Tribunal Cons-
+titucional des del 17 de desembre de 1993 fins al 31 de desembre del 2023, 
+classificats per tipus de recurs.
+-   Recursos directes 
+de constitucionalitat 
+contra lleis, decrets 
+legislatius i Reglament 
+del Consell General  
+(Articles 43 a 51 LQTC)
+9
+------------2-2
+-
+21-
+16
+-   Processos incidentals
+ 
+d’inconstitucionalitat 
+instats per la jurisdicció 
+ordinària 
+ 
+(Articles 52 a 58 LQTC)
+3-----41--2--2--
+-1--
+13
+-   Procediments de control
+ 
+previ de  
+constitucionalitat dels 
+tractats internacionals 
+ 
+(Articles 59 a 62 LQTC)
+----1-----------
+-
+---
+1
+-   Procediments de 
+ 
+dictamen previ  
+d’adequació a la  
+Constitució de les lleis 
+instats pels coprínceps
+ 
+(Articles 63 a 68 LQTC)
+4---------1-----
+-
+---
+5
+-  Conflictes 
+ 
+de competències 
+constitucionals entre 
+el Consell General i el 
+Govern, com a òrgans 
+generals de l’Estat, i els 
+comuns, com a òrgans 
+de les parròquies, 
+o d’aquests darrers 
+entre si 
+ 
+(Articles 69 a 77 LQTC)
+33421---------1-
+-
+---
+14
+-  Conflictes positius 
+ 
+i negatius de compe-
+tències constitucionals 
+entre els coprínceps, 
+el Consell General, el 
+Consell Superior de la 
+Justícia i el Govern
+ 
+(Articles 78 a 84 LQTC)
+1--4------------
+-
+---
+5
+-   Recursos d’empara
+ 
+(Articles 85 a 96 LQTC)
+128402641332945423545485061597093
+871007988
+1199
+  Totals
+148
+433047352949433545515061637195
+87
+1038088
+1253
+200620052007200820092010
+2011
+20122013201420152016201720182019
+Total
+1993 2004
+2020202120222023
+
+53
+■ Quadre núm. 2
+Assumptes presentats al registre de la Secretaria General del Tribunal Cons-
+titucional des del 17 de desembre de 1993 fins al 31 de desembre del 2023, 
+classificats per tipus de recurs.
+Recursos d’empara • 95,69 %
+Recursos d’inconstitucionalitat • 1,28 %
+Conflictes de competències
+entre òrgans constitucionals • 1,12 %
+Conflictes positiu i negatiu
+de competències • 0,40 %
+Accions incidentals • 1,04 %
+Procediments de control previ
+de constitucionalitat dels
+tractats internacionals • 0,08 %
+Dictàmens previs • 0,40 %
+
+54
+■ Quadre núm. 3
+Classificació dels assumptes presentats al Tribunal Constitucional des del 
+17 de desembre de 1993 fins al 31 de desembre del 2023, amb expressió de 
+la decisió pronunciada pel Ple del Tribunal Constitucional.
+Assumptes presentats  
+al registre de la Secretaria 
+General del TC
+Assumptes  
+admesos  
+a tràmit
+Assumptes  
+no admesos  
+a tràmit
+Assumptes 
+ 
+pendents  
+d’admissió  
+o d’inadmissió
+Recursos  
+d’inconstitucionalitat
+1616--
+Processos incidentals 
+ 
+d’inconstitucionalitat
+13112-
+Procediments de control 
+ 
+previ de constitucionalitat  
+dels tractats internacionals
+11--
+Procediments de dictamen 
+ 
+previ de les lleis
+541-
+Conflictes de competències 
+ 
+entre òrgans constitucionals
+14121-
+Conflictes positius i negatius 
+ 
+de competències
+514-
+Recursos d’empara11994627186
+Totals12535077266
+1239*
+*    16  recursos  d’empara  (les  causes  99-18-RE,  2001-12-RE,  2005-36-RE,  2010-8-RE,  2014-3-RE,  
+2014-11-RE, 2015-39-RE, 2016-25-RE, 2016-58-RE, 2020-36-RE, 2020-41-RE, 2020-42-RE, 2021-
+28-RE, 2022-74-RE, 2023-43-RE i 2023-47-RE) i 1 conflicte de competències (2007-5-CC) van ser 
+retirats,  mitjançant  escrit  de  desistiment,  abans  que  el  TC  es  pronunciés  sobre  llur  admissibilitat  i  
+la  causa  2002-13-RE  va  ser  declarada  decaiguda  pel  silenci  de  les  parts.  Les  causes  2015-38-RE,  
+2019-8-RE, 2020-23-RE i 2020-62-RE van ser retirades després que el TC les admetés a tràmit. Les 
+causes 2023-2-RE, 2023-3-RE i 2023-6-RE van ser arxivades per quedar sense contingut a causa de 
+la nul·litat de les decisions recorregudes.
+Les  causes  2009-7-RE  i  2009-8-RE  van  ser  inadmeses  i  després  d’estimar  el  corresponent  recurs  de  
+súplica van tornar a ser inadmeses a tràmit. Les causes 2011-26-RE, 2012-31-RE, 2013-15-RE, 2015-
+45-RE  i  2017-19-RE  van  ser  primer  inadmeses  i  després  del  corresponent  recurs  de  súplica  van  ser  
+admeses i es va dictar sentència al respecte.
+
+55
+■ Quadre núm. 4
+Resolucions dictades pel Tribunal Constitucional en els processos d’empara 
+des del 17 de desembre de 1993 fins al 31 de desembre del 2023.
+SentènciesTotal
+Estimació (total o parcial)209
+Desestimació234
+Total sentències443
+Autes
+Admissió462
+Inadmissió718
+Recursos de súplica estimats7
+Recursos de súplica rebutjats266
+Arxivament de la causa22
+Altres24
+Total autes1.499
+
+56
+■ Quadre núm. 5
+Resolucions dictades pel Tribunal Constitucional fins al 31 de desembre del 
+2023 amb indicació del contingut estimatori o desestimatori.
+Estimatori*Desestimatori
+Recursos d’inconstitucionalitat510
+Processos incidentals d’inconstitucionalitat46
+Procediments de control previ de constitucionalitat 
+ 
+dels tractats internacionals 
+-1
+Procediments de dictamen previ de les lleis31
+Conflictes de competències entre òrgans constitucionals22
+Conflictes positius i negatius de competències-1
+Recursos d’empara209234
+Totals223255
+* Estimatori (totalment o parcialment)
+
+57
+III.  DE LES ACTIVITATS INSTITUCIONALS  
+NO JURISDICCIONALS
+A. Externes
+Els magistrats han continuat desenvolupant la tasca de difusió del seu tre-
+ball jurisprudencial i de l’organització constitucional andorrana sobretot en 
+trobades de caràcter internacional, tot i que des de la pandèmia del SARS-
+COV-2 aquestes trobades s’han vist reduïdes o han canviat el seu format.
+Els serveis del Tribunal Constitucional han atès totes les consultes sobre les 
+competències jurisdiccionals que té atribuïdes i quins procediments judicials 
+poden utilitzar els particulars davant el Tribunal per a la protecció i la defensa 
+dels drets fonamentals.
+Així mateix, el Tribunal Constitucional andorrà intenta contribuir amb la 
+tramesa d’una selecció de la seva jurisprudència, en format abreujat, a la 
+“infobase”  de  jurisprudència  constitucional  de  la  Comissió  Europea  per  
+a  la  democràcia  per  la  llei,  més  coneguda  com  la  Comissió  de  Venècia.  
+Aquesta eina permet difondre la jurisprudència pròpia i alhora conèixer la 
+jurisprudència més recent dels tribunals homòlegs.
+1. Activitats de caràcter internacional
+27  de  gener.  El  president,  Sr.  Jean-Yves  Caullet,  va  assistir  al  seminari  
+d’obertura de l’any judicial del Tribunal Europeu dels Drets Humans que es 
+va celebrar a Estrasburg (França) intitulat “Protegint els drets humans els 
+jutges preserven la Democràcia”.
+4  i  5  de  maig.  El  president,  Sr.  Jean-Yves  Caullet,  va  assistir  al  Congrés  
+organitzat pel Tribunal Constitucional Federal alemany pels presidents dels 
+Tribunals Constitucionals europeus, sobre “Canvi climàtic com a repte pel 
+dret constitucional i pels Tribunals Constitucionals” que es va celebrar a 
+Berlin”.
+20  i  21  de  setembre.  El  Sr.  Josep-D.  Guàrdia  Canela  va  representar  el  
+Tribunal  en  el  marc  de  la  Conferència  organitzada  a  Riga  pel  Tribunal  
+Constitucional de Letònia sobre “El paper del poder judicial en l’execució 
+de les resolucions del Tribunal Europeu dels Drets Humans”.
+
+58
+2. Actes institucionals
+14 de març. El president, Sr. Jean-Yves Caullet, juntament amb els altres 
+magistrats, va assistir a la sessió extraordinària del Consell General.
+18  de  maig.  Tots  els  membres  del  Tribunal  Constitucional  van  lliurar  la  
+memòria del 2022 al M. I. Sr. Carles Ensenyat Reig, Síndic general, i a la 
+M. I. Sra. Sandra Codina Tort, Subsíndica general.
+14 de juliol. Tots els magistrats van assistir a la recepció de l’Ambaixada 
+de França celebrada amb motiu de la seva Festa Nacional.
+8 de setembre. El president, Sr. Jean-Yves Caullet, juntament amb els al-
+tres membres del Tribunal, va assistir a la sessió extraordinària del Consell 
+General,  i  a  la  Missa  celebrada  al  Santuari  de  N.  Sra.  de  Meritxell,  amb  
+motiu de la Festa Nacional del Principat d’Andorra.
+20 de setembre. El president, Sr. Jean-Yves Caullet, va rebre una delegació 
+del Congrés dels poders locals i regionals del Consell d’Europa, a petició 
+seva, dins el marc de la seva visita periòdica per a la preparació de l’informe 
+de supervisió amb la finalitat d’aprovar les recomanacions que s’adreçaran 
+a l’Estat andorrà.
+12 d’octubre. El president, Sr. Jean-Yves Caullet, juntament amb els altres 
+magistrats, va assistir a la recepció amb motiu de la Festa Nacional d’Espa-
+nya que es va celebrar a la sala d’actes de l’Ambaixada.
+19 de desembre. El president, Sr. Jean-Yves Caullet, juntament amb els altres 
+magistrats,  la  secretària  general  i  la  lletrada,  va  assistir  a  la  recepció  oferta  
+per S. E. el Copríncep Episcopal, al Palau Episcopal de la Seu d’Urgell, amb 
+motiu de les Festes Nadalenques.
+21  de  desembre.  El  president,  Sr.  Jean-Yves  Caullet,  juntament  amb  els  
+altres magistrats, va assistir a la Sessió Tradicional del Consell General de 
+Sant Tomàs.
+3. Altres activitats
+En el decurs d’aquest trentè any d’activitat el Tribunal ha estat present en 
+la vida pública andorrana, especialment per mitjà del seu president que, per 
+imperatiu legal (article 27 a) de la LQTC), n’exerceix la representació. El 
+president o el vicepresident o algun altre magistrat, o diversos representants 
+
+59
+alhora han participat i assistit, sempre que els ha estat possible, en els actes 
+en els quals el protocol exigia la presència del Tribunal.
+B. Internes
+Biblioteca
+D’ençà de la seva creació, el Tribunal Constitucional ha manifestat la vo-
+luntat constant de disposar d’un fons bibliotecari suficient per facilitar i 
+assegurar documentalment els treballs dels magistrats i de la Secretaria Ge-
+neral. La major part d’aquest fons bibliotecari, actualment es troba dipositat 
+en la biblioteca del Consell General. Pel que fa als llibres relatius al Dret 
+andorrà i al Dret constitucional, que continuen estan en el Tribunal, la seva 
+consulta està oberta a institucions, administracions públiques i col·lectius 
+professionals interessats.
+Pàgina Web
+El Tribunal Constitucional disposa d’una pàgina web http://www.tribunal-
+constitucional.ad/,  com  a  eina  principal  d’informació  pública,  dirigida  a  
+tota persona interessada en qualsevol de les activitats jurisdiccionals i insti-
+tucionals realitzades. La pàgina web conté un apartat dedicat a la jurispru-
+dència amb una base de dades, dissenyada amb diverses opcions de recerca 
+específiques, en què es recullen totes les resolucions dictades pel Tribunal 
+Constitucional amb l’objectiu de simplificar la seva consulta.
+
+60
+ 
+IV.  DELS MAGISTRATS CONSTITUCIONALS  
+I DE LA RESTA DELS SERVEIS DEL TRIBUNAL
+A) Dels magistrats constitucionals
+Composició del Tribunal Constitucional
+Magistrat
+Òrgan que  
+el va designar
+Data  
+de la designació
+Càrrec
+Període  
+de Presidència
+Jean-Yves CaulletCopríncep Francès10/12/2019President2022-2024
+Joan Manel  
+Abril Campoy
+Consell General
+20/08/2018  
+i 14/07/2022
+Vicepresident2024-2026
+Josep-D. Guàrdia 
+Canela
+Copríncep Episcopal24/11/2017Magistrat2020-2022
+Dominique RousseauConsell General14/04/2016Magistrat2018-2020
+
+61
+Antics magistrats
+Magistrat
+Òrgan  
+que el va designar
+Data  
+de la designació
+Data de cessament
+Període  
+de Presidència
+François Luchaire †Consell General04/11/199329/11/19991995-1997
+Joan Josep  
+López Burniol
+Copríncep Episcopal25/11/199329/11/20011993-1995
+Pere Vilanova TriasCopríncep Francès
+06/11/1993  
+i 24/11/1995
+06/12/20031999-2001
+Miguel Ángel  
+Aparicio Pérez †
+Consell General
+04/11/1993  
+i 19/11/1997
+10/12/20051997-1999
+Philippe Ardant †Consell General16/12/199907/06/20072003-2006
+Miguel Herrero  
+Rodríguez de Miñón
+Copríncep Episcopal15/11/200121/11/20092001-2003
+Didier MausCopríncep Francès10/12/200311/12/20112006-2008
+Carles Viver  
+Pi-Sunyer
+Consell General07/04/200624/05/20142008-2010
+Pierre Subra  
+de Bieusses
+Consell General20/12/200730/01/20162010-2012
+Juan Antonio Ortega 
+Díaz-Ambrona
+Copríncep Episcopal20/11/200925/11/20172012-2014
+Isidre Molas BatlloriConsell General24/07/201412/10/20182016-2018
+Laurence 
+Burgorgue-Larsen
+Copríncep Francès10/12/201112/12/20192014-2016
+B) Serveis del Tribunal
+Sra. Meritxell Tomàs Baldrich 
+Secretària general
+Sra. Rosa M. Ruiz Guerrero 
+Oficial lletrada
+Sra. Encarna Pérez Alguacil 
+Cap dels serveis administratius
+
+62
+V. DEL PRESSUPOST DEL TRIBUNAL
+Preparació
+El  Tribunal  Constitucional  té  atribuïda  l’administració  del  seu  pressupost  
+segons els articles 9 g) i 27 f) de la LQTC, i així mateix, elabora el seu propi 
+projecte  de  pressupost.  El  Ple  del  Tribunal,  després  d’aprovar  el  projecte  
+de pressupost, el tramet al cap de Govern sol·licitant-li que l’incorpori al 
+projecte de llei del pressupost general.
+Administració
+D’acord amb la Llei general de les finances públiques del 19 de desembre 
+de 1996, i sota les directrius establertes pel president del Tribunal, la Secre-
+taria General assumeix l’execució i la liquidació del pressupost. S’informa 
+mensualment el president del Tribunal i s’informa trimestralment el Ple del 
+Tribunal de l’estat d’execució del pressupost. El Ple del Tribunal fiscalitza 
+l’execució del pressupost i n’aprova la liquidació, abans de trametre-la al 
+Govern.
+•  Liquidació de comptes relativa al pressupost del Tribunal Constitucional 
+per a l’any 2022
+El  13  de  març  del  2023,  el  Ple  del  Tribunal  va  analitzar  i  va  aprovar  la  
+liquidació de comptes presentada per la Secretaria General en relació amb 
+el pressupost del Tribunal de l’any 2022, per un import liquidat i pagat de 
+658.324,00 euros. La Llei del pressupost general per a l’any 2022 va auto-
+ritzar una transferència corrent al Tribunal Constitucional per un import de 
+830.756,54 euros.
+• Pressupost del Tribunal Constitucional per a l’any 2023
+El projecte de pressupost que el Tribunal Constitucional va elaborar per a 
+l’any 2023 fixa la previsió global de la transferència corrent per fer front a 
+les despeses de funcionament i d’inversió del Tribunal en 824.893,84 euros 
+i de la utilització dels seus actius financers (romanents de tresoreria) en 
+un import de 120.000,00 euros. El projecte de pressupost per a l’any 2023 
+
+63
+presenta un augment en xifres absolutes en relació amb el pressupost de 
+l’any  2022  de  114.137,30  euros.  Aquest  projecte  de  pressupost  es  va  in-
+corporar al projecte de llei del pressupost general per a l’exercici del 2023, 
+aprovat com a Llei 13/2023, del 31 de gener, del pressupost per a l’exercici 
+del 2023.
+• Projecte de pressupost del Tribunal Constitucional per a l’any 2024
+El projecte de pressupost que el Tribunal Constitucional va elaborar per a 
+l’any 2024 fixa la previsió global de la transferència corrent per fer front a 
+les despeses de funcionament i d’inversió del Tribunal en 847.165,97 euros. 
+El projecte de pressupost per a l’any 2024 presenta un augment en xifres 
+absolutes en relació amb el pressupost de l’any 2023 de 22.272,13 euros. 
+Aquest projecte de pressupost es va incorporar al projecte de llei del pres-
+supost general per a l’exercici del 2024, aprovat com a Llei 1/2024, de l’1 
+de febrer, del pressupost per a l’exercici del 2024.
+
+64
+VI. DE L’APROVACIÓ DE LA MEMÒRIA
+Prenent com a base els materials lliurats per la Secretaria General del Tri-
+bunal, el Sr. Jean-Yves Caullet va presentar al Ple del Tribunal un primer 
+projecte de memòria que, després del debat pertinent, i una vegada intro-
+duïdes les modificacions suggerides pels magistrats, s’ha convertit en una 
+nova redacció, que ha estat aprovada pel Tribunal en la seva sessió del 10 
+de maig del 2024.
+Aquesta memòria serà lliurada al M. I. Sr. Síndic general del Principat d’An-
+dorra, pel Tribunal Constitucional, per al coneixement del Consell General.
