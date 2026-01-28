@@ -41,7 +41,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <Link href="/preguntes-control">{t(idioma, 'nav.preguntesControl')}</Link>
             <Link href="/paper">{t(idioma, 'nav.paper')}</Link>
             <Link href="/com-esta-fet">{t(idioma, 'nav.comEstaFet')}</Link>
-            <Link href="/about">{t(idioma, 'nav.about')}</Link>
             <div className="lang-selector">
               {idiomesDisponibles.map((lang) => (
                 <button
@@ -91,4 +90,3 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 }
 
 export default Layout;
-
