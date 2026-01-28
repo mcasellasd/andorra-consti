@@ -444,21 +444,28 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
       const clean = (text || '').trim();
       if (!clean) return { resum: '', exemples: [] as Exemple[], doctrina: '' };
 
-      // Heurística d'extracció d'exemples:
-      // - línies que comencen per "Exemple", "Ejemplo", "Exemple appliqué"
-      // - o punts amb "- "
+      // Heurística d'extracció d'exemples més flexible:
+      // Accepta: "Exemple aplicat:", "Exemple:", "Exemple 1:", "- Exemple:", etc.
       const exampleLineRegex =
         idiomaActual === 'es'
-          ? /(^|\n)\s*(?:-\s*)?(Ejemplo aplicado:.*?)(?=\n|$)/gi
+          ? /(^|\n)\s*(?:-\s*|\d+\.\s*)?(?:Ejemplo(?: aplicado)?|Caso pr[áa]ctico)(?:\s+\d+)?[:\s]+(.*?)(?=\n|$)/gi
           : idiomaActual === 'fr'
-            ? /(^|\n)\s*(?:-\s*)?(Exemple appliqué:.*?)(?=\n|$)/gi
-            : /(^|\n)\s*(?:-\s*)?(Exemple aplicat:.*?)(?=\n|$)/gi;
+            ? /(^|\n)\s*(?:-\s*|\d+\.\s*)?(?:Exemple(?: appliqu[ée])?|Cas pratique)(?:\s+\d+)?[:\s]+(.*?)(?=\n|$)/gi
+            : /(^|\n)\s*(?:-\s*|\d+\.\s*)?(?:Exemple(?: aplicat)?|Cas pràctic)(?:\s+\d+)?[:\s]+(.*?)(?=\n|$)/gi;
 
       const exemples: Exemple[] = [];
       let match: RegExpExecArray | null;
+
+      // Reiniciar lastIndex per si de cas es reutilitza la regex (encara que sigui const local)
+      exampleLineRegex.lastIndex = 0;
+
       while ((match = exampleLineRegex.exec(clean)) && exemples.length < 3) {
+        // match[2] conté el text de l'exemple (el grup de captura després del prefix)
         const cas = (match[2] || '').trim();
-        if (cas) exemples.push({ cas, idioma: idiomaActual });
+        // Filtrar exemples buits o massa curts
+        if (cas && cas.length > 10) {
+          exemples.push({ cas, idioma: idiomaActual });
+        }
       }
 
       // Heurística d'extracció de doctrina: agafar l’últim paràgraf si conté "doctrina"/"jurisprud"
