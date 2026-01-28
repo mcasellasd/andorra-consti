@@ -26,7 +26,6 @@ export const traduccions = {
       cerca: 'Cerca',
       comparador: 'Comparador',
       guies: 'Guies',
-      about: 'Sobre',
       paper: 'Paper Acadèmic',
       preguntesControl: 'Preguntes de Control',
       comEstaFet: 'Com està fet',
@@ -89,7 +88,6 @@ export const traduccions = {
       cerca: 'Búsqueda',
       comparador: 'Comparador',
       guies: 'Guías',
-      about: 'Acerca de',
       paper: 'Paper Académico',
       preguntesControl: 'Preguntas de Control',
       comEstaFet: 'Cómo está hecho',
@@ -153,7 +151,6 @@ export const traduccions = {
       cerca: 'Recherche',
       comparador: 'Comparateur',
       guies: 'Guides',
-      about: 'À propos',
       paper: 'Article Académique',
       preguntesControl: 'Questions de Contrôle',
       comEstaFet: 'Comment c\'est fait',
@@ -319,4 +316,3 @@ export function getAvailableLanguages(obj: Traduible): Idioma[] {
   }
   return available;
 }
-

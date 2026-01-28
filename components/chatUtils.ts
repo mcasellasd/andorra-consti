@@ -22,11 +22,10 @@ export function openChat(options: OpenChatOptions = {}) {
   const event = new CustomEvent('openUnifiedChat', {
     detail: {
       question: options.question || '',
-      codeScope: 'constitucio',
+      codeScope: options.codeScope ?? 'constitucio',
       autoSubmit: options.autoSubmit || false
     }
   });
 
   window.dispatchEvent(event);
 }
-
