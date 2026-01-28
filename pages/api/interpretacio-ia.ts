@@ -99,11 +99,10 @@ export default async function handler(
     let jurisprudenciaContext = '';
     if (jurisprudencia.length > 0) {
       jurisprudenciaContext = `\n\nJurisprudència rellevant:\n${jurisprudencia
-        .slice(0, 3) // Limitar a les 3 més rellevants
+        .slice(0, 1) // OPTIMITZACIÓ: Limitar a 1 per reduir tokens i temps de resposta (<60s)
         .map(
           (sent) =>
-            `- ${sent.tribunal} (${sent.data}): ${sent.resum}${sent.articles_afectats.length > 0 ? ` (Articles: ${sent.articles_afectats.join(', ')})` : ''
-            }`
+            `- ${sent.tribunal} (${sent.data}): ${sent.resum}`
         )
         .join('\n')}\n`;
     }
@@ -111,11 +110,11 @@ export default async function handler(
     // Construir context de doctrina si n'hi ha (Manual retrieval)
     let doctrinaContext = '';
     if (doctrinaRelacionada.length > 0) {
-      doctrinaContext = `\n\nDoctrina i interpretació acadèmica (Manual):\n${doctrinaRelacionada
-        .slice(0, 2)
+      doctrinaContext = `\n\nDoctrina acadèmica:\n${doctrinaRelacionada
+        .slice(0, 1) // OPTIMITZACIÓ: Limitar a 1
         .map(
           (doc) =>
-            `- ${doc.title} (${doc.author}, ${doc.date}): ${doc.summary}`
+            `- ${doc.title}: ${doc.summary}`
         )
         .join('\n')}\n`;
     }
@@ -505,7 +504,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
     // Intento 1: Generació inicial
     try {
       answer = await generateText(messages, {
-        maxTokens: 600,
+        maxTokens: 450, // Reduït per garantir resposta en <60s
         temperature: 0.1, // Molt baixa per evitar al·lucinacions als exemples
         dateString
       });
