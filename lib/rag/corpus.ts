@@ -11,8 +11,6 @@ let constitucioKnowledge: any = [];
 let constitucioEmbeddings: any = [];
 let unifiedLoaded = false;
 
-/* DESACTIVAT PER VERCEL DEPLOY (Manca fitxers grans a git)
-// Descomentar si es té accés als fitxers locals data/rag/*.json
 try {
   // @ts-ignore - Dynamic import per permetre fallback
   constitucioKnowledge = require('../../data/rag/constitucio-unified.json');
@@ -29,7 +27,6 @@ try {
     constitucioEmbeddings = [];
   }
 }
-*/
 
 // Carregar doctrina (només si no tenim el corpus unificat, per evitar duplicats i permetre fallback)
 // Nota: El corpus unificat JA inclou la doctrina processada.
