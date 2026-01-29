@@ -14,13 +14,13 @@ Aquest article presenta una prova pilot que avalua la viabilitat tècnica d'un s
 
 Andorra es caracteritza per una realitat sociodemogràfica singular que intensifica els desafiaments d'accessibilitat jurídica. Segons dades recents, aproximadament el 48% de la població andorrana és d'origen immigrant, configurant una societat multilingüe i multicultural amb necessitats específiques d'accés al coneixement jurídic. A aquesta diversitat lingüística i cultural s'afegeix la complexitat inherent del llenguatge jurídic, que constitueix una barrera per a la comprensió efectiva de la normativa per part de la ciutadania.
 
-La Constitució del Principat d'Andorra, aprovada el 4 de maig de 1993, estableix els principis fonamentals de l'Estat i garanteix els drets i llibertats dels ciutadans. Tanmateix, com succeeix en la majoria d'ordenaments jurídics, l'accés efectiu a aquest coneixement constitucional està limitat per les barreres que suposa el llenguatge jurídic formal. El llenguatge jurídic constitucional caracteritza's per la seva precisió tècnica, densitat conceptual i estructura formal, característiques essencials per a la seguretat jurídica però que constitueixen un obstacle per a la comprensió del ciutadà mitjà.
+La Constitució del Principat d'Andorra, aprovada el 4 de maig de 1993, estableix els principis fonamentals de l'Estat i garanteix els drets i llibertats dels ciutadans. Tanmateix, com succeeix en la majoria d'ordenaments jurídics, l'accés efectiu a aquest coneixement constitucional està limitat per les barreres que suposa el llenguatge jurídic formal. El llenguatge jurídic constitucional es caracteritza per la seva precisió tècnica, densitat conceptual i estructura formal, característiques essencials per a la seguretat jurídica però que constitueixen un obstacle per a la comprensió del ciutadà mitjà.
 
 L'Article 4 de la Constitució andorrana estableix que "la dignitat humana és intangible" i garanteix "els drets inviolables i imprescriptibles de la persona". L'Article 6 proclama que "totes les persones són iguals davant la llei" i que "els poders públics han de crear les condicions per tal que la igualtat i la llibertat dels individus siguin reals i efectives". Però la comprensió d'aquests conceptes per part de la ciutadania, especialment aquella d'origen immigrant, requereix un grau de coneixement jurídic que no sempre està disponible.
 
 ### 1.2. Justificació: Llei 6/2024 + dret a comprendre
 
-El dret a comprendre el dret que vinculen els ciutadans ha estat reconegut com a component essencial de l'estat de dret. Fuller (1964) va establir que la claredat i la comprensió són requisits necessaris perquè el dret compleixi la seva funció de guiar la conducta humana. Un dret incomprensible no pot ser complert efectivament ni defensat adequadament, comprometent així els principis fonamentals de l'estat de dret.
+El dret a comprendre el dret que vincula els ciutadans ha estat reconegut com a component essencial de l'estat de dret. Fuller (1964) va establir que la claredat i la comprensió són requisits necessaris perquè el dret compleixi la seva funció de guiar la conducta humana. Un dret incomprensible no pot ser complert efectivament ni defensat adequadament, comprometent així els principis fonamentals de l'estat de dret.
 
 Tamanaha (2004) ha desenvolupat aquesta idea, subratllant que l'accessibilitat jurídica és una condició necessària per a l'efectivitat de l'estat de dret. La possibilitat que la ciutadania pugui entendre les normes que la vinculen constitueix una condició necessària per a l'exercici efectiu dels drets i el compliment conscient de les obligacions.
 
@@ -50,7 +50,7 @@ Aquesta distinció entre comprensió i assessorament legal és fonamental. El si
 
 ### 2.1. El dret a comprendre (literatura bàsica)
 
-El dret a comprendre el dret que vinculen els ciutadans ha estat reconegut com a component essencial de l'estat de dret. Fuller (1964), en la seva obra clàssica "The Morality of Law", va establir vuit requisits necessaris perquè el dret compleixi la seva funció de guiar la conducta humana. Entre aquests requisits figura la claredat: les normes han de ser comprenibles per a aquells que han de complir-les. Un dret incomprensible no pot ser complert efectivament ni defensat adequadament, comprometent així els principis fonamentals de l'estat de dret.
+El dret a comprendre el dret que vincula els ciutadans ha estat reconegut com a component essencial de l'estat de dret. Fuller (1964), en la seva obra clàssica "The Morality of Law", va establir vuit requisits necessaris perquè el dret compleixi la seva funció de guiar la conducta humana. Entre aquests requisits figura la claredat: les normes han de ser comprenibles per a aquells que han de complir-les. Un dret incomprensible no pot ser complert efectivament ni defensat adequadament, comprometent així els principis fonamentals de l'estat de dret.
 
 Tamanaha (2004) ha desenvolupat aquesta idea en el seu treball sobre l'estat de dret, subratllant que l'accessibilitat jurídica és una condició necessària per a l'efectivitat de l'estat de dret. La possibilitat que la ciutadania pugui entendre les normes que la vinculen constitueix una condició necessària per a l'exercici efectiu dels drets i el compliment conscient de les obligacions. Sense comprensió, no hi pot haver participació efectiva en el sistema jurídic ni defensa adequada dels propis interessos.
 
@@ -151,13 +151,13 @@ Per a la prova pilot, s'ha optat per una implementació en memòria dels embeddi
 
 - **Tractabilitat del corpus**: Amb aproximadament 360 entrades (108 articles constitucionals + 254 fragments de doctrina), el corpus és suficientment petit per ser carregat completament en memòria sense afectar el rendiment.
 
-- **Simplicitat arquitectural**: L'absència de dependències externes (com bases de dades vectorials Qdrant, Pinecone o Weaviate) redueix la complexitat del desplegament i minimitza els costos operatius, essent adequat per a una prova pilot.
+- **Simplicitat arquitectònica**: L'absència de dependències externes (com bases de dades vectorials Qdrant, Pinecone o Weaviate) redueix la complexitat del desplegament i minimitza els costos operatius, essent adequat per a una prova pilot.
 
 - **Rendiment adequat**: El càlcul de similitud cosinus implementat directament sobre els vectors en memòria proporciona latències inferiors a 100ms per a consultes típiques, suficient per a l'ús previst.
 
 - **Control i traçabilitat**: L'emmagatzematge en fitxers JSON permet control total sobre els embeddings generats, facilitant la validació, auditoria i versionat del corpus.
 
-Aquesta decisió arquitectural implica limitacions d'escalabilitat: per a corpus substancialment més grans (milers o milions d'entrades), seria recomanable migrar a una base de dades vectorial especialitzada. Tanmateix, per a l'objectiu d'aquesta prova pilot -avaluar la viabilitat del concepte amb el corpus constitucional- aquesta implementació és adequada i eficient.
+Aquesta decisió arquitectònica implica limitacions d'escalabilitat: per a corpus substancialment més grans (milers o milions d'entrades), seria recomanable migrar a una base de dades vectorial especialitzada. Tanmateix, per a l'objectiu d'aquesta prova pilot -avaluar la viabilitat del concepte amb el corpus constitucional- aquesta implementació és adequada i eficient.
 
 **Stack tècnic**
 
@@ -245,13 +245,13 @@ Aquesta unificació permet que el sistema RAG recuperi informació no només del
 
 El sistema de validació ha evolucionat des d'un conjunt inicial de 20 preguntes de control fins a un sistema més complet amb 43 preguntes, incorporant preguntes del "golden standard" i altres fonts acadèmiques. Aquestes preguntes estan distribuïdes en quatre categories que cobreixen diferents aspectes de la Constitució i diferents nivells de complexitat:
 
-**Preguntes bàsiques (5 preguntes)**: Qüestions directes sobre articles coneguts de la Constitució, com "Què diu l'article 1 de la Constitució d'Andorra?" o "Quina és la llengua oficial d'Andorra segons la Constitució?". Aquestes preguntes avaluen la capacitat del sistema per identificar i explicar articles bàsics.
+**Preguntes bàsiques**: Qüestions directes sobre articles coneguts de la Constitució, com "Què diu l'article 1 de la Constitució d'Andorra?" o "Quina és la llengua oficial d'Andorra segons la Constitució?". Aquestes preguntes avaluen la capacitat del sistema per identificar i explicar articles bàsics.
 
-**Preguntes específiques (5 preguntes)**: Qüestions que requereixen la comprensió de conceptes jurídics específics, com "Què és el Coprincipat parlamentari?" o "Com s'adquireix la nacionalitat andorrana?". Aquestes preguntes avaluen la capacitat del sistema per explicar conceptes jurídics complexos.
+**Preguntes específiques**: Qüestions que requereixen la comprensió de conceptes jurídics específics, com "Què és el Coprincipat parlamentari?" o "Com s'adquireix la nacionalitat andorrana?". Aquestes preguntes avaluen la capacitat del sistema per explicar conceptes jurídics complexos.
 
-**Preguntes complexes (5 preguntes)**: Qüestions que requereixen la integració de múltiples articles o conceptes, com "Quins són els drets fonamentals que garanteix la Constitució d'Andorra?" o "Què estableix la Constitució sobre la sobirania d'Andorra?". Aquestes preguntes avaluen la capacitat del sistema per sintetitzar informació de múltiples articles.
+**Preguntes complexes**: Qüestions que requereixen la integració de múltiples articles o conceptes, com "Quins són els drets fonamentals que garanteix la Constitució d'Andorra?" o "Què estableix la Constitució sobre la sobirania d'Andorra?". Aquestes preguntes avaluen la capacitat del sistema per sintetitzar informació de múltiples articles.
 
-**Casos límits (5 preguntes)**: Qüestions que poden ser difícils o ambigües, com "Què significa 'virtus, unita, fortior'?" o "Què diu el preàmbul de la Constitució sobre els Pareatges?". Aquestes preguntes avaluen la capacitat del sistema per gestionar qüestions complexes o poc clarament definides.
+**Casos límits**: Qüestions que poden ser difícils o ambigües, com "Què significa 'virtus, unita, fortior'?" o "Què diu el preàmbul de la Constitució sobre els Pareatges?". Aquestes preguntes avaluen la capacitat del sistema per gestionar qüestions complexes o poc clarament definides.
 
 **Criteris d'avaluació (scores)**
 
@@ -261,7 +261,7 @@ L'avaluació de cada resposta segueix un sistema de puntuació amb tres componen
 
 - **Paraules clau (40% del score)**: S'avalua si la resposta conté les paraules clau esperades, indicant que l'adaptació manté la precisió terminològica necessària.
 
-- **Paraules prohibides (20% del score)**: S'avalua si la resposta conté termes o conceptes incorrectes. La presència de paraules prohibits penalitza significativament el score.
+- **Paraules prohibides (20% del score)**: S'avalua si la resposta conté termes o conceptes incorrectes. La presència de paraules prohibides penalitza significativament el score.
 
 Una pregunta es considera **vàlida** si:
 - El score global és igual o superior a 70 punts (sobre 100)
@@ -272,7 +272,7 @@ Una pregunta es considera **vàlida** si:
 Aquesta metodologia de validació és adequada perquè:
 
 - **Objectivitat**: Els criteris de puntuació són objectius i mesurables, reduint la subjectivitat en l'avaluació
-- **Cobertura completa**: Les 20 preguntes cobreixen tots els títols de la Constitució i diferents nivells de complexitat
+- **Cobertura completa**: Les 43 preguntes cobreixen tots els títols de la Constitució i diferents nivells de complexitat
 - **Traçabilitat**: Els criteris permeten identificar quins aspectes funcionen bé i quins requereixen millores
 - **Escalabilitat**: La metodologia pot ser aplicada a altres codis i normes per avaluar la qualitat de l'adaptació
 
