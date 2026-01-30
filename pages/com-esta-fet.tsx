@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 import Layout from '../components/Layout';
 
 const ComEstaFetPage: React.FC = () => {
@@ -30,6 +31,7 @@ const ComEstaFetPage: React.FC = () => {
                 explicar-los en un llenguatge més accessible.
               </p>
               <p>
+                El xat del sistema, anomenat <strong>Hermes</strong>, et permet fer preguntes en llenguatge natural.
                 Quan fas una pregunta o sol·licites una interpretació d&apos;un article, el sistema:
               </p>
               <ol>
@@ -117,29 +119,28 @@ const ComEstaFetPage: React.FC = () => {
             <section className="legal-section">
               <h2>4. Models d&apos;intel·ligència artificial utilitzats</h2>
               <p>
-                El sistema utilitza una combinació avançada de models d&apos;IA de l&apos;ecosistema OpenAI,
-                cadascun seleccionat per a la seva funció específica:
+                El sistema utilitza models sobirans i contextualment adequats (Projecte AINA per embeddings, Llama 70B via Groq per generació),
+                seleccionats per a la seva funció específica i per evitar biaixos hermenèutics externs:
               </p>
 
               <h3>4.1. Models d&apos;embeddings</h3>
               <p>
-                <strong>text-embedding-3-large</strong> (OpenAI): Transforma el text en representacions vectorials
-                de 3072 dimensions per a la cerca semàntica d&apos;alta precisió.
+                <strong>Fase 1 (actual)</strong>: <strong>XLM-RoBERTa-base</strong>, model multilingüe que s&apos;executa localment
+                per a la recuperació semàntica (representacions vectorials de 768 dimensions). Oferix privacitat i control total sobre les dades.
               </p>
               <p style={{ marginTop: '0.5rem' }}>
-                <strong>XLM-RoBERTa</strong>: Model multilingüe que s&apos;executa localment per a tasques específiques
-                de recuperació de context i anàlisi de similitud, actuant com a complement per garantir robustesa.
+                <strong>Fase 2 (prevista)</strong>: Migració al model <strong>roberta-base-ca-v2</strong> del <strong>Projecte AINA</strong>,
+                entrenat específicament per al català amb un corpus que inclou documents governamentals i jurídics, per millorar la qualitat
+                de la cerca semàntica en text jurídic català.
               </p>
 
               <h3>4.2. Models de generació de text</h3>
               <p>
-                <strong>GPT-4o-mini</strong> (OpenAI): Genera les explicacions accessibles, resums i respostes del xat.
-                És un model optimitzat per a la rapidesa i la capacitat de raonament jurídic.
+                <strong>Llama 70B</strong> (Llama-3.3-70B-Versatile via <strong>Groq</strong>): Genera les explicacions accessibles, resums i respostes del xat (Hermes).
+                Es va provar inicialment Salamandra-7b-instruct (BSC), però no va resultar viable per a producció; en l&apos;estat actual s&apos;utilitza Llama 70B mitjançant l&apos;API de Groq, amb latència baixa i qualitat adequada per al català, castellà i francès.
               </p>
-
-              <p style={{ marginTop: '1.5rem' }}>
-                Aquesta arquitectura híbrida permet combinar la potència dels grans models al núvol amb
-                l&apos;agilitat i privacitat dels models locals, complint sempre amb l&apos;AI Act.
+              <p style={{ marginTop: '0.5rem' }}>
+                L&apos;ús de models com Llama 70B (Groq) i AINA (embeddings previstos) permet mantenir la qualitat de la generació en català i complir amb l&apos;AI Act i els principis d&apos;adequació tecnològica del projecte.
               </p>
             </section>
 
@@ -164,7 +165,10 @@ const ComEstaFetPage: React.FC = () => {
                   <strong>Vercel</strong>: Infraestructura al núvol que assegura un desplegament global d&apos;alta disponibilitat.
                 </li>
                 <li>
-                  <strong>OpenAI API</strong>: Motor d&apos;intel·ligència artificial per al processament del llenguatge natural.
+                  <strong>Llama 70B</strong> (Groq): Model de llenguatge per a la generació de text (explicacions, resums, xat). Via API Groq (Llama-3.3-70B-Versatile).
+                </li>
+                <li>
+                  <strong>XLM-RoBERTa-base</strong>: Model d&apos;embeddings multilingüe executat localment (fase 1). Fase 2: <strong>Projecte AINA</strong> (roberta-base-ca-v2) per al català.
                 </li>
               </ul>
             </section>
@@ -172,40 +176,74 @@ const ComEstaFetPage: React.FC = () => {
             <section className="legal-section">
               <h2>6. Corpus i dades</h2>
               <p>
-                La base de coneixement del sistema (Corpus) està formada per documents oficials i acadèmics
-                processats i vectoritzats:
+                La base de coneixement del sistema (corpus unificat) està formada per la Constitució d&apos;Andorra com a corpus pilot,
+                complementada amb doctrina acadèmica i recomanacions d&apos;aprenentatge:
               </p>
 
               <ul>
                 <li>
-                  <strong>Constitució d&apos;Andorra</strong>: El text fonamental sencer, estructurat per títols, capítols i articles.
+                  <strong>Constitució d&apos;Andorra (1993)</strong>: 105 articles estructurats per títols i capítols, amb navegació
+                  jeràrquica completa. Aquest és el corpus pilot del projecte, escollit per la seva importància com a Regla de
+                  Reconeixement del sistema jurídic andorrà.
                 </li>
                 <li>
-                  <strong>Doctrina de Dret Processal Civil</strong>: Manuals i textos de referència sobre el procediment civil andorrà,
-                  incloent l&apos;obra coordinada per la Universitat d&apos;Andorra.
+                  <strong>Doctrina jurídica</strong>: Fragments seleccionats de les <em>XIX Jornades de la Societat Andorrana de Ciències</em> (2015)
+                  i altres fonts acadèmiques que aporten context interpretatiu sobre el sistema jurídic andorrà, la seva complexitat
+                  i la necessitat d&apos;accessibilitat.
                 </li>
                 <li>
-                  <strong>Articles Doctrinals</strong>: Selecció d&apos;articles acadèmics (p.ex. sobre sobirania, drets fonamentals)
-                  que enriqueixen la interpretació de la norma.
-                </li>
-                <li>
-                  <strong>Jurisprudència (Experimental)</strong>: Integració progressiva de sentències rellevants del Tribunal Constitucional
-                  i del Tribunal Superior de Justícia.
+                  <strong>Recomanacions d&apos;aprenentatge</strong>: Entrades generades a partir de l&apos;avaluació de les preguntes de control,
+                  incorporant millores identificades pel sistema per enriquir les respostes i garantir la qualitat.
                 </li>
               </ul>
 
-              <p style={{ marginTop: '1.5rem' }}>
-                Mitjançant vectors semàntics, el sistema pot relacionar una pregunta de l&apos;usuari amb
-                fragments específics d&apos;aquests documents, encara que no comparteixin les mateixes paraules clau.
+              <p style={{ marginTop: '1rem' }}>
+                El corpus està processat amb embeddings multilingües (XLM-RoBERTa) que permeten la cerca semàntica.
+                Mitjançant vectors semàntics, el sistema relaciona la pregunta de l&apos;usuari amb fragments rellevants
+                d&apos;aquests documents, encara que no comparteixin les mateixes paraules clau.
               </p>
             </section>
 
             <section className="legal-section">
-              <h2>7. Transparència i limitacions</h2>
+              <h2>7. Compliment legal i principis ètics</h2>
               <p>
-                És fonamental utilitzar aquesta eina amb responsabilitat:
+                El projecte implementa les millors pràctiques en matèria de regulació d&apos;IA i accessibilitat jurídica:
               </p>
 
+              <h3>7.1. Marc normatiu</h3>
+              <ul>
+                <li>
+                  <strong>AI Act (Reglament UE 2024/1689)</strong>: Sistema de risc limitat amb obligacions de transparència.
+                  Sempre s&apos;indica que les respostes són generades per IA.
+                </li>
+                <li>
+                  <strong>Llei 6/2024 (Andorra)</strong>: Llenguatge institucional accessible, acurat i comprensible.
+                  El projecte explora com fer operatiu aquest mandat.
+                </li>
+                <li>
+                  <strong>Sobirania tecnològica</strong>: Embeddings locals (XLM-RoBERTa), models oberts (Llama 70B),
+                  control total sobre les dades.
+                </li>
+              </ul>
+
+              <h3>7.2. Principis ètics</h3>
+              <ul>
+                <li>
+                  <strong>Transparència total</strong>: Sempre es citen les fonts originals i s&apos;indica el funcionament del sistema.
+                </li>
+                <li>
+                  <strong>Traçabilitat</strong>: Arquitectura RAG que permet verificar cada resposta amb les fonts.
+                </li>
+                <li>
+                  <strong>Control humà</strong>: La IA assisteix, no substitueix el criteri jurídic professional.
+                </li>
+                <li>
+                  <strong>No és font de dret</strong>: Com adverteix Iago Andreu (2015), &quot;un manual pot acabar convertit en
+                  codi per la porta del darrere&quot;. Per això, aquest projecte és una eina pedagògica, no una font legal.
+                </li>
+              </ul>
+
+              <h3>7.3. Limitacions</h3>
               <ul>
                 <li>
                   <strong>Eina de suport</strong>: Aquest sistema està dissenyat per facilitar la recerca i la comprensió,
@@ -218,47 +256,120 @@ const ComEstaFetPage: React.FC = () => {
                 <li>
                   <strong>Informació no vinculant</strong>: Les interpretacions generades no tenen validesa jurídica oficial.
                 </li>
+                <li>
+                  <strong>Projecte acadèmic</strong>: Desenvolupat per un estudiant de Dret, no per un advocat col·legiat.
+                </li>
               </ul>
             </section>
 
             <section className="legal-section">
-              <h2>8. Millora contínua</h2>
-              <p>
-                Aquest projecte està viu i en constant evolució. Incorporem periòdicament:
-              </p>
-
+              <h2>8. Estat del projecte i roadmap</h2>
+              
+              <h3>8.1. Fase 1 completada (v1.0 - Constitució PoC)</h3>
               <ul>
-                <li>Nous documents i sentències al corpus.</li>
-                <li>Millores en els algoritmes de cerca (RAG) per augmentar la precisió.</li>
-                <li>Optimitzacions de la interfície basades en el feedback dels usuaris.</li>
+                <li>✅ 105 articles de la Constitució processats i estructurats</li>
+                <li>✅ Sistema RAG complet amb embeddings XLM-RoBERTa</li>
+                <li>✅ Chatbot funcional amb Llama 70B (Groq)</li>
+                <li>✅ Interfície multilingüe (català, castellà, francès)</li>
+                <li>✅ Paper acadèmic integrat amb bibliografia APA 7</li>
+                <li>✅ Sistema de control de qualitat amb preguntes de validació</li>
+              </ul>
+
+              <h3>8.2. Fase 2 en desenvolupament</h3>
+              <ul>
+                <li>Expansió a altres codis (Codi Civil, Penal)</li>
+                <li>Sistema de jurisprudència del Tribunal Constitucional</li>
+                <li>Millores en la cerca semàntica i optimització de prompts</li>
+                <li>Validació amb professionals del dret</li>
+              </ul>
+
+              <h3>8.3. Fase 3 futura</h3>
+              <ul>
+                <li>Comparador de sistemes legals (Andorra vs Catalunya vs Espanya)</li>
+                <li>API pública per a desenvolupadors</li>
+                <li>Guies especialitzades per a expatriats i emprenedors</li>
+                <li>Sistema d&apos;usuaris i subscripcions professionals</li>
               </ul>
             </section>
 
             <section className="legal-section" style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid #e5e7eb' }}>
-              <h2>Referència acadèmica</h2>
+              <h2>Sobre el projecte i l&apos;autor</h2>
               <p>
-                Aquest projecte forma part d&apos;una investigació doctoral a la Universitat d&apos;Andorra.
-                Per conèixer els detalls metodològics i científics, podeu consultar la secció{' '}
-                <a
-                  href="/com-esta-fet" // Self-link or keep text without link if specific paper page is hidden/removed
-                  style={{ color: '#2563eb', textDecoration: 'underline', cursor: 'default' }}
-                >
-                  metodològica
-                </a>{' '}
-                o contactar amb l&apos;equip de recerca.
+                Aquest projecte és desenvolupat per <strong>Marc Casellas</strong>, estudiant de Dret a la Universitat d&apos;Andorra,
+                com a part d&apos;una recerca sobre intel·ligència artificial i accessibilitat jurídica.
               </p>
-              <p style={{ marginTop: '1rem', fontSize: '0.9em', color: '#6b7280' }}>
+              <p style={{ marginTop: '1rem' }}>
+                Per conèixer els detalls metodològics i el marc teòric complet, podeu accedir al paper acadèmic:
+                <br />
+                <strong>&quot;El dret a la claredat constitucional: Intel·ligència Artificial i adequació tecnològica com a garanties de la cohesió jurídica a Andorra&quot;</strong>
+              </p>
+              <div style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                <Link href="/paper" className="com-esta-fet-paper-cta">
+                  📄 Llegir el paper acadèmic
+                </Link>
+                <Link href="/about" className="com-esta-fet-paper-cta-secondary">
+                  👤 Sobre l&apos;autor
+                </Link>
+              </div>
+              <p style={{ marginTop: '1.5rem', fontSize: '0.9em', color: '#6b7280' }}>
                 També pots consultar l&apos;{' '}
                 <a
                   href="/disclaimer"
                   style={{ color: '#2563eb', textDecoration: 'underline' }}
                 >
                   avís legal i política de privacitat
+                </a>
+                {' '}o el{' '}
+                <a
+                  href="https://github.com/mcasellasd/andorra-consti"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: '#2563eb', textDecoration: 'underline' }}
+                >
+                  codi font a GitHub
                 </a>.
               </p>
             </section>
           </article>
         </div>
+
+        <style jsx>{`
+          .com-esta-fet-paper-cta {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #ffffff;
+            background: #2563eb;
+            border: 2px solid #2563eb;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+          }
+          .com-esta-fet-paper-cta:hover {
+            background: #1d4ed8;
+            border-color: #1d4ed8;
+            transform: translateY(-1px);
+          }
+          .com-esta-fet-paper-cta-secondary {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #2563eb;
+            background: #ffffff;
+            border: 2px solid #2563eb;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+          }
+          .com-esta-fet-paper-cta-secondary:hover {
+            background: #eff6ff;
+            transform: translateY(-1px);
+          }
+        `}</style>
       </Layout>
     </>
   );
