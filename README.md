@@ -1,49 +1,51 @@
 # dretplaner.ad · Portal d'Accessibilitat Jurídica Assistida per IA
 
-Portal web d'accés gratuït que democratitza el coneixement jurídic andorrà mitjançant intel·ligència artificial. El portal interpreta i explica la legislació andorrana de manera accessible per a ciutadans, expatriats i professionals.
+Portal web d'accés gratuït que democratitza el coneixement jurídic andorrà mitjançant intel·ligència artificial. El projecte se centra en la **Constitució d'Andorra** com a corpus pilot, interpretant i explicant la legislació de manera accessible per a ciutadans, residents i professionals.
+
+> **Projecte acadèmic** desenvolupat per Marc Casellas, estudiant de Dret a la Universitat d'Andorra.
 
 ## 🎯 Objectius del Projecte
 
-- **Democratització del dret**: Fer accessible la legislació andorrana a tothom
-- **Base empírica**: Per a tesi doctoral a la Universitat d'Andorra
-- **Eina professional**: Via de residència per compte propi i eina per a professionals del dret
+- **Democratització del dret constitucional**: Fer accessible la Constitució d'Andorra a una societat heterogènia (55% de residents immigrants)
+- **Recerca acadèmica**: Base empírica per a tesi sobre IA i accessibilitat jurídica
+- **Proof of Concept**: Explorar com la IA pot garantir el dret a comprendre el dret sense erosionar les garanties legals
 
 ## ✨ Característiques Principals
 
-### 📖 Navegació per Codis Legals
-- **Codi Civil d'Andorra** (2022)
-- **Codi Penal** (en desenvolupament)
-- **Codi de Procediment Civil** (en desenvolupament)
+### 📖 Constitució d'Andorra (Corpus Pilot)
+- **105 articles** de la Constitució d'Andorra (1993)
+- Estructura jeràrquica: Títol > Capítol > Article
+- Navegació intuïtiva amb breadcrumbs
+- Sidebar amb índex de navegació ràpida
 
-Estructura jeràrquica: Codi > Llibre > Títol > Capítol > Article
-
-### 🤖 Interpretació Assistida per IA
-- **Resums en llenguatge plà** (3-4 frases)
-- **Exemples pràctics** contextualitzats
-- **Conceptes clau** explicats
-- **Diferències amb dret català/espanyol** (quan sigui rellevant)
-- **Toggle activable** per mostrar/amagar interpretació
+### 🤖 Interpretació Assistida per IA (RAG)
+- **Arquitectura RAG** (Retrieval-Augmented Generation) per garantir traçabilitat
+- **Resums en llenguatge plà** contextualitzats
+- **Exemples pràctics** adaptats a la realitat andorrana
+- **Conceptes clau** explicats amb rigor jurídic
+- **Referències explícites** a les fonts originals (sempre cita l'article)
+- **Control de qualitat**: Sistema de valoració de respostes
 
 ### 💬 Chatbot Dret Planer
-- Consultes en llenguatge natural sobre dret andorrà
-- Cerca automàtica en tots els codis simultàniament
+- Consultes en llenguatge natural sobre la Constitució
+- **Cerca semàntica** amb embeddings multilingües (XLM-RoBERTa)
+- **Generació de text** amb Llama 70B (via Groq)
 - Referències a articles específics amb enllaços directes
 - Disponible des de qualsevol pàgina (floating button)
+- **Transparència**: Sempre mostra les fonts utilitzades
 
-### ⚖️ Jurisprudència Vinculada
-- Sentències del TSJ/Tribunal de Corts que interpreten cada article
-- Resums automàtics de sentències (generats per IA)
-- Filtratge per any, tribunal, temàtica
-
-### 🔄 Comparador de Sistemes Legals
-- Comparació article per article: Andorra vs Catalunya vs Espanya
-- Rellevant per expatriats i empresaris
-- Taula comparativa automàtica amb IA
+### 📄 Paper Acadèmic Integrat
+- **"El dret a la claredat constitucional: Intel·ligència Artificial i adequació tecnològica com a garanties de la cohesió jurídica a Andorra"**
+- Marc teòric: Regla de Reconeixement de H.L.A. Hart aplicada a Andorra
+- Anàlisi de la Llei 6/2024 (llenguatge institucional accessible)
+- Documentació completa del sistema RAG i decisions tecnològiques
+- Bibliografia acadèmica en format APA 7
 
 ### 🌍 Multilingüisme
-- **Català** (per defecte)
+- **Català** (per defecte, llengua oficial)
 - **Castellà**
 - **Francès**
+- Interfície adaptable segons preferències de l'usuari
 
 ## 🚀 Desenvolupament
 
@@ -58,17 +60,15 @@ npm install
 Crea un fitxer `.env` a l'arrel del projecte:
 
 ```bash
-# OpenAI API (per chatbot i embeddings)
+# Generació de text (recomanat): Groq - Llama-3.3-70B
+GROQ_API_KEY=gsk-la-teva-clau-groq
+
+# Opcional: Embeddings (OpenAI) o XLM-RoBERTa (local, gratuït)
 OPENAI_API_KEY=sk-la-teva-clau-api-aqui
-
-# Opcional: Utilitzar XLM-RoBERTa per embeddings (local, gratuït)
 EMBEDDING_PROVIDER=xlm-roberta
-
-# O Claude API (segons el briefing)
-ANTHROPIC_API_KEY=sk-ant-la-teva-clau-api-aqui
 ```
 
-**Nota**: Pots utilitzar XLM-RoBERTa-base per embeddings (local, gratuït) i OpenAI només per al chatbot. Veure [XLM-ROBERTA-SETUP.md](./docs/XLM-ROBERTA-SETUP.md) per més detalls.
+**Nota**: Per al chatbot i la interpretació IA es fa servir Groq (Llama-3.3-70B). Per a embeddings pots utilitzar XLM-RoBERTa (gratuït) o OpenAI. Veure [XLM-ROBERTA-SETUP.md](./docs/XLM-ROBERTA-SETUP.md) per embeddings locals.
 
 ### Executar en desenvolupament
 
@@ -88,86 +88,156 @@ npm start
 ## 📁 Estructura del Projecte
 
 ```
-dret-planer/
+andorra-consti/
 ├── components/
-│   ├── Layout.tsx              # Layout principal amb navegació i selector d'idiomes
-│   ├── IA/
-│   │   └── InterpretacioIA.tsx # Component d'interpretació assistida per IA
-│   ├── UnifiedChatbot.tsx      # Chatbot integrat
+│   ├── Layout.tsx                    # Layout principal amb navegació i selector d'idiomes
+│   ├── UnifiedChatbot.tsx            # Chatbot integrat amb RAG
+│   ├── article/                      # Components per a visualització d'articles
+│   │   ├── ArticleHeader.tsx
+│   │   ├── ArticleContent.tsx
+│   │   ├── ArticleSidebar.tsx
+│   │   └── ArticleBreadcrumb.tsx
 │   └── ...
 ├── data/
-│   ├── codis/                  # Estructura segons briefing
-│   │   ├── codi-civil/
-│   │   │   ├── metadata.json
-│   │   │   └── articles-template.ts
-│   │   ├── codi-penal/
-│   │   └── types.ts            # Tipus TypeScript per articles
-│   └── ...
-├── lib/
-│   └── i18n.ts                 # Sistema d'internacionalització
-├── pages/
 │   ├── codis/
-│   │   └── civil/
-│   │       └── article/[id].tsx
-│   ├── api/
-│   │   └── interpretacio-ia.ts # Endpoint per generar interpretació
+│   │   └── constitucio/
+│   │       ├── metadata.json         # Metadades de la Constitució
+│   │       ├── articles-exemple.ts   # 105 articles estructurats
+│   │       └── articles-template.ts
+│   └── jurisprudence-example.ts      # Exemples de jurisprudència
+├── lib/
+│   ├── i18n.ts                       # Sistema d'internacionalització
+│   ├── llm/
+│   │   ├── groq.ts                   # Client Groq (Llama 70B)
+│   │   └── index.ts
+│   ├── embeddings/
+│   │   ├── xlm-roberta.ts            # Embeddings locals
+│   │   └── openai.ts                 # Embeddings OpenAI (opcional)
+│   ├── rag/
+│   │   ├── corpus.ts                 # Corpus de la Constitució
+│   │   ├── quality-assessment.ts     # Control de qualitat
+│   │   └── response-quality.ts
+│   └── prompts/
+│       └── guia-catala-juridic.ts    # Prompts per a generació
+├── pages/
+│   ├── index.tsx                     # Pàgina principal
+│   ├── about.tsx                     # Sobre l'autor
+│   ├── paper.tsx                     # Paper acadèmic
+│   ├── com-esta-fet.tsx              # Documentació tècnica
+│   ├── codis/constitucio/
+│   │   ├── index.tsx                 # Índex de la Constitució
+│   │   └── article/[id].tsx          # Pàgina d'article individual
+│   └── api/
+│       ├── unified-chat.ts           # API del chatbot
+│       ├── rag/
+│       │   ├── chat.ts               # Endpoint RAG
+│       │   └── search.ts             # Cerca semàntica
+│       └── ...
+├── docs/
+│   ├── PAPER-ACADEMIC-IA-ADAPTACIO-LLENGUATGE-NATURAL.md
+│   ├── REFERENCIES-APA7.md
+│   ├── CONFIGURACIO-GROQ.md
 │   └── ...
-└── ...
+└── scripts/
+    ├── build-constitucio-knowledge.js  # Generació del corpus
+    ├── generate-embeddings-constitucio.js
+    └── ...
 ```
 
 ## 🔧 Stack Tecnològic
 
+### Frontend
 - **Next.js 14** - Framework React (Pages Router)
 - **TypeScript** - Tipat estàtic
-- **Tailwind CSS** - Estilització (via globals.css)
-- **OpenAI API** - Generació de text i embeddings (per defecte)
-- **XLM-RoBERTa-base** - Embeddings locals multilingües (opció gratuïta)
-- **Claude API** - Opció alternativa segons briefing (per implementar)
+- **Tailwind CSS** - Estilització responsive
+
+### Intel·ligència Artificial
+- **Groq API** - Generació de text amb Llama-3.3-70B-Versatile (Inference-as-a-Service)
+- **XLM-RoBERTa-base** - Embeddings multilingües locals (via Transformers.js)
+- **OpenAI API** - Opció alternativa per a embeddings (text-embedding-3-large)
+
+### Arquitectura RAG
+- **Cerca semàntica** amb similitud cosinus
+- **Chunking intel·ligent** per articles i seccions
+- **Prompts rics** amb context jurídic andorrà
+- **Control de qualitat** amb sistema de valoració de respostes
+
+### Compliment Legal
+- **AI Act** (Reglament UE 2024/1689) - Sistema de risc limitat amb transparència
+- **Llei 6/2024** - Llenguatge institucional accessible i comprensible
+- **Sobirania tecnològica** - Embeddings locals, models oberts
+
+## ⚖️ Marc Jurídic i Compliment
+
+El projecte implementa les millors pràctiques en matèria de propietat intel·lectual i regulació d'IA:
+
+### Compliment Normatiu
+- **AI Act (Reglament UE 2024/1689)**: Sistema de risc limitat amb obligacions de transparència
+- **Llei 6/2024 (Andorra)**: Llenguatge institucional accessible, acurat i comprensible
+- **Directiva DSM**: Accés legítim a fonts públiques (Constitució, legislació oficial)
+
+### Principis Ètics i Tècnics
+- **Transparència total**: Sempre cita les fonts originals
+- **Traçabilitat**: Arquitectura RAG que permet verificar cada resposta
+- **Sobirania tecnològica**: Embeddings locals (XLM-RoBERTa), models oberts
+- **Control humà**: La IA assisteix, no substitueix el criteri jurídic
+- **Privacitat**: No es recullen dades personals dels usuaris
+
+### Advertència Legal
+> **"En absència de codi i de sistematització, un manual —més o menys acadèmic— pot acabar convertit en codi per la porta del darrere."**  
+> — Iago Andreu (2015)
+
+Per això, **Dret Planer no pretén ser una font de dret**, sinó una eina pedagògica i d'accessibilitat que sempre remet a les fonts oficials.
 
 ## 📝 Estat del Projecte
 
-### ✅ Completat (MVP Base)
-- [x] Estructura de dades segons briefing
-- [x] Sistema d'idiomes (i18n) - CA, ES, FR
-- [x] Component d'interpretació IA
-- [x] API endpoint per interpretació
-- [x] Layout adaptat per a dretplaner.ad
-- [x] Pàgina d'exemple per articles
+### ✅ Completat (v1.0 - Constitució)
+- [x] **105 articles de la Constitució** processats i estructurats
+- [x] **Sistema RAG complet** amb embeddings XLM-RoBERTa
+- [x] **Chatbot funcional** amb Llama 70B (Groq)
+- [x] **Sistema d'idiomes** (i18n) - CA, ES, FR
+- [x] **Paper acadèmic integrat** amb bibliografia APA 7
+- [x] **Pàgina About** amb informació de l'autor
+- [x] **Control de qualitat** amb sistema de valoració
+- [x] **Interfície responsive** amb navegació intuïtiva
+- [x] **Preguntes de control** per validació del sistema
 
 ### 🚧 En Desenvolupament
-- [ ] Parsear Codi Civil d'Andorra (2022) a JSON
-- [ ] Integrar articles reals al sistema
-- [ ] Adaptar chatbot per a dret andorrà
-- [ ] Implementar comparador de sistemes legals
-- [ ] Crear guies per a expatriats i emprenedors
+- [ ] Expansió a altres codis (Codi Civil, Penal)
 - [ ] Sistema de jurisprudència vinculada
+- [ ] Millores en el sistema de cerca semàntica
+- [ ] Optimització de prompts per a casos complexos
 
-### 📋 Pendent
-- [ ] Migració a Claude API (opcional)
-- [ ] Sistema d'usuaris i subscripcions
-- [ ] API pública
-- [ ] Calculadores jurídiques
-- [ ] Sistema d'alerts
+### 📋 Futur (Post-PoC)
+- [ ] Comparador de sistemes legals (Andorra vs Catalunya vs Espanya)
+- [ ] Guies per a expatriats i emprenedors
+- [ ] API pública per a desenvolupadors
+- [ ] Sistema d'usuaris i subscripcions professionals
+- [ ] Calculadores jurídiques específiques
 
 ## 🗺️ Roadmap
 
-### FASE 1: MVP (6-8 setmanes)
-- Infraestructura base (✅)
-- Contingut legal (Codi Civil amb 100+ articles)
-- Integració IA bàsica (✅)
-- Chatbot funcional
+### ✅ FASE 1: Proof of Concept - Constitució (Completat)
+- Infraestructura base amb Next.js + TypeScript
+- 105 articles de la Constitució processats
+- Sistema RAG amb XLM-RoBERTa + Llama 70B
+- Chatbot funcional amb traçabilitat
+- Paper acadèmic documentant el sistema
+- Interfície multilingüe (CA, ES, FR)
 
-### FASE 2: Expansió (8-12 setmanes)
-- Més codis (Penal, Consum, Procediment Civil)
-- Jurisprudència vinculada
-- Comparador de sistemes
-- Guies per a expatriats
+### 🚧 FASE 2: Expansió del Corpus Legal
+- Integració del Codi Civil d'Andorra
+- Sistema de jurisprudència del Tribunal Constitucional
+- Millores en la cerca semàntica
+- Optimització de prompts per a casos complexos
+- Validació amb professionals del dret
 
-### FASE 3: Professionalització (12+ setmanes)
-- Sistema d'usuaris
-- Subscripcions professionals
-- API pública
-- Analytics avançats
+### 📋 FASE 3: Professionalització (Futur)
+- Comparador de sistemes legals internacionals
+- API pública per a desenvolupadors
+- Sistema d'usuaris i subscripcions
+- Guies especialitzades per a expatriats i emprenedors
+- Analytics i mètriques d'ús
 
 ## 🚢 Desplegament
 
@@ -179,19 +249,55 @@ dret-planer/
 
 Veure `DEPLOY.md` per més detalls.
 
+## 📚 Documentació Acadèmica
+
+Aquest projecte està completament documentat acadèmicament:
+
+- **Paper principal**: `docs/PAPER-ACADEMIC-IA-ADAPTACIO-LLENGUATGE-NATURAL.md`
+  - "El dret a la claredat constitucional: Intel·ligència Artificial i adequació tecnològica com a garanties de la cohesió jurídica a Andorra"
+- **Referències**: `docs/REFERENCIES-APA7.md` (bibliografia completa en APA 7)
+- **Configuració tècnica**: `docs/CONFIGURACIO-OPENAI.md`, `docs/CONFIGURACIO-GROQ.md`
+- **Desplegament**: `DEPLOY.md`, `VERCEL-DEPLOY.md`
+
+## 🤝 Com Contribuir
+
+Aquest és un projecte acadèmic obert a feedback i col·laboració:
+
+### Formes de Contribuir
+- **Feedback jurídic**: Si ets professional del dret, el teu feedback és molt valuós
+- **Detecció d'errors**: Reporta imprecisions o errors en les respostes de la IA
+- **Suggeriments tècnics**: Millores en l'arquitectura RAG o els prompts
+- **Noves fonts**: Suggeriments de doctrina o jurisprudència a integrar
+- **Traduccions**: Millores en les traduccions al castellà i francès
+
+### Contacte per a Col·laboració
+Envia un correu a `contacte@dretplaner.ad` amb:
+- Descripció de la proposta o error detectat
+- Context (si és aplicable)
+- Suggeriments de millora
+
+## ⚠️ Disclaimer
+
+Aquest és un **projecte acadèmic** desenvolupat per un estudiant de Dret. **No constitueix assessorament legal**. Les respostes generades per la IA tenen caràcter orientatiu i educatiu, i han de ser contrastades amb professionals del dret i les fonts oficials.
+
 ## 📄 Llicència
 
-Projecte acadèmic per a tesi doctoral. Tots els drets reservats.
+Projecte acadèmic de recerca. Tots els drets reservats.
 
-## 👥 Contacte
+## 👥 Contacte i Autor
 
-- Email: contacte@dretplaner.ad
-- Web: https://dretplaner.ad (en desenvolupament)
+**Marc Casellas**  
+Estudiant de Dret, Universitat d'Andorra
+
+- **Email**: contacte@dretplaner.ad
+- **Web**: https://dretplaner.ad (en desenvolupament)
+- **GitHub**: https://github.com/mcasellasd/andorra-consti
+
+Per a més informació sobre l'autor i el projecte, visita la pàgina `/about` del portal.
 
 ---
 
-**Versió**: 1.0.0  
-**Data**: Novembre 2024  
-**Autor**: Projecte dretplaner.ad  
-**Estat**: MVP en desenvolupament
-# andorra-consti
+**Versió**: 1.0.0 (Constitució PoC)  
+**Data**: Gener 2026  
+**Autor**: Marc Casellas  
+**Estat**: Proof of Concept completat · En expansió
