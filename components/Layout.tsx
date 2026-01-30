@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { Globe } from 'lucide-react';
 import UnifiedChatbot from './UnifiedChatbot';
-import { getIdiomaActual, setIdioma, t, idiomesDisponibles, type Idioma } from '../lib/i18n';
+import { getIdiomaActual, setIdioma, t, idiomesDisponibles, nomsIdiomes, type Idioma } from '../lib/i18n';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -39,22 +40,28 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <Link href="/">{t(idioma, 'nav.inici')}</Link>
             <Link href="/codis/constitucio">{t(idioma, 'nav.constitucio')}</Link>
             <Link href="/preguntes-control">{t(idioma, 'nav.preguntesControl')}</Link>
-            {/* <Link href="/paper">{t(idioma, 'nav.paper')}</Link> */}
+            <Link href="/paper">{t(idioma, 'nav.paper')}</Link>
             <Link href="/com-esta-fet">{t(idioma, 'nav.comEstaFet')}</Link>
-            <Link href="/about">{t(idioma, 'nav.about')}</Link>
-            <div className="lang-selector">
+          </nav>
+          
+          {/* Selector d'idioma destacat */}
+          <div className="lang-selector-wrapper">
+            <div className="lang-selector" role="group" aria-label="Seleccionar idioma">
+              <Globe className="lang-icon" size={18} aria-hidden="true" />
               {idiomesDisponibles.map((lang) => (
                 <button
                   key={lang}
                   onClick={() => handleIdiomaChange(lang)}
-                  className={idioma === lang ? 'active' : ''}
-                  aria-label={`Canviar a ${lang.toUpperCase()}`}
+                  className={`lang-button ${idioma === lang ? 'active' : ''}`}
+                  aria-label={`Canviar a ${nomsIdiomes[lang]}`}
+                  aria-pressed={idioma === lang}
                 >
-                  {lang.toUpperCase()}
+                  <span className="lang-code">{lang.toUpperCase()}</span>
+                  <span className="lang-name">{nomsIdiomes[lang]}</span>
                 </button>
               ))}
             </div>
-          </nav>
+          </div>
         </div>
       </header>
       <main className="main-content">{children}</main>
