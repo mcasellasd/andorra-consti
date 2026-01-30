@@ -1,5 +1,5 @@
 /**
- * Script per generar traduccions d'articles legals amb OpenAI
+ * Script per generar traduccions d'articles legals amb Groq (Llama-3.3-70B)
  * 
  * Ús:
  *   node scripts/generate-translations.js --lang=es --start=1 --end=10
@@ -16,10 +16,6 @@ try {
   // dotenv no disponible, continuar
 }
 
-// Configuració
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
-
 // Parse arguments
 const args = process.argv.slice(2);
 const lang = args.find(arg => arg.startsWith('--lang='))?.split('=')[1] || 'es';
@@ -33,11 +29,12 @@ const langNames = {
 };
 
 /**
- * Genera traducció amb OpenAI
+ * Genera traducció amb Groq (Llama-3.3-70B)
  */
 async function translateText(text, targetLang, context = 'article') {
-  if (!OPENAI_API_KEY) {
-    throw new Error('OPENAI_API_KEY no està configurada. Configura-la amb: export OPENAI_API_KEY="tu-api-key"');
+  const GROQ_API_KEY = process.env.GROQ_API_KEY;
+  if (!GROQ_API_KEY) {
+    throw new Error('GROQ_API_KEY no està configurada. Configura-la amb: export GROQ_API_KEY="tu-api-key"');
   }
 
   const langName = langNames[targetLang] || targetLang;
@@ -92,14 +89,14 @@ ${Array.isArray(text) ? text.join(', ') : text}`;
   }
 
   try {
-    const response = await fetch(OPENAI_API_URL, {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_API_KEY}`
+        'Authorization': `Bearer ${GROQ_API_KEY}`
       },
       body: JSON.stringify({
-        model: 'gpt-4',
+        model: 'llama-3.3-70b-versatile',
         messages: [
           {
             role: 'system',
@@ -117,7 +114,7 @@ ${Array.isArray(text) ? text.join(', ') : text}`;
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(`OpenAI API error: ${error.error?.message || JSON.stringify(error)}`);
+      throw new Error(`Groq API error: ${error.error?.message || JSON.stringify(error)}`);
     }
 
     const data = await response.json();

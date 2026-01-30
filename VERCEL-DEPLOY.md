@@ -62,13 +62,15 @@ Vercel detectarà automàticament:
 A la secció "Environment Variables", afegeix:
 
 ```
-OPENAI_API_KEY=sk-la-teva-clau-api-aqui
+GROQ_API_KEY=gsk-la-teva-clau-groq
 ```
 
-**Important**: Assegura't d'afegir-la per a:
+**Important**: La generació de text (chatbot, interpretació IA) utilitza **Groq (Llama-3.3-70B)**. Assegura't d'afegir `GROQ_API_KEY` per a:
 - ✅ Production
 - ✅ Preview  
 - ✅ Development (opcional)
+
+Opcional: si utilitzes embeddings d'OpenAI, afegeix també `OPENAI_API_KEY`.
 
 ### 4. Desplegament
 
@@ -86,19 +88,19 @@ OPENAI_API_KEY=sk-la-teva-clau-api-aqui
 
 ### Variables d'Entorn Opcionals
 
-Si vols personalitzar els models d'OpenAI:
+- **Generació de text**: `GROQ_API_KEY` (obligatòria per chatbot i interpretació IA) — Llama-3.3-70B via Groq
+- **Embeddings**: `OPENAI_API_KEY` (opcional) — per text-embedding-3-large; alternativa: XLM-RoBERTa local amb `EMBEDDING_PROVIDER=xlm-roberta`
 
 ```
 OPENAI_EMBEDDINGS_MODEL=text-embedding-3-large
-OPENAI_CHAT_MODEL=gpt-4o-mini
 NEXT_PUBLIC_SHOW_EMBED_REMINDER=false
 ```
 
 **Variables d'entorn disponibles:**
-- `OPENAI_API_KEY` (obligatòria) - La teva clau API d'OpenAI
-- `OPENAI_CHAT_MODEL` (opcional) - Model de chat, per defecte: `gpt-4o-mini`
-- `OPENAI_EMBEDDINGS_MODEL` (opcional) - Model d'embeddings, per defecte: `text-embedding-3-large`
-- `NEXT_PUBLIC_SHOW_EMBED_REMINDER` (opcional) - Mostrar recordatori d'embed, per defecte: `false`
+- `GROQ_API_KEY` (obligatòria per generació) - Clau API de Groq (Llama-3.3-70B)
+- `OPENAI_API_KEY` (opcional) - Per embeddings OpenAI
+- `OPENAI_EMBEDDINGS_MODEL` (opcional) - Per defecte: `text-embedding-3-large`
+- `NEXT_PUBLIC_SHOW_EMBED_REMINDER` (opcional) - Per defecte: `false`
 
 ## ✅ Verificació Post-Desplegament
 
@@ -114,7 +116,7 @@ Després del desplegament, verifica:
 
 ## 📝 Notes Importants
 
-- **No necessites una nova clau API**: Utilitza la mateixa `OPENAI_API_KEY` que feies servir abans
+- **Generació de text**: Configura `GROQ_API_KEY` (obtinguda a [console.groq.com](https://console.groq.com))
 - **El chatbot unificat** pot consultar ambdós codis simultàniament
 - **Totes les rutes** estan configurades correctament:
   - `/` → Codi Civil
@@ -124,8 +126,8 @@ Després del desplegament, verifica:
 
 ## 🐛 Troubleshooting
 
-### Error: "OPENAI_API_KEY no configurada"
-- Verifica que la variable d'entorn estigui configurada a Vercel
+### Error: "Cal configurar GROQ_API_KEY" o respostes buides del chatbot
+- Afegeix `GROQ_API_KEY` a les variables d'entorn de Vercel
 - Assegura't que estigui marcada per "Production"
 - Redeploya després d'afegir la variable
 

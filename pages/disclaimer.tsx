@@ -77,8 +77,8 @@ const LegalNoticePage: React.FC = () => {
               </p>
               <p>
                 <strong>Destinataris i transferències.</strong> Les peticions del xat es processen mitjançant l&apos;API
-                d&apos;OpenAI (OpenAI OpCo, LLC, EUA). La transferència internacional s&apos;empara en clàusules contractuals
-                tipus de la Comissió Europea i les garanties complementàries d&apos;OpenAI. No es comparteixen dades amb
+                de Groq (Groq, Inc., EUA) utilitzant el model Llama-3.3-70B-Versatile. La transferència internacional s&apos;empara en clàusules contractuals
+                tipus de la Comissió Europea i les garanties complementàries de Groq. No es comparteixen dades amb
                 altres tercers.
               </p>
               <p>
@@ -126,10 +126,10 @@ const LegalNoticePage: React.FC = () => {
               <h3>7.1. Models utilitzats</h3>
               <ul>
                 <li>
-                  <strong>Generació de text</strong>: GPT-4o-mini (OpenAI OpCo, LLC)
+                  <strong>Generació de text</strong>: Llama-3.3-70B-Versatile (Groq, Inc.)
                 </li>
                 <li>
-                  <strong>Embeddings</strong>: text-embedding-3-large (OpenAI OpCo, LLC)
+                  <strong>Embeddings</strong>: XLM-RoBERTa-base (executat localment) o text-embedding-3-large (OpenAI OpCo, LLC) si s&apos;utilitza aquesta opció
                 </li>
               </ul>
 
@@ -157,7 +157,7 @@ const LegalNoticePage: React.FC = () => {
                 </li>
                 <li>
                   <strong>Menció del model</strong> (20 punts): Comprova que es menciona el model o proveïdor
-                  utilitzat (GPT-4o-mini d&apos;OpenAI).
+                  utilitzat (Llama-3.3-70B-Versatile de Groq, Inc.).
                 </li>
                 <li>
                   <strong>Advertències sobre limitacions</strong> (20 punts): Verifica que la resposta inclou
@@ -188,7 +188,7 @@ const LegalNoticePage: React.FC = () => {
                 <li>Les limitacions possibles (errors, simplificacions)</li>
                 <li>La recomanació de consultar professionals per casos específics</li>
                 <li>La clarificació que no constitueix assessorament legal</li>
-                <li>El model d&apos;IA utilitzat (GPT-4o-mini d&apos;OpenAI)</li>
+                <li>El model d&apos;IA utilitzat (Llama-3.3-70B-Versatile de Groq, Inc.)</li>
               </ul>
 
               <p>

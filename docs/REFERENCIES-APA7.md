@@ -12,6 +12,8 @@ Govern d’Andorra. (1993). *Constitució del Principat d’Andorra* (aprovada e
 
 Govern d’Andorra. (s.d.). *Codi Civil d’Andorra*. [Text extret; document intern: `docs/codi-civil-andorra.txt`]
 
+
+Govern d'Andorra. (2024). *Codi sobre l'Ètica de la Intel·ligència Artificial*. [Document de referència ètica per a l'ús de la IA a Andorra.]
 ---
 
 ## 2. Doctrina i jurisprudència (corpus RAG)
@@ -20,8 +22,18 @@ Govern d’Andorra. (s.d.). *Codi Civil d’Andorra*. [Text extret; document int
 
 - Andreu i Sotelo, I. (2015). Ponència sobre el sistema de fonts del dret privat andorrà. A Societat Andorrana de Ciències (Ed.), *Actes de les XIX Jornades de la Societat Andorrana de Ciències*. Societat Andorrana de Ciències.
 - Argemí Ferrer, J. (2015). Ponència sobre usos i costums i identitat. A Societat Andorrana de Ciències (Ed.), *Actes de les XIX Jornades de la Societat Andorrana de Ciències*. Societat Andorrana de Ciències.
+- Choi, J. H., Hickman, K. E., Monahan, A. B., & Schwarcz, D. (2023). ChatGPT goes to law school. *Journal of Legal Education*, 71(3), 387–401.
 - Badia Gomis, F. (2015). Ponència sobre seguretat jurídica i coneixement del dret. A Societat Andorrana de Ciències (Ed.), *Actes de les XIX Jornades de la Societat Andorrana de Ciències*. Societat Andorrana de Ciències.
 - Forné Molné, M. (2015). Ponència sobre simplificació administrativa i justícia. A Societat Andorrana de Ciències (Ed.), *Actes de les XIX Jornades de la Societat Andorrana de Ciències*. Societat Andorrana de Ciències.
+
+**RAG, governança algorítmica i veracitat (citats a la secció 3.2.1 del paper):**
+
+- Adams, R. (2025). Algorithmic risk assessment and judicial limits: the case of COMPAS in Wisconsin. [Referència a la limitació d’ús de sistemes tipus caixa negra.]
+- Armour, J., Parnham, R., & Sako, M. (2022). Augmented lawyering. *University of Illinois Law Review*.
+- Dantart, A. (2025a). Gobernanza y trazabilidad "a prueba de AI Act" para casos de uso legales. *arXiv:2510.12830*.
+- Dantart, A. (2025b). *Inteligencia Artificial Jurídica y el desafío de la veracidad: Análisis de alucinaciones y optimización de RAG*. Informe Técnico, Madrid.
+- Guha, N., et al. (2024). LEGALBENCH: A collaboratively built benchmark for measuring legal reasoning. *arXiv:2308.11462*.
+- Strom, R. (2024). Big Law is questioning the "magical thinking" of AI as savior. *Bloomberg Law*.
 
 Becat, J. (1993). Emergencia i reconeixement d’Andorra com a Estat. *Doctrina*. [Document intern: `docs/Emergencia i reconeixement d'Andorra.txt`]
 
@@ -35,6 +47,10 @@ Lopez B. (2024). Comunicació Lopez B. *Doctrina*. [Document intern: `docs/nous/
 
 López Burniol, J. J. (2023). *La Constitució d'Andorra: Gènesi i Funció*; *Tradició i Constitució a Andorra*. Doctrina. [Document intern: `docs/nous/burniol.txt`]
 
+
+Magesh, V., et al. (2024). Hallucination-free? Assessing reliability of legal AI. [Referència a l'ús de RAG per restringir el context i minimitzar al·lucinacions en entorns jurídics.]
+
+Westerman, H. (2023). La intel·ligència artificial en l'accés a la justícia: suport cognitiu i no substitut del jurista. [Referència al paradigma de la IA com a eina de suport cognitiu.]
 Tribunal Constitucional d’Andorra. (2023). *Memòria 2023*. [Document intern: `docs/nous/MEMÒRIA 2023 DEFINITIVA.txt`]
 
 Tribunal Constitucional d’Andorra. (2024). *Memòria 2024*. [Document intern: `docs/nous/MEMÒRIA 2024-3.txt`]

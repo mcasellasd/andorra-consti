@@ -67,8 +67,8 @@ Contingut (fragment fins a 2.000 caràcters):
 ${articleContent.substring(0, 2000)}${jurisprudenciaContext}
 
 Necessito una interpretació orientativa que segueixi estrictament aquestes indicacions:
-1. Escriu un apartat titulat "Resum (${articleNumber} CCA)" amb 3 a 5 frases en català planer que expliquin els punts essencials i la finalitat de l'article. IMPORTANT: NO repeteixis el text literal de la llei. Adapta el contingut utilitzant llenguatge natural i planer, explicant amb les teves pròpies paraules què significa i què regula l'article. El text ha de ser fidel al significat i l'àmbit d'aplicació, però utilitzant un vocabulari i estructures diferents al text jurídic formal. Recorda indicar el llibre, secció o títol si aporta context.
-2. Tanca la resposta amb un paràgraf breu sota l'etiqueta "Avís" que indiqui que la informació és orientativa, no constitueix assessorament legal i que ha estat generada amb suport d'IA (Cursor i OpenAI), animant a consultar professionals en cas de dubte.
+1. Escriu un apartat titulat "Resum (${articleNumber} CCA)" amb 4 a 6 frases (o més si l'article és dens) en català planer que expliquin els punts essencials, què regula l'article, a qui afecta i la finalitat. Sigues descriptiu i clar. IMPORTANT: NO repeteixis el text literal de la llei. Adapta el contingut utilitzant llenguatge natural i planer, explicant amb les teves pròpies paraules què significa i què regula l'article. El text ha de ser fidel al significat i l'àmbit d'aplicació, però utilitzant un vocabulari i estructures diferents al text jurídic formal. Recorda indicar el llibre, secció o títol si aporta context.
+2. Tanca la resposta amb un paràgraf breu sota l'etiqueta "Avís" que indiqui que la informació és orientativa, no constitueix assessorament legal i que ha estat generada amb suport d'intel·ligència artificial (Llama-3.3-70B de Groq), animant a consultar professionals en cas de dubte.
 3. No incloguis cap exemple pràctic en aquesta resposta. Si consideres que en caldria cap, limita't a recordar que es pot sol·licitar un exemple específic.
 4. Evita cites literals llargues i no inventis dades, jurisprudència ni reformes inexistents.
 5. Mantén un to respectuós, clar i didàctic.`;
@@ -85,7 +85,7 @@ Abans de respondre:
 
 Quan responguis:
 - Cita el número exacte de l'article (ex. "Article 1 CCA") i, si és rellevant, el llibre, títol o secció.
-- Proporciona primer un resum breu (3-5 frases) en català planer quan es demani un resum. CRÍTIC: Utilitza les teves pròpies paraules, NO repeteixis frases del text legal. Transforma el llenguatge jurídic formal en explicacions naturals i comprensibles.
+- Proporciona primer un resum descriptiu (4-6 frases, o més si cal) en català planer quan es demani un resum. CRÍTIC: Utilitza les teves pròpies paraules, NO repeteixis frases del text legal. Transforma el llenguatge jurídic formal en explicacions naturals i comprensibles.
 - Recorda sempre que això és orientatiu i no constitueix assessorament legal; recomana consultar professionals quan calgui.
 - Utilitza llenguatge propi del dret civil andorrà, però amb explicacions accessibles per a un públic general.
 

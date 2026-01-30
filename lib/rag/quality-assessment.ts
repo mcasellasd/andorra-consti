@@ -89,14 +89,16 @@ function checkDisclosesAI(text: string): boolean {
  */
 function checkMentionsModel(text: string): boolean {
   const modelPatterns = [
-    'openai',
-    'cursor',
-    'gpt-4o-mini',
-    'gpt-4',
-    'gpt-4o',
+    'groq',
+    'llama-3.3',
+    'llama-3',
+    'llama',
+    'mistral',
+    'mistral-7b',
+    'hugging face',
     'model d\'ia',
     'model d\'intel·ligència artificial',
-    'text-embedding-3-large',
+    'intel·ligència artificial',
   ];
 
   return modelPatterns.some(pattern => text.includes(pattern));
@@ -230,9 +232,24 @@ function generateWarnings(compliance: AIActCompliance): string[] {
  * Genera instruccions de prompt per garantir el compliment amb l'AI Act
  */
 export function getAIActCompliancePrompt(): string {
+  // Detecta quin model s'està utilitzant basant-se en les variables d'entorn
+  let modelInfo = 'una IA';
+  let modelProvider = '';
+  
+  if (process.env.GROQ_API_KEY && process.env.GROQ_API_KEY.startsWith('gsk_')) {
+    modelInfo = 'una IA (Llama-3.3-70B-Versatile)';
+    modelProvider = 'Llama-3.3-70B-Versatile de Groq, Inc.';
+  } else if (process.env.HUGGINGFACE_API_KEY) {
+    modelInfo = 'una IA (Mistral-7B-Instruct-v0.3)';
+    modelProvider = 'Mistral-7B-Instruct-v0.3 de Mistral AI via Hugging Face';
+  } else {
+    modelInfo = 'una IA';
+    modelProvider = 'model d\'intel·ligència artificial';
+  }
+
   return `TRANSPARÈNCIA (AI Act - Reglament UE 2024/1689):
-- Indica explícitament que ets una IA (OpenAI GPT-4o-mini)
-- Menciona el model utilitzat (GPT-4o-mini de OpenAI OpCo, LLC)
+- Indica explícitament que ets ${modelInfo}
+- Menciona el model utilitzat (${modelProvider})
 - Inclou advertències sobre limitacions (informació orientativa, pot contenir errors)
 - Recomana consultar professionals titulats (advocats, notaris) per casos específics
 - Deixa clar que la informació és orientativa i no constitueix assessorament legal professional`;
@@ -259,13 +276,13 @@ export interface PlainLanguageResult {
 export async function checkPlainLanguage(
   response: string
 ): Promise<PlainLanguageResult> {
-  const openaiApiKey = process.env.OPENAI_API_KEY;
+  const groqApiKey = process.env.GROQ_API_KEY;
 
-  if (!openaiApiKey) {
+  if (!groqApiKey || !groqApiKey.startsWith('gsk_')) {
     return {
       score: 50,
       compliant: false,
-      issues: ['No es pot validar: falta OPENAI_API_KEY'],
+      issues: ['No es pot validar: falta GROQ_API_KEY'],
     };
   }
 
@@ -294,14 +311,14 @@ Punts clau:
 - Score: 0-100 (100 = perfecte llenguatge planer)
 - Issues: Array de problemes específics detectats (si n'hi ha, array buit [] si no n'hi ha)`;
 
-    const apiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+    const apiResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${openaiApiKey}`,
+        'Authorization': `Bearer ${groqApiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'llama-3.3-70b-versatile',
         messages: [
           {
             role: 'system',
@@ -320,7 +337,7 @@ Punts clau:
 
     if (!apiResponse.ok) {
       const errorText = await apiResponse.text();
-      console.error('Error OpenAI API (plain language check):', apiResponse.status, errorText);
+      console.error('Error Groq API (plain language check):', apiResponse.status, errorText);
       return {
         score: 50,
         compliant: false,

@@ -37,17 +37,16 @@ export default async function handler(
   }
 
   try {
+    if (process.env.RAG_ENABLED !== 'true') {
+      return res.status(200).json({ results: [] });
+    }
     const provider = getEmbeddingProvider();
-    // Utilitzem XLM-RoBERTa per defecte, no necessitem OpenAI API key
     const queryEmbedding = await generateEmbedding(query, provider);
-    
     const matches = retrieveTopMatches(
       queryEmbedding,
       Math.max(1, Math.min(topK, 12))
     );
-
     const results = matches.map((match) => mapResult(match));
-
     return res.status(200).json({ results });
   } catch (error: any) {
     console.error('Error al cercador semàntic:', error);

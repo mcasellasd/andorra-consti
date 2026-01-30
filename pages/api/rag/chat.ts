@@ -27,7 +27,7 @@ interface ChatResponseBody {
   error?: string;
 }
 
-// Utilitzem Salamandra via lib/llm, no OpenAI
+// Generació de text via lib/llm (Groq Llama-3.3-70B o Hugging Face)
 
 export default async function handler(
   req: NextApiRequest,
@@ -59,16 +59,18 @@ export default async function handler(
     });
   }
 
-  const provider = getEmbeddingProvider();
+  let matches: RetrievedContext[] = [];
+  if (process.env.RAG_ENABLED === 'true') {
+    const provider = getEmbeddingProvider();
+    const queryEmbedding = await generateEmbedding(message, provider);
+    matches = retrieveTopMatches(queryEmbedding, 3);
+  }
 
   try {
-    const queryEmbedding = await generateEmbedding(message, provider);
-    const matches = retrieveTopMatches(queryEmbedding, 3);
-
     const contextBlock = buildContextBlock(matches);
     const chatMessages = buildChatMessages(message, history, contextBlock);
 
-    const answer = await generateChatCompletion(chatMessages, {
+    const answer = await generateText(chatMessages, {
       maxTokens,
       temperature
     });
@@ -186,17 +188,6 @@ ${GUIA_CATALA_JURIDIC}`;
   return messages;
 }
 
-// Funció helper per generar text amb Salamandra (substituint OpenAI)
-async function generateChatCompletion(
-  messages: Array<{ role: string; content: string }>,
-  options: { maxTokens: number; temperature: number }
-): Promise<string> {
-  // Utilitzar Salamandra via lib/llm
-  return generateText(messages, {
-    maxTokens: options.maxTokens,
-    temperature: options.temperature,
-  });
-}
 
 const articleIndex = buildArticleIndex();
 

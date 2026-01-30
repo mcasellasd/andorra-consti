@@ -1,10 +1,21 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import Head from 'next/head';
 import Layout from '../components/Layout';
 import Link from 'next/link';
 import { Shield, Users, Scale, FileCheck, Landmark, Check, PlayCircle } from 'lucide-react';
+import { MultilingualBanner } from '../components/MultilingualBanner';
+import { getIdiomaActual, t, type Idioma } from '../lib/i18n';
 
 const IndexPage: React.FC = () => {
+  const [idioma, setIdioma] = useState<Idioma>('ca');
+
+  useEffect(() => {
+    setIdioma(getIdiomaActual());
+    const handleIdiomaChange = () => setIdioma(getIdiomaActual());
+    window.addEventListener('idiomaChanged', handleIdiomaChange);
+    return () => window.removeEventListener('idiomaChanged', handleIdiomaChange);
+  }, []);
+
   const openChat = useCallback((question: string = '') => {
     if (typeof window !== 'undefined') {
       const event = new CustomEvent('openUnifiedChat', {
@@ -17,52 +28,70 @@ const IndexPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Dret Planer · Constitució d&apos;Andorra</title>
+        <title>
+          {idioma === 'ca' ? 'Dret Planer · Constitució d\'Andorra' :
+           idioma === 'es' ? 'Derecho Plano · Constitución de Andorra' :
+           'Droit Plan · Constitution d\'Andorre'}
+        </title>
         <meta
           name="description"
-          content="La Constitució d'Andorra explicada per a tothom. Guies, estructura i drets."
+          content={t(idioma, 'home.descripcio')}
         />
       </Head>
       <Layout>
         {/* Main Home Container */}
         <div className="max-w-7xl mx-auto px-6 py-12 md:py-20 space-y-24">
 
-          {/* HERO SECTION */}
-          <section className="text-center space-y-8 max-w-4xl mx-auto">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-gray-900 leading-tight">
-              La Constitució d&apos;Andorra<br />
-              <span className="text-gray-900">explicada per a tothom.</span>
-            </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Entén els teus drets constitucionals amb guies clares i pràctiques.
-            </p>
-            <div className="flex items-center justify-center gap-4 pt-4">
-              <Link
-                href="#estructura"
-                className="px-8 py-3 bg-transparent border border-gray-200 text-gray-900 rounded-md font-medium hover:bg-gray-50 transition-colors"
-                scroll={false}
-              >
-                Comença
-              </Link>
-              <button
-                onClick={() => openChat()}
-                className="px-8 py-3 bg-black text-white rounded-md font-medium hover:bg-gray-800 transition-colors border border-black"
-              >
-                Aprèn dret
-              </button>
+          {/* HERO SECTION - fons tipus pixel amb colors d'Andorra, títol, muntanya i CTAs */}
+          <section className="home-hero">
+            <div className="home-hero-inner">
+              <div className="home-hero-content">
+                <h1 className="home-hero-title">
+                  {t(idioma, 'home.titol')}<br />
+                  <span>{t(idioma, 'home.subtitol')}</span>
+                </h1>
+                <p className="home-hero-desc">
+                  {t(idioma, 'home.descripcio')}
+                </p>
+                <div className="home-hero-actions">
+                  <Link
+                    href="#estructura"
+                    className="home-hero-btn home-hero-btn-outline"
+                    scroll={false}
+                  >
+                    {t(idioma, 'home.comença')}
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => openChat()}
+                    className="home-hero-btn home-hero-btn-solid"
+                  >
+                    {t(idioma, 'home.aprenDret')}
+                  </button>
+                </div>
+              </div>
+              <div className="home-hero-mountain" aria-hidden="true">
+                <svg viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="home-hero-mountain-svg">
+                  <path d="M0 60L20 25 40 45 60 15 80 35 100 10 120 40V60H0z" stroke="#94a3b8" strokeWidth="1.5" fill="none" opacity="0.6" />
+                  <path d="M0 60L30 30 55 50 90 20 120 45V60H0z" stroke="#cbd5e1" strokeWidth="1.2" fill="none" opacity="0.5" />
+                </svg>
+              </div>
             </div>
           </section>
 
+          {/* BANNER MULTILINGÜE */}
+          <MultilingualBanner />
+
           {/* ESTRUCTURA DE LA CONSTITUCIÓ */}
           <section id="estructura" className="space-y-10">
-            <h2 className="text-3xl font-bold text-gray-900">Estructura de la Constitució</h2>
+            <h2 className="text-3xl font-bold text-gray-900">{t(idioma, 'home.estructuraTitol')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
               {/* Card 1 */}
               <Link href="/codis/constitucio?part=drets" className="group p-6 border border-gray-100 rounded-xl hover:shadow-lg transition-all bg-white text-center flex flex-col items-center gap-4">
                 <Shield className="w-8 h-8 text-gray-800" strokeWidth={1.5} />
                 <div>
-                  <h3 className="font-semibold text-gray-900">Drets fonamentals</h3>
-                  <p className="text-xs text-gray-500 mt-1">Títol II - Drets i llibertats (Arts. 4-43)</p>
+                  <h3 className="font-semibold text-gray-900">{t(idioma, 'home.dretsFonamentals')}</h3>
+                  <p className="text-xs text-gray-500 mt-1">{t(idioma, 'home.dretsFonamentalsDesc')}</p>
                 </div>
               </Link>
 
@@ -70,8 +99,8 @@ const IndexPage: React.FC = () => {
               <Link href="/codis/constitucio?part=nacionalitat" className="group p-6 border border-gray-100 rounded-xl hover:shadow-lg transition-all bg-white text-center flex flex-col items-center gap-4">
                 <Users className="w-8 h-8 text-gray-800" strokeWidth={1.5} />
                 <div>
-                  <h3 className="font-semibold text-gray-900">Nacionalitat</h3>
-                  <p className="text-xs text-gray-500 mt-1">Títol I - Sobirania i ciutadania (Arts. 1-3)</p>
+                  <h3 className="font-semibold text-gray-900">{t(idioma, 'home.nacionalitat')}</h3>
+                  <p className="text-xs text-gray-500 mt-1">{t(idioma, 'home.nacionalitatDesc')}</p>
                 </div>
               </Link>
 
@@ -79,8 +108,8 @@ const IndexPage: React.FC = () => {
               <Link href="/codis/constitucio?part=justicia" className="group p-6 border border-gray-100 rounded-xl hover:shadow-lg transition-all bg-white text-center flex flex-col items-center gap-4">
                 <Scale className="w-8 h-8 text-gray-800" strokeWidth={1.5} />
                 <div>
-                  <h3 className="font-semibold text-gray-900">Poder judicial</h3>
-                  <p className="text-xs text-gray-500 mt-1">Títol VII - Justícia (Arts. 85-94)</p>
+                  <h3 className="font-semibold text-gray-900">{t(idioma, 'home.poderJudicial')}</h3>
+                  <p className="text-xs text-gray-500 mt-1">{t(idioma, 'home.poderJudicialDesc')}</p>
                 </div>
               </Link>
 
@@ -88,8 +117,8 @@ const IndexPage: React.FC = () => {
               <Link href="/codis/constitucio?part=parlament" className="group p-6 border border-gray-100 rounded-xl hover:shadow-lg transition-all bg-white text-center flex flex-col items-center gap-4">
                 <FileCheck className="w-8 h-8 text-gray-800" strokeWidth={1.5} />
                 <div>
-                  <h3 className="font-semibold text-gray-900">Consell General</h3>
-                  <p className="text-xs text-gray-500 mt-1">Títol IV - Parlament (Arts. 50-71)</p>
+                  <h3 className="font-semibold text-gray-900">{t(idioma, 'home.consellGeneral')}</h3>
+                  <p className="text-xs text-gray-500 mt-1">{t(idioma, 'home.consellGeneralDesc')}</p>
                 </div>
               </Link>
 
@@ -97,8 +126,8 @@ const IndexPage: React.FC = () => {
               <Link href="/codis/constitucio?part=govern" className="group p-6 border border-gray-100 rounded-xl hover:shadow-lg transition-all bg-white text-center flex flex-col items-center gap-4">
                 <Landmark className="w-8 h-8 text-gray-800" strokeWidth={1.5} />
                 <div>
-                  <h3 className="font-semibold text-gray-900">Govern</h3>
-                  <p className="text-xs text-gray-500 mt-1">Títol V - Poder executiu (Arts. 72-78)</p>
+                  <h3 className="font-semibold text-gray-900">{t(idioma, 'home.govern')}</h3>
+                  <p className="text-xs text-gray-500 mt-1">{t(idioma, 'home.governDesc')}</p>
                 </div>
               </Link>
             </div>
@@ -106,15 +135,15 @@ const IndexPage: React.FC = () => {
 
           {/* GUIES SOBRE LA CONSTITUCIÓ */}
           <section className="space-y-10">
-            <h2 className="text-3xl font-bold text-gray-900">Preguntes ràpides</h2>
+            <h2 className="text-3xl font-bold text-gray-900">{t(idioma, 'home.preguntesRapides')}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
-                "Què són els drets fonamentals?",
-                "Com funciona el Consell General?",
-                "Els Coprínceps: funció i poders",
-                "El Tribunal Constitucional explicat",
-                "Drets i deures dels ciutadans",
-                "Com es reforma la Constitució?"
+                t(idioma, 'home.pregunta1'),
+                t(idioma, 'home.pregunta2'),
+                t(idioma, 'home.pregunta3'),
+                t(idioma, 'home.pregunta4'),
+                t(idioma, 'home.pregunta5'),
+                t(idioma, 'home.pregunta6')
               ].map((guide, idx) => (
                 <button
                   key={idx}
@@ -132,12 +161,12 @@ const IndexPage: React.FC = () => {
 
           {/* DRETS EN ACCIÓ */}
           <section className="space-y-10">
-            <h2 className="text-3xl font-bold text-gray-900">Drets en acció</h2>
+            <h2 className="text-3xl font-bold text-gray-900">{t(idioma, 'home.dretsAccio')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
-                "Drets a la intimitat",
-                "Llibertat d'expressió",
-                "Dret de reunió"
+                t(idioma, 'home.dretIntimitat'),
+                t(idioma, 'home.llibertatExpressio'),
+                t(idioma, 'home.dretReunio')
               ].map((title, idx) => (
                 <div key={idx} className="group cursor-pointer">
                   <div className="aspect-square bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-colors relative overflow-hidden">
@@ -152,16 +181,16 @@ const IndexPage: React.FC = () => {
 
           {/* ESTUDIA LA CONSTITUCIÓ */}
           <section className="space-y-10">
-            <h2 className="text-3xl font-bold text-gray-900">Estudia la Constitució</h2>
+            <h2 className="text-3xl font-bold text-gray-900">{t(idioma, 'home.estudiaConstitucio')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 border border-gray-200 rounded-xl divide-y md:divide-y-0 md:divide-x divide-gray-200 bg-white shadow-sm">
               <Link href="/codis/constitucio#preambul" className="p-8 text-center hover:bg-gray-50 transition-colors bg-white first:rounded-t-xl first:md:rounded-l-xl first:md:rounded-tr-none">
-                <span className="font-bold text-gray-900">Preàmbul</span>
+                <span className="font-bold text-gray-900">{t(idioma, 'home.preambul')}</span>
               </Link>
               <Link href="/codis/constitucio" className="p-8 text-center hover:bg-gray-50 transition-colors bg-white">
-                <span className="font-bold text-gray-900">Títols I-IV</span>
+                <span className="font-bold text-gray-900">{t(idioma, 'home.titolsI_IV')}</span>
               </Link>
               <Link href="/codis/constitucio" className="p-8 text-center hover:bg-gray-50 transition-colors bg-white last:rounded-b-xl last:md:rounded-r-xl last:md:rounded-bl-none">
-                <span className="font-bold text-gray-900">Títols V-X</span>
+                <span className="font-bold text-gray-900">{t(idioma, 'home.titolsV_X')}</span>
               </Link>
             </div>
           </section>

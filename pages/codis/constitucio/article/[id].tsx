@@ -180,17 +180,17 @@ const ArticleConstitucioPage: React.FC = () => {
     <>
       <Head>
         <title>
-          {article.numeracio}: {article.titol} - Constitució d&apos;Andorra | dretplaner.ad
+          {article.numeracio}: {idioma === 'ca' ? article.titol : article.idiomes?.titol?.[idioma] || article.titol} - {idioma === 'ca' ? 'Constitució' : idioma === 'es' ? 'Constitución' : 'Constitution'} d&apos;Andorra | dretplaner.ad
         </title>
         <meta name="description" content={(article.idiomes?.[idioma] || article.text_oficial).substring(0, 160)} />
       </Head>
       <Layout>
         <div className="min-h-screen flex flex-col bg-background">
           {/* Breadcrumb */}
-          <ArticleBreadcrumb article={article} />
+          <ArticleBreadcrumb article={article} idioma={idioma} />
 
           {/* Header */}
-          <ArticleHeader article={article} />
+          <ArticleHeader article={article} idioma={idioma} />
 
           {/* Main content area */}
           <main className="flex-1 w-full max-w-6xl mx-auto px-6 lg:px-8 py-8 lg:py-12">

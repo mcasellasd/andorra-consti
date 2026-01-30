@@ -42,3 +42,6 @@ ts-debug.log*
 
 # generated data
 data/rag/*.json
+
+# Xenova cache (models descarregats)
+.cache/

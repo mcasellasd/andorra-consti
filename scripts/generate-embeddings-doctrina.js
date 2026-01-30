@@ -12,14 +12,20 @@
 const fs = require('fs');
 const path = require('path');
 
+// Carregar variables d'entorn: primer .env.local, després .env
+const envLocal = path.join(__dirname, '../.env.local');
+const env = path.join(__dirname, '../.env');
+if (fs.existsSync(envLocal)) require('dotenv').config({ path: envLocal });
+if (fs.existsSync(env)) require('dotenv').config({ path: env });
+
 const RAG_DIR = path.join(__dirname, '../data/rag/doctrina');
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const MODEL = process.env.OPENAI_EMBEDDINGS_MODEL || 'text-embedding-3-large';
 
 async function main() {
   if (!OPENAI_API_KEY) {
-    console.error('❌ Fes servir la variable d\'entorn OPENAI_API_KEY abans d\'executar el script.');
-    console.error('   Els scripts Node.js requereixen OpenAI API per generar embeddings.');
+    console.error('❌ No s\'ha trobat OPENAI_API_KEY.');
+    console.error('   Configura la clau: export OPENAI_API_KEY="..." o afegeix OPENAI_API_KEY=... a .env o .env.local');
     process.exit(1);
   }
 

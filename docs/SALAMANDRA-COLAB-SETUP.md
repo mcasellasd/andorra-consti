@@ -1,5 +1,7 @@
 # Configuració de Salamandra a Google Colab
 
+> **Nota (2025)**: L’endpoint personalitzat Salamandra/Colab/ngrok ja no és suportat al codi. Per a generació de text es recomana **Groq (Llama-3.3-70B-Versatile)** amb `GROQ_API_KEY`. Aquest document es manté com a referència històrica.
+
 Aquest document explica com configurar **Salamandra-7b-instruct** a Google Colab i connectar-lo al teu projecte Next.js. El model 7B dóna millor qualitat que el 2B. S’utilitza **quantització 4-bit** (bitsandbytes) per fer-lo cabre a la GPU T4 gratuïta de Colab (~16 GB VRAM).
 
 ## Avantatges

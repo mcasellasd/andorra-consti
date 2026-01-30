@@ -151,13 +151,13 @@ const SummarySection: React.FC<SummarySectionProps> = ({
               <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: '#fff3cd', borderRadius: '4px', fontSize: '0.9rem' }}>
                 <strong>⚠️ Configuració necessària:</strong>
                 <p style={{ margin: '0.5rem 0 0 0' }}>
-                  Per utilitzar aquesta funcionalitat, cal configurar la clau API d'OpenAI a Vercel:
+                  Per utilitzar aquesta funcionalitat, cal configurar la clau API de Groq a Vercel:
                 </p>
                 <ol style={{ margin: '0.5rem 0 0 1.5rem', padding: 0 }}>
                   <li>Vés a <a href="https://vercel.com/dashboard" target="_blank" rel="noopener noreferrer">Vercel Dashboard</a></li>
                   <li>Selecciona el projecte</li>
                   <li>Vés a <strong>Settings</strong> → <strong>Environment Variables</strong></li>
-                  <li>Afegeix <code>OPENAI_API_KEY</code> amb la teva clau API</li>
+                  <li>Afegeix <code>GROQ_API_KEY</code> amb la teva clau API (obtinguda a <a href="https://console.groq.com" target="_blank" rel="noopener noreferrer">console.groq.com</a>)</li>
                   <li>Redeploya l'aplicació</li>
                 </ol>
               </div>

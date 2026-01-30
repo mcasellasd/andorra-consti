@@ -12,10 +12,14 @@ import { articlesConstitucio } from '../../../data/codis/constitucio/articles-te
 const ConstitucioPage: React.FC = () => {
   const idioma = getIdiomaActual();
 
-  // Agrupar articles per títol i capítol
+  // Agrupar articles per títol i capítol (amb traduccions)
   const estructura = articlesConstitucio.reduce((acc, article) => {
-    const titol = article.titol;
-    const capitol = article.capitol || 'Sense capítol';
+    const titol = idioma === 'ca' 
+      ? article.titol 
+      : article.idiomes?.titol?.[idioma] || article.titol;
+    const capitol = idioma === 'ca'
+      ? article.capitol || (idioma === 'ca' ? 'Sense capítol' : idioma === 'es' ? 'Sin capítulo' : 'Sans chapitre')
+      : article.idiomes?.capitol?.[idioma] || article.capitol || (idioma === 'es' ? 'Sin capítulo' : 'Sans chapitre');
 
     if (!acc[titol]) {
       acc[titol] = {};

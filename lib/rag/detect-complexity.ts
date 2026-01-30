@@ -130,15 +130,30 @@ export function detectArticleReference(message: string): string | null {
 export function detectArticleByKeywords(message: string): string[] {
   const lowerMessage = message.toLowerCase();
   const articleKeywords: { [key: string]: string[] } = {
-    'CONST_001': ['sobirania', 'poble andorrà', 'article 1'],
-    'CONST_002': ['capital', 'andorra la vella', 'article 2'],
-    'CONST_003': ['norma suprema', 'ordenament jurídic', 'rang normatiu', 'eficàcia jurídica', 'article 3'],
-    'CONST_004': ['dignitat humana', 'drets inviolables', 'article 4'],
-    'CONST_006': ['igualtat', 'totes les persones són iguals', 'article 6'],
-    'CONST_008': ['dret a la vida', 'article 8'],
-    'CONST_010': ['procés degut', 'article 10'],
-    'CONST_095': ['tribunal constitucional', 'article 95'],
-    'CONST_PREAMB': ['preàmbul', 'pareatges', 'virtus unita fortior', 'lema']
+    'CONST_PREAMB': ['preàmbul', 'pareatges', 'virtus unita fortior', 'lema', 'article 0', 'aprovació constitució', '1993'],
+    'CONST_001': ['sobirania', 'poble andorrà', 'coprincipat parlamentari', 'parròquies', 'principat', 'article 1'],
+    'CONST_002': ['capital', 'andorra la vella', 'llengua oficial', 'català oficial', 'himne nacional', 'bandera', 'escut', 'article 2'],
+    'CONST_003': ['norma suprema', 'ordenament jurídic', 'rang normatiu', 'eficàcia jurídica', 'legalitat', 'jerarquia', 'no retroactivitat', 'article 3'],
+    'CONST_004': ['dignitat humana', 'drets inviolables', 'imprescriptibles', 'article 4'],
+    'CONST_005': ['declaració universal dels drets humans', 'declaració universal', 'dudh', 'drets humans vigent', 'article 5'],
+    'CONST_006': ['igualtat', 'totes les persones són iguals', 'discriminat', 'article 6'],
+    'CONST_007': ['nacionalitat andorrana', 'nacional andorrà', 'adquisició nacionalitat', 'pèrdua nacionalitat', 'nacionalitat diferent', 'llei qualificada nacionalitat', 'article 7'],
+    'CONST_008': ['dret a la vida', 'pena de mort', 'prohibeix pena de mort', 'integritat física', 'tortures', 'article 8'],
+    'CONST_009': ['detenció governativa', 'quaranta-vuit hores', '48 hores', 'llibertat i seguretat', 'article 9'],
+    'CONST_010': ['procés degut', 'jurisdicció', 'tutela judicial', 'presumpció innocència', 'article 10'],
+    'CONST_039': ['dret directament aplicable', 'capítol iii', 'capítol iv', 'estrangers residents drets', 'article 39'],
+    'CONST_040': ['lleis qualificades drets', 'regular exercici drets', 'drets capítols iii iv', 'article 40'],
+    'CONST_042': ['estat d\'alarma', 'estat d\'emergència', 'estats excepció', 'article 42'],
+    'CONST_043': ['coprínceps són', 'bisbe d\'urgell', 'president república francesa', 'cap de l\'estat andorra', 'article 43'],
+    'CONST_050': ['consell general', 'potestat legislativa', 'pressupostos estat', 'control govern', 'article 50'],
+    'CONST_057': ['lleis qualificades aprovació', 'majoria absoluta consellers', 'article 57'],
+    'CONST_072': ['govern andorra', 'cap de govern', 'potestat reglamentària', 'article 72'],
+    'CONST_085': ['justícia andorra', 'jutges independents', 'organització judicial', 'títol vii justícia', 'article 85'],
+    'CONST_095': ['tribunal constitucional', 'intèrpret suprem constitució', 'article 95'],
+    'CONST_098': ['inconstitucionalitat', 'empara constitucional', 'conflictes competències', 'article 98'],
+    'CONST_105': ['reforma constitucional', 'títol ix', 'article 105'],
+    'CONST_106': ['revisió constitucional', 'article 106'],
+    'CONST_107': ['reforma constitució', 'article 107']
   };
   
   const foundArticles: string[] = [];

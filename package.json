@@ -4,7 +4,7 @@
   "description": "Portal d'Accessibilitat Jurídica Assistida per IA per al Principat d'Andorra",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_OPTIONS='--max-old-space-size=4096' next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -16,6 +16,7 @@
     "embed:doctrina": "node scripts/generate-embeddings-doctrina.js",
     "embed:aprenentatge": "node scripts/generate-embeddings-aprenentatge.js",
     "process:doctrina": "node scripts/processar-doctrina-txt.js",
+    "process:doctrina:xlm": "npx tsx scripts/processar-doctrina-xlm.ts",
     "unificar:corpus": "node scripts/unificar-corpus-doctrina.js",
     "translate": "node scripts/generate-translations.js"
   },

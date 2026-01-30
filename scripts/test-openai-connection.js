@@ -14,20 +14,20 @@ if (fs.existsSync(envPath)) {
   process.exit(1);
 }
 
-const apiKey = process.env.OPENAI_API_KEY;
+const apiKey = process.env.GROQ_API_KEY;
 
 if (!apiKey) {
-  console.error("❌ OPENAI_API_KEY no trobada a .env.local");
+  console.error("❌ GROQ_API_KEY no trobada a .env.local");
   process.exit(1);
 }
 
 // Mask key for display
 const maskedKey = apiKey.substring(0, 7) + '...' + apiKey.substring(apiKey.length - 4);
-console.log(`🔑 Provant connexió amb clau: ${maskedKey}`);
+console.log(`🔑 Provant connexió amb clau Groq: ${maskedKey}`);
 
 async function testConnection() {
   try {
-    const response = await fetch('https://api.openai.com/v1/models', {
+    const response = await fetch('https://api.groq.com/openai/v1/models', {
       headers: {
         'Authorization': `Bearer ${apiKey}`
       }
@@ -35,17 +35,18 @@ async function testConnection() {
 
     if (response.ok) {
       const data = await response.json();
-      console.log("✅ Connexió amb OpenAI EXITOSA!");
-      // Check if gpt-4o-mini is available
-      const hasModel = data.data.some(m => m.id === 'gpt-4o-mini');
+      console.log("✅ Connexió amb Groq EXITOSA!");
+      // Check if llama-3.3-70b-versatile is available
+      const hasModel = data.data.some(m => m.id === 'llama-3.3-70b-versatile');
       if (hasModel) {
-        console.log("✅ Model 'gpt-4o-mini' disponible.");
+        console.log("✅ Model 'llama-3.3-70b-versatile' disponible.");
       } else {
-        console.log("⚠️ Model 'gpt-4o-mini' NO trobat a la llista de models disponibles.");
+        console.log("⚠️ Model 'llama-3.3-70b-versatile' NO trobat a la llista de models disponibles.");
+        console.log("Models disponibles:", data.data.map(m => m.id).join(', '));
       }
     } else {
       const errorText = await response.text();
-      console.error("❌ Error API OpenAI:", response.status, response.statusText);
+      console.error("❌ Error API Groq:", response.status, response.statusText);
       console.error("Detalls:", errorText);
     }
   } catch (error) {
