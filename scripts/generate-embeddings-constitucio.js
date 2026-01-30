@@ -12,8 +12,11 @@
 const fs = require('fs');
 const path = require('path');
 
-// Carregar variables d'entorn des de .env.local si existeix
-require('dotenv').config({ path: path.join(__dirname, '../.env.local') });
+// Carregar variables d'entorn: primer .env.local, després .env
+const envLocal = path.join(__dirname, '../.env.local');
+const env = path.join(__dirname, '../.env');
+if (require('fs').existsSync(envLocal)) require('dotenv').config({ path: envLocal });
+if (require('fs').existsSync(env)) require('dotenv').config({ path: env });
 
 const KNOWLEDGE_PATH = path.join(__dirname, '../data/rag/constitucio.json');
 const OUTPUT_PATH = path.join(__dirname, '../data/rag/constitucio-embeddings.json');

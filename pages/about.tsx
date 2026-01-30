@@ -93,7 +93,7 @@ const AboutPage: React.FC = () => {
               </ul>
               <p>
                 Tot el desenvolupament està documentat acadèmicament al paper: 
-                <Link href="/paper/document" className="paper-inline-link">
+                <Link href="/paper" className="paper-inline-link">
                   «El dret a la claredat constitucional: Intel·ligència Artificial i adequació tecnològica com a 
                   garanties de la cohesió jurídica a Andorra»
                 </Link>.

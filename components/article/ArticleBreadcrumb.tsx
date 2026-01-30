@@ -2,12 +2,20 @@ import React from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { ArticleAndorra } from '../../data/codis/types';
+import { type Idioma } from '../../lib/i18n';
 
 interface ArticleBreadcrumbProps {
   article: ArticleAndorra;
+  idioma?: Idioma;
 }
 
-export function ArticleBreadcrumb({ article }: ArticleBreadcrumbProps) {
+export function ArticleBreadcrumb({ article, idioma = 'ca' }: ArticleBreadcrumbProps) {
+  const constitucioLabel = idioma === 'ca' 
+    ? 'Constitució d\'Andorra'
+    : idioma === 'es'
+    ? 'Constitución de Andorra'
+    : 'Constitution d\'Andorre';
+
   return (
     <nav aria-label="Camí jeràrquic" className="w-full border-b border-border bg-card">
       <div className="max-w-6xl mx-auto px-6 lg:px-8 py-4">
@@ -17,7 +25,7 @@ export function ArticleBreadcrumb({ article }: ArticleBreadcrumbProps) {
               href="/codis/constitucio" 
               className="text-muted-foreground hover:text-primary transition-colors"
             >
-              Constitució d&apos;Andorra
+              {constitucioLabel}
             </Link>
           </li>
           {article.titol && (

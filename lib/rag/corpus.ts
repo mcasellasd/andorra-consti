@@ -92,6 +92,78 @@ export function getKnowledgeEntries(): KnowledgeEntry[] {
   return corpus.knowledge.slice();
 }
 
+/** Resum d’un document/font del corpus per mostrar a l’usuari abans de contestar */
+export interface CorpusDocumentSummary {
+  id: string;
+  name: string;
+  description: string;
+  count: number;
+}
+
+/**
+ * Retorna la llista de documents/fonts que el RAG pot consultar abans de contestar.
+ * Útil per mostrar a l’usuari què hi ha al corpus (Constitució, doctrina, etc.).
+ */
+export function getCorpusDocumentsList(): CorpusDocumentSummary[] {
+  const constitution: KnowledgeEntry[] = [];
+  const doctrina: KnowledgeEntry[] = [];
+
+  for (const entry of corpus.knowledge) {
+    const isDoctrina =
+      entry.id.startsWith('DOCTRINA_') ||
+      entry.id.startsWith('DOC_') ||
+      entry.category === 'Doctrina' ||
+      entry.category === 'doctrina' ||
+      entry.category === 'Jurisprudència' ||
+      entry.category === 'jurisprudència';
+    if (isDoctrina) {
+      doctrina.push(entry);
+    } else {
+      constitution.push(entry);
+    }
+  }
+
+  const result: CorpusDocumentSummary[] = [];
+
+  if (constitution.length > 0) {
+    const hasPreamb = constitution.some(e => e.id === 'CONST_PREAMB');
+    const articles = constitution.filter(e => e.id !== 'CONST_PREAMB');
+    const nums = articles
+      .map(e => {
+        const m = e.id.match(/^CONST_(\d+)$/);
+        return m ? parseInt(m[1], 10) : null;
+      })
+      .filter((n): n is number => n !== null);
+    const minArt = nums.length ? Math.min(...nums) : 0;
+    const maxArt = nums.length ? Math.max(...nums) : 0;
+    const desc =
+      hasPreamb && nums.length
+        ? `Preàmbul i articles 1–${maxArt}`
+        : hasPreamb
+          ? 'Preàmbul'
+          : nums.length
+            ? `Articles ${minArt}–${maxArt}`
+            : 'Constitució';
+    result.push({
+      id: 'CONSTITUCIO',
+      name: "Constitució d'Andorra",
+      description: desc,
+      count: constitution.length
+    });
+  }
+
+  if (doctrina.length > 0) {
+    result.push({
+      id: 'DOCTRINA',
+      name: 'Doctrina i jurisprudència',
+      description: 'Textos doctrinaris, comentaris i jurisprudència relacionada',
+      count: doctrina.length
+    });
+  }
+
+  return result;
+}
+
 /**
  * Busca un article específic per ID al corpus
  * @param articleId - ID de l'article (ex: "CONST_019")
@@ -131,7 +203,8 @@ export function getArticleByNumber(articleNumber: string): KnowledgeEntry | null
 export function retrieveTopMatches(
   queryEmbedding: number[],
   topK = 3,
-  books?: string[] // Ara és opcional i no s'utilitza
+  books?: string[], // Ara és opcional i no s'utilitza
+  prioritizeConstitution: boolean = false // Prioritzar articles CONST_* sobre doctrina
 ): RetrievedContext[] {
   const queryNorm = vectorNorm(queryEmbedding);
   if (queryNorm === 0) {
@@ -145,37 +218,109 @@ export function retrieveTopMatches(
   }
 
   const scored = corpus.embeddings
-    .map((entry) => ({
-      id: entry.id,
-      score: cosineSimilarity(
+    .map((entry) => {
+      let score = cosineSimilarity(
         queryEmbedding,
         queryNorm,
         entry.embedding,
         entry.norm
-      )
-    }))
+      );
+      
+      // Boost per articles de la Constitució quan prioritizeConstitution és true
+      if (prioritizeConstitution) {
+        const entryData = corpus.knowledgeById.get(entry.id);
+        if (entryData) {
+          // Articles de la Constitució: IDs que comencen amb CONST_ i no són doctrina
+          const isConstitutionArticle = entry.id.startsWith('CONST_') && 
+            !entry.id.startsWith('DOCTRINA_') &&
+            entryData.category !== 'Doctrina' &&
+            entryData.category !== 'doctrina' &&
+            entryData.category !== 'jurisprudència' &&
+            entryData.category !== 'Jurisprudència';
+          
+          if (isConstitutionArticle) {
+            // Boost del 40% per articles constitucionals (prioritat alta)
+            score = Math.min(1.0, score * 1.4);
+          } else if (entry.id.startsWith('DOCTRINA_') || 
+                     entry.id.startsWith('DOC_') ||
+                     entryData.category === 'Doctrina' ||
+                     entryData.category === 'doctrina' ||
+                     entryData.category === 'jurisprudència' ||
+                     entryData.category === 'Jurisprudència') {
+            // Penalització del 25% per doctrina quan es prioritza Constitució
+            score = score * 0.75;
+          }
+        }
+      }
+      
+      return {
+        id: entry.id,
+        score
+      };
+    })
     .filter((item) => Number.isFinite(item.score))
     .sort((a, b) => b.score - a.score)
-    .slice(0, topK);
+    .slice(0, topK * 2); // Agafar més candidats per després filtrar per tipus
 
   const results: RetrievedContext[] = [];
+  const constitutionArticles: RetrievedContext[] = [];
+  const doctrinaArticles: RetrievedContext[] = [];
+  
   for (const { id, score } of scored) {
     const entry = corpus.knowledgeById.get(id);
     if (entry) {
       // Determinar l'ID del llibre segons l'ID de l'entrada
       let bookId: 'CONSTITUCIO' | 'DOCTRINA' = 'CONSTITUCIO';
-      if (entry.id.startsWith('DOC_') || entry.category === 'Doctrina') {
+      const isDoctrina = entry.id.startsWith('DOCTRINA_') || 
+                         entry.id.startsWith('DOC_') || 
+                         entry.category === 'Doctrina' ||
+                         entry.category === 'doctrina' ||
+                         entry.category === 'jurisprudència';
+      
+      if (isDoctrina) {
         bookId = 'DOCTRINA';
       }
 
-      results.push({
+      const context: RetrievedContext = {
         bookId,
         entry,
         score
-      });
+      };
+      
+      // Separar per tipus quan es prioritza Constitució
+      if (prioritizeConstitution) {
+        if (isDoctrina) {
+          doctrinaArticles.push(context);
+        } else {
+          constitutionArticles.push(context);
+        }
+      } else {
+        results.push(context);
+      }
     }
   }
-  return results;
+  
+  // Si es prioritza Constitució, primer articles constitucionals, després doctrina
+  if (prioritizeConstitution) {
+    // Agafar almenys 60% d'articles constitucionals si n'hi ha suficients
+    // Si n'hi ha pocs, agafar tots els disponibles i omplir amb doctrina
+    const constitutionCount = constitutionArticles.length > 0
+      ? Math.min(Math.ceil(topK * 0.6), constitutionArticles.length)
+      : 0;
+    const doctrinaCount = topK - constitutionCount;
+    
+    results.push(...constitutionArticles.slice(0, constitutionCount));
+    if (doctrinaCount > 0) {
+      results.push(...doctrinaArticles.slice(0, doctrinaCount));
+    }
+    
+    // Si encara no tenim suficients resultats, omplir amb més articles constitucionals si n'hi ha
+    if (results.length < topK && constitutionArticles.length > constitutionCount) {
+      results.push(...constitutionArticles.slice(constitutionCount, topK - results.length + constitutionCount));
+    }
+  }
+  
+  return results.slice(0, topK);
 }
 
 /**

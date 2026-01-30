@@ -81,14 +81,17 @@ a {
   text-decoration: none;
 }
 
-/* Header Styles */
+/* Header Styles - fixe a la part superior en fer scroll */
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   background: #ffffff;
   border-bottom: 1px solid #e5e7eb;
   padding: 1.25rem 0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  z-index: 1000;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   backdrop-filter: blur(10px);
   background: rgba(255, 255, 255, 0.95);
@@ -1753,6 +1756,131 @@ a {
   justify-content: center;
 }
 
+/* Home Hero - banner amb fons tipus pixel (colors d'Andorra), títol, muntanya i CTAs */
+.home-hero {
+  --andorra-blue: #001489;
+  --andorra-yellow: #FCD116;
+  --andorra-red: #C8102E;
+  background-color: #f8fafc;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='8' height='8' fill='%23001489' opacity='0.2'/%3E%3Crect x='8' width='8' height='8' fill='%23FCD116' opacity='0.2'/%3E%3Crect x='16' width='8' height='8' fill='%23C8102E' opacity='0.2'/%3E%3Crect x='24' width='8' height='8' fill='%23001489' opacity='0.2'/%3E%3Crect y='8' width='8' height='8' fill='%23FCD116' opacity='0.18'/%3E%3Crect x='8' y='8' width='8' height='8' fill='%23C8102E' opacity='0.18'/%3E%3Crect x='16' y='8' width='8' height='8' fill='%23001489' opacity='0.18'/%3E%3Crect x='24' y='8' width='8' height='8' fill='%23FCD116' opacity='0.18'/%3E%3Crect y='16' width='8' height='8' fill='%23C8102E' opacity='0.2'/%3E%3Crect x='8' y='16' width='8' height='8' fill='%23001489' opacity='0.2'/%3E%3Crect x='16' y='16' width='8' height='8' fill='%23FCD116' opacity='0.2'/%3E%3Crect x='24' y='16' width='8' height='8' fill='%23C8102E' opacity='0.2'/%3E%3Crect y='24' width='8' height='8' fill='%23001489' opacity='0.18'/%3E%3Crect x='8' y='24' width='8' height='8' fill='%23FCD116' opacity='0.18'/%3E%3Crect x='16' y='24' width='8' height='8' fill='%23C8102E' opacity='0.18'/%3E%3Crect x='24' y='24' width='8' height='8' fill='%23001489' opacity='0.18'/%3E%3C/svg%3E");
+  border-radius: 20px;
+  padding: 3rem 2.5rem 3.5rem;
+  margin-bottom: 0;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 4px 20px rgba(0, 20, 137, 0.08);
+  border: 1px solid rgba(0, 20, 137, 0.1);
+}
+
+.home-hero-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.home-hero-content {
+  flex: 1;
+  min-width: 280px;
+  text-align: center;
+}
+
+.home-hero-title {
+  font-size: clamp(1.875rem, 4vw, 3rem);
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.15;
+  margin: 0 0 0.75rem 0;
+  letter-spacing: -0.02em;
+}
+
+.home-hero-title span {
+  color: #0f172a;
+}
+
+.home-hero-desc {
+  font-size: 1.125rem;
+  color: #475569;
+  line-height: 1.6;
+  margin: 0 0 1.5rem 0;
+  max-width: 32rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.home-hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.home-hero-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+  cursor: pointer;
+  border: 1px solid #1e293b;
+  background: transparent;
+  color: #1e293b;
+}
+
+.home-hero-btn-outline {
+  background: #ffffff;
+  border: 1px solid #1e293b;
+  color: #1e293b;
+  text-decoration: none;
+}
+
+.home-hero-btn-outline:hover {
+  background: #f8fafc;
+}
+
+.home-hero-btn-solid {
+  background: #0f172a;
+  border: 1px solid #0f172a;
+  color: #ffffff;
+}
+
+.home-hero-btn-solid:hover {
+  background: #1e293b;
+  border-color: #1e293b;
+}
+
+.home-hero-mountain {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.home-hero-mountain-svg {
+  width: 140px;
+  height: 70px;
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .home-hero {
+    padding: 2rem 1.5rem 2.5rem;
+  }
+  .home-hero-inner {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .home-hero-mountain-svg {
+    width: 100px;
+    height: 50px;
+  }
+}
+
 .search-section--assistant {
   background: radial-gradient(circle at top left, rgba(76, 110, 245, 0.12), rgba(15, 23, 42, 0.03));
   border: 1px solid rgba(15, 23, 42, 0.08);
@@ -2929,6 +3057,7 @@ details[open].toc-accordion .toc-accordion-summary {
 
 .main-content {
   min-height: calc(100vh - 320px);
+  padding-top: 8rem; /* espai per al header fixe (incl. menú en columna a mòbil) */
   padding-bottom: 4rem;
   background: #fafbfc;
 }
@@ -4264,13 +4393,13 @@ details[open].toc-accordion .toc-accordion-summary {
   border-color: #cbd5e1;
 }
 
-/* Banner Multilingüe */
+/* Banner Multilingüe - gradient morat-blau, text blanc, selector d'idiomes */
 .multilingual-banner {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(90deg, #5b21b6 0%, #6366f1 50%, #818cf8 100%);
   border-radius: 20px;
   padding: 3rem 2.5rem;
   margin: 4rem 0;
-  box-shadow: 0 20px 60px -20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 20px 60px -20px rgba(91, 33, 182, 0.35);
   position: relative;
   overflow: hidden;
 }
@@ -4278,12 +4407,22 @@ details[open].toc-accordion .toc-accordion-summary {
 .multilingual-banner::before {
   content: '';
   position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  bottom: -20%;
+  right: -5%;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
   border-radius: 50%;
+  pointer-events: none;
+}
+
+.multilingual-banner-sparkle {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 2rem;
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.25);
+  pointer-events: none;
 }
 
 .multilingual-banner-content {
@@ -4352,34 +4491,33 @@ details[open].toc-accordion .toc-accordion-summary {
   align-items: center;
   gap: 0.375rem;
   padding: 1rem 1.25rem;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
   min-width: 90px;
-  color: rgba(255, 255, 255, 0.9);
+  color: #ffffff;
   position: relative;
 }
 
 .multilingual-banner-button:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.6);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
 .multilingual-banner-button.active {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.25);
   border-color: #ffffff;
-  color: #667eea;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  transform: translateY(-2px);
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .multilingual-banner-button.active:hover {
-  background: #f8f9fa;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .multilingual-banner-code {
@@ -4399,7 +4537,7 @@ details[open].toc-accordion .toc-accordion-summary {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  color: #667eea;
+  color: #ffffff;
 }
 
 /* Responsive per al banner */

@@ -167,6 +167,15 @@ const DOCUMENTS = {
     category: 'doctrina',
     codi: 'constitucio'
   },
+  '23-jane-ca': {
+    file: 'nous/23-Jane-ca.txt',
+    title: 'Document 23 de gener (català)',
+    author: 'Desconegut',
+    publication: 'Doctrina',
+    date: '2024',
+    category: 'doctrina',
+    codi: 'constitucio'
+  },
   'llarga-resistencia': {
     file: 'LA LLARGA RESISTÈNCIA DEL PRINCIPAT D’AN.txt',
     title: 'De la consuetud a l’Estat de dret. La llarga resistència del Principat d’Andorra a la modernització política',

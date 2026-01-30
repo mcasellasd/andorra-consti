@@ -1,11 +1,11 @@
 /**
  * Utilitat unificada per generar text
- * Suporta Salamandra (recomanat per català) i altres proveïdors
+ * Prioritat: Groq (Llama-3.3-70B) > Hugging Face (Mistral-7B) > local (opcional)
  */
 
-import { generateWithSalamandra, generateWithSalamandraLocal } from './salamandra';
+import { generateWithGroq, generateWithGroqLocal } from './groq';
 
-export type LLMProvider = 'salamandra' | 'salamandra-local';
+export type LLMProvider = 'groq' | 'groq-local' | 'salamandra'; // 'salamandra' = àlies de groq (compatibilitat .env)
 
 /**
  * Genera text utilitzant el proveïdor especificat
@@ -22,12 +22,11 @@ export async function generateText(
   const provider = options.provider || getLLMProvider();
   
   switch (provider) {
-    case 'salamandra':
-      return generateWithSalamandra(messages, options);
-    
-    case 'salamandra-local':
-      return generateWithSalamandraLocal(messages, options);
-    
+    case 'groq':
+    case 'salamandra': // àlies per compatibilitat amb .env antic
+      return generateWithGroq(messages, options);
+    case 'groq-local':
+      return generateWithGroqLocal(messages, options);
     default:
       throw new Error(`Proveïdor de LLM desconegut: ${provider}`);
   }
@@ -38,46 +37,8 @@ export async function generateText(
  */
 export function getLLMProvider(): LLMProvider {
   const provider = process.env.LLM_PROVIDER?.toLowerCase();
-  
-  if (provider === 'salamandra-local') {
-    return 'salamandra-local';
-  }
-  
-  // Per defecte, utilitza Salamandra via API (gratuïta amb Hugging Face)
-  return 'salamandra';
+  if (provider === 'groq-local') return 'groq-local';
+  if (provider === 'salamandra') return 'groq'; // àlies
+  return 'groq';
 }
 
-/**
- * Funció de compatibilitat amb l'API antiga d'OpenAI
- * Permet migrar gradualment els endpoints
- */
-export async function generateChatCompletion(
-  apiKey: string | undefined,
-  messages: Array<{ role: string; content: string }>,
-  options: {
-    model?: string;
-    maxTokens?: number;
-    temperature?: number;
-    dateString?: string;
-  } = {}
-): Promise<string> {
-  // Si no hi ha API key, utilitzar Salamandra (per defecte)
-  if (!apiKey) {
-    return generateText(messages, {
-      maxTokens: options.maxTokens,
-      temperature: options.temperature,
-      dateString: options.dateString,
-    });
-  }
-  
-  // Si hi ha API key, potser volen usar OpenAI (per compatibilitat)
-  // Però recomanem usar Salamandra
-  console.warn('⚠️  OpenAI API key detectada. Considera migrar a Salamandra per models locals.');
-  
-  // Per defecte, usar Salamandra igualment
-  return generateText(messages, {
-    maxTokens: options.maxTokens,
-    temperature: options.temperature,
-    dateString: options.dateString,
-  });
-}

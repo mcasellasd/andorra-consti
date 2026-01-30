@@ -2,7 +2,7 @@
  * API endpoint per generar interpretació assistida per IA
  * Segons el briefing tècnic de dretplaner.ad
  * 
- * Utilitza Salamandra (model local/open source per català) per generar resums, exemples i doctrina
+ * Utilitza Groq (Llama-3.3-70B) o Hugging Face per generar resums, exemples i doctrina
  */
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -120,49 +120,40 @@ export default async function handler(
     }
 
     // ============================================================================
-    // RAG FLOW: Recuperació de context amb XLM-RoBERTa
+    // RAG FLOW: Recuperació de context amb XLM-RoBERTa (opcional, desactivat per defecte)
+    // Activa amb RAG_ENABLED=true al .env.local si vols context addicional (carrega XLM-RoBERTa, pot trigar)
     // ============================================================================
 
     let ragContext = '';
 
-    // Executem RAG amb un timeout segur per evitar que la API falli (500) o trigui massa
-    try {
-      const runRag = async () => {
-        // 1. Imports dinàmics dins del try per evitar errors de càrrega
-        const { generateEmbedding } = await import('../../lib/embeddings/index');
-        const { retrieveTopMatches } = await import('../../lib/rag/corpus');
-
-        console.log(`🧠 Generant embedding RAG per a article ${article_id} amb XLM-RoBERTa...`);
-        const embedding = await generateEmbedding(`${article?.titol || ''} ${text_oficial}`, 'xlm-roberta');
-
-        // 2. Recuperar context rellevant
-        return retrieveTopMatches(embedding, 5); // Top 5 resultats
-      };
-
-      const timeoutPromise = new Promise<any[]>((_, reject) =>
-        setTimeout(() => reject(new Error('RAG Timeout (limite excedit)')), 15000) // 15s a local està bé
-      );
-
-      // Cursa entre el RAG i el Timeout
-      const matches = await Promise.race([runRag(), timeoutPromise]);
-
-      if (matches && matches.length > 0) {
-        ragContext = `\n\nCONTEXT ADDICIONAL RECUPERAT (RAG - XLM-RoBERTa):\nUtilitza aquest context per enriquir l'explicació, però prioritza el text oficial de l'article.\n`;
-
-        matches.forEach((m: any) => {
-          // Evitem duplicar l'article actual si surt als resultats
-          if (m.entry.id !== article_id) {
-            ragContext += `- [${m.entry.category}] ${m.entry.topic}: ${m.entry.content.substring(0, 300)}...\n`;
-            if (m.entry.implications) {
-              ragContext += `  Implicacions: ${m.entry.implications.substring(0, 200)}...\n`;
+    if (process.env.RAG_ENABLED === 'true') {
+      try {
+        const runRag = async () => {
+          const { generateEmbedding } = await import('../../lib/embeddings/index');
+          const { retrieveTopMatches } = await import('../../lib/rag/corpus');
+          console.log(`🧠 Generant embedding RAG per a article ${article_id} amb XLM-RoBERTa...`);
+          const embedding = await generateEmbedding(`${article?.titol || ''} ${text_oficial}`, 'xlm-roberta');
+          return retrieveTopMatches(embedding, 5);
+        };
+        const timeoutPromise = new Promise<any[]>((_, reject) =>
+          setTimeout(() => reject(new Error('RAG Timeout (limite excedit)')), 15000)
+        );
+        const matches = await Promise.race([runRag(), timeoutPromise]);
+        if (matches && matches.length > 0) {
+          ragContext = `\n\nCONTEXT ADDICIONAL RECUPERAT (RAG - XLM-RoBERTa):\nUtilitza aquest context per enriquir l'explicació, però prioritza el text oficial de l'article.\n`;
+          matches.forEach((m: any) => {
+            if (m.entry.id !== article_id) {
+              ragContext += `- [${m.entry.category}] ${m.entry.topic}: ${m.entry.content.substring(0, 300)}...\n`;
+              if (m.entry.implications) {
+                ragContext += `  Implicacions: ${m.entry.implications.substring(0, 200)}...\n`;
+              }
             }
-          }
-        });
-        console.log(`✅ RAG: ${matches.length} contextos recuperats`);
+          });
+          console.log(`✅ RAG: ${matches.length} contextos recuperats`);
+        }
+      } catch (ragError) {
+        console.error('⚠️ RAG Omesa (Error o Timeout):', ragError instanceof Error ? ragError.message : ragError);
       }
-    } catch (ragError) {
-      console.error('⚠️ RAG Omesa (Error o Timeout):', ragError instanceof Error ? ragError.message : ragError);
-      // Continuem sense context RAG si falla el timeout o el model
     }
 
     // ============================================================================
@@ -187,7 +178,7 @@ PRIORITAT ABSOLUTA: Primer interpreta el **text literal** de l’article en llen
 - NO afegeixis despedides, salutacions ni informació de contacte.
 - NO parlis de temes que NO estiguin explícitament a l'article proporcionat.
 - NO escriguis res fora del JSON. Cap text abans ni després.
-- NO copiïs ni reutilitzis frases d'exemple/plantilla del prompt (p. ex. "Resum molt concret...", "situació concreta...", "...").
+- NO copiïs ni reutilitzis frases d'exemple/plantilla del prompt (p. ex. "Resum descriptiu...", "situació concreta...", "...").
 - NO diguis que “no pots” donar exemples o comentari per manca de jurisprudència/doctrina.
 
 REGLA FONAMENTAL: Només pots parlar del que diu aquest article. Si l'article NO menciona residència, immigració, procediments administratius o altres temes, NO en parlis.
@@ -197,7 +188,7 @@ IMPORTANT: NO repeteixis el text literal de l'article. Adapta el contingut utili
 ⚠️ ESTRUCTURA OBLIGATÒRIA: La teva resposta s'ha d'encabir en TRES llocs específics ⚠️
 
 La interpretació IA es mostra en tres seccions del sidebar:
-1. **RESUM**: Resum molt concret en COM A MÀXIM 3 frases curtes i clares (utilitzant llenguatge planer diferent al text legal).
+1. **RESUM**: Resum descriptiu de 4 a 6 frases (o més si l'article és dens), en llenguatge planer, que expliqui què diu l'article, què regula, a qui afecta i quines implicacions pràctiques té. No copiïs el text literal; adapta el contingut amb les teves paraules.
 2. **EXEMPLES**: Exactament 2 o 3 exemples pràctics quotidians.
    - ⚠️ REGLA D'OR: L'exemple ha de ser sobre un tema que l'article regula EXPLÍCITAMENT. Si l'article parla de detenció, no parlis d'impostos.
    - Cada exemple ha de començar amb "Exemple aplicat:" seguit de la situació concreta derivada directament del text legal.
@@ -208,7 +199,7 @@ La interpretació IA es mostra en tres seccions del sidebar:
 
 Respon en format JSON amb aquesta estructura EXACTA (cap text abans ni després; comença per { i acaba per }):
 {
-  "resum": "Escriu un resum ESPECÍFIC d'aquest article (màxim 3 frases, sense placeholders).",
+  "resum": "Escriu un resum ESPECÍFIC i descriptiu d'aquest article (4 a 6 frases, o més si cal; sense placeholders).",
   "exemples": [
     {"cas": "Exemple aplicat: (cas realista i específic d'aquest article, 1–2 frases)", "idioma": "ca"},
     {"cas": "Exemple aplicat: (segon cas realista i específic, 1–2 frases)", "idioma": "ca"}
@@ -239,7 +230,7 @@ PRIORIDAD ABSOLUTA: Primero interpreta el **texto literal** del artículo en len
 - NO añadas despedidas, saludos ni información de contacto.
 - NO hables de temas que NO estén explícitamente en el artículo proporcionado.
 - NO escribas nada fuera del JSON. Nada antes ni después.
-- NO copies ni reutilices frases plantilla del prompt (p. ej. "Resumen muy concreto...", "situación concreta...", "...").
+- NO copies ni reutilices frases plantilla del prompt (p. ej. "Resumen descriptivo...", "situación concreta...", "...").
 - NO digas que “no puedes” dar ejemplos o comentario por falta de jurisprudencia/doctrina.
 
 REGLA FUNDAMENTAL: Solo puedes hablar de lo que dice este artículo. Si el artículo NO menciona residencia, inmigración, procedimientos administrativos u otros temas, NO hables de ellos.
@@ -249,7 +240,7 @@ IMPORTANTE: NO repitas el texto literal del artículo. Adapta el contenido utili
 ⚠️ ESTRUCTURA OBLIGATORIA: Tu respuesta debe encajarse en TRES lugares específicos ⚠️
 
 La interpretación IA se muestra en tres secciones del sidebar:
-1. **RESUMEN**: Resumen muy concreto de COMO MÁXIMO 3 frases cortas y claras (utilizando lenguaje llano diferente al texto legal).
+1. **RESUMEN**: Resumen descriptivo de 4 a 6 frases (o más si el artículo es denso), en lenguaje llano, que explique qué dice el artículo, qué regula, a quién afecta y qué implicaciones prácticas tiene. No copies el texto literal; adapta el contenido con tus propias palabras.
 2. **EJEMPLOS**: Exactamente 2 o 3 ejemplos prácticos cotidianos.
    - ⚠️ REGLA DE ORO: El ejemplo debe ser sobre un tema que el artículo regula EXPLÍCITAMENTE. Si el artículo habla de detención, no hables de impuestos.
    - Cada ejemplo debe empezar con "Ejemplo aplicado:" seguido de la situación concreta derivada directamente del texto legal.
@@ -260,7 +251,7 @@ La interpretación IA se muestra en tres secciones del sidebar:
 
 Responde en formato JSON con esta estructura EXACTA (nada antes ni después; empieza por { y acaba por }):
 {
-  "resum": "Escribe un resumen ESPECÍFICO de este artículo (máx. 3 frases, sin placeholders).",
+  "resum": "Escribe un resumen ESPECÍFICO y descriptivo de este artículo (4 a 6 frases, o más si procede; sin placeholders).",
   "exemples": [
     {"cas": "Ejemplo aplicado: (caso realista y específico de este artículo, 1–2 frases)", "idioma": "es"},
     {"cas": "Ejemplo aplicado: (segundo caso realista y específico, 1–2 frases)", "idioma": "es"}
@@ -288,7 +279,7 @@ PRIORITÉ ABSOLUE: Interprète d'abord le **texte littéral** de l'article en la
 - N'ajoute PAS de formules de politesse, de salutations ni d'informations de contact.
 - Ne parle PAS de sujets qui NE sont PAS explicitement dans l'article fourni.
 - N'écris RIEN en dehors du JSON. Rien avant ni après.
-- Ne copie pas / ne réutilise pas les phrases modèle du prompt (p. ex. "Résumé très concret...", "situation concrète...", "...").
+- Ne copie pas / ne réutilise pas les phrases modèle du prompt (p. ex. "Résumé descriptif...", "situation concrète...", "...").
 - Ne dis pas que tu “ne peux pas” donner des exemples ou un commentaire faute de jurisprudence/doctrine.
 
 RÈGLE FONDAMENTALE: Tu ne peux parler que de ce que dit cet article. Si l'article NE mentionne PAS la résidence, l'immigration, les procédures administratives ou d'autres sujets, N'en parle PAS.
@@ -298,7 +289,7 @@ IMPORTANT: NE répète PAS le texte littéral de l'article. Adapte le contenu en
 ⚠️ STRUCTURE OBLIGATOIRE: Ta réponse doit s'encadrer dans TROIS endroits spécifiques ⚠️
 
 L'interprétation IA s'affiche dans trois sections de la barre latérale:
-1. **RÉSUMÉ**: Résumé très concret en AU MAXIMUM 3 phrases courtes et claires (en utilisant un langage simple différent du texte légal).
+1. **RÉSUMÉ**: Résumé descriptif de 4 à 6 phrases (ou plus si l'article est dense), en langage simple, qui explique ce que dit l'article, ce qu'il régit, à qui il s'applique et quelles implications pratiques il a. Ne copie pas le texte littéral; adapte le contenu avec tes propres mots.
 2. **EXEMPLES**: Exactement 2 ou 3 exemples pratiques quotidiens.
    - ⚠️ RÈGLE D'OR: L'exemple doit porter sur un sujet que l'article régit EXPLICITEMENT. Si l'article parle de détention, ne parle pas d'impôts.
    - Chaque exemple doit commencer par "Exemple appliqué:" suivi de la situation concrète directement dérivée du texte légal.
@@ -309,7 +300,7 @@ L'interprétation IA s'affiche dans trois sections de la barre latérale:
 
 Réponds en format JSON avec cette structure EXACTE (rien avant ni après; commence par { et finis par }):
 {
-  "resum": "Écris un résumé SPÉCIFIQUE de cet article (max. 3 phrases, sans placeholders).",
+  "resum": "Écris un résumé SPÉCIFIQUE et descriptif de cet article (4 à 6 phrases, ou plus si besoin; sans placeholders).",
   "exemples": [
     {"cas": "Exemple appliqué: (cas réaliste et spécifique à cet article, 1–2 phrases)", "idioma": "fr"},
     {"cas": "Exemple appliqué: (deuxième cas réaliste et spécifique, 1–2 phrases)", "idioma": "fr"}
@@ -333,7 +324,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 - La teva resposta HA DE SER ÚNICAMENT un objecte JSON vàlid. CAP text abans ni després.
 - El primer caràcter HA DE SER { i l'últim HA DE SER }. Sense introduccions, conclusions, enllaços, preguntes, explicacions ni "Espero haver ajudat".
 - NO escriguis res fora del JSON. NO afegeixis comentaris ni explicacions.
-- Mantén cada camp concís: resum MÀXIM 3 frases; cada exemple ha de començar amb "Exemple aplicat:" i tenir 1–2 frases; doctrina_jurisprudencia 1–3 frases.
+- Mantén cada camp clar: resum 4 a 6 frases (descriptiu); cada exemple ha de començar amb "Exemple aplicat:" i tenir 1–2 frases; doctrina_jurisprudencia 1–3 frases.
 - EXEMPLE DE FORMAT CORRECTE (copia aquesta estructura exacta):
 {
   "resum": "...",
@@ -347,7 +338,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 - Tu respuesta DEBE SER ÚNICAMENTE un objeto JSON válido. NADA antes ni después.
 - El primer carácter DEBE SER { y el último DEBE SER }. Sin introducciones, conclusiones, enlaces, preguntas, explicaciones ni "Espero haber ayudado".
 - NO escribas nada fuera del JSON. NO añadas comentarios ni explicaciones.
-- Mantén cada campo conciso: resumen MÁXIMO 3 frases; cada ejemplo debe empezar con "Ejemplo aplicado:" y tener 1–2 frases; doctrina_jurisprudencia 1–3 frases.
+- Mantén cada campo claro: resumen 4 a 6 frases (descriptivo); cada ejemplo debe empezar con "Ejemplo aplicado:" y tener 1–2 frases; doctrina_jurisprudencia 1–3 frases.
 - EJEMPLO DE FORMATO CORRECTO (copia esta estructura exacta):
 {
   "resum": "...",
@@ -361,7 +352,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 - Ta réponse DOIT ÊTRE UNIQUEMENT un objet JSON valide. Rien avant ni après.
 - Le premier caractère DOIT ÊTRE { et le dernier DOIT ÊTRE }. Pas d'introduction, conclusion, liens, questions ni "J'espère vous avoir aidé".
 - N'écris RIEN en dehors du JSON. N'ajoute PAS de commentaires ni d'explications.
-- Garde chaque champ concis: résumé AU MAXIMUM 3 phrases; chaque exemple doit commencer par "Exemple appliqué:" et avoir 1–2 phrases; doctrina_jurisprudencia 1–3 phrases.
+- Garde chaque champ clair: résumé 4 à 6 phrases (descriptif); chaque exemple doit commencer par "Exemple appliqué:" et avoir 1–2 phrases; doctrina_jurisprudencia 1–3 phrases.
 - EXEMPLE DE FORMAT CORRECT (copie cette structure exacte):
 {
   "resum": "...",
@@ -370,16 +361,76 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 }
 `;
 
-    // SYSTEM PROMPT COMPLET (Qualitat màxima a costa de temps)
-    const systemMessage = idioma === 'ca'
-      ? `Ets un assistent expert en dret andorrà. Respon SIEMPRE en format JSON vàlid.\n\n${CONST_NOMES}\n\n⚠️ REGLA CRÍTICA — FORMAT JSON OBLIGATORI ⚠️\n- La teva resposta HA DE SER ÚNICAMENT un objecte JSON vàlid. CAP text abans ni després.\n- El primer caràcter HA DE SER { i l'últim HA DE SER }. Sense introduccions, conclusions, enllaços, preguntes, explicacions ni "Espero haver ajudat".\n- NO escriguis res fora del JSON. NO afegeixis comentaris ni explicacions.\n- Mantén cada camp concís: resum MÀXIM 3 frases; cada exemple ha de començar amb "Exemple aplicat:" i tenir 1–2 frases; doctrina_jurisprudencia 1–3 frases.\n- EXEMPLE DE FORMAT CORRECTE (copia aquesta estructura exacta):\n{\n  "resum": "...",\n  "exemples": [{"cas": "Exemple aplicat: ...", "idioma": "ca"}],\n  "doctrina_jurisprudencia": "..."\n}\n\n${GUIA_CATALA_JURIDIC}\n${ASPECTES_JURISPRUDENCIA_ANDORRANA}`
+    // ESTRATÈGIA ONE-SHOT PROMPTING SIMPLIFICADA (Array strings per exemples)
+    // Reduïm la complexitat del JSON per evitar errors de sintaxi del model.
+
+    const systemPromptBase = idioma === 'ca'
+      ? `Ets un assistent jurídic expert en dret andorrà. La teva única funció és analitzar articles de la Constitució i generar fitxes explicatives en format JSON simplificat. La teva resposta (resum, exemples, doctrina_jurisprudencia) ha de ser íntegrament en català. Respon NOMÉS en català.`
       : idioma === 'es'
-        ? `Eres un asistente experto en derecho andorrano. Responde SIEMPRE en formato JSON válido.\n\n${CONST_NOMES_ES}\n\n⚠️ REGLA CRÍTICA — FORMATO JSON OBLIGATORIO ⚠️\n- Tu respuesta DEBE SER ÚNICAMENTE un objeto JSON válido.\n- El primer carácter DEBE SER { y el último DEBE SER }.\n- NADA antes ni después del JSON. Sin introducciones, conclusiones, enlaces ni preguntas.\n\n${REGLA_JSON_ES}`
-        : `Tu es un assistant expert en droit andorran. Réponds TOUJOURS en format JSON valide.\n\n${CONST_NOMES_FR}\n\n⚠️ RÈGLE CRITIQUE — FORMAT JSON OBLIGATOIRE ⚠️\n- Ta réponse DOIT ÊTRE UNIQUEMENT un objet JSON valide.\n- Le premier caractère DOIT ÊTRE { et le dernier DOIT ÊTRE }.\n- RIEN avant ni après le JSON. Pas d'introduction, conclusion, liens ni questions.\n\n${REGLA_JSON_FR}`;
+        ? `Eres un asistente experto en derecho andorrano. Tu única función es analizar artículos de la Constitución y generar fichas explicativas en formato JSON simplificado. Tu respuesta (resum, exemples, doctrina_jurisprudencia) debe ser íntegramente en castellano. Responde SOLO en castellano.`
+        : `Tu es un assistant expert en droit andorran. Ta seule fonction est d'analyser des articles de la Constitution et de générer des fiches explicatives en format JSON simplifié. Ta réponse (resum, exemples, doctrina_jurisprudencia) doit être entièrement en français. Réponds UNIQUEMENT en français.`;
+
+    // Exemple One-Shot 1 (Article 2) - EXEMPLES COM A STRINGS SIMPLES
+    const exampleUser = idioma === 'ca'
+      ? `Analitza l'ARTICLE 2: "1. La llengua oficial de l'Estat és el català.\n2. L'himne nacional, la bandera i l'escut d'Andorra són els tradicionals.\n3. Andorra la Vella és la capital de l'Estat."\n\nContext: (buit)`
+      : idioma === 'es'
+        ? `Analiza el ARTÍCULO 2: "1. La lengua oficial del Estado es el catalán..."\n\nContexto: (vacío)`
+        : `Analyse l'ARTICLE 2: "1. La langue officielle de l'État est le catalan..."\n\nContexte: (vide)`;
+
+    const exampleAssistant = idioma === 'ca'
+      ? `{"resum":"Aquest article defineix els símbols d'identitat d'Andorra: el català com a única llengua oficial i els símbols tradicionals. També fixa la capitalitat a Andorra la Vella.","exemples":["Un ciutadà vol presentar una sol·licitud al Govern i té dret a ser atès en català.","En un acte oficial internacional, s'ha d'utilitzar la bandera i l'escut tradicionals d'Andorra."],"doctrina_jurisprudencia":"La cooficialitat d'altres llengües no està reconeguda constitucionalment. El català és l'única llengua de l'administració."}`
+      : idioma === 'es'
+        ? `{"resum":"Este artículo define los símbolos de identidad de Andorra: el catalán como única lengua oficial y los símbolos tradicionales. También fija la capitalidad en Andorra la Vella.","exemples":["Un ciudadano quiere presentar una solicitud al Gobierno y tiene derecho a ser atendido en catalán.","En un acto oficial internacional, se debe utilizar la bandera y el escudo tradicionales de Andorra."],"doctrina_jurisprudencia":"La cooficialidad de otras lenguas no está reconocida constitucionalmente."}`
+        : `{"resum":"Cet article définit les symboles d'identité de l'Andorre : le catalan comme seule langue officielle et les symboles traditionnels. Il fixe également la capitale à Andorre-la-Vieille.","exemples":["Un citoyen souhaite soumettre une demande au Gouvernement et a le droit d'être servi en catalan.","Lors d'une cérémonie officielle internationale, le drapeau et les armoiries traditionnels doivent être utilisés."],"doctrina_jurisprudencia":"La co-officialité d'autres langues n'est pas reconnue constitutionnellement."}`;
+
+    // Exemple One-Shot 2 (Article 8) - EXEMPLES COM A STRINGS SIMPLES
+    const exampleUser2 = idioma === 'ca'
+      ? `Analitza l'ARTICLE 8: "1. La Constitució reconeix el dret a la vida..."\n\nContext: (buit)`
+      : idioma === 'es'
+        ? `Analiza el ARTÍCULO 8: "1. La Constitución reconoce el derecho a la vida..."\n\nContexto: (vacío)`
+        : `Analyse l'ARTICLE 8: "1. La Constitution reconnaît le droit à la vie..."\n\nContexte: (vide)`;
+
+    const exampleAssistant2 = idioma === 'ca'
+      ? `{"resum":"Es reconeix el dret a la vida com a dret fonamental inviolable i es prohibeix absolutament la pena de mort i la tortura.","exemples":["Un presoner denuncia maltractaments físics; la Constitució ho prohibeix terminantment.","El debat sobre l'avortament es basa en la protecció de la vida en les seves diferents fases."],"doctrina_jurisprudencia":"La prohibició de la pena de mort és absoluta. La protecció en 'diferents fases' fonamenta la restricció de l'avortament."}`
+      : idioma === 'es'
+        ? `{"resum":"Se reconoce el derecho a la vida como derecho fundamental inviolable y se prohíbe absolutamente la pena de muerte y la tortura.","exemples":["Un prisionero denuncia maltratos físicos; la Constitución lo prohíbe terminantemente.","El debate sobre el aborto se basa en la protección de la vida en sus diferentes fases."],"doctrina_jurisprudencia":"La prohibición de la pena de muerte es absoluta."}`
+        : `{"resum":"Le droit à la vie est reconnu comme un droit fondamental inviolable et la peine de mort ainsi que la torture sont absolument interdites.","exemples":["Un prisonnier dénonce des mauvais traitements physiques; la Constitution l'interdit formellement.","Le débat sur l'avortement repose sur la protection de la vie dans ses différentes phases."],"doctrina_jurisprudencia":"L'interdiction de la peine de mort est absolue."}`;
+
+    // Prompt Real - Reforçat per evitar copiar exemples
+    const promptReal = idioma === 'ca'
+      ? `---
+ARA ÉS EL TEU TORN.
+TASCA ACTUAL: Analitza l'ARTICLE ${numeracio} (i cap altre).
+TEXT DE L'ARTICLE: "${text_oficial}"
+
+Genera el JSON exclusivament per a l'Article ${numeracio}.
+Context Addicional (si n'hi ha):
+${ragContext}`
+      : idioma === 'es'
+        ? `---
+AHORA ES TU TURNO.
+TAREA ACTUAL: Analiza el ARTÍCULO ${numeracio} (y ningún otro).
+TEXTO DEL ARTÍCULO: "${text_oficial}"
+
+Genera el JSON exclusivamente para el Artículo ${numeracio}.
+Contexto Adicional (si hay):
+${ragContext}`
+        : `---
+C'EST TON TOUR.
+TÂCHE ACTUELLE: Analyse l'ARTICLE ${numeracio} (et aucun autre).
+TEXTE DE L'ARTICLE: "${text_oficial}"
+
+Génère le JSON exclusivement pour l'Article ${numeracio}.
+Contexte Supplémentaire (s'il y en a):
+${ragContext}`;
 
     const messages = [
-      { role: 'system', content: systemMessage },
-      { role: 'user', content: prompt },
+      { role: 'system', content: systemPromptBase },
+      { role: 'user', content: exampleUser },
+      { role: 'assistant', content: exampleAssistant },
+      { role: 'user', content: exampleUser2 },
+      { role: 'assistant', content: exampleAssistant2 },
+      { role: 'user', content: promptReal }
     ];
 
     // Debug: Log del prompt per veure què s'està enviant
@@ -437,7 +488,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
     };
 
     const normalizeDoctrine = (rawObj: Record<string, unknown>): string => {
-      // La clau esperada és doctrina_jurisprudencia, però Salamandra pot retornar variants
+      // La clau esperada és doctrina_jurisprudencia; el model pot retornar variants
       return coalesceString(
         rawObj.doctrina_jurisprudencia,
         rawObj['doctrina_jurisprudència'],
@@ -534,12 +585,12 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
         dateString
       });
     } catch (error: any) {
-      console.error('Error Salamandra API:', error);
+      console.error('Error LLM API:', error);
       return res.status(500).json({ error: `Error al generar la interpretació: ${error.message}` });
     }
 
     if (!answer) {
-      return res.status(500).json({ error: 'Resposta buida de Salamandra' });
+      return res.status(500).json({ error: 'Resposta buida del model de generació' });
     }
 
     const looksLikeInstructions = (text: string): boolean => {
@@ -571,6 +622,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
       const t = (text || '').toLowerCase();
       if (t.includes('resum molt concret')) return true;
       if (t.includes("escriu un resum específic")) return true;
+      if (t.includes('resum específic i descriptiu') && t.includes('4 a 6 frases')) return true;
       if (t.includes('màxim 3 frases')) return true;
       if (t.includes('sense placeholder')) return true;
       if (t.includes("cas realista i específic")) return true;
@@ -604,7 +656,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 
     // Intento 2: Si no s'ha obtingut JSON vàlid, retry amb prompt més estricte
     if (!parsedContent || typeof parsedContent !== 'object') {
-      console.warn('⚠️ Primer intent: Salamandra ha retornat text pla. Intentant retry amb prompt més estricte...');
+      console.warn('⚠️ Primer intent: el model ha retornat text pla. Intentant retry amb prompt més estricte...');
 
       const retryPrompt = idioma === 'ca'
         ? `${prompt}\n\n⚠️ ATENCIÓ: La teva resposta anterior NO era JSON vàlid. Respon ÚNICAMENT amb el JSON demanat. El primer caràcter ha de ser { i l'últim }. Cap text abans ni després. ⚠️`
@@ -613,7 +665,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
           : `${prompt}\n\n⚠️ ATTENTION: Ta réponse précédente N'ÉTAIT PAS un JSON valide. Réponds UNIQUEMENT avec le JSON demandé. Le premier caractère doit être { et le dernier }. Rien avant ni après. ⚠️`;
 
       const retryMessages = [
-        { role: 'system', content: systemMessage },
+        { role: 'system', content: systemPromptBase },
         { role: 'user', content: retryPrompt },
       ];
 
@@ -625,7 +677,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
         });
         parsedContent = parseJSONResponse(answer);
       } catch (retryError: any) {
-        console.error('Error en retry Salamandra API:', retryError);
+        console.error('Error en retry LLM API:', retryError);
         return res.status(500).json({ error: `Error al generar la interpretació (retry): ${retryError.message}` });
       }
     }
@@ -636,13 +688,13 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 
       const fixPrompt =
         idioma === 'ca'
-          ? `${prompt}\n\n⚠️ IMPORTANT: La teva resposta anterior copiava frases plantilla.\n- PROHIBIT usar literalment: \"Resum molt concret\", \"situació concreta\", \"...\".\n- Escriu contingut ESPECÍFIC d'aquest article (resum + 2–3 exemples realistes), sense placeholders.\nRespon ÚNICAMENT amb el JSON.`
+          ? `${prompt}\n\n⚠️ IMPORTANT: La teva resposta anterior copiava frases plantilla.\n- PROHIBIT usar literalment instruccions o placeholders (\"Resum descriptiu...\", \"situació concreta\", \"...\").\n- Escriu contingut ESPECÍFIC d'aquest article: resum descriptiu (4–6 frases) + 2–3 exemples realistes.\nRespon ÚNICAMENT amb el JSON.`
           : idioma === 'es'
-            ? `${prompt}\n\n⚠️ IMPORTANTE: Tu respuesta anterior copiaba frases plantilla.\n- PROHIBIDO usar literalmente: \"Resumen muy concreto\", \"situación concreta\", \"...\".\n- Escribe contenido ESPECÍFICO de este artículo (resumen + 2–3 ejemplos realistas), sin placeholders.\nResponde ÚNICAMENTE con el JSON.`
-            : `${prompt}\n\n⚠️ IMPORTANT: Ta réponse précédente copiait des phrases modèle.\n- INTERDIT d'utiliser littéralement: \"Résumé très concret\", \"situation concrète\", \"...\".\n- Écris un contenu SPÉCIFIQUE à cet article (résumé + 2–3 exemples réalistes), sans placeholders.\nRéponds UNIQUEMENT avec le JSON.`;
+            ? `${prompt}\n\n⚠️ IMPORTANTE: Tu respuesta anterior copiaba frases plantilla.\n- PROHIBIDO usar literalmente instrucciones o placeholders (\"Resumen descriptivo...\", \"situación concreta\", \"...\").\n- Escribe contenido ESPECÍFICO de este artículo: resumen descriptivo (4–6 frases) + 2–3 ejemplos realistas.\nResponde ÚNICAMENTE con el JSON.`
+            : `${prompt}\n\n⚠️ IMPORTANT: Ta réponse précédente copiait des phrases modèle.\n- INTERDIT d'utiliser littéralement les instructions ou placeholders (\"Résumé descriptif...\", \"situation concrète\", \"...\").\n- Écris un contenu SPÉCIFIQUE à cet article: résumé descriptif (4–6 phrases) + 2–3 exemples réalistes.\nRéponds UNIQUEMENT avec le JSON.`;
 
       const fixMessages = [
-        { role: 'system', content: systemMessage },
+        { role: 'system', content: systemPromptBase },
         { role: 'user', content: fixPrompt },
       ];
 
@@ -654,7 +706,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
         });
         parsedContent = parseJSONResponse(answer);
       } catch (fixError: any) {
-        console.error('Error en retry correctiu Salamandra API:', fixError);
+        console.error('Error en retry correctiu LLM API:', fixError);
       }
     }
 
@@ -677,13 +729,13 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 
         const fix2 =
           idioma === 'ca'
-            ? `Reescriu NOMÉS aquests camps per a l'ARTICLE ${numeracio} (sense repetir el text literal):\n\n- "exemples": 2 o 3 exemples reals i específics (NO placeholders, NO "situació concreta", NO "(cas realista...)", NO "...").\n- "doctrina_jurisprudencia": 1–3 frases de comentari jurídic basat en el text de l'article; si el context conté doctrina/jurisprudència rellevant, integra-la breument (sense inventar). NO diguis "no hi ha jurisprudència".\n\nPROHIBIT descriure el format o les instruccions. Produeix contingut.\n\nRespon ÚNICAMENT amb un JSON vàlid amb aquesta estructura exacta:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": [{\"cas\": \"Exemple aplicat: ...\", \"idioma\": \"ca\"}],\n  "doctrina_jurisprudencia": \"...\"\n}`
+            ? `Reescriu NOMÉS aquests camps per a l'ARTICLE ${numeracio} (sense repetir el text literal):\n\n- "exemples": Array de 2 o 3 frases simples explicant exemples pràctics (NO placeholders).\n- "doctrina_jurisprudencia": 1–3 frases de comentari jurídic.\n\nRespon ÚNICAMENT amb un JSON vàlid:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Exemple aplicat: ...", "Exemple aplicat: ..."],\n  "doctrina_jurisprudencia": "..."\n}`
             : idioma === 'es'
-              ? `Reescribe SOLO estos campos para el ARTÍCULO ${numeracio} (sin repetir el texto literal):\n\n- "exemples": 2 o 3 ejemplos reales y específicos (NO placeholders, NO "situación concreta", NO "...").\n- "doctrina_jurisprudencia": 1–3 frases de comentario jurídico basado en el texto del artículo; si el contexto contiene doctrina/jurisprudencia relevante, intégrala brevemente (sin inventar). NO digas "no hay jurisprudencia".\n\nPROHIBIDO describir el formato o las instrucciones. Produce contenido.\n\nResponde ÚNICAMENTE con un JSON válido con esta estructura exacta:\n{\n  \"resum\": \"${coalesceString(parsedObj0.resum)}\",\n  \"exemples\": [{\"cas\": \"Ejemplo aplicado: ...\", \"idioma\": \"es\"}],\n  \"doctrina_jurisprudencia\": \"...\"\n}`
-              : `Réécris UNIQUEMENT ces champs pour l'ARTICLE ${numeracio} (sans répéter le texte littéral):\n\n- \"exemples\": 2 ou 3 exemples réels et spécifiques (PAS de placeholders, PAS \"situation concrète\", PAS \"...\").\n- \"doctrina_jurisprudencia\": 1–3 phrases de commentaire juridique basé sur le texte de l'article; si le contexte contient une doctrine/jurisprudence pertinente, intègre-la brièvement (sans inventer). Ne dis pas \"pas de jurisprudence\".\n\nINTERDIT de décrire le format ou les instructions. Produis du contenu.\n\nRéponds UNIQUEMENT avec un JSON valide avec cette structure exacte:\n{\n  \"resum\": \"${coalesceString(parsedObj0.resum)}\",\n  \"exemples\": [{\"cas\": \"Exemple appliqué: ...\", \"idioma\": \"fr\"}],\n  \"doctrina_jurisprudencia\": \"...\"\n}`;
+              ? `Reescribe SOLO estos campos para el ARTÍCULO ${numeracio}:\n\n- "exemples": Array de 2 o 3 frases simples (Ejemplos prácticos).\n- "doctrina_jurisprudencia": 1–3 frases de comentario jurídico.\n\nResponde ÚNICAMENTE con un JSON válido:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Ejemplo aplicado: ...", "Ejemplo aplicado: ..."],\n  "doctrina_jurisprudencia": "..."\n}`
+              : `Réécris UNIQUEMENT ces champs pour l'ARTICLE ${numeracio}:\n\n- "exemples": Tableau de 2 ou 3 phrases simples (Exemples pratiques).\n- "doctrina_jurisprudencia": 1–3 phrases de commentaire juridique.\n\nRéponds UNIQUEMENT avec un JSON valide:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Exemple appliqué: ...", "Exemple appliqué: ..."],\n  "doctrina_jurisprudencia": "..."\n}`;
 
         const fix2Messages = [
-          { role: 'system', content: systemMessage },
+          { role: 'system', content: systemPromptBase },
           { role: 'user', content: `${prompt}\n\n---\n\n${fix2}` },
         ];
 
@@ -706,7 +758,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 
     // Fallback final: Si encara no hi ha JSON vàlid, usar text pla com a resum
     if (!parsedContent || typeof parsedContent !== 'object') {
-      console.warn('⚠️ Salamandra ha retornat text pla després de retry. S\'usa fallback amb resum directe.');
+      console.warn('⚠️ El model ha retornat text pla després de retry. S\'usa fallback amb resum directe.');
       const rawResum = answer.length > 6000 ? answer.slice(0, 5997) + '...' : answer;
 
       const extracted = extractFromPlainText(rawResum, idioma);

@@ -2,7 +2,7 @@ import React from 'react';
 import { Sparkles } from 'lucide-react';
 import { Button } from '../ui/button';
 import { ArticleAndorra } from '../../data/codis/types';
-import { type Idioma } from '../../lib/i18n';
+import { type Idioma, t } from '../../lib/i18n';
 
 interface ArticleContentProps {
   article: ArticleAndorra;
@@ -17,11 +17,21 @@ export function ArticleContent({
   onGenerateAssistencia,
   isGenerating
 }: ArticleContentProps) {
-  const articleText = article.idiomes?.[idioma] || article.text_oficial;
+  // El text normatiu oficial és sempre en català (llengua de la Constitució). No es tradueix.
+  const articleText = article.text_oficial;
 
   return (
     <article className="space-y-8">
-      {/* Legal text block */}
+      {/* Legal text block - sempre text oficial en català */}
+      {idioma !== 'ca' && (
+        <p className="text-sm text-muted-foreground mb-2">
+          {idioma === 'es'
+            ? 'Texto oficial en catalán (lengua de la Constitución de Andorra).'
+            : idioma === 'fr'
+              ? 'Texte officiel en catalan (langue de la Constitution d\'Andorre).'
+              : ''}
+        </p>
+      )}
       <div className="bg-card rounded-lg border border-border p-8 lg:p-10">
         <div className="prose prose-lg max-w-none">
           {articleText.split('\n').map((line, index) => {
@@ -50,13 +60,20 @@ export function ArticleContent({
             );
           })}
 
-          {article.tags && article.tags.length > 0 && (
-            <div className="mt-8 pt-8 border-t border-border/50">
-              <p className="text-sm text-muted-foreground">
-                <strong className="text-foreground">Etiquetes:</strong> {article.tags.join(', ')}
-              </p>
-            </div>
-          )}
+          {(() => {
+            const tags = idioma === 'ca'
+              ? article.tags
+              : article.idiomes?.tags?.[idioma] || article.tags;
+            return tags && tags.length > 0 ? (
+              <div className="mt-8 pt-8 border-t border-border/50">
+                <p className="text-sm text-muted-foreground">
+                  <strong className="text-foreground">
+                    {idioma === 'ca' ? 'Etiquetes' : idioma === 'es' ? 'Etiquetas' : 'Étiquettes'}:
+                  </strong> {tags.join(', ')}
+                </p>
+              </div>
+            ) : null;
+          })()}
         </div>
       </div>
 
@@ -69,7 +86,7 @@ export function ArticleContent({
           className="w-full sm:w-auto min-w-[200px] h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium gap-2 shadow-lg hover:shadow-xl transition-all"
         >
           <Sparkles className="h-4 w-4" />
-          <span>Assisteix-me</span>
+          <span>{t(idioma, 'article.assisteixMe')}</span>
         </Button>
       </div>
     </article>

@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { getIdiomaActual, type Idioma } from '../lib/i18n';
 
 type Source = {
   type: 'constitucio';
@@ -35,8 +36,18 @@ export default function UnifiedChatbot({
   const [isOpen, setIsOpen] = useState(initiallyOpen);
   const [isMaximized, setIsMaximized] = useState(false);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [idioma, setIdioma] = useState<Idioma>('ca');
+  const [ragDocuments, setRagDocuments] = useState<Array<{ id: string; name: string; description: string; count: number }>>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Sincronitzar idioma amb el selector del lloc (canvi d'idioma)
+  useEffect(() => {
+    setIdioma(getIdiomaActual());
+    const handleIdiomaChange = () => setIdioma(getIdiomaActual());
+    window.addEventListener('idiomaChanged', handleIdiomaChange);
+    return () => window.removeEventListener('idiomaChanged', handleIdiomaChange);
+  }, []);
 
   // Carregar missatges des de sessionStorage al carregar el component
   useEffect(() => {
@@ -89,6 +100,15 @@ export default function UnifiedChatbot({
     }
   }, [isOpen]);
 
+  // Carregar llista de documents RAG quan s’obre el xat (abans de contestar)
+  useEffect(() => {
+    if (!isOpen) return;
+    fetch('/api/rag/documents')
+      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .then((data) => setRagDocuments(data.documents || []))
+      .catch(() => setRagDocuments([]));
+  }, [isOpen]);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -102,7 +122,13 @@ export default function UnifiedChatbot({
       const questionText = typeof e === 'string' ? e : input.trim();
 
       if (!privacyAccepted) {
-        alert('Has d\'acceptar la informació de privacitat abans d\'enviar una consulta.');
+        const privacyMsg =
+          idioma === 'es'
+            ? 'Debes aceptar la información de privacidad antes de enviar una consulta.'
+            : idioma === 'fr'
+              ? "Vous devez accepter les informations de confidentialité avant d'envoyer une question."
+              : "Has d'acceptar la informació de privacitat abans d'enviar una consulta.";
+        alert(privacyMsg);
         return;
       }
 
@@ -119,6 +145,8 @@ export default function UnifiedChatbot({
       setLoading(true);
 
       try {
+        // La resposta del xat es genera en l'idioma de la interfície (locale)
+        const locale = getIdiomaActual();
         const response = await fetch('/api/unified-chat', {
           method: 'POST',
           headers: {
@@ -130,6 +158,7 @@ export default function UnifiedChatbot({
               role: m.role,
               content: m.content
             })),
+            locale,
             maxTokens: 800,
             temperature: 0.7
           })
@@ -137,7 +166,13 @@ export default function UnifiedChatbot({
 
         if (!response.ok) {
           const data = await response.json();
-          throw new Error(data.error || 'Error en la resposta del chatbot');
+          const defaultError =
+            idioma === 'es'
+              ? 'Error en la respuesta del chatbot'
+              : idioma === 'fr'
+                ? "Erreur dans la réponse du chatbot"
+                : 'Error en la resposta del chatbot';
+          throw new Error(data.error || defaultError);
         }
 
         const data = await response.json();
@@ -151,17 +186,25 @@ export default function UnifiedChatbot({
 
         setMessages((prev) => [...prev, assistantMessage]);
       } catch (error: any) {
+        const errorPrefix =
+          idioma === 'es'
+            ? 'Lo siento, ha habido un error:'
+            : idioma === 'fr'
+              ? "Désolé, une erreur s'est produite :"
+              : 'Ho sento, hi ha hagut un error:';
+        const errorSuffix =
+          idioma === 'es' ? ' Inténtalo de nuevo.' : idioma === 'fr' ? ' Réessayez.' : ' Torna-ho a intentar.';
         const errorMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: `Ho sento, hi ha hagut un error: ${error.message}. Torna-ho a intentar.`
+          content: `${errorPrefix} ${error.message}.${errorSuffix}`
         };
         setMessages((prev) => [...prev, errorMessage]);
       } finally {
         setLoading(false);
       }
     },
-    [input, loading, privacyAccepted, messages]
+    [input, loading, privacyAccepted, messages, idioma]
   );
 
   // Escoltar events per obrir el chatbot des de qualsevol lloc
@@ -285,7 +328,9 @@ export default function UnifiedChatbot({
         <button
           onClick={() => setIsOpen(true)}
           className="chatbot-bubble"
-          aria-label="Obrir chatbot Dret Planer"
+          aria-label={
+            idioma === 'es' ? 'Abrir chat Hermes' : idioma === 'fr' ? 'Ouvrir le chat Hermes' : 'Obrir xat Hermes'
+          }
         >
           <svg
             width="24"
@@ -313,15 +358,19 @@ export default function UnifiedChatbot({
             <div className="chatbot-header-content">
               <div className="chatbot-title">
                 <span className="chatbot-icon">💬</span>
-                <span>Dret Planer</span>
+                <span>Hermes · Dret Planer</span>
               </div>
               <div className="chatbot-header-actions">
                 {messages.length > 0 && (
                   <button
                     onClick={handleClearChat}
                     className="chatbot-clear"
-                    aria-label="Esborrar conversa"
-                    title="Esborrar conversa"
+                    aria-label={
+                      idioma === 'es' ? 'Borrar conversación' : idioma === 'fr' ? 'Effacer la conversation' : 'Esborrar conversa'
+                    }
+                    title={
+                      idioma === 'es' ? 'Borrar conversación' : idioma === 'fr' ? 'Effacer la conversation' : 'Esborrar conversa'
+                    }
                   >
                     🗑️
                   </button>
@@ -329,14 +378,26 @@ export default function UnifiedChatbot({
                 <button
                   onClick={() => setIsMaximized((value) => !value)}
                   className="chatbot-maximize"
-                  aria-label={isMaximized ? 'Restableix mida' : 'Maximitza finestra'}
-                  title={isMaximized ? 'Restableix mida' : 'Maximitza finestra'}
+                  aria-label={
+                    idioma === 'es'
+                      ? isMaximized ? 'Restaurar tamaño' : 'Maximizar ventana'
+                      : idioma === 'fr'
+                        ? isMaximized ? 'Restaurer la taille' : 'Agrandir la fenêtre'
+                        : isMaximized ? 'Restableix mida' : 'Maximitza finestra'
+                  }
+                  title={
+                    idioma === 'es'
+                      ? isMaximized ? 'Restaurar tamaño' : 'Maximizar ventana'
+                      : idioma === 'fr'
+                        ? isMaximized ? 'Restaurer la taille' : 'Agrandir la fenêtre'
+                        : isMaximized ? 'Restableix mida' : 'Maximitza finestra'
+                  }
                 >
                   <span className="chatbot-maximize-icon">
                     {isMaximized ? '⤓' : '⤢'}
                   </span>
                   <span className="chatbot-maximize-text">
-                    {isMaximized ? 'Restableix' : 'Maximitza'}
+                    {idioma === 'es' ? (isMaximized ? 'Restaurar' : 'Maximizar') : idioma === 'fr' ? (isMaximized ? 'Restaurer' : 'Agrandir') : isMaximized ? 'Restableix' : 'Maximitza'}
                   </span>
                 </button>
                 <button
@@ -346,8 +407,12 @@ export default function UnifiedChatbot({
                     // No esborrem els missatges, es mantenen a sessionStorage
                   }}
                   className="chatbot-close"
-                  aria-label="Tancar chatbot"
-                  title="Tancar chatbot"
+                  aria-label={
+                    idioma === 'es' ? 'Cerrar chat' : idioma === 'fr' ? 'Fermer le chat' : 'Tancar chatbot'
+                  }
+                  title={
+                    idioma === 'es' ? 'Cerrar chat' : idioma === 'fr' ? 'Fermer le chat' : 'Tancar chatbot'
+                  }
                 >
                   ✕
                 </button>
@@ -358,18 +423,73 @@ export default function UnifiedChatbot({
           <div className="chatbot-messages">
             {messages.length === 0 && (
               <div className="chatbot-welcome">
-                <p>
-                  <strong>Hola! Sóc Dret Planer.</strong>
-                </p>
-                <p>
-                  Sóc un assistent jurídic especialitzat en la <strong>Constitució del Principat d&apos;Andorra</strong>.
-                </p>
-                <p>
-                  Puc ajudar-te a entendre qualsevol article de la Constitució, explicar els drets fonamentals, les institucions andorranes i qualsevol aspecte relacionat amb la llei fonamental del país.
-                </p>
-                <p>
-                  Fes-me qualsevol pregunta sobre la Constitució d&apos;Andorra i et respondré amb informació precisa i clara.
-                </p>
+                {ragDocuments.length > 0 && (
+                  <div className="chatbot-rag-documents">
+                    <strong>
+                      {idioma === 'es'
+                        ? 'Documentos que el sistema puede consultar antes de responder:'
+                        : idioma === 'fr'
+                          ? 'Documents que le système peut consulter avant de répondre :'
+                          : 'Documents que el sistema pot consultar abans de contestar:'}
+                    </strong>
+                    <ul>
+                      {ragDocuments.map((doc) => (
+                        <li key={doc.id}>
+                          {doc.name}: {doc.description} ({doc.count}{' '}
+                          {idioma === 'es' ? 'entradas' : idioma === 'fr' ? 'entrées' : 'entrades'})
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {idioma === 'ca' && (
+                  <>
+                    <p>
+                      <strong>Hola! Sóc Hermes.</strong>
+                    </p>
+                    <p>
+                      El xat es diu Hermes, en honor al déu grec de la comunicació i la interpretació.
+                    </p>
+                    <p>
+                      Sóc un assistent jurídic especialitzat en la <strong>Constitució del Principat d&apos;Andorra</strong>. Puc ajudar-te a entendre qualsevol article, explicar els drets fonamentals, les institucions andorranes i qualsevol aspecte de la llei fonamental del país.
+                    </p>
+                    <p>
+                      Fes-me qualsevol pregunta sobre la Constitució d&apos;Andorra i et respondré amb informació precisa i clara.
+                    </p>
+                  </>
+                )}
+                {idioma === 'es' && (
+                  <>
+                    <p>
+                      <strong>¡Hola! Soy Hermes.</strong>
+                    </p>
+                    <p>
+                      El chat se llama Hermes, en honor al dios griego de la comunicación y la interpretación.
+                    </p>
+                    <p>
+                      Soy un asistente jurídico especializado en la <strong>Constitución del Principado de Andorra</strong>. Puedo ayudarte a entender cualquier artículo, explicar los derechos fundamentales, las instituciones andorranas y cualquier aspecto de la ley fundamental del país.
+                    </p>
+                    <p>
+                      Hazme cualquier pregunta sobre la Constitución de Andorra y te responderé con información precisa y clara.
+                    </p>
+                  </>
+                )}
+                {idioma === 'fr' && (
+                  <>
+                    <p>
+                      <strong>Bonjour ! Je suis Hermes.</strong>
+                    </p>
+                    <p>
+                      Le chat s&apos;appelle Hermes, en l&apos;honneur du dieu grec de la communication et de l&apos;interprétation.
+                    </p>
+                    <p>
+                      Je suis un assistant juridique spécialisé dans la <strong>Constitution de la Principauté d&apos;Andorre</strong>. Je peux vous aider à comprendre n&apos;importe quel article, expliquer les droits fondamentaux, les institutions andorranes et tout aspect de la loi fondamentale du pays.
+                    </p>
+                    <p>
+                      Posez-moi toute question sur la Constitution d&apos;Andorre et je vous répondrai avec des informations précises et claires.
+                    </p>
+                  </>
+                )}
               </div>
             )}
 
@@ -383,7 +503,9 @@ export default function UnifiedChatbot({
 
                   {message.sources && message.sources.length > 0 && (
                     <div className="chatbot-sources">
-                      <strong>Fonts:</strong>
+                      <strong>
+                        {idioma === 'es' ? 'Fuentes:' : idioma === 'fr' ? 'Sources:' : 'Fonts:'}
+                      </strong>
                       <ul>
                         {message.sources.map((source, index) => (
                           <li key={index}>
@@ -418,15 +540,19 @@ export default function UnifiedChatbot({
 
           <form onSubmit={handleSend} className="chatbot-input-container">
             <div className="chatbot-privacy-checkbox">
-              <label>
+                <label>
                 <input
                   type="checkbox"
                   checked={privacyAccepted}
                   onChange={(e) => setPrivacyAccepted(e.target.checked)}
                 />
                 <span>
-                  Confirmo que he llegit la informació de privacitat i que no inclouré dades
-                  personals ni confidencials en la meva consulta.
+                  {idioma === 'ca' &&
+                    "Confirmo que he llegit la informació de privacitat i que no inclouré dades personals ni confidencials en la meva consulta."}
+                  {idioma === 'es' &&
+                    'Confirmo que he leído la información de privacidad y que no incluiré datos personales ni confidenciales en mi consulta.'}
+                  {idioma === 'fr' &&
+                    "J'accepte d'avoir lu les informations de confidentialité et de ne pas inclure de données personnelles ou confidentielles dans ma question."}
                 </span>
               </label>
             </div>
@@ -437,7 +563,13 @@ export default function UnifiedChatbot({
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Pregunta sobre la Constitució d'Andorra..."
+                placeholder={
+                  idioma === 'es'
+                    ? 'Pregunta sobre la Constitución de Andorra...'
+                    : idioma === 'fr'
+                      ? 'Question sur la Constitution d\'Andorre...'
+                      : 'Pregunta sobre la Constitució d\'Andorra...'
+                }
                 className="chatbot-input"
                 disabled={loading || !privacyAccepted}
               />
@@ -445,7 +577,9 @@ export default function UnifiedChatbot({
                 type="submit"
                 disabled={loading || !input.trim() || !privacyAccepted}
                 className="chatbot-send"
-                aria-label="Enviar missatge"
+                aria-label={
+                  idioma === 'es' ? 'Enviar mensaje' : idioma === 'fr' ? 'Envoyer le message' : 'Enviar missatge'
+                }
               >
                 <svg
                   width="20"
@@ -633,6 +767,25 @@ export default function UnifiedChatbot({
           background: #f5f5f5;
           border-radius: 8px;
           margin-bottom: 1rem;
+        }
+
+        .chatbot-rag-documents {
+          margin-bottom: 1rem;
+          padding: 0.75rem;
+          background: #e8f4f4;
+          border-radius: 6px;
+          font-size: 0.9rem;
+        }
+        .chatbot-rag-documents strong {
+          display: block;
+          margin-bottom: 0.5rem;
+        }
+        .chatbot-rag-documents ul {
+          margin: 0;
+          padding-left: 1.25rem;
+        }
+        .chatbot-rag-documents li {
+          margin: 0.25rem 0;
         }
 
         .chatbot-message {

@@ -1,5 +1,7 @@
 # Guia Completa: Projecte Nou amb MEL i Salamandra
 
+> **Nota (2025)**: Per a generació de text el projecte utilitza **Groq (Llama-3.3-70B)** amb `GROQ_API_KEY`; la opció Salamandra/Colab ja no és suportada. Aquesta guia segueix sent útil per a MEL (embeddings) i estructura general.
+
 Aquesta guia et permet crear un projecte complet des de zero utilitzant models open source (MEL per embeddings i Salamandra per generació de text) en lloc d'OpenAI.
 
 ## 📋 Índex

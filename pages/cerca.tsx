@@ -36,6 +36,12 @@ const CercaPage: React.FC = () => {
     return article.idiomes?.titol?.[lang] || article.titol;
   };
 
+  // Obtenir tags de l'article segons idioma
+  const getTagsArticle = (article: ArticleAndorra, lang: Idioma): string[] => {
+    if (lang === 'ca') return article.tags || [];
+    return article.idiomes?.tags?.[lang] || article.tags || [];
+  };
+
   // Funció de cerca
   const resultats = useMemo(() => {
     if (!query.trim()) {
@@ -51,8 +57,9 @@ const CercaPage: React.FC = () => {
     articlesConstitucio.forEach((article) => {
       const textArticle = getTextArticle(article, idioma);
       const titolArticle = getTitolArticle(article, idioma);
+      const tagsArticle = getTagsArticle(article, idioma);
       const numeracio = article.numeracio.toLowerCase();
-      const textComplet = `${titolArticle} ${textArticle} ${numeracio} ${article.tags?.join(' ') || ''}`.toLowerCase();
+      const textComplet = `${titolArticle} ${textArticle} ${numeracio} ${tagsArticle.join(' ')}`.toLowerCase();
 
       const coincidencies: string[] = [];
       let relevancia = 0;
@@ -82,7 +89,7 @@ const CercaPage: React.FC = () => {
         }
 
         // Cerca a tags
-        if (article.tags?.some(tag => tag.toLowerCase().includes(paraula))) {
+        if (tagsArticle.some(tag => tag.toLowerCase().includes(paraula))) {
           comptador += 2;
           coincidencies.push(`Etiqueta: "${paraula}"`);
         }
@@ -391,9 +398,11 @@ const CercaPage: React.FC = () => {
                             >
                               {t(idioma, 'cerca.veureArticle')} →
                             </Link>
-                            {article.tags && article.tags.length > 0 && (
-                              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                {article.tags.slice(0, 3).map((tag, idx) => (
+                            {(() => {
+                              const tags = getTagsArticle(article, idioma);
+                              return tags.length > 0 ? (
+                                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                  {tags.slice(0, 3).map((tag, idx) => (
                                   <span
                                     key={idx}
                                     style={{
@@ -409,7 +418,8 @@ const CercaPage: React.FC = () => {
                                   </span>
                                 ))}
                               </div>
-                            )}
+                              ) : null;
+                            })()}
                           </div>
                         </div>
                       );

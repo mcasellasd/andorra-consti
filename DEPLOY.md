@@ -21,8 +21,9 @@ Aquesta web es pot desplegar a qualsevol servidor web, inclòs SiteGround, Verce
 3. **Configura les variables d'entorn:**
    - Crea un fitxer `.env` al servidor amb:
      ```
-     OPENAI_API_KEY=la_teva_clau_api
+     GROQ_API_KEY=gsk_la_teva_clau_groq
      ```
+     (Opcional: `OPENAI_API_KEY` per embeddings.)
 
 4. **Construeix l'aplicació:**
    ```bash
@@ -123,19 +124,19 @@ Vercel està optimitzat per Next.js i és molt fàcil d'usar:
 
 3. **⚠️ IMPORTANT: Configura la clau API d'OpenAI (si utilitzes exemples aplicats):**
    
-   Perquè la funcionalitat d'exemples aplicats funcioni, cal configurar la variable d'entorn:
+   Perquè el chatbot i la interpretació IA funcionin, cal configurar la variable d'entorn:
    
    - Vés a [Vercel Dashboard](https://vercel.com/dashboard)
    - Selecciona el teu projecte
    - Vés a **Settings** → **Environment Variables**
    - Afegeix:
-     - **Key:** `OPENAI_API_KEY`
-     - **Value:** La teva clau API d'OpenAI (comença per `sk-`)
+     - **Key:** `GROQ_API_KEY`
+     - **Value:** La teva clau API de Groq (comença per `gsk_`)
      - Selecciona **Production** (i opcionalment Preview/Development)
    - Clica **Save**
    - **Redeploya** l'aplicació (Deployments → ⋯ → Redeploy)
    
-   📖 Vegeu [CONFIGURACIO-OPENAI.md](./CONFIGURACIO-OPENAI.md) per instruccions detallades.
+   Opcional: `OPENAI_API_KEY` per embeddings. 📖 Vegeu [VERCEL-DEPLOY.md](./VERCEL-DEPLOY.md) per més detalls.
 
 ### Avantatges:
 - ✅ Desplegament automàtic des de GitHub
@@ -191,15 +192,15 @@ Si la web està en un subdirectori (ex: `dretplaner.ad/llibre-cinquè`):
 
 ## Troubleshooting
 
-### OpenAI no funciona a Vercel
-- **Problema:** Els exemples aplicats no es generen, mostra error "OpenAI API key no configurada"
+### El chatbot / la interpretació IA no funciona a Vercel
+- **Problema:** Respostes buides o error "Cal configurar GROQ_API_KEY"
 - **Solució:**
   1. Vés a Vercel Dashboard → Project → Settings → Environment Variables
-  2. Afegeix `OPENAI_API_KEY` amb la teva clau API
+  2. Afegeix `GROQ_API_KEY` amb la teva clau API de Groq (obtinguda a [console.groq.com](https://console.groq.com))
   3. Assegura't que estigui marcada per **Production**
   4. **Redeploya** l'aplicació (això és crític!)
   5. Espera uns minuts i torna a provar
-- Vegeu [CONFIGURACIO-OPENAI.md](./CONFIGURACIO-OPENAI.md) per més detalls
+- Vegeu [VERCEL-DEPLOY.md](./VERCEL-DEPLOY.md) per més detalls
 
 ### Els enllaços no funcionen
 - Assegura't que `trailingSlash: true` estigui configurat

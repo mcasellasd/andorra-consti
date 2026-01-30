@@ -7,11 +7,26 @@
  * @xenova/transformers durant la compilació (només funciona a Node.js)
  */
 
+import path from 'path';
+import fs from 'fs';
+
 // Model a utilitzar
 const MODEL_NAME = 'Xenova/xlm-roberta-base';
 
+/** Màxim de caràcters per text abans d'embedar (XLM-RoBERTa ~512 tokens; ~4 chars/token → ~2000) */
+const MAX_INPUT_CHARS = 2000;
+
 // Cache del model carregat
 let embeddingPipeline: any = null;
+
+/**
+ * Trunca el text per no sobrecarregar el model (més caràcters = més lent).
+ * XLM-RoBERTa té màx 514 tokens; truncar per caràcters és ràpid sense tokenizer.
+ */
+function truncateForEmbedding(text: string): string {
+  if (!text || text.length <= MAX_INPUT_CHARS) return text;
+  return text.slice(0, MAX_INPUT_CHARS);
+}
 
 /**
  * Carrega el model XLM-RoBERTa (lazy loading amb import dinàmic)
@@ -25,9 +40,27 @@ async function loadModel() {
 
     const { pipeline, env } = transformers;
 
-    // Configuració del directori de cache (Vercel només permet escriure a /tmp)
-    // Utilitzem /tmp tant a producció com a local per evitar problemes de permisos
-    env.cacheDir = '/tmp/.cache';
+    // Configuració del directori de cache
+    // Local: utilitzem un directori persistent del projecte per evitar re-descàrregues
+    // Producció (Vercel): utilitzem /tmp perquè és l'únic directori escrivible
+    const isVercel = process.env.VERCEL === '1';
+    
+    if (isVercel) {
+      // Producció: Vercel només permet escriure a /tmp
+      env.cacheDir = '/tmp/.cache';
+    } else {
+      // Local: directori persistent al projecte per evitar re-descàrregues
+      const projectRoot = process.cwd();
+      const cacheDir = path.join(projectRoot, '.cache', 'xenova');
+      
+      // Crear directori si no existeix
+      if (!fs.existsSync(cacheDir)) {
+        fs.mkdirSync(cacheDir, { recursive: true });
+      }
+      
+      env.cacheDir = cacheDir;
+    }
+    
     env.allowLocalModels = false;
     env.useBrowserCache = false;
 
@@ -46,9 +79,10 @@ async function loadModel() {
  */
 export async function generateEmbedding(text: string): Promise<number[]> {
   const model = await loadModel();
+  const truncated = truncateForEmbedding(text);
 
   // Generar l'embedding
-  const output = await model(text, {
+  const output = await model(truncated, {
     pooling: 'mean', // Mitjana de tots els tokens
     normalize: true,  // Normalitzar el vector
   });
@@ -81,23 +115,20 @@ export async function generateEmbeddingsBatch(
   const model = await loadModel();
   const embeddings: number[][] = [];
 
-  // Processar en lots per evitar sobrecarregar la memòria
+  // Processar en lots i en seqüència dins del lot (evita pics de memòria i pot ser més ràpid que Promise.all a CPU)
   for (let i = 0; i < texts.length; i += batchSize) {
     const batch = texts.slice(i, i + batchSize);
     console.log(`📊 Processant lot ${Math.floor(i / batchSize) + 1}/${Math.ceil(texts.length / batchSize)}`);
 
-    const batchPromises = batch.map(async (text) => {
-      const output = await model(text, {
+    for (const text of batch) {
+      const truncated = truncateForEmbedding(text);
+      const output = await model(truncated, {
         pooling: 'mean',
         normalize: true,
       });
       const embedding = Array.from(output.data) as number[];
-      // Assegurar-nos que l'embedding té exactament 768 dimensions
-      return embedding.length > 768 ? embedding.slice(0, 768) : embedding;
-    });
-
-    const batchEmbeddings = await Promise.all(batchPromises);
-    embeddings.push(...batchEmbeddings);
+      embeddings.push(embedding.length > 768 ? embedding.slice(0, 768) : embedding);
+    }
   }
 
   return embeddings;
