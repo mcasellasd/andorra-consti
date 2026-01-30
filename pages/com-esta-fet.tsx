@@ -303,12 +303,9 @@ const ComEstaFetPage: React.FC = () => {
                 <br />
                 <strong>&quot;El dret a la claredat constitucional: Intel·ligència Artificial i adequació tecnològica com a garanties de la cohesió jurídica a Andorra&quot;</strong>
               </p>
-              <div style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              <div style={{ marginTop: '1.5rem' }}>
                 <Link href="/paper" className="com-esta-fet-paper-cta">
                   📄 Llegir el paper acadèmic
-                </Link>
-                <Link href="/about" className="com-esta-fet-paper-cta-secondary">
-                  👤 Sobre l&apos;autor
                 </Link>
               </div>
               <p style={{ marginTop: '1.5rem', fontSize: '0.9em', color: '#6b7280' }}>
