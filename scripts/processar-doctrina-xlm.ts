@@ -45,7 +45,7 @@ const DOCUMENTS: Record<string, {
     codi: 'constitucio'
   },
   'constitucio-territorial': {
-    file: 'La constitución andorrana y la ordenación territorial del poder público.txt',
+    file: 'La constitución andorrana y la ordenación territorial del poder público.txt ',
     title: 'La constitución andorrana y la ordenación territorial del poder público',
     author: 'Desconegut',
     publication: 'Doctrina',
@@ -99,7 +99,7 @@ const DOCUMENTS: Record<string, {
     codi: 'constitucio'
   },
   'relacions-internacionals': {
-    file: 'nous/Les relacions internacionals d\'Andorra des de la Constituci.txt',
+    file: 'nous/Les relacions internacionals d\u2019Andorra des de la Constituci.txt',
     title: 'Les relacions internacionals d\'Andorra des de la Constitució',
     author: 'Desconegut',
     publication: 'Doctrina',
@@ -189,7 +189,7 @@ const DOCUMENTS: Record<string, {
     codi: 'constitucio'
   },
   'llarga-resistencia': {
-    file: 'LA LLARGA RESISTÈNCIA DEL PRINCIPAT D\'AN.txt',
+    file: 'LA LLARGA RESISTÈNCIA DEL PRINCIPAT D\u2019AN.txt',
     title: 'De la consuetud a l\'Estat de dret. La llarga resistència del Principat d\'Andorra a la modernització política',
     author: 'Pere Soler Parício',
     publication: 'Doctrina',
@@ -311,6 +311,13 @@ function buildEmbeddingText(entry: any): string {
   return lines.filter(Boolean).join('\n');
 }
 
+/** Comprova si un document ja té knowledge i embeddings generats (no cal repetir). */
+function isAlreadyProcessed(docId: string): boolean {
+  const knowledgePath = path.join(OUTPUT_DIR, `${docId}.json`);
+  const embeddingsPath = path.join(OUTPUT_DIR, `${docId}-embeddings.json`);
+  return fs.existsSync(knowledgePath) && fs.existsSync(embeddingsPath);
+}
+
 async function processDocument(docId: string, docInfo: typeof DOCUMENTS[string]) {
   const inputPath = path.join(DOCS_DIR, docInfo.file);
   
@@ -319,14 +326,20 @@ async function processDocument(docId: string, docInfo: typeof DOCUMENTS[string])
     return null;
   }
   
+  if (isAlreadyProcessed(docId)) {
+    console.log(`\n⏭️  Ominent ${docId} (ja processat: existeix .json i -embeddings.json)`);
+    return null;
+  }
+  
   console.log(`\n📄 Processant: ${docInfo.file}...`);
   
   const text = fs.readFileSync(inputPath, 'utf8');
   
   // Netejar el text (eliminar headers, footers, etc.)
+  // Nota: usar [\s\S] en lloc de . amb flag 's' per compatibilitat amb target ES5
   let cleanedText = text
-    .replace(/^.*?Taula de contingut.*?\n/ims, '') // Eliminar taula de continguts
-    .replace(/^.*?Pròlegs.*?\n/ims, '') // Eliminar pròlegs
+    .replace(/^[\s\S]*?Taula de contingut[\s\S]*?\n/im, '') // Eliminar taula de continguts
+    .replace(/^[\s\S]*?Pròlegs[\s\S]*?\n/im, '') // Eliminar pròlegs
     .replace(/\n{3,}/g, '\n\n') // Normalitzar salts de línia
     .trim();
   
@@ -405,7 +418,10 @@ async function main() {
       });
       process.exit(1);
     }
-    
+    if (isAlreadyProcessed(docId)) {
+      console.log(`⏭️  "${docId}" ja està processat (existeixen .json i -embeddings.json). No es repeteix.`);
+      process.exit(0);
+    }
     try {
       await processDocument(docId, docInfo);
       console.log(`\n✅ Processament completat per "${docId}"`);
@@ -417,7 +433,7 @@ async function main() {
     // Processar tots els documents
     console.log(`📚 Processant ${Object.keys(DOCUMENTS).length} documents de doctrina...\n`);
     
-    const results: Array<{ id: string; success: boolean; entries: number; embeddings: number }> = [];
+    const results: Array<{ id: string; success: boolean; entries: number; embeddings: number; skipped?: boolean }> = [];
     
     for (const [id, info] of Object.entries(DOCUMENTS)) {
       try {
@@ -429,6 +445,8 @@ async function main() {
             entries: result.entries.length,
             embeddings: result.embeddings.length
           });
+        } else if (isAlreadyProcessed(id)) {
+          results.push({ id, success: true, entries: 0, embeddings: 0, skipped: true });
         } else {
           results.push({ id, success: false, entries: 0, embeddings: 0 });
         }
@@ -442,13 +460,17 @@ async function main() {
     console.log('📊 Resum del processament:');
     console.log('='.repeat(60));
     
-    const successful = results.filter(r => r.success);
+    const successful = results.filter(r => r.success && !r.skipped);
+    const skipped = results.filter(r => r.skipped);
     const failed = results.filter(r => !r.success);
     
-    console.log(`✅ Processats correctament: ${successful.length}`);
+    console.log(`✅ Processats ara: ${successful.length}`);
+    if (skipped.length > 0) {
+      console.log(`⏭️  Ominents (ja processats): ${skipped.length} (${skipped.map(r => r.id).join(', ')})`);
+    }
     console.log(`❌ Errors: ${failed.length}`);
-    console.log(`📄 Total entrades: ${successful.reduce((sum, r) => sum + r.entries, 0)}`);
-    console.log(`🧠 Total embeddings: ${successful.reduce((sum, r) => sum + r.embeddings, 0)}`);
+    console.log(`📄 Total entrades noves: ${successful.reduce((sum, r) => sum + r.entries, 0)}`);
+    console.log(`🧠 Total embeddings nous: ${successful.reduce((sum, r) => sum + r.embeddings, 0)}`);
     
     if (failed.length > 0) {
       console.log('\n❌ Documents amb errors:');
