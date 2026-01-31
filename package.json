@@ -7,7 +7,7 @@
     "dev": "NODE_OPTIONS='--max-old-space-size=4096' next dev",
     "build": "next build",
     "postbuild": "cp -r public .next/standalone/ 2>/dev/null || true; cp -r .next/static .next/standalone/.next/ 2>/dev/null || true",
-    "start": "node .next/standalone/server.js",
+    "start": "cd .next/standalone && HOSTNAME=0.0.0.0 node server.js",
     "lint": "next lint",
     "export": "next build",
     "embed:llibre-primer": "node scripts/generate-embeddings-llibre-primer.js",
