@@ -32,7 +32,7 @@ const DOCUMENTS = {
     codi: 'constitucio'
   },
   'constitucio-territorial': {
-    file: 'La constitución andorrana y la ordenación territorial del poder público.txt',
+    file: 'La constitución andorrana y la ordenación territorial del poder público.txt ',
     title: 'La constitución andorrana y la ordenación territorial del poder público',
     author: 'Desconegut',
     publication: 'Doctrina',
@@ -285,11 +285,21 @@ function extractKeyConcepts(text) {
   return sorted;
 }
 
+function isAlreadyProcessed(docId) {
+  const outputPath = path.join(OUTPUT_DIR, `${docId}.json`);
+  return fs.existsSync(outputPath);
+}
+
 function processDocument(docId, docInfo) {
   const inputPath = path.join(DOCS_DIR, docInfo.file);
   
   if (!fs.existsSync(inputPath)) {
     console.error(`❌ No s'ha trobat el fitxer: ${inputPath}`);
+    return null;
+  }
+  
+  if (isAlreadyProcessed(docId)) {
+    console.log(`⏭️  Ominent ${docId} (ja processat: existeix ${docId}.json)`);
     return null;
   }
   
@@ -299,8 +309,8 @@ function processDocument(docId, docInfo) {
   
   // Netejar el text (eliminar headers, footers, etc.)
   let cleanedText = text
-    .replace(/^.*?Taula de contingut.*?\n/ims, '') // Eliminar taula de continguts
-    .replace(/^.*?Pròlegs.*?\n/ims, '') // Eliminar pròlegs
+    .replace(/^[\s\S]*?Taula de contingut[\s\S]*?\n/im, '') // Eliminar taula de continguts
+    .replace(/^[\s\S]*?Pròlegs[\s\S]*?\n/im, '') // Eliminar pròlegs
     .replace(/\n{3,}/g, '\n\n') // Normalitzar salts de línia
     .trim();
   
@@ -350,7 +360,10 @@ async function main() {
       });
       process.exit(1);
     }
-    
+    if (isAlreadyProcessed(docId)) {
+      console.log(`⏭️  "${docId}" ja està processat. No es repeteix.`);
+      process.exit(0);
+    }
     processDocument(docId, docInfo);
   } else {
     // Processar tots els documents
@@ -358,8 +371,8 @@ async function main() {
     
     for (const [id, info] of Object.entries(DOCUMENTS)) {
       try {
-        processDocument(id, info);
-        console.log();
+        const result = processDocument(id, info);
+        if (result !== null) console.log();
       } catch (error) {
         console.error(`❌ Error processant ${id}:`, error.message);
       }
