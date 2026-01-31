@@ -1,0 +1,4 @@
+# Evita l'error "not a directory" amb tsconfig.tsbuildinfo (Nixpacks intenta muntar cache a un fitxer)
+# https://station.railway.com/questions/nixpacks-build-error-958954e5
+[phases.build]
+cacheDirectories = [".next/cache", "node_modules/.cache"]

@@ -91,6 +91,9 @@ Si el servei falla per manca de memòria, considera:
 - Verifica que `next.config.js` tingui `output: 'standalone'`
 - Revisa que `postbuild` existeixi a `package.json` i s’executi sense errors
 
+### Error "not a directory" / tsconfig.tsbuildinfo
+- El fitxer `nixpacks.toml` evita que Nixpacks munti cache a un fitxer. Si continua fallant, afegeix `NIXPACKS_NO_CACHE=1` a les variables d'entorn.
+
 ### RAG no funciona / timeout
 - Assegura’t que `RAG_ENABLED=true`
 - El primer cop pot trigar (càrrega del model); torna-ho a provar passats uns minuts
@@ -105,5 +108,6 @@ Si el servei falla per manca de memòria, considera:
 ## Fitxers de configuració
 
 - `railway.json` – configuració de build i deploy
+- `nixpacks.toml` – evita error de cache amb tsconfig.tsbuildinfo
 - `next.config.js` – `output: 'standalone'` per Railway
 - `package.json` – scripts `postbuild` i `start` per standalone
