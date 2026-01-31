@@ -106,6 +106,18 @@ Si el teu pla de SiteGround inclou suport per Node.js:
 
 ---
 
+## Opció 2b: Railway (recomanat per RAG amb XLM-RoBERTa)
+
+Per desplegament amb RAG actiu (cerca semàntica amb XLM-RoBERTa), Railway és una bona opció perquè ofereix servidors persistents amb més memòria que Vercel serverless.
+
+1. Connecta el repositori a [railway.app](https://railway.app)
+2. Configura les variables d'entorn: `GROQ_API_KEY`, opcionalment `RAG_ENABLED=true`
+3. Desplega – Railway detecta Next.js i utilitza els scripts de `package.json` (build, postbuild, start)
+
+📖 **Guia completa:** [docs/RAILWAY-DEPLOY.md](./docs/RAILWAY-DEPLOY.md)
+
+---
+
 ## Opció 3: Vercel (Més fàcil)
 
 Vercel està optimitzat per Next.js i és molt fàcil d'usar:

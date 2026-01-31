@@ -1,6 +1,6 @@
 const https = require('https');
 
-const API_KEY = process.env.HUGGINGFACE_API_KEY || process.env.HF_TOKEN || "";
+const API_KEY = process.env.HUGGINGFACE_API_KEY || process.env.HF_TOKEN || '';
 const MODEL = 'mistralai/Mistral-7B-Instruct-v0.2';
 
 const data = JSON.stringify({

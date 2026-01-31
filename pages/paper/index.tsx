@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import Layout from '../../components/Layout';
-import { markdownToHtml, type TocItem } from '../../lib/markdown-to-html';
+import { markdownToHtml, type TocItem } from '@/lib/markdown-to-html';
 import { GetStaticProps } from 'next';
 import fs from 'fs';
 import path from 'path';
