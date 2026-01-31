@@ -212,9 +212,9 @@ export function retrieveTopMatches(
   }
 
   if (!corpus.embeddings.length) {
-    throw new Error(
-      'No hi ha embeddings disponibles per a la Constitució. Executa el script corresponent per generar-los.'
-    );
+    // Corpus buit (ex.: deploy sense data/rag/*.json): retornem [] en lloc de fallar.
+    // El chatbot funcionarà sense context de Constitució/doctrina.
+    return [];
   }
 
   const scored = corpus.embeddings
