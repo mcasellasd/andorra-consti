@@ -1,9 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // Configuració per exportació estàtica (per SiteGround o qualsevol servidor web)
-  // NOTA: Si utilitzes l'API d'OpenAI, no pots usar 'export' - elimina aquesta línia
-  // output: 'export',
+  // Railway: output standalone per desplegament eficient (imatge més petita, arrencada més ràpida)
+  output: 'standalone',
+  // Evitar error ESLint "extensions has been removed" amb Railpack/ESLint 9
+  eslint: { ignoreDuringBuilds: true },
+  // Per exportació estàtica (SiteGround): comenta la línia anterior i descomenta: output: 'export',
   images: {
     unoptimized: true, // Necessari per exportació estàtica
   },
