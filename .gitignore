@@ -1,6 +1,9 @@
 # generated data
 data/rag/**
 !data/rag/.keep
+# Exceptions: corpus RAG necessari per desplegament (Railway)
+!data/rag/constitucio-unified.json
+!data/rag/constitucio-unified-embeddings.json
 # dependencies
 node_modules
 .pnp
@@ -40,8 +43,6 @@ ts-debug.log*
 # typescript
 *.tsbuildinfo
 
-# generated data
-data/rag/*.json
 
 # Xenova cache (models descarregats)
 .cache/

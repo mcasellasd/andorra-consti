@@ -5,7 +5,7 @@
  *   node scripts/generate-embeddings-constitucio.js
  *
  * Requisits:
- *   - Variable d'entorn OPENAI_API_KEY establerta.
+ *   - OPENAI_API_KEY O EMBEDDING_PROVIDER=xlm-roberta (per model local)
  *   - Arxiu data/rag/constitucio.json amb les entrades de coneixement.
  */
 
@@ -21,11 +21,13 @@ if (require('fs').existsSync(env)) require('dotenv').config({ path: env });
 const KNOWLEDGE_PATH = path.join(__dirname, '../data/rag/constitucio.json');
 const OUTPUT_PATH = path.join(__dirname, '../data/rag/constitucio-embeddings.json');
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const EMBEDDING_PROVIDER = process.env.EMBEDDING_PROVIDER || (OPENAI_API_KEY ? 'openai' : 'xlm-roberta');
 const MODEL = process.env.OPENAI_EMBEDDINGS_MODEL || 'text-embedding-3-large';
 
 async function main() {
-  if (!OPENAI_API_KEY) {
+  if (EMBEDDING_PROVIDER === 'openai' && !OPENAI_API_KEY) {
     console.error('❌ Fes servir la variable d\'entorn OPENAI_API_KEY abans d\'executar el script.');
+    console.error('   O configura EMBEDDING_PROVIDER=xlm-roberta per utilitzar el model local.');
     process.exit(1);
   }
 
@@ -38,7 +40,12 @@ async function main() {
   const entries = JSON.parse(raw);
 
   console.log(`📚 Entrades carregades: ${entries.length}`);
-  console.log(`🧠 Model d'embeddings: ${MODEL}`);
+  console.log(`🧠 Proveïdor d'embeddings: ${EMBEDDING_PROVIDER}`);
+  if (EMBEDDING_PROVIDER === 'openai') {
+    console.log(`🧠 Model d'embeddings: ${MODEL}`);
+  } else {
+    console.log(`🧠 Model: XLM-RoBERTa-base (local)`);
+  }
 
   const results = [];
 
@@ -86,6 +93,26 @@ function buildEmbeddingText(entry) {
 }
 
 async function createEmbedding(input) {
+  if (EMBEDDING_PROVIDER === 'xlm-roberta') {
+    const { pipeline } = require('@xenova/transformers');
+    const MODEL_NAME = 'Xenova/xlm-roberta-base';
+
+    if (!createEmbedding.modelCache) {
+      console.log(`📦 Carregant model ${MODEL_NAME}...`);
+      createEmbedding.modelCache = await pipeline('feature-extraction', MODEL_NAME, {
+        quantized: true
+      });
+      console.log(`✅ Model carregat`);
+    }
+
+    const output = await createEmbedding.modelCache(input, {
+      pooling: 'mean',
+      normalize: true
+    });
+
+    return Array.from(output.data);
+  }
+
   const response = await fetch('https://api.openai.com/v1/embeddings', {
     method: 'POST',
     headers: {
