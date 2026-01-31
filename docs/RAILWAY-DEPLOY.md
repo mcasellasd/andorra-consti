@@ -103,6 +103,10 @@ Si el servei falla per manca de memòria, considera:
 - Pot ser per manca de memòria amb RAG actiu
 - Considera desactivar RAG o augmentar recursos
 
+### Error 502 Bad Gateway
+- **Port a Network**: A **Settings → Networking** del servei, assegura't que el port exposat coincideix amb el que Railway injecta (`PORT`). Si hi ha un camp "Port" o "Internal Port", omple'l amb `3000` o deixa que Railway el detecti automàticament.
+- El servidor s'executa des de `.next/standalone` i escolta a `0.0.0.0:PORT` per acceptar connexions externes.
+
 ---
 
 ## Fitxers de configuració
