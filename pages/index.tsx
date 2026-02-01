@@ -42,7 +42,7 @@ const IndexPage: React.FC = () => {
         {/* Main Home Container */}
         <div className="max-w-7xl mx-auto px-6 py-12 md:py-20 space-y-24">
 
-          {/* HERO SECTION - fons tipus pixel amb colors d'Andorra, títol, muntanya i CTAs */}
+          {/* HERO SECTION - fons tipus pixel amb colors d'Andorra, títol i CTAs */}
           <section className="home-hero">
             <div className="home-hero-inner">
               <div className="home-hero-content">
@@ -69,12 +69,6 @@ const IndexPage: React.FC = () => {
                     {t(idioma, 'home.aprenDret')}
                   </button>
                 </div>
-              </div>
-              <div className="home-hero-mountain" aria-hidden="true">
-                <svg viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="home-hero-mountain-svg">
-                  <path d="M0 60L20 25 40 45 60 15 80 35 100 10 120 40V60H0z" stroke="#94a3b8" strokeWidth="1.5" fill="none" opacity="0.6" />
-                  <path d="M0 60L30 30 55 50 90 20 120 45V60H0z" stroke="#cbd5e1" strokeWidth="1.2" fill="none" opacity="0.5" />
-                </svg>
               </div>
             </div>
           </section>
