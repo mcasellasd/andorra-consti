@@ -388,7 +388,7 @@ La prova de concepte Dret Planer mostra que la intel·ligència artificial, quan
 
 - Llei 6/2024, del 25 d'abril, de la llengua pròpia i oficial. *Butlletí Oficial del Principat d'Andorra*.
 
-- Llei 29/2021, de protecció de dades personals. *Butlletí Oficial del Principat d'Andorra*.
+- Llei 29/2021, del 28 d'octubre, qualificada de protecció de dades personals (LQPDP). *Butlletí Oficial del Principat d'Andorra*.
 
 - Reglament (UE) 2024/1689 del Parlament Europeu i del Consell, de 13 de juny de 2024, relatiu a l'establiment de normes harmonitzades en matèria d'intel·ligència artificial (Reglament sobre la intel·ligència artificial, AI Act).
 
