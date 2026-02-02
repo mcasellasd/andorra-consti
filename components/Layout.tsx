@@ -14,6 +14,7 @@ const navLinks = [
   { href: '/codis/constitucio', key: 'nav.constitucio' },
   { href: '/preguntes-control', key: 'nav.preguntesControl' },
   { href: '/com-esta-fet', key: 'nav.comEstaFet' },
+  { href: '/disclaimer', key: 'nav.privacitat' },
 ] as const;
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
