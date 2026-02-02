@@ -18,6 +18,10 @@ interface SearchResponse {
     articleId?: string;
     articleNumber?: string;
     articleTitle?: string;
+    /** Tipus de font per enllaç i etiqueta: constitucio | doctrina */
+    sourceType: 'constitucio' | 'doctrina';
+    /** ID de l'entrada al corpus (ex: CONST_019, DOCTRINA_...) per enllaçar */
+    entryId: string;
   }>;
   error?: string;
 }
@@ -44,7 +48,9 @@ export default async function handler(
     const queryEmbedding = await generateEmbedding(query, provider);
     const matches = retrieveTopMatches(
       queryEmbedding,
-      Math.max(1, Math.min(topK, 12))
+      Math.max(1, Math.min(topK, 24)),
+      undefined,
+      false
     );
     const results = matches.map((match) => mapResult(match));
     return res.status(200).json({ results });
@@ -58,8 +64,9 @@ export default async function handler(
 }
 
 function mapResult(match: RetrievedContext) {
-  const { entry, score } = match;
+  const { entry, score, bookId } = match;
   const articleInfo = findArticleByReference(entry.legalReference);
+  const sourceType = bookId === 'DOCTRINA' ? 'doctrina' : 'constitucio';
 
   return {
     conceptId: entry.id,
@@ -68,7 +75,9 @@ function mapResult(match: RetrievedContext) {
     score,
     articleId: articleInfo?.id,
     articleNumber: articleInfo?.numeracio,
-    articleTitle: articleInfo?.titol
+    articleTitle: articleInfo?.titol,
+    sourceType,
+    entryId: entry.id,
   };
 }
 

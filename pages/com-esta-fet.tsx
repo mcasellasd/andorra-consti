@@ -7,10 +7,10 @@ const ComEstaFetPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Com està fet · dretplaner.ad</title>
+        <title>Com està fet · dretplaner</title>
         <meta
           name="description"
-          content="Descripció tècnica accessible sobre com funciona dretplaner.ad: arquitectura, models d'IA i metodologia d'implementació."
+          content="Com funciona dretplaner: capacitats, arquitectura, models d'IA i metodologia d'implementació."
         />
       </Head>
       <Layout>
@@ -19,19 +19,19 @@ const ComEstaFetPage: React.FC = () => {
             <header className="legal-header">
               <h1>Com està fet</h1>
               <p className="legal-subtitle">
-                Descripció accessible sobre el funcionament tècnic de dretplaner.ad, pensada per a tots els públics.
+                Descripció accessible sobre com funciona dretplaner: capacitats, arquitectura, models d'IA i metodologia d'implementació.
               </p>
             </header>
 
             <section className="legal-section">
               <h2>1. Visió general: com funciona el sistema</h2>
               <p>
-                dretplaner.ad utilitza intel·ligència artificial per ajudar a comprendre la legislació andorrana.
-                El sistema funciona de manera similar a un assistent que ha llegit tots els textos legals i pot
-                explicar-los en un llenguatge més accessible.
+                dretplaner utilitza intel·ligència artificial per ajudar a comprendre la constitució andorrana.
+                El sistema funciona de manera similar a un assistent que ha llegit tots els textos els articles, doctrina i jurisprudència i pot
+                explicar-los en un llenguatge més accessible. L'eina no dona consell legal, ni respòn a qüestons personals. La seva tasca es limita a la interpretació de la llei i la generació d'explicacions en llenguatge planer.
               </p>
               <p>
-                El xat del sistema, anomenat <strong>Hermes</strong>, et permet fer preguntes en llenguatge natural.
+                El xat del sistema, anomenat <strong>Hermes</strong>, et permet fer preguntes en llenguatge natural i rebre la resposta en l'¡idioma de l'usuari.
                 Quan fas una pregunta o sol·licites una interpretació d&apos;un article, el sistema:
               </p>
               <ol>
@@ -295,7 +295,7 @@ const ComEstaFetPage: React.FC = () => {
             <section className="legal-section" style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid #e5e7eb' }}>
               <h2>Sobre el projecte i l&apos;autor</h2>
               <p>
-                Aquest projecte és desenvolupat per <strong>Marc Casellas</strong>, estudiant de Dret a la Universitat d&apos;Andorra,
+                Aquest projecte és desenvolupat per <strong>Marc Casellas</strong>, estudiant de Dret a la UOC (Universitat Oberta de Catalunya) i pre-matrícula ala Universitat d&apos;Andorra,
                 com a part d&apos;una recerca sobre intel·ligència artificial i accessibilitat jurídica.
               </p>
               <p style={{ marginTop: '1rem' }}>

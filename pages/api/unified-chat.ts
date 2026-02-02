@@ -221,6 +221,7 @@ ${aiActPrompt}
 
 IMPORTAT: Utilitza ÚNICAMENT la informació del context proporcionat. NO inventis articles ni lleis.
 Si la informació del context no és suficient per respondre, digues-ho honestament.
+El context pot incloure tant articles de la Constitució (CONST_XXX) com fragments de doctrina o jurisprudència (DOCTRINA_XXX). Has d’utilitzar totes les fonts rellevants del context per respondre; no t’limitïs només als articles si hi ha doctrina rellevant.
 
 CITA ELS ARTICLES CORRECTAMENT:
 - Quan citis la Constitució, indica SEMPRE el número d'article exacte (ex: "Article 19", "Article 3").
@@ -236,7 +237,7 @@ JERARQUIA NORMATIVA:
 - Exemple: Si es diu que el català és la llengua oficial, ho és perquè ho estableix la Constitució (Article 2).
 - Les lleis que emanen de la Constitució són norma superior respecte a altres normes, però sempre estan subordinades a la pròpia Constitució.
 
-Context de la Constitució d'Andorra:
+Context (Constitució i doctrina):
 ${contextBlock}`;
 
     // Construïm la llista final de missatges
@@ -273,16 +274,19 @@ ${contextBlock}`;
       responseToReturn = warningMsg + generatedText;
     }
 
-    // 7. Preparar fonts per retornar
-    const sources = matches.map(({ entry, score }) => ({
-      type: 'constitucio',
-      code: 'constitucio',
-      id: entry.id,
-      title: entry.topic,
-      number: entry.legalReference || undefined,
-      score: score,
-      content: entry.content?.substring(0, 200) || undefined
-    }));
+    // 7. Preparar fonts per retornar (tipus real: Constitució o Doctrina segons bookId)
+    const sources = matches.map(({ entry, score, bookId }) => {
+      const code = bookId === 'DOCTRINA' ? 'doctrina' : 'constitucio';
+      return {
+        type: code as 'constitucio' | 'doctrina',
+        code,
+        id: entry.id,
+        title: entry.topic,
+        number: entry.legalReference || undefined,
+        score,
+        content: entry.content?.substring(0, 200) || undefined
+      };
+    });
 
     // 8. Retornar resposta (inclou validació qualitativa)
     return res.status(200).json({
