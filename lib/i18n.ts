@@ -30,6 +30,7 @@ export const traduccions = {
       paper: 'Paper Acadèmic',
       preguntesControl: 'Preguntes de Control',
       comEstaFet: 'Com està fet',
+      dretPlaner: 'Dret Planer',
       privacitat: 'Privacitat',
     },
     footer: {
@@ -157,6 +158,7 @@ export const traduccions = {
       paper: 'Paper Académico',
       preguntesControl: 'Preguntas de Control',
       comEstaFet: 'Cómo está hecho',
+      dretPlaner: 'Dret Planer',
       privacitat: 'Privacidad',
     },
     footer: {
@@ -285,6 +287,7 @@ export const traduccions = {
       paper: 'Article Académique',
       preguntesControl: 'Questions de Contrôle',
       comEstaFet: 'Comment c\'est fait',
+      dretPlaner: 'Dret Planer',
       privacitat: 'Confidentialité',
     },
     footer: {
