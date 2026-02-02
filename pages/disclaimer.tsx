@@ -52,7 +52,7 @@ const LegalNoticePage: React.FC = () => {
             <section className="legal-section">
               <h2>3. Responsables i contacte</h2>
               <p>
-                Responsable: estudiant del Grau de Dret de la UOC (contacte:{' '}
+                Responsable: estudiant de Dret a la Universitat d&apos;Andorra (contacte:{' '}
                 <a href="mailto:contacte@dretplaner.ad">contacte@dretplaner.ad</a>). Per dubtes sobre privacitat
                 utilitza l&apos;adreça <a href="mailto:privacitat@dretplaner.ad">privacitat@dretplaner.ad</a>.
               </p>
@@ -61,12 +61,17 @@ const LegalNoticePage: React.FC = () => {
             <section className="legal-section">
               <h2>4. Política de privacitat</h2>
               <p>
+                <strong>Marc normatiu.</strong> El tractament de dades es regeix per la{' '}
+                <strong>Llei 29/2021, del 28 d&apos;octubre, qualificada de protecció de dades personals</strong> del 
+                Principat d&apos;Andorra (LQPDP).
+              </p>
+              <p>
                 <strong>Finalitat.</strong> Es tracten exclusivament les dades introduïdes voluntàriament pels usuaris per
                 generar respostes del xat i analitzar-ne l&apos;ús de forma agregada, sempre amb finalitat acadèmica i sense
                 explotació comercial.
               </p>
               <p>
-                <strong>Base jurídica.</strong> Interès legítim de recerca (art. 6.1.f RGPD) i consentiment informat de
+                <strong>Base jurídica.</strong> Interès legítim de recerca (art. 6.1.f de la Llei 29/2021 LQPDP) i consentiment informat de
                 l&apos;usuari, que confirma haver llegit aquesta informació abans d&apos;enviar consultes.
               </p>
               <p>
@@ -93,7 +98,8 @@ const LegalNoticePage: React.FC = () => {
               <p>
                 <strong>Drets.</strong> Pots exercir els drets d&apos;accés, rectificació, supressió, limitació, oposició i
                 portabilitat escrivint a <a href="mailto:privacitat@dretplaner.ad">privacitat@dretplaner.ad</a>. També pots
-                presentar reclamacions davant l'autoritat de protecció de dades d'Andorra.
+                presentar reclamacions davant l&apos;<strong>Agència Andorrana de Protecció de Dades (APDA)</strong> a{' '}
+                <a href="https://www.apda.ad" target="_blank" rel="noopener noreferrer">www.apda.ad</a>.
               </p>
             </section>
 
@@ -223,7 +229,7 @@ const LegalNoticePage: React.FC = () => {
               <h2>8. Actualitzacions</h2>
               <p>
                 Aquesta informació legal es revisa periòdicament per adaptar-la a canvis legislatius o tècnics. Última
-                actualització: Gener 2025.
+                actualització: Febrer 2026.
               </p>
             </section>
           </article>
