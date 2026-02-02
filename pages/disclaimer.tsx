@@ -71,9 +71,18 @@ const LegalNoticePage: React.FC = () => {
               </p>
               <p>
                 <strong>Dades tractades i minimització.</strong> No es recullen dades identificatives de manera
-                proactiva. Les preguntes enviades poden contenir dades personals, però s&apos;insisteix a evitar-ho. Les
-                consultes i respostes es conserven un màxim de 30 dies per monitoratge tècnic i després s&apos;anonimitzen o
-                eliminen.
+                proactiva. Les preguntes enviades poden contenir dades personals, però s&apos;insisteix a evitar-ho.
+              </p>
+              <p>
+                <strong>Emmagatzematge de converses.</strong> Les converses del xat es guarden <strong>únicament al navegador de l&apos;usuari</strong> 
+                (sessionStorage) durant la sessió activa i s&apos;esborren automàticament en tancar la pestanya o el navegador. 
+                <strong>No hi ha cap base de dades al servidor</strong> que emmagatzemi missatges o converses. El projecte no disposa 
+                de sistema de comptes ni seguiment d&apos;usuaris.
+              </p>
+              <p>
+                <strong>Processament temporal.</strong> Quan envies una consulta, aquesta es processa temporalment al servidor 
+                per generar la resposta i després es descarta. No es conserven registres de consultes al nostre servidor. 
+                Els proveïdors de models d&apos;IA (Groq) poden mantenir logs temporals segons les seves pròpies polítiques de retenció.
               </p>
               <p>
                 <strong>Destinataris i transferències.</strong> Les peticions del xat es processen mitjançant l&apos;API
@@ -91,9 +100,22 @@ const LegalNoticePage: React.FC = () => {
             <section className="legal-section">
               <h2>5. Cookies i emmagatzematge local</h2>
               <p>
-                Només s&apos;utilitza emmagatzematge local tècnic (localStorage) per recordar preferències del xat, com ara
-                la supressió d&apos;avisos interns. No s&apos;empren cookies publicitàries ni de tercers. Pots esborrar o
-                bloquejar aquestes dades des del navegador; l&apos;experiència pot veure&apos;s limitada si ho fas.
+                El projecte utilitza emmagatzematge local del navegador per a funcionalitats tècniques:
+              </p>
+              <ul>
+                <li>
+                  <strong>sessionStorage</strong>: Guarda els missatges del xat durant la sessió activa. S&apos;esborra automàticament 
+                  en tancar la pestanya o el navegador.
+                </li>
+                <li>
+                  <strong>localStorage</strong>: Recorda el consentiment de privacitat i preferències de l&apos;usuari (com ara 
+                  la supressió d&apos;avisos interns). Persisteix fins que l&apos;usuari esborra les dades del navegador.
+                </li>
+              </ul>
+              <p>
+                No s&apos;empren cookies publicitàries ni de tercers. Pots esborrar o bloquejar aquestes dades des de la configuració 
+                del teu navegador; l&apos;experiència pot veure&apos;s limitada si ho fas. També pots esborrar la conversa actual 
+                utilitzant el botó &quot;Netejar xat&quot; dins del xat.
               </p>
             </section>
 
