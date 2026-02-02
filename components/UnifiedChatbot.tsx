@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { getIdiomaActual, type Idioma } from '../lib/i18n';
 
 type Source = {
-  type: 'constitucio';
-  code: 'constitucio'; // Fixed literal type from API
+  type: 'constitucio' | 'doctrina';
+  code: 'constitucio' | 'doctrina';
   id: string;
   title: string;
   number?: string;
@@ -251,16 +251,19 @@ export default function UnifiedChatbot({
   };
 
   const getSourceLink = (source: Source) => {
-    // Si és un ID de la Constitució (CONST_019, CONST_001, etc.), utilitzar-lo directament
-    if (source.id.startsWith('CONST_')) {
+    // Articles de la Constitució: enllaç a la pàgina de l'article
+    if (source.code === 'constitucio' && source.id.startsWith('CONST_')) {
       return `/codis/constitucio/article/${source.id}`;
     }
-    // Fallback cap a la mateixa ruta si l'ID no comença per CONST_ però és de la constitució
+    // Doctrina: sense pàgina de cerca, enllaç a l'inici
+    if (source.code === 'doctrina') {
+      return '/';
+    }
     return `/codis/constitucio/article/${source.id}`;
   };
 
   const getSourceLabel = (source: Source) => {
-    return `CONST`;
+    return source.code === 'doctrina' ? 'Doctrina' : 'CONST';
   };
 
   const renderMessageContent = (message: Message) => {
@@ -280,9 +283,11 @@ export default function UnifiedChatbot({
               const source = message.sources?.find(s => s.id === id);
               if (source) {
                 // Trobem la font, mostrem etiqueta interactiva
-                const label = source.number ?
-                  (source.number === 'Doctrina' ? 'Doctrina' : `Art. ${source.number}`) :
-                  'Font';
+                const label = source.code === 'doctrina'
+                  ? 'Doctrina'
+                  : source.number
+                    ? `Art. ${source.number}`
+                    : 'Font';
 
                 // Retallem el contingut per al tooltip
                 const contentPreview = source.content
@@ -548,11 +553,11 @@ export default function UnifiedChatbot({
                 />
                 <span>
                   {idioma === 'ca' &&
-                    "Confirmo que he llegit la informació de privacitat i que no inclouré dades personals ni confidencials en la meva consulta."}
+                    "Confirmo que he llegit la informació de privacitat i que no inclouré dades personals. Les converses es guarden només al meu navegador (sessionStorage) i s'esborren en tancar la pestanya."}
                   {idioma === 'es' &&
-                    'Confirmo que he leído la información de privacidad y que no incluiré datos personales ni confidenciales en mi consulta.'}
+                    'Confirmo que he leído la información de privacidad y que no incluiré datos personales. Las conversaciones se guardan solo en mi navegador (sessionStorage) y se borran al cerrar la pestaña.'}
                   {idioma === 'fr' &&
-                    "J'accepte d'avoir lu les informations de confidentialité et de ne pas inclure de données personnelles ou confidentielles dans ma question."}
+                    "Je confirme avoir lu les informations de confidentialité et ne pas inclure de données personnelles. Les conversations sont stockées uniquement dans mon navigateur (sessionStorage) et supprimées à la fermeture de l'onglet."}
                 </span>
               </label>
             </div>
