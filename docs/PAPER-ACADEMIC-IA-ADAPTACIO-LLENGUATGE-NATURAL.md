@@ -2,7 +2,7 @@
 
 ## Resum
 
-En contextos socials i lingüístics complexos, la comprensibilitat del dret esdevé una condició essencial per a la seva legitimitat i efectivitat. Aquest article analitza el dret a comprendre com a principi jurídic implícit en l'ordenament andorrà i defensa que la intel·ligència artificial d'ús restringit pot actuar com a instrument legítim d'assistència a la claredat normativa. Partint de la Constitució d'Andorra com a Regla de Reconeixement, es presenta Dret Planer, una prova de concepte basada en una arquitectura Retrieval-Augmented Generation (RAG) orientada a generar explicacions en llenguatge planer del text constitucional. Es conclou que una IA dissenyada amb abast limitat, traçabilitat i control humà pot reforçar la cohesió jurídica i el dret a comprendre sense substituir la interpretació jurídica professional.
+En contextos socials i lingüístics complexos, la comprensibilitat del dret esdevé una condició essencial per a la legitimitat i efectivitat del Sistema Jurídic. En aquest article s'analitza el **dret a comprendre** com a principi jurídic implícit en el context andorrà i defensa que la intel·ligència artificial d'ús especialitzat pot actuar com a instrument legítim d'assistència a la claredat normativa. Partint de la **Constitució d'Andorra** com a Regla de Reconeixement, es presenta Dret Planer, una prova de concepte basada en una arquitectura Retrieval-Augmented Generation (RAG) orientada a generar explicacions en llenguatge planer del text constitucional. Es conclou que una IA dissenyada amb abast limitat, traçabilitat i control humà pot reforçar la cohesió jurídica i el dret a comprendre sense substituir la interpretació jurídica professional.
 
 **Paraules clau:** dret a comprendre, claredat constitucional, intel·ligència artificial, RAG, Constitució d'Andorra, cohesió jurídica.
 
@@ -12,7 +12,7 @@ En contextos socials i lingüístics complexos, la comprensibilitat del dret esd
 
 ### El dret a la claredat constitucional en un Estat petit i plural
 
-En una Andorra socialment diversa i estructuralment plurilingüe, la comprensió efectiva del dret continua essent un repte central per a la cohesió jurídica i democràtica. Malgrat l'existència d'un mandat explícit de claredat lingüística en la Llei 6/2024, del 25 d'abril, de la llengua pròpia i oficial, el llenguatge jurídic institucional manté encara uns nivells de complexitat que dificulten l'accés real al significat de les normes, especialment per a la població no socialitzada en el sistema jurídic andorrà.
+Cada any que passa Andorra esdevé socialment més diversa i alhora reforça l'estructura plurilingüe, erosionant la comprensió efectiva del dret, que alhora esdevé un repte central per a la cohesió jurídica i democràtica. Malgrat l'existència d'un mandat explícit de claredat lingüística en la Llei 6/2024, del 25 d'abril, de la llengua pròpia i oficial, el llenguatge jurídic institucional poden existir certs nivells de complexitat que dificulten l'accés real al significat de les normes, especialment per a la població no socialitzada en el sistema jurídic andorrà o bé en una altra llengua materna.
 
 Aquest problema no és merament comunicatiu, sinó jurídic. Tal com assenyala Hart (1961), perquè una norma fonamental sigui realment operativa cal que sigui assumida des d'un punt de vista intern pels seus destinataris. En un context com l'andorrà, on més del 55% de la població resident és d'origen estranger i no ha participat en el procés constituent de 1993, la distància cognitiva entre el text constitucional i una part significativa dels subjectes de dret posa en risc aquesta acceptació interna i, amb ella, la funció integradora del dret.
 
@@ -20,7 +20,7 @@ Aquesta distància cognitiva s'agreuja per la complexitat del teixit social desc
 
 La doctrina contemporània ha conceptualitzat aquesta problemàtica sota la noció del dret a comprendre, entès com un pressupòsit imprescindible de l'accés efectiu a la justícia i de la tutela judicial efectiva (Carretero González, 2020; Vallespín Pérez, 2025). En aquesta línia, Montolío Durán i Bayés-Gil (2024) han mostrat com la percepció ciutadana del llenguatge juridicoadministratiu continua sent majoritàriament negativa, mentre que Saggion (2024) adverteix que la disponibilitat formal de la informació jurídica resulta insuficient si aquesta no és realment comprensible per als seus destinataris.
 
-En el context andorrà, aquesta exigència de comprensibilitat adquireix una dimensió constitucional específica, atès que la norma suprema vincula el català no només a una funció tècnica, sinó a la igualtat material i a la cohesió de l'Estat. Tal com adverteixen Pujol Palau i Gabernet Piqué (2024), l'opacitat en la comunicació jurídica no és un defecte formal, sinó un risc sistèmic: la manca de comprensió dels documents oficials pot derivar en situacions d'indefensió i, en darrera instància, constituir una vulneració dels drets fonamentals i, incloent, el procés l'accés a la integració jurídica.
+En el context andorrà, aquesta exigència de comprensibilitat adquireix una dimensió constitucional específica, atès que la norma suprema vincula el català no només a una funció tècnica, sinó a la igualtat material i a la cohesió de l'Estat, certament particular. Tal com adverteixen Pujol Palau i Gabernet Piqué (2024), l'opacitat en la comunicació jurídica no és un defecte formal, sinó un risc sistèmic: la manca de comprensió dels documents oficials pot derivar en situacions d'indefensió i, en darrera instància, constituir una vulneració dels drets fonamentals i, incloent, el procés l'accés a la integració jurídica.
 
 ### Intel·ligència artificial i dret a comprendre: delimitació del problema
 
@@ -28,19 +28,17 @@ La irrupció recent dels sistemes d'intel·ligència artificial basats en proces
 
 No obstant això, existeix un àmbit específic on la intel·ligència artificial pot aportar un valor jurídicament rellevant: la simplificació lingüística i explicativa del text normatiu. Els models de llenguatge han demostrat una capacitat notable per a la paràfrasi, el resum i l'adaptació de registres lingüístics, tasques que, amb una governança adequada, poden ser automatitzades sense erosionar el principi de legalitat ni el control humà (Da Cunha, 2024; Saggion, 2024).
 
-Aquest treball parteix de la hipòtesi que una intel·ligència artificial d'ús restringit, dissenyada específicament per a la simplificació i explicació del dret, pot actuar com a instrument d'assistència al dret a comprendre. La "estretesa" del sistema no deriva del model de llenguatge base utilitzat per a la generació del text, sinó del disseny funcional i jurídic: un corpus tancat i validat, una arquitectura de recuperació augmentada de generació (RAG), la traçabilitat obligatòria a les fonts oficials, mecanismes de validació de qualitat i la supervisió humana. En aquest sentit, la limitació del sistema és una propietat emergent de la seva governança i no de la tecnologia de base.
+Aquest treball parteix de la hipòtesi que una intel·ligència artificial d'ús restringit (López de Mántaras, 2017), dissenyada específicament per a la simplificació i explicació del dret, pot actuar com a instrument d'assistència al dret a comprendre. La "estretesa" del sistema no deriva del model de llenguatge base utilitzat per a la generació del text, sinó del disseny funcional i jurídic: un corpus tancat i validat, una arquitectura de recuperació augmentada de generació (RAG), la traçabilitat obligatòria a les fonts oficials, mecanismes de validació de qualitat (Dantart, 2025) i la supervisió humana. En aquest sentit, la limitació del sistema és una propietat emergent de la seva governança i no de la tecnologia de base.
 
 ### Objecte, abast i encaix normatiu del projecte
 
-L'objecte d'aquest treball és analitzar i validar, mitjançant una prova de concepte, la viabilitat d'una plataforma d'intel·ligència artificial orientada a fer comprensible la Constitució del Principat d'Andorra mitjançant explicacions en llenguatge planer, sense substituir la interpretació jurídica professional ni generar criteri vinculant.
+L'objecte d'aquest treball és validar, mitjançant una prova de concepte, la viabilitat d'una plataforma d'intel·ligència artificial orientada a fer comprensible els diferents preceptes jurídics, el literal de la llei mitjançant explicacions en llenguatge planer, sense substituir la interpretació jurídica professional ni generar criteri vinculant.
 
-En la seva configuració actual, el sistema —anomenat Dret Planer— es concep com una eina d'informació i assistència a la comprensió normativa adreçada a la ciutadania, sense efectes jurídics directes. Les respostes generades tenen caràcter orientatiu, incorporen advertiments explícits sobre les seves limitacions i remeten sempre a les fonts oficials. En aquesta modalitat, el sistema s'inscriu dins dels usos informatius de la intel·ligència artificial, sotmesos principalment a obligacions de transparència, d'acord amb el Reglament (UE) 2024/1689 (AI Act).
-
-Aquest treball distingeix expressament aquesta modalitat ciutadana d'un escenari potencial, no implementat en la prova de concepte, consistent en la integració del sistema en entorns institucionals (per exemple, com a document explicatiu adjunt a resolucions administratives o judicials). Aquest segon escenari requeriria un règim reforçat de garanties —validació humana prèvia, separació estricta entre text oficial i versió explicativa, i protocols específics de responsabilitat— i es planteja únicament com a línia de recerca futura.
+En la seva configuració actual, el sistema —anomenat Dret Planer— es concep com una eina d'informació i assistència a la comprensió normativa adreçada a la ciutadania, sense efectes jurídics directes. Les respostes generades tenen caràcter orientatiu sobre la interpretació jurídica d'un precepte concret, incorporen advertiments explícits sobre les seves limitacions i remeten sempre a les fonts oficials. En aquesta modalitat, el sistema s'inscriu dins dels usos informatius de la intel·ligència artificial, sotmesos principalment a obligacions de transparència, d'acord amb el Reglament (UE) 2024/1689 (AI Act).
 
 ### Metodologia i estructura del treball
 
-Com a prova de concepte, el treball presenta una plataforma de llenguatge planer centrada inicialment en la Constitució andorrana, considerada com la Regla de Reconeixement del sistema jurídic en el sentit de Hart (1961). El sistema utilitza una arquitectura RAG que combina la recuperació semàntica d'articles constitucionals i fragments doctrinals amb la generació d'explicacions accessibles, garantint la traçabilitat i la fidelitat al text original.
+Per a dur a la prova de concepte, el treball presenta una plataforma de llenguatge planer centrada inicialment en la Constitució andorrana, considerada com la Regla de Reconeixement del sistema jurídic en el sentit de Hart (1961). El sistema utilitza una arquitectura RAG que combina la recuperació semàntica d'articles constitucionals i fragments doctrinals amb la generació d'explicacions accessibles, garantint la traçabilitat i la fidelitat al text original.
 
 En primer lloc, s'analitza el dret a comprendre en el marc internacional, europeu i andorrà; en segon lloc, s'examina la singularitat constitucional d'Andorra i la seva relació amb la cohesió jurídica; a continuació, es desenvolupa el marc teòric de la intel·ligència artificial aplicada al dret; posteriorment, es descriu detalladament l'arquitectura, el corpus i el sistema de validació de Dret Planer; finalment, es presenten les conclusions i les línies de desenvolupament futur.
 
@@ -124,7 +122,7 @@ Aquesta operació va tenir una doble funció: d'una banda, transferir la sobiran
 
 ### IV.3. Acceptació interna i distància cognitiva
 
-La singularitat del cas andorrà rau en el fet que la població subjecta a l'ordenament no coincideix plenament amb el cos polític que va aprovar la Constitució. Tal com mostren les dades demogràfiques, una part majoritària de la població resident actual no va participar en el referèndum de 1993 i no ha estat socialitzada en el sistema jurídic andorrà.
+Una singularitat jurídica en el cas andorrà rau en el fet que la població subjecta a l'ordenament no va formar part de l'aprovació de la Constitució. Tal com mostren les dades demogràfiques (Taula 4), una part majoritària de la població resident actual no va participar en el referèndum de 1993 i tampoc ha estat socialitzada en els valors jurídics andorrans.
 
 Aquesta circumstància genera una tensió específica en termes d'acceptació interna de la Regla de Reconeixement. Si bé els operadors jurídics assumeixen plenament la Constitució com a norma fonamental, una part significativa dels destinataris de la norma pot percebre-la com un text distant, complex o aliè. Com assenyala Hart (1961), l'estabilitat del sistema no depèn únicament de l'acceptació pels jutges, sinó també del fet que la població pugui reconèixer la norma com a marc legítim d'organització social.
 
@@ -300,7 +298,15 @@ El funcionament de Dret Planer es pot descriure en cinc etapes successives:
 
 Aquest flux garanteix que la resposta final estigui sempre ancorada en el dret vigent i que l'usuari pugui identificar clarament la naturalesa del contingut rebut.
 
-### VI.6. Validació i control de qualitat
+### VI.6. Procés d'indexació de dades i construcció del corpus
+
+El corpus de Dret Planer es construeix mitjançant un procés d'indexació que no implica entrenament de xarxes neuronals sobre els textos jurídics. En primer lloc, s'extreu i s'estructura el text normatiu (Constitució) i la doctrina seleccionada en unitats discretes (articles, fragments). A continuació, cada unitat es segmenta en fragments (chunks) adequats per a la recuperació semàntica. Els embeddings es generen mitjançant **inferència** amb un model preentrenat (per exemple XLM-RoBERTa o equivalents): el model no s'entrena ni s'actualitza amb el corpus; només es fan passar els textos per obtenir representacions vectorials. Aquestes representacions es desen juntament amb les metadades i el text original en un índex unificat (corpus unificat i fitxer d'embeddings). En temps d'execució, la consulta de l'usuari es transforma en vector, es compara amb l'índex (similitud cosinus o equivalent) i els fragments més rellevants es passen al model generatiu com a context. En cap moment el corpus andorrà es fa servir per modificar els pesos del model de llenguatge ni del model d'embeddings; tota la integració es fa per recuperació i condicionament del context (RAG). Així doncs, no hi ha "aprenentatge" en sentit d'entrenament sobre dades protegides, sinó ús de models preentrenats en tasques d'inferència i generació condicionada a les fonts recuperades.
+
+### VI.7. Respecte de la propietat intel·lectual i del dret d'autor
+
+El disseny del sistema té en compte la propietat intel·lectual i el dret d'autor des de diverses dimensions. **(1) Textos normatius:** la Constitució i les lleis andorranes són de domini públic o d'accés oficial; la seva reutilització per a finalitats informatives i d'explicació en llenguatge planer s'inscriu en l'ús legítim i en les polítiques de dades obertes. **(2) Doctrina:** la doctrina incorporada al corpus es limita a fragments citables, amb atribució i finalitat d'il·lustració interpretativa, sense reproducció íntegra d'obres; es respecten les excepcions per a citació i mineria de textos i de dades (Directiva (UE) 2019/790, arts. 3 i 4). **(3) Transparència i traçabilitat:** el sistema remet explícitament a les fonts utilitzades, en línia amb les exigències de transparència del Reglament (UE) 2024/1689 (AI Act, art. 53). **(4) Accés legítim:** només s'incorpora contingut al qual el projecte té accés legítim i la procedència de les dades queda documentada. **(5) Llicències:** el material divulgatiu generat pel projecte es pot publicar sota llicències obertes (per exemple Creative Commons) per a ús educatiu i informatiu, sense reutilitzar obres protegides de tercers sense el marc legal adequat. Així, el procés d'indexació i l'ús del corpus es dissenyen per ser compatibles amb el respecte de la propietat intel·lectual i del dret d'autor.
+
+### VI.8. Validació i control de qualitat
 
 Per avaluar la fiabilitat del sistema, s'ha implementat un sistema de validació basat en preguntes de control, dissenyat per comprovar la capacitat del prototip per identificar correctament els articles constitucionals rellevants i generar explicacions coherents.
 
@@ -312,13 +318,13 @@ Aquest sistema inclou criteris com:
 
 Tot i que aquesta validació no pretén substituir una avaluació jurídica exhaustiva, permet detectar errors recurrents i millorar progressivament el comportament del sistema, d'acord amb una lògica d'aprenentatge controlat.
 
-### VI.7. Encaix normatiu i límits del prototip
+### VI.9. Encaix normatiu i límits del prototip
 
 En la seva configuració actual, Dret Planer no produeix efectes jurídics directes ni intervé en processos decisoris. El sistema es limita a oferir informació i explicacions orientatives, amb transparència sobre l'ús d'intel·ligència artificial i recomanació explícita de supervisió humana.
 
 Aquest encaix funcional permet situar el prototip dins dels usos legítims de la IA en l'àmbit jurídic, sense comprometre els principis de legalitat, responsabilitat ni control humà, d'acord amb el Reglament (UE) 2024/1689.
 
-### VI.8. Síntesi
+### VI.10. Síntesi
 
 La prova de concepte Dret Planer demostra que és tècnicament viable articular una plataforma d'intel·ligència artificial orientada a la comprensió del dret constitucional, sempre que es dissenyi amb abast limitat, traçabilitat i garanties jurídiques. Aquest resultat obre la porta a futures investigacions sobre l'ús d'eines similars en altres àmbits normatius, així com a una avaluació empírica més extensa del seu impacte en la comprensió ciutadana del dret.
 
@@ -385,6 +391,8 @@ La prova de concepte Dret Planer mostra que la intel·ligència artificial, quan
 - Llei 29/2021, de protecció de dades personals. *Butlletí Oficial del Principat d'Andorra*.
 
 - Reglament (UE) 2024/1689 del Parlament Europeu i del Consell, de 13 de juny de 2024, relatiu a l'establiment de normes harmonitzades en matèria d'intel·ligència artificial (Reglament sobre la intel·ligència artificial, AI Act).
+
+- Directiva (UE) 2019/790 del Parlament Europeu i del Consell, de 17 d'abril de 2019, relativa als drets d'autor i drets afins al mercat únic digital (Directiva sobre drets d'autor en el mercat únic digital).
 
 ### Doctrina
 
@@ -487,3 +495,38 @@ La prova de concepte Dret Planer mostra que la intel·ligència artificial, quan
 | Vots emesos (participació del 75,7%) | 6.910 |
 | Vots a favor (Sí) | 4.903 (74,2%) |
 | Vots en contra (No) | 1.706 (25,8%) |
+
+### Taula 5. Corpus i fonts utilitzades per al RAG (entrenament / indexació)
+
+**Font normativa (corpus principal)**
+
+| Font | Descripció | Origen |
+|------|------------|--------|
+| Constitució del Principat d'Andorra (1993) | Preàmbul i 107 articles, estructurats per títols i capítols | Text oficial (*constitucio-andorra.txt*) |
+
+**Doctrina i fonts secundàries** (incorporades al corpus unificat per a context interpretatiu; Fuller, 1964; Vilajosana, 2010)
+
+| Títol | Autor / Publicació | Categoria |
+|-------|-------------------|-----------|
+| Aspectes de la jurisprudència andorrana. Balanç de 20 anys de Constitució | Pere Pastor Vilanova (coordinador); Universitat d'Andorra | Jurisprudència |
+| La constitución andorrana y la ordenación territorial del poder público | Doctrina | Doctrina |
+| Constitucionalisme i codificació | Doctrina | Doctrina |
+| Sobre usos, costums i el codi | Doctrina | Doctrina |
+| Ponència sobre codificació i veritat | Antoni Pol / Doctrina | Doctrina |
+| El Manual Digest i el Tribunal Europeu dels Drets Humans | Doctrina | Doctrina |
+| Comunicació Lopez B. | Lopez B. | Doctrina |
+| Les relacions internacionals d'Andorra des de la Constitució | Doctrina | Doctrina |
+| Llibre Complet Dret Processal Civil | Doctrina | Doctrina (civil) |
+| Memòria 2023 del Tribunal Constitucional | Tribunal Constitucional | Jurisprudència |
+| Memòria 2024 | Tribunal Constitucional | Jurisprudència |
+| L'aplicació directa de les normes constitucionals | Doctrina | Doctrina |
+| Article Burniol sobre sobirania | Burniol | Doctrina |
+| Joan Martí Alanis, bisbe | Doctrina | Doctrina |
+| La sol·licitud dels bisbes d'Urgell | Doctrina | Doctrina |
+| REC5 2019 | Doctrina | Doctrina |
+| Document 23 de gener (català) | Doctrina | Doctrina |
+| De la consuetud a l'Estat de dret. La llarga resistència del Principat d'Andorra a la modernització política | Pere Soler Parício | Doctrina |
+| Joan Martí Alanis, bisbe d'Urgell, príncep d'Andorra | Joan Bassegoda Nonell | Doctrina |
+| Emergencia i reconeixement d'Andorra com a Estat | Joan BECAT | Doctrina |
+
+*Font: definició del corpus a `scripts/processar-doctrina-xlm.ts`; corpus unificat a `data/rag/constitucio-unified.json`.*
