@@ -13,7 +13,6 @@ const navLinks = [
   { href: '/', key: 'nav.inici' },
   { href: '/codis/constitucio', key: 'nav.constitucio' },
   { href: '/preguntes-control', key: 'nav.preguntesControl' },
-  { href: '/paper', key: 'nav.paper' },
   { href: '/com-esta-fet', key: 'nav.comEstaFet' },
 ] as const;
 
