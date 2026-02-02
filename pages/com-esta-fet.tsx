@@ -63,7 +63,7 @@ const ComEstaFetPage: React.FC = () => {
               <h3>2.2. Generació adaptada (Generation)</h3>
               <p>
                 Un cop s&apos;ha trobat la informació rellevant, el sistema la transforma en una explicació clara i accessible.
-                El model d&apos;IA s&apos;ha entrenat específicament per:
+                El model d&apos;IA no s&apos;entrena amb els textos legals; opera per recuperació i condicionament (RAG) i està configurat per:
               </p>
               <ul>
                 <li>Mantenir la fidelitat al text original</li>
@@ -177,12 +177,12 @@ const ComEstaFetPage: React.FC = () => {
               <h2>6. Corpus i dades</h2>
               <p>
                 La base de coneixement del sistema (corpus unificat) està formada per la Constitució d&apos;Andorra com a corpus pilot,
-                complementada amb doctrina acadèmica i recomanacions d&apos;aprenentatge:
+                complementada amb doctrina jurídica seleccionada:
               </p>
 
               <ul>
                 <li>
-                  <strong>Constitució d&apos;Andorra (1993)</strong>: 105 articles estructurats per títols i capítols, amb navegació
+                  <strong>Constitució d&apos;Andorra (1993)</strong>: Preàmbul i 107 articles estructurats per títols i capítols, amb navegació
                   jeràrquica completa. Aquest és el corpus pilot del projecte, escollit per la seva importància com a Regla de
                   Reconeixement del sistema jurídic andorrà.
                 </li>
@@ -191,16 +191,16 @@ const ComEstaFetPage: React.FC = () => {
                   i altres fonts acadèmiques que aporten context interpretatiu sobre el sistema jurídic andorrà, la seva complexitat
                   i la necessitat d&apos;accessibilitat.
                 </li>
-                <li>
-                  <strong>Recomanacions d&apos;aprenentatge</strong>: Entrades generades a partir de l&apos;avaluació de les preguntes de control,
-                  incorporant millores identificades pel sistema per enriquir les respostes i garantir la qualitat.
-                </li>
               </ul>
 
               <p style={{ marginTop: '1rem' }}>
-                El corpus està processat amb embeddings multilingües (XLM-RoBERTa) que permeten la cerca semàntica.
-                Mitjançant vectors semàntics, el sistema relaciona la pregunta de l&apos;usuari amb fragments rellevants
-                d&apos;aquests documents, encara que no comparteixin les mateixes paraules clau.
+                El corpus s&apos;indexa mitjançant <strong>inferència</strong>: no s&apos;entrena cap xarxa neuronal amb els textos jurídics;
+                els embeddings es generen amb un model preentrenat (XLM-RoBERTa) i es desen en un índex unificat. En temps d&apos;execució,
+                la consulta es compara amb aquest índex per similitud semàntica i els fragments més rellevants es passen al model generatiu com a context.
+              </p>
+              <p style={{ marginTop: '0.75rem' }}>
+                El sistema de validació amb <strong>preguntes de control</strong> permet comprovar que el prototip identifica correctament
+                els articles rellevants i genera explicacions coherents, d&apos;acord amb una lògica de qualitat controlada.
               </p>
             </section>
 
@@ -267,7 +267,7 @@ const ComEstaFetPage: React.FC = () => {
               
               <h3>8.1. Fase 1 completada (v1.0 - Constitució PoC)</h3>
               <ul>
-                <li>✅ 105 articles de la Constitució processats i estructurats</li>
+                <li>✅ Preàmbul i 107 articles de la Constitució processats i estructurats</li>
                 <li>✅ Sistema RAG complet amb embeddings XLM-RoBERTa</li>
                 <li>✅ Chatbot funcional amb Llama 70B (Groq)</li>
                 <li>✅ Interfície multilingüe (català, castellà, francès)</li>
@@ -301,7 +301,7 @@ const ComEstaFetPage: React.FC = () => {
               <p style={{ marginTop: '1rem' }}>
                 Per conèixer els detalls metodològics i el marc teòric complet, podeu accedir al paper acadèmic:
                 <br />
-                <strong>&quot;El dret a la claredat constitucional: Intel·ligència Artificial i adequació tecnològica com a garanties de la cohesió jurídica a Andorra&quot;</strong>
+                <strong>&quot;Dret Planer: Intel·ligència Artificial d&apos;Ús Restringit per a la Claredat Constitucional al Principat d&apos;Andorra&quot;</strong>
               </p>
               <div style={{ marginTop: '1.5rem' }}>
                 <Link href="/paper" className="com-esta-fet-paper-cta">
