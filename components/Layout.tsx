@@ -152,7 +152,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               {t(idioma, 'footer.descripcio')}
               {' '}
               Portal d&apos;accessibilitat jurídica assistida per IA per al Principat d&apos;Andorra.
-              Projecte acadèmic per a tesi doctoral a la Universitat d&apos;Andorra.
+              Exercici acadèmic d&apos;investigació com a estudiant de Dret.
             </p>
           </div>
 

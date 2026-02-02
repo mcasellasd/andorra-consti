@@ -7,13 +7,13 @@ Portal web d'accés gratuït que democratitza el coneixement jurídic andorrà m
 ## 🎯 Objectius del Projecte
 
 - **Democratització del dret constitucional**: Fer accessible la Constitució d'Andorra a una societat heterogènia (55% de residents immigrants)
-- **Recerca acadèmica**: Base empírica per a tesi sobre IA i accessibilitat jurídica
+- **Recerca acadèmica**: Base empírica per a investigació sobre IA i accessibilitat jurídica
 - **Proof of Concept**: Explorar com la IA pot garantir el dret a comprendre el dret sense erosionar les garanties legals
 
 ## ✨ Característiques Principals
 
 ### 📖 Constitució d'Andorra (Corpus Pilot)
-- **105 articles** de la Constitució d'Andorra (1993)
+- **Preàmbul i 107 articles** de la Constitució d'Andorra (1993)
 - Estructura jeràrquica: Títol > Capítol > Article
 - Navegació intuïtiva amb breadcrumbs
 - Sidebar amb índex de navegació ràpida
