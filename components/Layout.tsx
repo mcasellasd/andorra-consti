@@ -12,8 +12,7 @@ interface LayoutProps {
 const navLinks = [
   { href: '/', key: 'nav.inici' },
   { href: '/codis/constitucio', key: 'nav.constitucio' },
-  { href: '/preguntes-control', key: 'nav.preguntesControl' },
-  { href: '/com-esta-fet', key: 'nav.comEstaFet' },
+  { href: '/com-esta-fet', key: 'nav.dretPlaner' },
   { href: '/disclaimer', key: 'nav.privacitat' },
 ] as const;
 
@@ -150,10 +149,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="footer-col">
             <p className="footer-title">{t(idioma, 'footer.titol')}</p>
             <p className="footer-text">
-              {t(idioma, 'footer.descripcio')}
-              {' '}
-              Portal d&apos;accessibilitat jurídica assistida per IA per al Principat d&apos;Andorra.
-              Exercici acadèmic d&apos;investigació com a estudiant de Dret.
+              Projecte d&apos;investigació acadèmica per a facilitar la comprensió de la Constitució d&apos;Andorra.
             </p>
           </div>
 
