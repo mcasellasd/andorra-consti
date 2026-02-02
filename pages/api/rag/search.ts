@@ -66,7 +66,7 @@ export default async function handler(
 function mapResult(match: RetrievedContext) {
   const { entry, score, bookId } = match;
   const articleInfo = findArticleByReference(entry.legalReference);
-  const sourceType = bookId === 'DOCTRINA' ? 'doctrina' : 'constitucio';
+  const sourceType: 'constitucio' | 'doctrina' = bookId === 'DOCTRINA' ? 'doctrina' : 'constitucio';
 
   return {
     conceptId: entry.id,
