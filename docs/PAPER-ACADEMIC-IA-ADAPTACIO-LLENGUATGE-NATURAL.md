@@ -38,7 +38,7 @@ En la seva configuració actual, el sistema —anomenat Dret Planer— es concep
 
 ### Metodologia i estructura del treball
 
-Per a dur a la prova de concepte, el treball presenta una plataforma de llenguatge planer centrada inicialment en la Constitució andorrana, considerada com la Regla de Reconeixement del sistema jurídic en el sentit de Hart (1961). El sistema utilitza una arquitectura RAG que combina la recuperació semàntica d'articles constitucionals i fragments doctrinals amb la generació d'explicacions accessibles, garantint la traçabilitat i la fidelitat al text original.
+Per a dur a la prova de concepte, el treball presenta una plataforma de llenguatge planer centrada inicialment en la Constitució andorrana, considerada com la Regla de Reconeixement del sistema jurídic en el sentit de Hart (1961). El sistema utilitza una arquitectura RAG que combina la recuperació semàntica d'articles constitucionals i fragments doctrinals amb la generació d'explicacions accessibles, garantint la traçabilitat i la fidelitat al text original. Cal assenyalar, per transparència metodològica, que el prototip Dret Planer s'ha implementat amb assistència d'eines d'intel·ligència artificial per al desenvolupament de software (desenvolupament assistit per IA; en la pràctica, sovint anomenat «vibe coding»), mitjançant editors i assistents basats en llenguatge natural. Aquest fet es menciona perquè l'objecte d'estudi és la claredat constitucional i l'arquitectura RAG, no el procés de codificació en si; tot i això, el paper d'aquestes eines en la construcció del prototip ha estat rellevant i convé deixar-ho constància.
 
 En primer lloc, s'analitza el dret a comprendre en el marc internacional, europeu i andorrà; en segon lloc, s'examina la singularitat constitucional d'Andorra i la seva relació amb la cohesió jurídica; a continuació, es desenvolupa el marc teòric de la intel·ligència artificial aplicada al dret; posteriorment, es descriu detalladament l'arquitectura, el corpus i el sistema de validació de Dret Planer; finalment, es presenten les conclusions i les línies de desenvolupament futur.
 
@@ -355,6 +355,8 @@ Aquest estudi presenta, tanmateix, diverses limitacions que cal reconèixer expl
 En segon lloc, la validació del sistema s'ha basat principalment en criteris tècnics i de coherència interna, sense incorporar encara una avaluació empírica sistemàtica amb usuaris finals que permeti mesurar l'impacte real del sistema en la comprensió ciutadana del dret.
 
 Finalment, l'anàlisi normativa s'ha limitat a l'encaix general amb el marc europeu i andorrà vigent, sense entrar en profunditat en qüestions específiques de responsabilitat patrimonial o de governança institucional en escenaris d'ús avançat.
+
+En quart lloc, el codi del prototip s'ha desenvolupat amb assistència d'eines d'IA generativa per al desenvolupament de software (per exemple Cursor, GitHub Copilot o equivalents), cosa que pot afectar la reproducibilitat estricta del procés de desenvolupament i la traçabilitat de decisions de disseny. Es considera una limitació metodològica digna de menció en un context acadèmic que valora la transparència i la replicabilitat.
 
 ### VII.3. Línies futures de recerca i desenvolupament
 
