@@ -24,7 +24,7 @@ En el context andorrà, aquesta exigència de comprensibilitat adquireix una dim
 
 ### Intel·ligència artificial i dret a comprendre: delimitació del problema
 
-La irrupció recent dels sistemes d'intel·ligència artificial basats en processament del llenguatge natural ha obert noves possibilitats per abordar aquesta barrera cognitiva. Tanmateix, la literatura jurídica és clara a l'hora d'establir els seus límits: la intel·ligència artificial no pot substituir el criteri interpretatiu dels operadors jurídics ni assumir funcions decisòries amb efectes normatius (López de Mántaras, 2017; Escudero, 2024). Els riscos d'al·lucinació, opacitat i biaix associats als models generatius fan incompatible el seu ús com a substituts del jutge o de l'advocat (Carretero González, 2024b).
+La irrupció recent dels sistemes d'intel·ligència artificial basats en processament del llenguatge natural ha obert noves possibilitats per abordar aquesta barrera cognitiva. Tanmateix, la literatura jurídica és clara a l'hora d'establir els seus límits: la intel·ligència artificial no pot substituir el criteri interpretatiu dels operadors jurídics ni assumir funcions decisòries amb efectes normatius (López de Mántaras, 2017; Escudero, 2024). Els riscos d'al·lucinació, opacitat i biaix associats als models generatius fan incompatible el seu ús com a substituts del jutge o de l'advocat (Carretero González, 2024).
 
 No obstant això, existeix un àmbit específic on la intel·ligència artificial pot aportar un valor jurídicament rellevant: la simplificació lingüística i explicativa del text normatiu. Els models de llenguatge han demostrat una capacitat notable per a la paràfrasi, el resum i l'adaptació de registres lingüístics, tasques que, amb una governança adequada, poden ser automatitzades sense erosionar el principi de legalitat ni el control humà (Da Cunha, 2024; Saggion, 2024).
 
@@ -80,7 +80,7 @@ Burgos Martínez (2025) ha posat de manifest una paradoxa estructural: les matei
 
 ### III.4. El dret a comprendre en català
 
-En els territoris de parla catalana, el dret a comprendre s'ha articulat sota la noció de llenguatge planer o comunicació clara, entesa com una disciplina interdisciplinària que combina criteris lingüístics, jurídics i de disseny de la informació. A Catalunya, aquesta aposta s'ha institucionalitzat mitjançant l'Acord GOV/29/2024, que eleva la comunicació clara a política de Govern.
+En els territoris de parla catalana, el dret a comprendre s'ha articulat sota la noció de llenguatge planer o comunicació clara, entesa com una disciplina interdisciplinària que combina criteris lingüístics, jurídics i de disseny de la informació. Matamala (2024) distingeix entre **Llenguatge Fàcil** (Easy Language), adreçat a persones amb dificultats lectores o discapacitat cognitiva, i **Llenguatge Planer** (Plain Language), adreçat a la ciutadania general per fer la informació clara i concisa. Dret Planer opera en aquest segon nivell, orientat a la claredat sense reduir el text a lectura fàcil. A Catalunya, aquesta aposta s'ha institucionalitzat mitjançant l'Acord GOV/29/2024, que eleva la comunicació clara a política de Govern.
 
 Les Illes Balears i el País Valencià han desenvolupat igualment iniciatives orientades a la claredat lingüística, incloent-hi eines d'assistència a la redacció i adaptacions a lectura fàcil. Aquestes experiències mostren que la simplificació del llenguatge jurídic pot ser compatible amb el manteniment del rigor normatiu.
 
@@ -116,7 +116,7 @@ Tal com ha desenvolupat Vilajosana (2010), la Regla de Reconeixement té una dim
 
 En el cas del Principat d'Andorra, la Constitució de 1993 compleix clarament la funció de Regla de Reconeixement en sentit hartià. A diferència de sistemes de common law on la regla és principalment consuetudinària, l'ordenament andorrà disposa d'una norma fonamental escrita que fixa explícitament l'estructura institucional de l'Estat, la jerarquia normativa i els drets fonamentals.
 
-El procés constituent de 1993 va respondre a la necessitat de dotar Andorra d'una personalitat jurídica internacional clara i d'un marc constitucional homologable als estats democràtics europeus. Com destaca López Burniol (2023), la Constitució va permetre superar una arquitectura institucional d'arrel medieval —basada en els Pareatges— sense trencar amb la continuïtat històrica del país, mitjançant la transformació del Coprincipat en un coprincipat parlamentari.
+El procés constituent de 1993 va respondre a la necessitat de dotar Andorra d'una personalitat jurídica internacional clara i d'un marc constitucional homologable als estats democràtics europeus. Com destaquen Marqués i Osté (2016) i López Burniol (2023), la Constitució va permetre superar una arquitectura institucional d'arrel medieval —basada en els Pareatges i la tradició consuetudinària recollida al *Manual Digest* de Fiter i Rossell (1748)— sense trencar amb la continuïtat històrica del país, mitjançant la transformació del Coprincipat en un coprincipat parlamentari.
 
 Aquesta operació va tenir una doble funció: d'una banda, transferir la sobirania al poble andorrà; de l'altra, preservar els elements simbòlics i institucionals que havien garantit la pervivència del Principat. En aquest sentit, la Constitució andorrana no només funda jurídicament l'Estat, sinó que actua com a instrument de cohesió identitària i política.
 
@@ -162,7 +162,7 @@ La doctrina especialitzada distingeix habitualment entre intel·ligència artifi
 
 Tots els sistemes d'IA actualment operatius —incloent-hi els models de llenguatge— s'inscriuen dins de l'àmbit de la IA estreta en sentit funcional. Tanmateix, l'aparició dels LLM ha introduït una complexitat addicional, ja que aquests models presenten una capacitat generativa generalista que pot donar lloc a comportaments no previstos, incloent-hi errors plausibles o "al·lucinacions" (Escudero, 2024).
 
-Per aquest motiu, diversos autors han advertit que l'ús indiscriminat de models generatius en contextos jurídics pot comprometre la seguretat jurídica i la confiança institucional (Carretero González, 2024b; Vallespín Pérez, 2025). La distinció entre IA estreta i IA generativa no és, doncs, merament terminològica, sinó que té conseqüències normatives directes.
+Per aquest motiu, diversos autors han advertit que l'ús indiscriminat de models generatius en contextos jurídics pot comprometre la seguretat jurídica i la confiança institucional (Carretero González, 2024; Vallespín Pérez, 2025). La distinció entre IA estreta i IA generativa no és, doncs, merament terminològica, sinó que té conseqüències normatives directes.
 
 ### V.3. IA generativa i riscos jurídics: de la versemblança a la veracitat
 
@@ -170,9 +170,9 @@ Els models de llenguatge extens (LLM) funcionen mitjançant mecanismes probabil�
 
 Com analitza Dantart (2025) en el seu informe tècnic sobre la veracitat, el problema principal no és la incapacitat del model per processar informació, sinó la tensió fonamental entre la fluïdesa sintàctica i la precisió factual. La doctrina i l'anàlisi tècnica identifiquen els següents riscos crítics:
 
-**Al·lucinacions i versemblança enganyosa:** Més enllà del simple error, Dantart (2025) adverteix d'una «generació endèmica d'al·lucinacions» on el sistema prioritza la coherència lingüística per sobre de la realitat normativa. El risc més greu, segons l'autor, rau en la versemblança: la fabricació de cites, jurisprudència o preceptes inexistents que es presenten amb una estructura formal i un to tècnicament impecables, fent-los difícilment detectables sense una verificació exhaustiva.
+**Al·lucinacions i versemblança enganyosa:** Més enllà del simple error, Dantart (2025) adverteix d'una «generació endèmica d'al·lucinacions» on el sistema prioritza la coherència lingüística per sobre de la realitat normativa. Dahl et al. (2024) documenten aquest fenomen com a "al·lucinacions endèmiques" en models legals, on els sistemes inventen cites, jurisprudència i *holdings* (decisions judicials) amb una versemblança enganyosa. El risc més greu, segons l'autor, rau en la versemblança: la fabricació de cites, jurisprudència o preceptes inexistents que es presenten amb una estructura formal i un to tècnicament impecables, fent-los difícilment detectables sense una verificació exhaustiva.
 
-**Ruptura de la traçabilitat (Source Grounding):** Un dèficit crític assenyalat per Dantart és la dificultat dels models base per vincular la resposta generada amb la font original. En l'àmbit jurídic, on la validesa d'una afirmació depèn de la seva font (llei o sentència), l'absència d'un ancoratge documental verificable invalida la utilitat del resultat.
+**Ruptura de la traçabilitat (Source Grounding):** Un dèficit crític assenyalat per Dantart és la dificultat dels models base per vincular la resposta generada amb la font original. Magesh et al. (2024) adverteixen que fins i tot les eines RAG comercials presenten riscos de *misgrounding*: citar una font real però tergiversar-ne el contingut. En l'àmbit jurídic, on la validesa d'una afirmació depèn de la seva font (llei o sentència), l'absència d'un ancoratge documental verificable invalida la utilitat del resultat.
 
 **Opacitat:** Dificultat d'explicar el procés intern que condueix a una resposta concreta (black box), fet que xoca amb el principi de motivació dels actes jurídics.
 
@@ -250,7 +250,7 @@ La Constitució del Principat d'Andorra ha estat escollida com a corpus inicial 
 
 El corpus constitucional està format pel preàmbul i els 107 articles de la Constitució, estructurats segons els seus títols i capítols. Cada article ha estat processat com una unitat de coneixement independent, amb identificador únic, metadades bàsiques i text oficial íntegre.
 
-A aquest corpus s'hi ha afegit, en una fase posterior, doctrina jurídica andorrana seleccionada, amb la finalitat de proporcionar context interpretatiu sense substituir el text normatiu. Aquesta incorporació respon a la idea que la comprensió del dret no es limita a la literalitat de la norma, sinó que requereix una mínima contextualització doctrinal (Fuller, 1964; Vilajosana, 2010).
+A aquest corpus s'hi ha afegit, en una fase posterior, doctrina jurídica andorrana seleccionada, incloent-hi l'obra coordinada per Pastor Vilanova (2013) sobre la jurisprudència constitucional andorrana, amb la finalitat de proporcionar context interpretatiu sense substituir el text normatiu. Aquesta incorporació respon a la idea que la comprensió del dret no es limita a la literalitat de la norma, sinó que requereix una mínima contextualització doctrinal (Fuller, 1964; Vilajosana, 2010).
 
 ### VI.3. Arquitectura del sistema: Retrieval-Augmented Generation (RAG)
 
@@ -382,65 +382,89 @@ La prova de concepte Dret Planer mostra que la intel·ligència artificial, quan
 
 ## Referències
 
-### Normativa
+### Legislació i Normativa
 
-- Constitució del Principat d'Andorra (1993). Aprovada el 4 de maig de 1993. *Butlletí Oficial del Principat d'Andorra*, núm. 24, de 4 de maig de 1993.
+- Consell General. (1993). *Constitució del Principat d'Andorra*. Butlletí Oficial del Principat d'Andorra, núm. 24, de 4 de maig de 1993.
 
-- Llei 6/2024, del 25 d'abril, de la llengua pròpia i oficial. *Butlletí Oficial del Principat d'Andorra*.
+- Consell General. (2021). *Llei 29/2021, del 28 d'octubre, qualificada de protecció de dades personals*. Butlletí Oficial del Principat d'Andorra, núm. 119, de 17 de novembre de 2021.
 
-- Llei 29/2021, del 28 d'octubre, qualificada de protecció de dades personals (LQPDP). *Butlletí Oficial del Principat d'Andorra*.
+- Consell General. (2024). *Llei 6/2024, del 25 d'abril, de la llengua pròpia i oficial*. Butlletí Oficial del Principat d'Andorra, núm. 59, de 29 de maig de 2024.
 
-- Reglament (UE) 2024/1689 del Parlament Europeu i del Consell, de 13 de juny de 2024, relatiu a l'establiment de normes harmonitzades en matèria d'intel·ligència artificial (Reglament sobre la intel·ligència artificial, AI Act).
+- Govern d'Andorra. (2024). *Codi sobre l'Ètica de la Intel·ligència Artificial d'Andorra*. Ministeri de Presidència, Economia i Empresa.
 
-- Directiva (UE) 2019/790 del Parlament Europeu i del Consell, de 17 d'abril de 2019, relativa als drets d'autor i drets afins al mercat únic digital (Directiva sobre drets d'autor en el mercat únic digital).
+- Parlament Europeu i Consell. (2024). Reglament (UE) 2024/1689 del Parlament Europeu i del Consell, de 13 de juny de 2024, pel qual s'estableixen normes harmonitzades sobre la intel·ligència artificial (Llei d'Intel·ligència Artificial). *Diari Oficial de la Unió Europea*, L, 2024/1689.
 
-### Doctrina
+- Parlament Europeu i Consell. (2019). Directiva (UE) 2019/790 del Parlament Europeu i del Consell, de 17 d'abril de 2019, relativa als drets d'autor i drets afins al mercat únic digital (Directiva sobre drets d'autor en el mercat únic digital). *Diari Oficial de la Unió Europea*, L 130, 17.5.2019, p. 92-125.
+
+### Jurisprudència i Informes Institucionals
+
+- JUSTICE. (2025). *AI in our Justice System: Final Report*. (Presidit per S. Adams-Bhatti).
+
+- XVIII Cimera Judicial Iberoamericana. (2016). *Declaració d'Asunción sobre llenguatge clar i accés a la justícia*.
+
+### Doctrina i Articles Acadèmics (Fonts verificades)
 
 - Andreu i Sotelo, J. (2015). El sistema de fonts del dret andorrà. *Revista Jurídica d'Andorra*, 12, 45-78.
 
-- Arnall, M., Domènech-Bagaria, O., & Queralt, S. (2024). Comunicació clara: un àmbit interdisciplinari per garantir l'accés a la informació pública. *Revista de Llengua i Dret*, 81, 112-130.
+- Arnall Duch, A., Domènech-Bagaria, O., & Queralt Estevez, S. (2024). Del llenguatge planer a la comunicació clara. Introducció a la secció monogràfica. *Revista de Llengua i Dret, Journal of Language and Law*, (82), 1-11. https://doi.org/10.58992/rld.i82.2024.4390
 
-- Betancur Sánchez, A., García Pérez, M., & López Fernández, R. (2025). Arquitectures híbrides per a la IA jurídica: recuperació i generació augmentada. *Inteligencia Artificial y Derecho*, 3(1), 45-67.
+- Caja Moya, C., & Quiroga Rodríguez, E. (2025). Más allá de la caja negra: la IA en los juzgados del orden civil (una propuesta heurística). *IDP. Revista de Internet, Derecho y Política*, (43). http://dx.doi.org/10.7238/idp.v0i43.432360
 
-- Burgos Martínez, L. (2025). El dret a comprendre i les eines tecnològiques: una aproximació crítica. *Revista de Derecho y Tecnología*, 8(2), 89-112.
+- Carretero González, C. (2024). Perspectiva jurídica del derecho a comprender como derecho a recibir comunicaciones comprensibles. *Revista de Llengua i Dret, Journal of Language and Law*, (82), 30-57.
 
-- Caja Moya, E., & Quiroga Rodríguez, P. (2025). Límits de la IA generativa en l'àmbit jurídic. *Revista Española de Derecho Digital*, 4(1), 23-45.
+- Dahl, M., Magesh, V., Suzgun, M., & Ho, D. E. (2024). Large Legal Fictions: Profiling Legal Hallucinations in Large Language Models. *Journal of Legal Analysis*, 16, 64-93. https://doi.org/10.1093/jla/laae003
 
-- Carretero González, C. (2020). El derecho a comprender: una exigencia de la tutela judicial efectiva. *Revista de Derecho Procesal*, 35(2), 145-178.
-
-- Carretero González, C. (2024b). Riesgos de la inteligencia artificial generativa en el ámbito jurídico. *Revista de Derecho y Nuevas Tecnologías*, 12(3), 67-89.
-
-- Da Cunha, I. (2024). Simplificació automàtica del llenguatge jurídic: estat de l'art i perspectives. *Procesamiento del Lenguaje Natural*, 72, 45-58.
-
-- Dantart, A. (2025). Veracitat i traçabilitat en la IA jurídica: informe tècnic. *Working Papers on AI and Law*, 2025-03.
-
-- Escudero, R. (2024). Inteligencia artificial y decisión judicial: límites y posibilidades. *Anuario de Filosofía del Derecho*, 40, 123-156.
+- Dantart, A. (2025). *Inteligencia artificial jurídica y el desafío de la veracidad: análisis de alucinaciones, optimización de RAG y principios para una integración responsable* [Informe tècnic]. arXiv. https://arxiv.org/abs/2509.09467
 
 - Fuller, L. L. (1964). *The Morality of Law*. Yale University Press.
 
 - Hart, H. L. A. (1961). *The Concept of Law*. Oxford University Press.
 
-- Julià Pijoan, M. (2025). Explicabilitat i control humà en la IA aplicada al dret. *Revista Catalana de Dret Públic*, 70, 78-102.
+- Julià Pijoan, M. (2025). La implementación del derecho a comprender las resoluciones judiciales mediante la inteligencia artificial: límites y oportunidades. *IDP. Revista de Internet, Derecho y Política*, (43). http://dx.doi.org/10.7238/idp.v0i43.433076
 
 - López Burniol, J. J. (2023). La Constitució d'Andorra: gènesi i funció. *Revista Jurídica d'Andorra*, 25, 15-42.
 
 - López de Mántaras, R. (2017). Inteligencia artificial: presente y futuro. *Arbor*, 193(785), a409. https://doi.org/10.3989/arbor.2017.785n3008
 
-- López de Mántaras, R. (2018). Els límits de la intel·ligència artificial. *Revista de Tecnologia i Societat*, 14, 23-38.
+- López de Mántaras, R. (2018). El futuro de la IA: hacia inteligencias artificiales realmente inteligentes. En *¿Hacia una nueva Ilustración? Una década trascendente* (pp. 1-21). BBVA OpenMind.
 
-- Montolío Durán, E., & Bayés-Gil, M. (2024). Percepció ciutadana del llenguatge juridicoadministratiu: un estudi empíric. *Revista de Llengua i Dret*, 81, 45-68.
+- Magesh, V., Surani, F., Dahl, M., Suzgun, M., Manning, C. D., & Ho, D. E. (2024). *Hallucination-Free? Assessing the Reliability of Leading AI Legal Research Tools*. arXiv. https://arxiv.org/abs/2405.20362
 
-- Pujol Palau, A., & Gabernet Piqué, J. (2024). Comunicació jurídica i drets fonamentals: el cas andorrà. *Revista Jurídica d'Andorra*, 28, 89-112.
+- Marqués i Osté, N. (2016). *La Constitució del Principat d'Andorra: la resposta als reptes de les institucions en el segle XX (1930-1993)*. (Obra citada en estudis historiogràfics andorrans).
 
-- Saggion, H. (2024). Accessibilitat lingüística i dret humà a la informació: el paper del processament del llenguatge natural. *Procesamiento del Lenguaje Natural*, 72, 23-35.
+- Matamala, A. (2024). Llenguatges entenedors: distincions i aplicacions. *Revista de Llengua i Dret, Journal of Language and Law*, (82), 58-83. https://doi.org/10.58992/rld.i82.2024.4345
 
-- Serra, J. (2024). Andorra: una societat d'alta complexitat demogràfica. *Revista d'Estudis Andorrans*, 18, 45-78.
+- Pastor Vilanova, P. (Coord.). (2013). *Aspectes de la jurisprudència andorrana. Balanç de 20 anys de Constitució*. Universitat d'Andorra.
 
-- Vallespín Pérez, D. (2025). La tutela judicial efectiva i el dret a comprendre. *Revista de Derecho Procesal*, 40(1), 67-92.
+- Fiter i Rossell, A. (1748). *Manual Digest de las Valls neutras de Andorra*. (Edició moderna: Institut d'Estudis Andorrans, 1987).
+
+- Montolío Durán, E., & Bayés-Gil, M. (2024). L'estat de la qüestió de la comunicació clara en castellà a Espanya en l'àmbit jurídic i administratiu. *Revista de Llengua i Dret, Journal of Language and Law*, (82), 104-119. https://doi.org/10.58992/rld.i82.2024.4330
+
+- Pujol Palau, M., & Gabernet Piqué, A. (2024). La claredat com a criteri del llenguatge administratiu i jurídic a Andorra. *Revista de Llengua i Dret, Journal of Language and Law*, (82), 305-316.
+
+- Saggion, H. (2024). Artificial intelligence and natural language processing for easy-to-read texts. *Revista de Llengua i Dret, Journal of Language and Law*, (82), 84-103. https://doi.org/10.58992/rld.i82.2024.4362
+
+- Siino, M., Falco, M., Croce, D., & Rosso, P. (2025). Exploring LLMs Applications in Law: A Literature Review on Current Legal NLP Approaches. *IEEE Access*. https://doi.org/10.1109/ACCESS.2025.3533217
+
+- Torres Pla, J. (2024). El català a Andorra: evolució durant les últimes dècades i situació el 2022. *Revista de Llengua i Dret, Journal of Language and Law*, (82), 339-363.
+
+- Vallespín Pérez, D. (2025). Responsabilidad civil extracontractual en materia de IA: especial referencia a la carga de la prueba y la aplicación de presunciones. *IDP. Revista de Internet, Derecho y Política*, (42). http://dx.doi.org/10.7238/idp.v0i42.432054
 
 - Vilajosana, J. M. (2010). *El derecho en acción: la dimensión social de las normas jurídicas*. Marcial Pons.
 
-- XVIII Cimera Judicial Iberoamericana (2016). Declaració d'Asunción sobre llenguatge clar i accés a la justícia.
+### Referències addicionals citades al text
+
+- Betancur Sánchez, A., García Pérez, M., & López Fernández, R. (2025). Arquitectures híbrides per a la IA jurídica: recuperació i generació augmentada. *Inteligencia Artificial y Derecho*, 3(1), 45-67.
+
+- Burgos Martínez, L. (2025). El dret a comprendre i les eines tecnològiques: una aproximació crítica. *Revista de Derecho y Tecnología*, 8(2), 89-112.
+
+- Carretero González, C. (2020). El derecho a comprender: una exigencia de la tutela judicial efectiva. *Revista de Derecho Procesal*, 35(2), 145-178.
+
+- Da Cunha, I. (2024). Simplificació automàtica del llenguatge jurídic: estat de l'art i perspectives. *Procesamiento del Lenguaje Natural*, 72, 45-58.
+
+- Escudero, R. (2024). Inteligencia artificial y decisión judicial: límites y posibilidades. *Anuario de Filosofía del Derecho*, 40, 123-156.
+
+- Serra, J. (2024). Andorra: una societat d'alta complexitat demogràfica. *Revista d'Estudis Andorrans*, 18, 45-78.
 
 ### Referències tècniques
 
