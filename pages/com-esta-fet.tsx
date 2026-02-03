@@ -42,11 +42,83 @@ const ComEstaFetPage: React.FC = () => {
               </ol>
             </section>
 
+            <section className="legal-section" style={{ background: 'linear-gradient(to right, #1e3a8a, #0369a1)', color: '#ffffff', margin: '2rem -1rem', padding: '2rem 1rem', borderRadius: '0.5rem' }}>
+              <h2 style={{ color: '#ffffff', marginBottom: '0.5rem' }}>Sobirania, Claredat i IA</h2>
+              <p style={{ color: '#e0f2fe', fontStyle: 'italic', marginBottom: '1rem', fontSize: '1.05rem' }}>
+                L&apos;arquitectura del coneixement jurídic andorrà
+              </p>
+              <p style={{ maxWidth: '48rem', margin: '0 auto', fontSize: '1.05rem', color: '#ffffff', lineHeight: 1.6 }}>
+                Andorra transita cap a una <strong style={{ color: '#ffffff' }}>sobirania digital</strong> basada en la veracitat documental. El sistema <strong style={{ color: '#ffffff' }}>Dret Planer</strong> no només automatitza, sinó que protegeix la integritat de la norma mitjançant una arquitectura RAG (<em>Retrieval-Augmented Generation</em>) alimentada per un corpus d&apos;alta qualitat, des dels Pariatges fins a la jurisprudència de 2024.
+              </p>
+            </section>
+
+            <section className="legal-section">
+              <h2>El legat històric</h2>
+              <p style={{ marginBottom: '1.5rem' }}>
+                L&apos;estabilitat andorrana es fonamenta en la resistència a la modernització política desestructurada, mantenint una línia clara des de la consuetud medieval fins a l&apos;Estat de Dret (Soler Parício).
+              </p>
+              <div style={{ position: 'relative', paddingLeft: '2rem', borderLeft: '4px solid #cbd5e1' }}>
+                <div style={{ marginBottom: '2rem' }}>
+                  <div style={{ fontWeight: 800, fontSize: '1.25rem', color: '#1e3a8a' }}>1278 – 1288 · Pariatges de Pau</div>
+                  <div style={{ marginTop: '0.5rem', padding: '1rem', background: '#f0f9ff', borderRadius: '0.5rem', borderLeft: '4px solid #0ea5e9', fontStyle: 'italic', fontSize: '0.9rem' }}>
+                    &quot;Sols resto l&apos;única filla de l&apos;imperi Carlemany&quot;. La sobirania compartida com a mecanisme de supervivència davant veïns gegantins.
+                  </div>
+                </div>
+                <div style={{ marginBottom: '2rem' }}>
+                  <div style={{ fontWeight: 800, fontSize: '1.25rem', color: '#1e3a8a' }}>1748 · Manual Digest</div>
+                  <div style={{ marginTop: '0.5rem', padding: '1rem', background: '#ecfeff', borderRadius: '0.5rem', borderLeft: '4px solid #22d3ee', fontStyle: 'italic', fontSize: '0.9rem' }}>
+                    Antoni Fiter i Rossell sistematitza el dret propi. Primer intent de fer accessible el dret que regia la vida dels ciutadans.
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontWeight: 800, fontSize: '1.25rem', color: '#1e3a8a' }}>1993 · Regla de Reconeixement</div>
+                  <div style={{ marginTop: '0.5rem', padding: '1rem', background: '#fefce8', borderRadius: '0.5rem', borderLeft: '4px solid #eab308', fontStyle: 'italic', fontSize: '0.9rem' }}>
+                    La Constitució fixa l&apos;estructura institucional i els drets fonamentals. La sobirania resideix plenament en el poble.
+                  </div>
+                </div>
+              </div>
+            </section>
+
             <section className="legal-section">
               <h2>2. Arquitectura RAG: com troba la informació</h2>
               <p>
                 El sistema utilitza una tècnica anomenada <strong>RAG</strong> (Retrieval-Augmented Generation),
                 que combina dues capacitats principals:
+              </p>
+
+              <p style={{ marginTop: '1rem' }}>
+                Per evitar al·lucinacions en la intel·ligència artificial jurídica, el sistema <strong>Dret Planer</strong> s&apos;alimenta d&apos;un corpus jerarquitzat que garanteix la veracitat (Dantart). Aquest procés d&apos;optimització RAG permet que cada resposta de la IA estigui ancorada en documents oficials i doctrina validada.
+              </p>
+
+              <h4 style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#1e3a8a', marginTop: '1.5rem', marginBottom: '0.75rem' }}>Capes de context per a la veracitat</h4>
+              <ul style={{ listStyle: 'none', padding: 0 }}>
+                <li style={{ padding: '0.75rem', background: '#f9fafb', borderRadius: '0.5rem', border: '1px solid #e5e7eb', marginBottom: '0.5rem' }}>
+                  <strong style={{ color: '#1e3a8a' }}>Normativa Suprema</strong> · Constitució del Principat d&apos;Andorra (corpus principal).
+                </li>
+                <li style={{ padding: '0.75rem', background: '#f9fafb', borderRadius: '0.5rem', border: '1px solid #e5e7eb', marginBottom: '0.5rem' }}>
+                  <strong style={{ color: '#1e3a8a' }}>Jurisprudència</strong> · Memòria del Tribunal Constitucional i Balanç de 20 anys (Pastor Vilanova).
+                </li>
+                <li style={{ padding: '0.75rem', background: '#f9fafb', borderRadius: '0.5rem', border: '1px solid #e5e7eb', marginBottom: '0.5rem' }}>
+                  <strong style={{ color: '#1e3a8a' }}>Doctrina tècnica</strong> · IA jurídica i veracitat (Dantart); prevenció d&apos;al·lucinacions.
+                </li>
+                <li style={{ padding: '0.75rem', background: '#f9fafb', borderRadius: '0.5rem', border: '1px solid #e5e7eb' }}>
+                  <strong style={{ color: '#1e3a8a' }}>Context sociolingüístic</strong> · Alta complexitat demogràfica (Serra); impacte del multilingüisme en la comprensió del dret.
+                </li>
+              </ul>
+
+              <h3>Diagrama: l&apos;arquitectura RAG</h3>
+              <figure style={{ margin: '1.5rem 0', textAlign: 'center' }}>
+                <img
+                  src="/images/dret-planer-rag-arquitectura.png"
+                  alt="Dret Planer: diagrama del flux RAG — consulta de l'usuari, vectorització, corpus tancat (Constitució 1993 + doctrina), recuperació semàntica, model generatiu i explicació planera"
+                  style={{ maxWidth: '100%', height: 'auto', borderRadius: '0.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}
+                />
+                <figcaption style={{ marginTop: '0.75rem', fontSize: '0.9rem', color: '#6b7280' }}>
+                  <strong>Dret Planer: L&apos;arquitectura RAG per a la claredat constitucional.</strong> El flux mostra com la consulta es vectoritza, es busca en el corpus tancat i es condiciona la generació per garantir traçabilitat i evitar al·lucinacions.
+                </figcaption>
+              </figure>
+              <p>
+                El diagrama resumeix el <strong>flux de processament RAG</strong>: (1) la <strong>consulta de l&apos;usuari</strong> es transforma en vectors (<em>vectorització</em>); (2) el sistema fa <strong>recuperació semàntica</strong> sobre un <strong>corpus de dades tancat</strong> (Constitució 1993 i doctrina jurídica), sense reentrenar la IA; (3) els fragments rellevants alimenten el <strong>model generatiu</strong>, que elabora l&apos;explicació limitant-se estrictament al context recuperat; (4) cada resposta inclou <strong>referències directes</strong> als articles per permetre la verificació humana; (5) un <strong>filtre de validació de qualitat</strong> detecta si la resposta se separa del text original o conté errors factuals. Això reflecteix una <strong>IA d&apos;ús restringit</strong> (domini jurídic tancat) i <strong>governança tècnica</strong> orientada a la veracitat.
               </p>
 
               <h3>2.1. Recuperació intel·ligent (Retrieval)</h3>
@@ -201,6 +273,60 @@ const ComEstaFetPage: React.FC = () => {
               <p style={{ marginTop: '0.75rem' }}>
                 El sistema de validació amb <strong>preguntes de control</strong> permet comprovar que el prototip identifica correctament
                 els articles rellevants i genera explicacions coherents, d&apos;acord amb una lògica de qualitat controlada.
+              </p>
+            </section>
+
+            <section className="legal-section" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }}>
+              <div>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, textTransform: 'uppercase', color: '#1e3a8a', marginBottom: '0.5rem' }}>Balanç de 20 anys de Constitució</h3>
+                <p style={{ fontSize: '0.9rem', fontStyle: 'italic', color: '#4b5563', marginBottom: '1rem' }}>
+                  Segons Pere Pastor Vilanova, la jurisprudència constitucional ha estat la clau per &quot;aterrar&quot; els principis de 1993 a la realitat quotidiana, especialment en drets fonamentals.
+                </p>
+              </div>
+              <div>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, textTransform: 'uppercase', color: '#1e3a8a', marginBottom: '0.75rem' }}>Jerarquia de veracitat RAG</h3>
+                <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '1rem' }}>
+                  El sistema prioritza les fonts segons la seva funció dins l&apos;arquitectura de generació de respostes jurídiques.
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{ flex: 1, height: '1rem', background: '#e5e7eb', borderRadius: '9999px', overflow: 'hidden' }}>
+                      <div style={{ width: '100%', height: '100%', background: '#1e3a8a' }} />
+                    </div>
+                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#1e3a8a', whiteSpace: 'nowrap' }}>Constitució (100%)</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{ flex: 1, height: '1rem', background: '#e5e7eb', borderRadius: '9999px', overflow: 'hidden' }}>
+                      <div style={{ width: '80%', height: '100%', background: '#0891b2' }} />
+                    </div>
+                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#0891b2', whiteSpace: 'nowrap' }}>Jurisprudència (80%)</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{ flex: 1, height: '1rem', background: '#e5e7eb', borderRadius: '9999px', overflow: 'hidden' }}>
+                      <div style={{ width: '65%', height: '100%', background: '#eab308' }} />
+                    </div>
+                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#b45309', whiteSpace: 'nowrap' }}>Doctrina (65%)</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{ flex: 1, height: '1rem', background: '#e5e7eb', borderRadius: '9999px', overflow: 'hidden' }}>
+                      <div style={{ width: '50%', height: '100%', background: '#9ca3af' }} />
+                    </div>
+                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#6b7280', whiteSpace: 'nowrap' }}>Context social (50%)</span>
+                  </div>
+                </div>
+                <p style={{ fontSize: '0.75rem', color: '#9ca3af', fontStyle: 'italic', marginTop: '1rem', textAlign: 'center' }}>
+                  Mecanismes de validació basats en els principis d&apos;integració responsable (Dantart).
+                </p>
+              </div>
+            </section>
+
+            <section className="legal-section" style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid #e5e7eb', textAlign: 'center' }}>
+              <p style={{ fontSize: '0.85rem', fontWeight: 600, color: '#6b7280', marginBottom: '0.5rem' }}>Fonts doctrinals integrades</p>
+              <p style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
+                López Burniol (2023) · Dantart (informe tècnic RAG) · Pastor Vilanova (jurisprudència) · Soler Parício (evolució històrica) · Serra (sociologia)
+              </p>
+              <p style={{ fontSize: '0.7rem', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '1rem' }}>
+                Dret Planer — Garantint la veracitat del dret en l&apos;era digital
               </p>
             </section>
 

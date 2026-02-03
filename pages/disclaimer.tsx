@@ -27,7 +27,7 @@ const LegalNoticePage: React.FC = () => {
               <h2>1. Projecte acadèmic individual</h2>
               <p>
                 dretplaner.ad és una iniciativa personal d&apos;un estudiant de dret. El projecte té una finalitat exclusivament acadèmica i de recerca, sense ànim de lucre,
-                i explora l&apos;ús d&apos;intel·ligència artificial aplicada a la divulgació del Codi Civil d'Andorra.
+                i explora l&apos;ús d&apos;intel·ligència artificial aplicada a la divulgació de la Constitució d'Andorra.
               </p>
               <p>
                 Aquesta plataforma no presta serveis professionals ni ofereix assessorament jurídic. Les informacions i
@@ -134,7 +134,7 @@ const LegalNoticePage: React.FC = () => {
               </p>
               <p>
                 El material divulgatiu es publica sota llicència Creative Commons BY-NC-SA 4.0, excepte els textos legals
-                del Codi Civil d'Andorra, que són de domini públic. Cal citar la font i mantenir el caràcter no
+                de la Constitució d'Andorra, que són de domini públic. Cal citar la font i mantenir el caràcter no
                 comercial en qualsevol reutilització.
               </p>
               <p>
