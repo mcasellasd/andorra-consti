@@ -39,6 +39,8 @@ export const traduccions = {
       avis: 'Avís',
       avisText: 'La informació és orientativa i no constitueix assessorament legal. Per a consultes específiques, adreça\'t a professionals titulats.',
       contacte: 'Contacte',
+      navegacio: 'Navegació',
+      informacio: 'Informació',
     },
     article: {
       interpretacioIA: 'Mostrar interpretació assistida per IA',
@@ -167,6 +169,8 @@ export const traduccions = {
       avis: 'Aviso',
       avisText: 'La información es orientativa y no constituye asesoramiento legal. Para consultas específicas, dirígete a profesionales titulados.',
       contacte: 'Contacto',
+      navegacio: 'Navegación',
+      informacio: 'Información',
     },
     article: {
       interpretacioIA: 'Mostrar interpretación asistida por IA',
@@ -296,6 +300,8 @@ export const traduccions = {
       avis: 'Avis',
       avisText: 'Les informations sont indicatives et ne constituent pas un conseil juridique. Pour des consultations spécifiques, adressez-vous à des professionnels titulaires.',
       contacte: 'Contact',
+      navegacio: 'Navigation',
+      informacio: 'Information',
     },
     article: {
       interpretacioIA: 'Afficher l\'interprétation assistée par IA',

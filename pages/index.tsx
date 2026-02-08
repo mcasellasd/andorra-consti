@@ -39,39 +39,42 @@ const IndexPage: React.FC = () => {
         />
       </Head>
       <Layout>
+        {/* HERO BANNER – gradient muntanyenc (estil Mistral) */}
+        <section className="home-banner">
+          <div className="home-banner-mountains" aria-hidden="true">
+            <div className="home-banner-peak home-banner-peak-1" />
+            <div className="home-banner-peak home-banner-peak-2" />
+            <div className="home-banner-peak home-banner-peak-3" />
+          </div>
+          <div className="home-banner-content">
+            <h1 className="home-banner-title">
+              {t(idioma, 'home.titol')}<br />
+              <span>{t(idioma, 'home.subtitol')}</span>
+            </h1>
+            <p className="home-banner-desc">
+              {t(idioma, 'home.descripcio')}
+            </p>
+            <div className="home-banner-actions">
+              <Link
+                href="#estructura"
+                className="home-banner-btn"
+                scroll={false}
+              >
+                {t(idioma, 'home.comença')} →
+              </Link>
+              <button
+                type="button"
+                onClick={() => openChat()}
+                className="home-banner-btn"
+              >
+                {t(idioma, 'home.aprenDret')} →
+              </button>
+            </div>
+          </div>
+        </section>
+
         {/* Main Home Container */}
         <div className="max-w-7xl mx-auto px-6 py-12 md:py-20 space-y-24">
-
-          {/* HERO SECTION - fons tipus pixel amb colors d'Andorra, títol i CTAs */}
-          <section className="home-hero">
-            <div className="home-hero-inner">
-              <div className="home-hero-content">
-                <h1 className="home-hero-title">
-                  {t(idioma, 'home.titol')}<br />
-                  <span>{t(idioma, 'home.subtitol')}</span>
-                </h1>
-                <p className="home-hero-desc">
-                  {t(idioma, 'home.descripcio')}
-                </p>
-                <div className="home-hero-actions">
-                  <Link
-                    href="#estructura"
-                    className="home-hero-btn home-hero-btn-outline"
-                    scroll={false}
-                  >
-                    {t(idioma, 'home.comença')}
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => openChat()}
-                    className="home-hero-btn home-hero-btn-solid"
-                  >
-                    {t(idioma, 'home.aprenDret')}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </section>
 
           {/* BANNER MULTILINGÜE */}
           <MultilingualBanner />
@@ -153,24 +156,29 @@ const IndexPage: React.FC = () => {
             </div>
           </section>
 
-          {/* DRETS EN ACCIÓ */}
+          {/* VÍDEO DESTACAT */}
           <section className="space-y-10">
-            <h2 className="text-3xl font-bold text-gray-900">{t(idioma, 'home.dretsAccio')}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                t(idioma, 'home.dretIntimitat'),
-                t(idioma, 'home.llibertatExpressio'),
-                t(idioma, 'home.dretReunio')
-              ].map((title, idx) => (
-                <div key={idx} className="group cursor-pointer">
-                  <div className="aspect-square bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-colors relative overflow-hidden">
-                    {/* Placeholder for video content */}
-                    <PlayCircle className="w-12 h-12 text-gray-900 opacity-80 group-hover:scale-110 transition-transform duration-300" strokeWidth={1} />
-                  </div>
-                  <h3 className="font-bold text-gray-900">{title}</h3>
-                </div>
-              ))}
+            <h2 className="text-3xl font-bold text-gray-900">
+              {idioma === 'ca' ? 'La defensa del patrimoni' : idioma === 'es' ? 'La defensa del patrimonio' : 'La défense du patrimoine'}
+            </h2>
+            <div className="w-full aspect-video rounded-xl overflow-hidden shadow-lg border border-gray-100 bg-black">
+              <video 
+                controls 
+                className="w-full h-full object-cover"
+                poster="/images/poster-defensa.jpg" // Opcional: si tens una imatge de portada
+              >
+                <source src="/defensa-patrimoni.webm" type="video/webm" />
+                Your browser does not support the video tag.
+              </video>
             </div>
+            <p className="text-gray-600 text-lg">
+              {idioma === 'ca' 
+                ? "Una explicació visual sobre com la Constitució protegeix el patrimoni cultural i natural d'Andorra (Article 34)."
+                : idioma === 'es'
+                  ? "Una explicación visual sobre cómo la Constitución protege el patrimonio cultural y natural de Andorra (Artículo 34)."
+                  : "Une explication visuelle sur la façon dont la Constitution protège le patrimoine culturel et naturel d'Andorre (Article 34)."
+              }
+            </p>
           </section>
 
           {/* ESTUDIA LA CONSTITUCIÓ */}

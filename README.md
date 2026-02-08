@@ -76,6 +76,12 @@ EMBEDDING_PROVIDER=xlm-roberta
 npm run dev
 ```
 
+Per a proves ràpides sense càrrega pesada (sense Xenova/embeddings), pots usar:
+
+```bash
+npm run dev:light
+```
+
 Obre [http://localhost:3000](http://localhost:3000) al navegador.
 
 ### Construir per a producció
@@ -87,24 +93,32 @@ npm start
 
 ## 📁 Estructura del Projecte
 
+*(Estructura simplificada; el repositori inclou més carpetes i scripts.)*
+
 ```
 andorra-consti/
 ├── components/
-│   ├── Layout.tsx                    # Layout principal amb navegació i selector d'idiomes
+│   ├── Layout.tsx                    # Layout principal, navegació, footer
 │   ├── UnifiedChatbot.tsx            # Chatbot integrat amb RAG
+│   ├── MultilingualBanner.tsx        # Banner selector d'idioma a la home
 │   ├── article/                      # Components per a visualització d'articles
-│   │   ├── ArticleHeader.tsx
+│   │   ├── ArticleHeader.tsx         # Títol, metadades, navegació anterior/següent
 │   │   ├── ArticleContent.tsx
 │   │   ├── ArticleSidebar.tsx
 │   │   └── ArticleBreadcrumb.tsx
-│   └── ...
+│   └── ui/                           # Components d'interfície (Button, Card, etc.)
+├── contexts/
+│   └── ChatbotContext.tsx            # Context del chatbot
 ├── data/
 │   ├── codis/
-│   │   └── constitucio/
-│   │       ├── metadata.json         # Metadades de la Constitució
-│   │       ├── articles-exemple.ts   # 105 articles estructurats
-│   │       └── articles-template.ts
-│   └── jurisprudence-example.ts      # Exemples de jurisprudència
+│   │   ├── constitucio/
+│   │   │   ├── metadata.json         # Metadades de la Constitució
+│   │   │   ├── articles.ts           # Preàmbul + 107 articles estructurats
+│   │   │   └── articles-template.ts
+│   │   ├── codi-civil/               # (en expansió)
+│   │   └── tribunal-constitucional/  # (en expansió)
+│   ├── jurisprudence-example.ts
+│   └── preguntes-control.ts          # Preguntes de validació del sistema
 ├── lib/
 │   ├── i18n.ts                       # Sistema d'internacionalització
 │   ├── llm/
@@ -114,34 +128,38 @@ andorra-consti/
 │   │   ├── xlm-roberta.ts            # Embeddings locals
 │   │   └── openai.ts                 # Embeddings OpenAI (opcional)
 │   ├── rag/
-│   │   ├── corpus.ts                 # Corpus de la Constitució
-│   │   ├── quality-assessment.ts     # Control de qualitat
+│   │   ├── corpus.ts
+│   │   ├── quality-assessment.ts
 │   │   └── response-quality.ts
 │   └── prompts/
-│       └── guia-catala-juridic.ts    # Prompts per a generació
+│       └── guia-catala-juridic.ts
 ├── pages/
 │   ├── index.tsx                     # Pàgina principal
 │   ├── about.tsx                     # Sobre l'autor
-│   ├── paper.tsx                     # Paper acadèmic
-│   ├── com-esta-fet.tsx              # Documentació tècnica
+│   ├── paper.tsx, paper/             # Paper acadèmic
+│   ├── com-esta-fet.tsx              # Com està fet (documentació tècnica)
+│   ├── disclaimer.tsx                # Avís legal / privacitat
+│   ├── preguntes-control.tsx         # Preguntes de control del sistema
+│   ├── cerca.tsx, chat.tsx           # Cerca i xat
 │   ├── codis/constitucio/
 │   │   ├── index.tsx                 # Índex de la Constitució
 │   │   └── article/[id].tsx          # Pàgina d'article individual
 │   └── api/
 │       ├── unified-chat.ts           # API del chatbot
-│       ├── rag/
-│       │   ├── chat.ts               # Endpoint RAG
-│       │   └── search.ts             # Cerca semàntica
-│       └── ...
+│       ├── rag/chat.ts, rag/search.ts
+│       ├── generate-summary.ts, generate-example.ts, interpretacio-ia.ts
+│       └── preguntes-control.ts
 ├── docs/
 │   ├── PAPER-ACADEMIC-IA-ADAPTACIO-LLENGUATGE-NATURAL.md
-│   ├── REFERENCIES-APA7.md
-│   ├── CONFIGURACIO-GROQ.md
+│   ├── XLM-ROBERTA-SETUP.md          # Configuració embeddings locals
+│   ├── REFERENCIES-APA7.md, CONFIGURACIO-GROQ.md
 │   └── ...
-└── scripts/
-    ├── build-constitucio-knowledge.js  # Generació del corpus
-    ├── generate-embeddings-constitucio.js
-    └── ...
+├── scripts/                          # Scripts de construcció i embeddings
+│   ├── build-constitucio-knowledge.js, build-constitucio-completa.js
+│   ├── generate-embeddings-constitucio.js
+│   └── (altres: llibres, doctrina, aprenentatge, etc.)
+├── DEPLOY.md, VERCEL-DEPLOY.md, QUICK-START.md
+└── railway.json                      # Config desplegament Railway (opcional)
 ```
 
 ## 🔧 Stack Tecnològic
@@ -192,7 +210,7 @@ Per això, **Dret Planer no pretén ser una font de dret**, sinó una eina pedag
 ## 📝 Estat del Projecte
 
 ### ✅ Completat (v1.0 - Constitució)
-- [x] **105 articles de la Constitució** processats i estructurats
+- [x] **Preàmbul i 107 articles de la Constitució** processats i estructurats
 - [x] **Sistema RAG complet** amb embeddings XLM-RoBERTa
 - [x] **Chatbot funcional** amb Llama 70B (Groq)
 - [x] **Sistema d'idiomes** (i18n) - CA, ES, FR
@@ -219,7 +237,7 @@ Per això, **Dret Planer no pretén ser una font de dret**, sinó una eina pedag
 
 ### ✅ FASE 1: Proof of Concept - Constitució (Completat)
 - Infraestructura base amb Next.js + TypeScript
-- 105 articles de la Constitució processats
+- Preàmbul i 107 articles de la Constitució processats
 - Sistema RAG amb XLM-RoBERTa + Llama 70B
 - Chatbot funcional amb traçabilitat
 - Paper acadèmic documentant el sistema
@@ -244,7 +262,7 @@ Per això, **Dret Planer no pretén ser una font de dret**, sinó una eina pedag
 ### Vercel (recomanat)
 
 1. Connecta el repositori a Vercel
-2. Configura les variables d'entorn (`OPENAI_API_KEY` o `ANTHROPIC_API_KEY`)
+2. Configura les variables d'entorn: `GROQ_API_KEY` (obligat per al chatbot i la interpretació IA); opcionalment `OPENAI_API_KEY` per a embeddings.
 3. Desplega automàticament
 
 Veure `DEPLOY.md` per més detalls.

@@ -185,10 +185,14 @@ REGLA FONAMENTAL: Només pots parlar del que diu aquest article. Si l'article NO
 
 IMPORTANT: NO repeteixis el text literal de l'article. Adapta el contingut utilitzant llenguatge natural i planer, explicant amb les teves pròpies paraules què significa i què regula l'article.
 
+LLENGUATGE PLANER I EXPLICATIU: El text oficial està en català. La teva feina és **traduir** el significat a llenguatge planer: explica què vol dir amb paraules senzilles i quotidianes, sense repetir el llenguatge jurídic. El resum ha de ser **explicatiu** (què implica en la pràctica, per què importa) i en **llenguatge planer** (vocabulari accessible, frases curtes, sense jargon sense explicar).
+
+PÚBLIC: Hi ha usuaris que necessiten més explicació. El resum ha de ser **suficient** per a qui necessiti més detall: inclou **tots** els apartats o incisos de l'article (no només els primers). Si l'article té diversos punts numerats, menciona o resumeix cadascun en llenguatge planer. En articles densos, pots fer el resum una mica més llarg (3 a 5 frases) per cobrir-ho tot.
+
 ⚠️ ESTRUCTURA OBLIGATÒRIA: La teva resposta s'ha d'encabir en TRES llocs específics ⚠️
 
 La interpretació IA es mostra en tres seccions del sidebar:
-1. **RESUM**: Resum descriptiu de 2 a 3 frases semi llargues, en llenguatge planer, que expliqui què diu l'article, què regula, a qui afecta i quines implicacions pràctiques té. No copiïs el text literal; adapta el contingut amb les teves paraules.
+1. **RESUM**: Resum **explicatiu** en **llenguatge planer** (2 a 5 frases segons la densitat). **Traduïu** el text oficial a paraules senzilles: què vol dir, què implica en la pràctica. Inclou la interpretació **en conjunt** i **tots** els punts concrets (cada apartat; què regula, a qui afecta). Vocabulari accessible, sense jargon jurídic sense explicar. No copiïs el text literal; explica amb les teves paraules.
 2. **EXEMPLES**: Exactament 2 o 3 exemples pràctics quotidians.
    - ⚠️ REGLA D'OR: L'exemple ha de ser sobre un tema que l'article regula EXPLÍCITAMENT. Si l'article parla de detenció, no parlis d'impostos.
    - Cada exemple ha de començar amb "Exemple aplicat:" seguit de la situació concreta derivada directament del text legal.
@@ -199,7 +203,7 @@ La interpretació IA es mostra en tres seccions del sidebar:
 
 Respon en format JSON amb aquesta estructura EXACTA (cap text abans ni després; comença per { i acaba per }):
 {
-  "resum": "Escriu un resum ESPECÍFIC i descriptiu d'aquest article (2 a 3 frases semi llargues; sense placeholders).",
+  "resum": "Escriu un resum ESPECÍFIC i descriptiu d'aquest article (2 a 5 frases segons la densitat; cobreix tots els punts de l'article; sense placeholders).",
   "exemples": [
     {"cas": "Exemple aplicat: (cas realista i específic d'aquest article, 1–2 frases)", "idioma": "ca"},
     {"cas": "Exemple aplicat: (segon cas realista i específic, 1–2 frases)", "idioma": "ca"}
@@ -214,6 +218,8 @@ ${ASPECTES_JURISPRUDENCIA_ANDORRANA}`,
       es: `Eres un experto en derecho andorrano. El artículo siguiente es de la **Constitución del Principado de Andorra**.
 
 ⚠️ TAREA: Interpreta ÚNICAMENTE este artículo específico. No hables de otros artículos ni temas no relacionados. ⚠️
+
+INTERPRETACIÓN COMPLETA: Debes interpretar la norma **en conjunto** (sentido general, finalidad, coherencia con el contexto constitucional) y **también** los puntos concretos de la ley (apartados, incisos, obligaciones o derechos específicos que establece el artículo).
 
 PRIORIDAD ABSOLUTA: Primero interpreta el **texto literal** del artículo en lenguaje llano. La jurisprudencia/doctrina es **opcional** y solo debe usarse si aparece en el contexto. Aunque NO haya jurisprudencia/doctrina, debes generar igualmente el resumen, los ejemplos y un comentario jurídico basado en el texto del artículo.
 
@@ -237,10 +243,14 @@ REGLA FUNDAMENTAL: Solo puedes hablar de lo que dice este artículo. Si el artí
 
 IMPORTANTE: NO repitas el texto literal del artículo. Adapta el contenido utilizando lenguaje natural y llano, explicando con tus propias palabras qué significa y qué regula el artículo.
 
+LENGUAJE LLANO Y EXPLICATIVO: El texto oficial está en catalán. Tu tarea es **traducir** el significado a lenguaje llano: explica qué quiere decir con palabras sencillas y cotidianas, sin repetir el lenguaje jurídico. El resumen debe ser **explicativo** (qué implica en la práctica, por qué importa) y en **lenguaje llano** (vocabulario accesible, frases cortas, sin jerga sin explicar).
+
+PÚBLICO: Hay usuarios que necesitan más explicación. El resumen debe ser **suficiente** para quien necesite más detalle: incluye **todos** los apartados o incisos del artículo (no solo los primeros). Si el artículo tiene varios puntos numerados, menciona o resume cada uno en lenguaje llano. En artículos densos, puedes alargar el resumen (3 a 5 frases) para cubrirlo todo.
+
 ⚠️ ESTRUCTURA OBLIGATORIA: Tu respuesta debe encajarse en TRES lugares específicos ⚠️
 
 La interpretación IA se muestra en tres secciones del sidebar:
-1. **RESUMEN**: Resumen descriptivo de 2 a 3 frases semi largas, en lenguaje llano, que explique qué dice el artículo, qué regula, a quién afecta y qué implicaciones prácticas tiene. No copies el texto literal; adapta el contenido con tus propias palabras.
+1. **RESUMEN**: Resumen **explicativo** en **lenguaje llano** (2 a 5 frases según la densidad). **Traduce** el texto oficial a palabras sencillas: qué quiere decir, qué implica en la práctica. Incluye la interpretación **en conjunto** y **todos** los puntos concretos (cada apartado; qué regula, a quién afecta). Vocabulario accesible, sin jerga jurídica sin explicar. No copies el texto literal; explica con tus propias palabras.
 2. **EJEMPLOS**: Exactamente 2 o 3 ejemplos prácticos cotidianos.
    - ⚠️ REGLA DE ORO: El ejemplo debe ser sobre un tema que el artículo regula EXPLÍCITAMENTE. Si el artículo habla de detención, no hables de impuestos.
    - Cada ejemplo debe empezar con "Ejemplo aplicado:" seguido de la situación concreta derivada directamente del texto legal.
@@ -251,7 +261,7 @@ La interpretación IA se muestra en tres secciones del sidebar:
 
 Responde en formato JSON con esta estructura EXACTA (nada antes ni después; empieza por { y acaba por }):
 {
-  "resum": "Escribe un resumen ESPECÍFICO y descriptivo de este artículo (2 a 3 frases semi largas; sin placeholders).",
+  "resum": "Escribe un resumen ESPECÍFICO y descriptivo de este artículo (2 a 5 frases según la densidad; cubre todos los puntos del artículo; sin placeholders).",
   "exemples": [
     {"cas": "Ejemplo aplicado: (caso realista y específico de este artículo, 1–2 frases)", "idioma": "es"},
     {"cas": "Ejemplo aplicado: (segundo caso realista y específico, 1–2 frases)", "idioma": "es"}
@@ -263,6 +273,8 @@ Responde en formato JSON con esta estructura EXACTA (nada antes ni después; emp
       fr: `Tu es un expert en droit andorran. L'article suivant est de la **Constitution de la Principauté d'Andorre**.
 
 ⚠️ TÂCHE: Interprète UNIQUEMENT cet article spécifique. Ne parle pas d'autres articles ni de sujets non liés. ⚠️
+
+INTERPRÉTATION COMPLÈTE: Tu dois interpréter la norme **dans son ensemble** (sens général, finalité, cohérence avec le contexte constitutionnel) et **aussi** les points concrets de la loi (paragraphes, alinéas, obligations ou droits spécifiques que l'article établit).
 
 PRIORITÉ ABSOLUE: Interprète d'abord le **texte littéral** de l'article en langage simple. La jurisprudence/doctrine est **optionnelle** et ne doit être utilisée que si elle apparaît dans le contexte. Même s'il n'y a PAS de jurisprudence/doctrine, tu dois quand même générer le résumé, les exemples et un commentaire juridique basé sur le texte de l'article.
 
@@ -286,10 +298,14 @@ RÈGLE FONDAMENTALE: Tu ne peux parler que de ce que dit cet article. Si l'artic
 
 IMPORTANT: NE répète PAS le texte littéral de l'article. Adapte le contenu en utilisant un langage naturel et simple, expliquant avec tes propres mots ce que signifie et ce que régit l'article.
 
+LANGAGE SIMPLE ET EXPLICATIF: Le texte officiel est en catalan. Ta tâche est de **traduire** le sens en langage simple: explique ce que cela signifie avec des mots simples et quotidiens, sans répéter le langage juridique. Le résumé doit être **explicatif** (ce que cela implique en pratique, pourquoi c'est important) et en **langage simple** (vocabulaire accessible, phrases courtes, pas de jargon sans l'expliquer).
+
+PUBLIC: Certains utilisateurs ont besoin de plus d'explication. Le résumé doit être **suffisant** pour qui a besoin de plus de détail : inclus **tous** les paragraphes ou alinéas de l'article (pas seulement les premiers). Si l'article a plusieurs points numérotés, mentionne ou résume chacun en langage simple. Pour les articles denses, tu peux allonger le résumé (3 à 5 phrases) pour tout couvrir.
+
 ⚠️ STRUCTURE OBLIGATOIRE: Ta réponse doit s'encadrer dans TROIS endroits spécifiques ⚠️
 
 L'interprétation IA s'affiche dans trois sections de la barre latérale:
-1. **RÉSUMÉ**: Résumé descriptif de 2 à 3 phrases semi longues, en langage simple, qui explique ce que dit l'article, ce qu'il régit, à qui il s'applique et quelles implications pratiques il a. Ne copie pas le texte littéral; adapte le contenu avec tes propres mots.
+1. **RÉSUMÉ**: Résumé **explicatif** en **langage simple** (2 à 5 phrases selon la densité). **Traduis** le texte officiel en mots simples: ce que cela veut dire, ce que cela implique en pratique. Inclus l'interprétation **dans son ensemble** et **tous** les points concrets (chaque paragraphe; ce qu'il régit, à qui il s'applique). Vocabulaire accessible, pas de jargon juridique sans l'expliquer. Ne copie pas le texte littéral; explique avec tes propres mots.
 2. **EXEMPLES**: Exactement 2 ou 3 exemples pratiques quotidiens.
    - ⚠️ RÈGLE D'OR: L'exemple doit porter sur un sujet que l'article régit EXPLICITEMENT. Si l'article parle de détention, ne parle pas d'impôts.
    - Chaque exemple doit commencer par "Exemple appliqué:" suivi de la situation concrète directement dérivée du texte légal.
@@ -300,7 +316,7 @@ L'interprétation IA s'affiche dans trois sections de la barre latérale:
 
 Réponds en format JSON avec cette structure EXACTE (rien avant ni après; commence par { et finis par }):
 {
-  "resum": "Écris un résumé SPÉCIFIQUE et descriptif de cet article (2 à 3 phrases semi longues; sans placeholders).",
+  "resum": "Écris un résumé SPÉCIFIQUE et descriptif de cet article (2 à 5 phrases selon la densité; couvre tous les points de l'article; sans placeholders).",
   "exemples": [
     {"cas": "Exemple appliqué: (cas réaliste et spécifique à cet article, 1–2 phrases)", "idioma": "fr"},
     {"cas": "Exemple appliqué: (deuxième cas réaliste et spécifique, 1–2 phrases)", "idioma": "fr"}
@@ -324,7 +340,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 - La teva resposta HA DE SER ÚNICAMENT un objecte JSON vàlid. CAP text abans ni després.
 - El primer caràcter HA DE SER { i l'últim HA DE SER }. Sense introduccions, conclusions, enllaços, preguntes, explicacions ni "Espero haver ajudat".
 - NO escriguis res fora del JSON. NO afegeixis comentaris ni explicacions.
-- Mantén cada camp clar: resum 2 a 3 frases semi llargues (descriptiu); cada exemple ha de començar amb "Exemple aplicat:" i tenir 1–2 frases; doctrina_jurisprudencia 1–3 frases.
+- Mantén cada camp clar: resum 2 a 5 frases segons la densitat (descriptiu, tots els punts de l'article); cada exemple ha de començar amb "Exemple aplicat:" i tenir 1–2 frases; doctrina_jurisprudencia 1–3 frases.
 - EXEMPLE DE FORMAT CORRECTE (copia aquesta estructura exacta):
 {
   "resum": "...",
@@ -338,7 +354,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 - Tu respuesta DEBE SER ÚNICAMENTE un objeto JSON válido. NADA antes ni después.
 - El primer carácter DEBE SER { y el último DEBE SER }. Sin introducciones, conclusiones, enlaces, preguntas, explicaciones ni "Espero haber ayudado".
 - NO escribas nada fuera del JSON. NO añadas comentarios ni explicaciones.
-- Mantén cada campo claro: resumen 2 a 3 frases semi largas (descriptivo); cada ejemplo debe empezar con "Ejemplo aplicado:" y tener 1–2 frases; doctrina_jurisprudencia 1–3 frases.
+- Mantén cada campo claro: resumen 2 a 5 frases según la densidad (descriptivo, todos los puntos del artículo); cada ejemplo debe empezar con "Ejemplo aplicado:" y tener 1–2 frases; doctrina_jurisprudencia 1–3 frases.
 - EJEMPLO DE FORMATO CORRECTO (copia esta estructura exacta):
 {
   "resum": "...",
@@ -352,7 +368,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 - Ta réponse DOIT ÊTRE UNIQUEMENT un objet JSON valide. Rien avant ni après.
 - Le premier caractère DOIT ÊTRE { et le dernier DOIT ÊTRE }. Pas d'introduction, conclusion, liens, questions ni "J'espère vous avoir aidé".
 - N'écris RIEN en dehors du JSON. N'ajoute PAS de commentaires ni d'explications.
-- Garde chaque champ clair: résumé 2 à 3 phrases semi longues (descriptif); chaque exemple doit commencer par "Exemple appliqué:" et avoir 1–2 phrases; doctrina_jurisprudencia 1–3 phrases.
+- Garde chaque champ clair: résumé 2 à 5 phrases selon la densité (descriptif, tous les points de l'article); chaque exemple doit commencer par "Exemple appliqué:" et avoir 1–2 phrases; doctrina_jurisprudencia 1–3 phrases.
 - EXEMPLE DE FORMAT CORRECT (copie cette structure exacte):
 {
   "resum": "...",

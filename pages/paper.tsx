@@ -115,39 +115,30 @@ const PaperIndexPage: React.FC<PaperIndexProps> = ({ html, toc }) => {
                 <div className="paper-section-card">
                   <h3>IV. Marc teòric-jurídic de la Intel·ligència Artificial i principis rectors</h3>
                   <ul className="paper-outline">
-                    <li>IV.1. IA estreta vs. IA generativa</li>
-                    <li>IV.2. IA generativa i LLM</li>
-                    <li>IV.3. Comparació i ús judicial</li>
+                    <li>V.2. La distinció funcional: IA generativa vs. IA consultiva</li>
+                    <li>V.3. Pluralisme vs. "Canonització": Gestió del dissens i "guardrails" en matèries sensibles</li>
+                    <li>V.4. IA generativa i riscos jurídics: De la versemblança a la veracitat</li>
                     <li>Estat de l&apos;art (anglès, castellà, català, Andorra)</li>
                   </ul>
                 </div>
 
                 <div className="paper-section-card">
-                  <h3>V. Proof of Concept: Prudència.ad – IA per al dret clar andorrà</h3>
+                  <h3>VI. Proof of Concept: Dret Planer</h3>
                   <ul className="paper-outline">
-                    <li>V.1. Marc jurídic i plantejament conceptual</li>
-                    <li>V.1.1. Base normativa i principis fundacionals</li>
-                    <li>V.1.2. Valor afegit i focus andorrà (diferenciadors, abast, impacte social, sobirania tecnològica)</li>
-                  </ul>
-                </div>
-
-                <div className="paper-section-card paper-section-card-highlight">
-                  <h3>3. Arquitectura de garantia: El sistema &apos;Dret Planer&apos; ⭐</h3>
-                  <ul className="paper-outline">
-                    <li>3.1. Història del desenvolupament i passos seguits</li>
-                    <li>3.2. Metodologia i Implementació (RAG, models, emmagatzematge, stack)</li>
-                    <li>3.3. Corpus: Constitució i expansió</li>
-                    <li>3.3. Sistema de validació (43 preguntes, criteris d&apos;avaluació)</li>
-                    <li>3.5. Compliment normatiu (Llei 29/2021, AI Act)</li>
+                    <li>VI.1. Dret Planer: una plataforma d&apos;IA per al dret a comprendre a Andorra</li>
+                    <li>VI.2. Dret Planer com a facilitador tecnològic</li>
+                    <li>VI.10. Encaix normatiu i règim de responsabilitat</li>
+                    <li>VI.11. Limitacions tècniques i full de ruta</li>
+                    <li>VI.12. Síntesi</li>
                   </ul>
                 </div>
 
                 <div className="paper-section-card">
-                  <h3>VI. Conclusions</h3>
+                  <h3>VII. Conclusions</h3>
                   <ul className="paper-outline">
-                    <li>Del text a la norma comprensible</li>
-                    <li>Sobirania i seguretat jurídica</li>
-                    <li>Impacte social: El dret a comprendre</li>
+                    <li>VII.1. La tecnologia com a constitucionalisme aplicat</li>
+                    <li>VII.2. El futur: sobirania digital jurídica</li>
+                    <li>VII.3. Tancament: Dret Planer com a infraestructura de justícia cognitiva</li>
                   </ul>
                 </div>
 

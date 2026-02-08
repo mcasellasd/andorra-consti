@@ -250,14 +250,14 @@ export default function UnifiedChatbot({
     }
   };
 
-  const getSourceLink = (source: Source) => {
+  const getSourceLink = (source: Source): string | null => {
     // Articles de la Constitució: enllaç a la pàgina de l'article
     if (source.code === 'constitucio' && source.id.startsWith('CONST_')) {
       return `/codis/constitucio/article/${source.id}`;
     }
-    // Doctrina: sense pàgina de cerca, enllaç a l'inici
+    // Doctrina: sense pàgina de cerca, retornem null per no fer link trencat
     if (source.code === 'doctrina') {
-      return '/';
+      return null;
     }
     return `/codis/constitucio/article/${source.id}`;
   };
@@ -512,15 +512,26 @@ export default function UnifiedChatbot({
                         {idioma === 'es' ? 'Fuentes:' : idioma === 'fr' ? 'Sources:' : 'Fonts:'}
                       </strong>
                       <ul>
-                        {message.sources.map((source, index) => (
-                          <li key={index}>
-                            <Link href={getSourceLink(source)}>
-                              <span className="source-code">{getSourceLabel(source)}</span>
-                              {source.number ? ` · ${source.number}: ` : ': '}
-                              {source.title}
-                            </Link>
-                          </li>
-                        ))}
+                        {message.sources.map((source, index) => {
+                          const link = getSourceLink(source);
+                          return (
+                            <li key={index}>
+                              {link ? (
+                                <Link href={link}>
+                                  <span className="source-code">{getSourceLabel(source)}</span>
+                                  {source.number ? ` · ${source.number}: ` : ': '}
+                                  {source.title}
+                                </Link>
+                              ) : (
+                                <span className="source-item-no-link" title="Text complet no disponible en línia">
+                                  <span className="source-code">{getSourceLabel(source)}</span>
+                                  {source.number ? ` · ${source.number}: ` : ': '}
+                                  {source.title}
+                                </span>
+                              )}
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                   )}

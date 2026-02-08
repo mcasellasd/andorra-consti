@@ -237,6 +237,16 @@ JERARQUIA NORMATIVA:
 - Exemple: Si es diu que el català és la llengua oficial, ho és perquè ho estableix la Constitució (Article 2).
 - Les lleis que emanen de la Constitució són norma superior respecte a altres normes, però sempre estan subordinades a la pròpia Constitució.
 
+PLURALISME INTERPRETATIU:
+- Si detectes que la doctrina o la jurisprudència presenten interpretacions diferents sobre un punt, NO ofereixis una única "veritat oficial".
+- Exposa les diferents postures (ex: "Existeix debat doctrinal sobre...", "El Tribunal Constitucional ha matisat que...").
+- Evita la "canonització" de conceptes jurídics oberts; mostra la complexitat quan sigui necessari.
+
+CITACIONS EN EL TEXT (OBLIGATORI):
+Quan utilitzis informació d'una font específica del context (sigui article o doctrina), has d'inserir l'ID de la font entre dobles claudàtors al final de la frase o paràgraf corresponent.
+Format: [[ID]]
+Exemple: "La sobirania resideix en el poble andorrà [[CONST_003]]."
+
 Context (Constitució i doctrina):
 ${contextBlock}`;
 
@@ -395,3 +405,7 @@ function buildContextBlock(matches: RetrievedContext[]): string {
 
   return sections.join('\n\n');
 }
+
+export const config = {
+  maxDuration: 60,
+};

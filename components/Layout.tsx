@@ -144,28 +144,38 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         )}
       </header>
       <main className="main-content">{children}</main>
-      <footer className="footer">
-        <div className="footer-content">
-          <div className="footer-col">
-            <p className="footer-title">{t(idioma, 'footer.titol')}</p>
-            <p className="footer-text">
-              Projecte d&apos;investigació acadèmica per a facilitar la comprensió de la Constitució d&apos;Andorra.
-            </p>
-          </div>
-
-          <div className="footer-col">
-            <p className="footer-label">{t(idioma, 'footer.avis')}</p>
-            <p className="footer-text">
-              {t(idioma, 'footer.avisText')}
-            </p>
-            <p className="footer-text">
-              {t(idioma, 'footer.contacte')}:{' '}
-              <a href="mailto:contacte@dretplaner.ad">contacte@dretplaner.ad</a>
-            </p>
-          </div>
+      <footer className="footer-mistral">
+        {/* Pixel-art muntanyes (bandera d'Andorra) amb logo */}
+        <div className="footer-mistral-pixel">
+          <div className="footer-pixel-mountains" aria-hidden="true" />
+          <Link href="/" className="footer-mistral-logo">dretplaner.ad</Link>
         </div>
-        <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} dretplaner.ad · Tots els drets reservats.</span>
+
+        {/* Contingut del footer – fons cream */}
+        <div className="footer-mistral-content">
+          <nav className="footer-mistral-grid" aria-label="Enllaços del peu de pàgina">
+            <div className="footer-mistral-col">
+              <p className="footer-mistral-heading">{t(idioma, 'footer.navegacio')}</p>
+              <Link href="/">{t(idioma, 'nav.inici')}</Link>
+              <Link href="/codis/constitucio">{t(idioma, 'nav.constitucio')}</Link>
+              <Link href="/com-esta-fet">{t(idioma, 'nav.dretPlaner')}</Link>
+              <Link href="/paper">{t(idioma, 'nav.paper')}</Link>
+              <Link href="/preguntes-control">{t(idioma, 'nav.preguntesControl')}</Link>
+            </div>
+            <div className="footer-mistral-col">
+              <p className="footer-mistral-heading">{t(idioma, 'footer.informacio')}</p>
+              <Link href="/disclaimer">{t(idioma, 'nav.privacitat')}</Link>
+              <a href="mailto:contacte@dretplaner.ad">{t(idioma, 'footer.contacte')}</a>
+            </div>
+            <div className="footer-mistral-col">
+              <p className="footer-mistral-heading">{t(idioma, 'footer.titol')}</p>
+              <p className="footer-mistral-desc">{t(idioma, 'footer.descripcio')}</p>
+            </div>
+          </nav>
+
+          <div className="footer-mistral-bottom">
+            <span>© {new Date().getFullYear()} dretplaner.ad</span>
+          </div>
         </div>
       </footer>
       <UnifiedChatbot />
