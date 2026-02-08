@@ -12,7 +12,6 @@ import { ArticleBreadcrumb } from '../../../../components/article/ArticleBreadcr
 import { ArticleHeader } from '../../../../components/article/ArticleHeader';
 import { ArticleContent } from '../../../../components/article/ArticleContent';
 import { ArticleSidebar } from '../../../../components/article/ArticleSidebar';
-import { ArticleNavigation } from '../../../../components/article/ArticleNavigation';
 
 const ArticleConstitucioPage: React.FC = () => {
   const router = useRouter();
@@ -45,13 +44,22 @@ const ArticleConstitucioPage: React.FC = () => {
     };
   }, [article?.id]);
 
+  // Clau de sessionStorage per guardar interpretacions per article (sessió)
+  const SESSION_STORAGE_KEY = 'dretplaner_interpretacio';
+
   useEffect(() => {
     if (id && typeof id === 'string') {
       const articleTrobat = articlesConstitucio.find((art) => art.id === id);
       if (articleTrobat) {
         setArticle(articleTrobat);
-        // Reset interpretacio when changing article
-        setInterpretacio(null);
+        // Carregar interpretació des de la memòria de sessió si n'hi ha
+        try {
+          const raw = typeof window !== 'undefined' && sessionStorage.getItem(`${SESSION_STORAGE_KEY}_${articleTrobat.id}`);
+          const cached = raw ? (JSON.parse(raw) as InterpretacioIAType) : null;
+          setInterpretacio(cached?.article_id === articleTrobat.id ? cached : null);
+        } catch {
+          setInterpretacio(null);
+        }
       }
       setLoading(false);
     }
@@ -117,26 +125,34 @@ const ArticleConstitucioPage: React.FC = () => {
 
       const data: InterpretacioIAType = await resposta.json();
 
-      setInterpretacio(prev => {
-        if (!prev) return data;
-        return {
-          ...data,
-          resum: {
-            ca: data.resum.ca || prev.resum.ca,
-            es: data.resum.es || prev.resum.es,
-            fr: data.resum.fr || prev.resum.fr,
-          },
-          exemples: [
-            ...(prev.exemples || []).filter(e => e.idioma !== idioma),
-            ...(data.exemples || [])
-          ],
-          // Preserve context fields if they exist
-          finalitat: data.finalitat || prev.finalitat,
-          destinataris: data.destinataris || prev.destinataris,
-          aplicacio: data.aplicacio || prev.aplicacio,
-          doctrina_jurisprudencia: data.doctrina_jurisprudencia || prev.doctrina_jurisprudencia
-        };
-      });
+      const merged: InterpretacioIAType = interpretacio
+        ? {
+            ...data,
+            resum: {
+              ca: data.resum?.ca ?? interpretacio.resum?.ca ?? '',
+              es: data.resum?.es ?? interpretacio.resum?.es ?? '',
+              fr: data.resum?.fr ?? interpretacio.resum?.fr ?? '',
+            },
+            exemples: [
+              ...(interpretacio.exemples || []).filter((e) => e.idioma !== idioma),
+              ...(data.exemples || []),
+            ],
+            finalitat: data.finalitat ?? interpretacio.finalitat,
+            destinataris: data.destinataris ?? interpretacio.destinataris,
+            aplicacio: data.aplicacio ?? interpretacio.aplicacio,
+            doctrina_jurisprudencia: data.doctrina_jurisprudencia ?? interpretacio.doctrina_jurisprudencia,
+          }
+        : data;
+
+      setInterpretacio(merged);
+
+      try {
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem(`${SESSION_STORAGE_KEY}_${article.id}`, JSON.stringify(merged));
+        }
+      } catch {
+        // sessionStorage pot fallar (p. ex. mode privat)
+      }
     } catch (error) {
       console.error('Error generant Assistencia:', error);
     } finally {
@@ -190,7 +206,12 @@ const ArticleConstitucioPage: React.FC = () => {
           <ArticleBreadcrumb article={article} idioma={idioma} />
 
           {/* Header */}
-          <ArticleHeader article={article} idioma={idioma} />
+          <ArticleHeader
+            article={article}
+            idioma={idioma}
+            previousArticle={previousArticle}
+            nextArticle={nextArticle}
+          />
 
           {/* Main content area */}
           <main className="flex-1 w-full max-w-6xl mx-auto px-6 lg:px-8 py-8 lg:py-12">
@@ -202,11 +223,6 @@ const ArticleConstitucioPage: React.FC = () => {
                   idioma={idioma}
                   onGenerateAssistencia={handleGenerateAssistencia}
                   isGenerating={isGenerating}
-                />
-                <ArticleNavigation
-                  previousArticle={previousArticle}
-                  nextArticle={nextArticle}
-                  idioma={idioma}
                 />
               </div>
 

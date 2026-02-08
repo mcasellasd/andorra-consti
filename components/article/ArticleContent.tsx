@@ -83,7 +83,7 @@ export function ArticleContent({
         <Button
           onClick={onGenerateAssistencia}
           disabled={isGenerating}
-          className="w-full sm:w-auto min-w-[200px] h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium gap-2 shadow-lg hover:shadow-xl transition-all"
+          className="w-full sm:w-auto min-w-[200px] h-12 bg-red-600 hover:bg-red-700 text-white font-medium gap-2 shadow-lg hover:shadow-xl transition-all"
         >
           <Sparkles className="h-4 w-4" />
           <span>{t(idioma, 'article.assisteixMe')}</span>
