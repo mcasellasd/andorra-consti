@@ -141,6 +141,8 @@ export function detectArticleByKeywords(message: string): string[] {
     'CONST_008': ['dret a la vida', 'pena de mort', 'prohibeix pena de mort', 'integritat física', 'tortures', 'article 8'],
     'CONST_009': ['detenció governativa', 'quaranta-vuit hores', '48 hores', 'llibertat i seguretat', 'article 9'],
     'CONST_010': ['procés degut', 'jurisdicció', 'tutela judicial', 'presumpció innocència', 'article 10'],
+    'CONST_027': ['propietat privada', 'dret a la propietat', 'herència', 'béns', 'justa indemnització', 'funció social propietat', 'article 27'],
+    'CONST_028': ['llibertat d\'empresa', 'economia de mercat', 'mercat econòmic', 'article 28'],
     'CONST_039': ['dret directament aplicable', 'capítol iii', 'capítol iv', 'estrangers residents drets', 'article 39'],
     'CONST_040': ['lleis qualificades drets', 'regular exercici drets', 'drets capítols iii iv', 'article 40'],
     'CONST_042': ['estat d\'alarma', 'estat d\'emergència', 'estats excepció', 'article 42'],
