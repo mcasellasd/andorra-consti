@@ -138,6 +138,7 @@ export default async function handler(
           // matchesMap es queda buit, el chat continuarà sense context del RAG
         }
       }
+    }
 
     // Si es detecta un article específic per número, afegir-lo (funciona amb o sense RAG)
     if (articleNumber) {
