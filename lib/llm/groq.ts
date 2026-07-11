@@ -111,78 +111,112 @@ export async function generateWithGroq(
   // 2. Fallback: Hugging Face API (Serverless Router)
   const hfApiKey = process.env.HUGGINGFACE_API_KEY;
 
-  if (!hfApiKey) {
-    throw new Error('Cal configurar GROQ_API_KEY (recomanat) o HUGGINGFACE_API_KEY al .env.local');
+  if (hfApiKey) {
+    // Model a utilitzar (Mistral-7B via Router v1/chat/completions)
+    // Requereix que el token tingui permissos d'Inference Providers
+    const modelId = 'mistralai/Mistral-7B-Instruct-v0.3'; // O 'meta-llama/Meta-Llama-3-8B-Instruct'
+
+    // Opció 1: Endpoint Mistral (via Router / OpenAI Compatible)
+    const response = await fetch(
+      'https://router.huggingface.co/v1/chat/completions',
+      {
+        headers: {
+          'Authorization': `Bearer ${hfApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify({
+          model: modelId,
+          messages: messages,
+          max_tokens: options.maxTokens || 350,
+          temperature: options.temperature || 0.7,
+          stream: false
+        })
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      let errorMessage = `Hugging Face API error (${response.status})`;
+
+      try {
+        const errorData = JSON.parse(errorText);
+        if (errorData.error) {
+          // De vegades error.message, de vegades error (string o objecte)
+          errorMessage = typeof errorData.error === 'string' ? errorData.error : JSON.stringify(errorData.error);
+        } else if (errorData.message) {
+          errorMessage = errorData.message;
+        }
+      } catch {
+        errorMessage = errorText || errorMessage;
+      }
+
+      // Log detallat
+      console.error(`❌ Hugging Face API Error (${response.status}):`, errorMessage);
+
+      // Gestió de 503 (Model loading)
+      if (response.status === 503) {
+        console.log('⏳ Model carregant, esperant 20 segons...');
+        await new Promise(resolve => setTimeout(resolve, 20000));
+        return generateWithGroq(messages, options); // Recursivitat limitada
+      }
+
+      throw new Error(`Error Hugging Face API: ${errorMessage}`);
+    }
+
+    const data = await response.json();
+
+    // Parsing de resposta format OpenAI (Router)
+    if (data.choices && data.choices[0]?.message?.content) {
+      return data.choices[0].message.content.trim();
+    }
+
+    // Fallback: format antic generated_text (poc probable amb endpoint v1/chat)
+    if (Array.isArray(data) && data[0]?.generated_text) {
+      return data[0].generated_text.trim();
+    }
+    if (data.generated_text) {
+      return data.generated_text.trim();
+    }
+
+    throw new Error('Format de resposta desconegut rebut de Hugging Face.');
   }
 
-  // Model a utilitzar (Mistral-7B via Router v1/chat/completions)
-  // Requereix que el token tingui permissos d'Inference Providers
-  const modelId = 'mistralai/Mistral-7B-Instruct-v0.3'; // O 'meta-llama/Meta-Llama-3-8B-Instruct'
+  // 3. Fallback: OpenAI Chat Completions
+  const openAIApiKey = process.env.OPENAI_API_KEY;
 
-  // Opció 1: Endpoint Mistral (via Router / OpenAI Compatible)
-  const response = await fetch(
-    'https://router.huggingface.co/v1/chat/completions',
-    {
+  if (openAIApiKey) {
+    const modelId = process.env.OPENAI_CHAT_MODEL || 'gpt-4o-mini';
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       headers: {
-        'Authorization': `Bearer ${hfApiKey}`,
+        'Authorization': `Bearer ${openAIApiKey}`,
         'Content-Type': 'application/json',
       },
       method: 'POST',
       body: JSON.stringify({
         model: modelId,
-        messages: messages,
-        max_tokens: options.maxTokens || 350,
-        temperature: options.temperature || 0.7,
-        stream: false
+        messages,
+        max_tokens: options.maxTokens || 500,
+        temperature: options.temperature || 0.5,
       })
-    }
-  );
+    });
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    let errorMessage = `Hugging Face API error (${response.status})`;
-
-    try {
-      const errorData = JSON.parse(errorText);
-      if (errorData.error) {
-        // De vegades error.message, de vegades error (string o objecte)
-        errorMessage = typeof errorData.error === 'string' ? errorData.error : JSON.stringify(errorData.error);
-      } else if (errorData.message) {
-        errorMessage = errorData.message;
-      }
-    } catch {
-      errorMessage = errorText || errorMessage;
+    if (!response.ok) {
+      const err = await response.text();
+      console.error('❌ OpenAI API Error:', err);
+      throw new Error(`OpenAI API Error: ${response.status} ${response.statusText}`);
     }
 
-    // Log detallat
-    console.error(`❌ Hugging Face API Error (${response.status}):`, errorMessage);
-
-    // Gestió de 503 (Model loading)
-    if (response.status === 503) {
-      console.log('⏳ Model carregant, esperant 20 segons...');
-      await new Promise(resolve => setTimeout(resolve, 20000));
-      return generateWithGroq(messages, options); // Recursivitat limitada
+    const data = await response.json();
+    if (data.choices && data.choices[0]?.message?.content) {
+      return data.choices[0].message.content.trim();
     }
 
-    throw new Error(`Error Hugging Face API: ${errorMessage}`);
+    throw new Error('Format de resposta desconegut rebut d\'OpenAI.');
   }
 
-  const data = await response.json();
-
-  // Parsing de resposta format OpenAI (Router)
-  if (data.choices && data.choices[0]?.message?.content) {
-    return data.choices[0].message.content.trim();
-  }
-
-  // Fallback: format antic generated_text (poc probable amb endpoint v1/chat)
-  if (Array.isArray(data) && data[0]?.generated_text) {
-    return data[0].generated_text.trim();
-  }
-  if (data.generated_text) {
-    return data.generated_text.trim();
-  }
-
-  throw new Error('Format de resposta desconegut rebut de Hugging Face.');
+  throw new Error('Cal configurar GROQ_API_KEY, HUGGINGFACE_API_KEY o OPENAI_API_KEY a l\'entorn de desplegament');
 }
 
 /**

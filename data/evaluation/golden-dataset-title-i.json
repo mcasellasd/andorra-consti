@@ -1,0 +1,65 @@
+[
+  {
+    "number": 1,
+    "id": "CONST_001_Q1",
+    "context": "1. Andorra és un Estat independent, de Dret, Democràtic i Social. La seva denominació oficial és Principat d'Andorra.\n2. La Constitució proclama com a principis inspiradors de l'acció de l'Estat andorrà el respecte i la promoció de la llibertat, la igualtat, la justícia, la tolerància, la defensa dels drets humans i la dignitat de la persona.\n3. La sobirania resideix en el poble andorrà, que l'exerceix per mitjà de les diferents classes de participació i de les institucions que estableix aquesta Constitució.\n4. El règim polític d'Andorra és el Coprincipat parlamentari.\n5. Andorra està integrada per les Parròquies de Canillo, Encamp, Ordino, La Massana, Andorra la Vella, Sant Julià de Lòria i Escaldes-Engordany.",
+    "question": "Quin és el règim polític d'Andorra?",
+    "ground_truth": "El règim polític d'Andorra és el Coprincipat parlamentari."
+  },
+  {
+    "number": 1,
+    "id": "CONST_001_Q2",
+    "context": "1. Andorra és un Estat independent, de Dret, Democràtic i Social. La seva denominació oficial és Principat d'Andorra.\n2. La Constitució proclama com a principis inspiradors de l'acció de l'Estat andorrà el respecte i la promoció de la llibertat, la igualtat, la justícia, la tolerància, la defensa dels drets humans i la dignitat de la persona.\n3. La sobirania resideix en el poble andorrà, que l'exerceix per mitjà de les diferents classes de participació i de les institucions que estableix aquesta Constitució.\n4. El règim polític d'Andorra és el Coprincipat parlamentari.\n5. Andorra està integrada per les Parròquies de Canillo, Encamp, Ordino, La Massana, Andorra la Vella, Sant Julià de Lòria i Escaldes-Engordany.",
+    "question": "On resideix la sobirania a Andorra?",
+    "ground_truth": "La sobirania resideix en el poble andorrà"
+  },
+  {
+    "number": 1,
+    "id": "CONST_001_Q3",
+    "context": "1. Andorra és un Estat independent, de Dret, Democràtic i Social. La seva denominació oficial és Principat d'Andorra.\n2. La Constitució proclama com a principis inspiradors de l'acció de l'Estat andorrà el respecte i la promoció de la llibertat, la igualtat, la justícia, la tolerància, la defensa dels drets humans i la dignitat de la persona.\n3. La sobirania resideix en el poble andorrà, que l'exerceix per mitjà de les diferents classes de participació i de les institucions que estableix aquesta Constitució.\n4. El règim polític d'Andorra és el Coprincipat parlamentari.\n5. Andorra està integrada per les Parròquies de Canillo, Encamp, Ordino, La Massana, Andorra la Vella, Sant Julià de Lòria i Escaldes-Engordany.",
+    "question": "Quina és la denominació oficial d'Andorra?",
+    "ground_truth": "La seva denominació oficial és Principat d'Andorra."
+  },
+  {
+    "number": 2,
+    "id": "CONST_002_Q1",
+    "context": "1. La llengua oficial de l'Estat és el català.\n2. L'himne nacional, la bandera i l'escut d'Andorra són els tradicionals.\n3. Andorra la Vella és la capital de l'Estat.",
+    "question": "Quina és la llengua oficial de l'Estat d'Andorra?",
+    "ground_truth": "el català"
+  },
+  {
+    "number": 2,
+    "id": "CONST_002_Q2",
+    "context": "1. La llengua oficial de l'Estat és el català.\n2. L'himne nacional, la bandera i l'escut d'Andorra són els tradicionals.\n3. Andorra la Vella és la capital de l'Estat.",
+    "question": "Què representa l'himne nacional, la bandera i l'escut d'Andorra?",
+    "ground_truth": "els tradicionals"
+  },
+  {
+    "number": 2,
+    "id": "CONST_002_Q3",
+    "context": "1. La llengua oficial de l'Estat és el català.\n2. L'himne nacional, la bandera i l'escut d'Andorra són els tradicionals.\n3. Andorra la Vella és la capital de l'Estat.",
+    "question": "Quina és la capital de l'Estat d'Andorra?",
+    "ground_truth": "Andorra la Vella"
+  },
+  {
+    "number": 3,
+    "id": "CONST_003_Q1",
+    "context": "1. La present Constitució, que és la norma suprema de l'ordenament jurídic, vincula tots els poders públics i els ciutadans.\n2. La Constitució garanteix els principis de legalitat, de jerarquia, de publicitat de les normes jurídiques, de no retroactivitat de les",
+    "question": "Quina és la norma suprema de l'ordenament jurídic?",
+    "ground_truth": "La present Constitució"
+  },
+  {
+    "number": 3,
+    "id": "CONST_003_Q2",
+    "context": "1. La present Constitució, que és la norma suprema de l'ordenament jurídic, vincula tots els poders públics i els ciutadans.\n2. La Constitució garanteix els principis de legalitat, de jerarquia, de publicitat de les normes jurídiques, de no retroactivitat de les",
+    "question": "Quins principis garanteix la Constitució?",
+    "ground_truth": "els principis de legalitat, de jerarquia, de publicitat de les normes jurídiques, de no retroactivitat de les"
+  },
+  {
+    "number": 3,
+    "id": "CONST_003_Q3",
+    "context": "1. La present Constitució, que és la norma suprema de l'ordenament jurídic, vincula tots els poders públics i els ciutadans.\n2. La Constitució garanteix els principis de legalitat, de jerarquia, de publicitat de les normes jurídiques, de no retroactivitat de les",
+    "question": "A qui vincula la Constitució?",
+    "ground_truth": "tots els poders públics i els ciutadans"
+  }
+]

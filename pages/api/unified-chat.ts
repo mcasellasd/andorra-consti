@@ -105,27 +105,39 @@ export default async function handler(
 
     if (process.env.RAG_ENABLED === 'true') {
       const provider = getEmbeddingProvider();
-      console.log('🔍 Generant embedding i cercant context RAG...');
-      const queryEmbedding = await generateEmbedding(message, provider);
-      const topK = Math.max(5, complexity.suggestedTopK);
+      const openaiApiKey = process.env.OPENAI_API_KEY;
       
-      // Prioritzar articles de la Constitució quan la pregunta és clarament constitucional
-      // Detectem si la pregunta menciona "article", "constitució", o pregunta directament sobre la Constitució
-      const isConstitutionQuestion = 
-        message.toLowerCase().includes('article') ||
-        message.toLowerCase().includes('constitució') ||
-        message.toLowerCase().includes('constitución') ||
-        articleNumber !== null ||
-        articleKeywords.length > 0 ||
-        isValidConstitutionQuestion(message);
-      
-      if (isConstitutionQuestion) {
-        console.log('📜 Prioritzant articles de la Constitució sobre doctrina');
+      // ⚠️ VERCEL WORKAROUND: Si no hi ha OPENAI_API_KEY, RAG es desactiva automàticament
+      if (!openaiApiKey && provider === 'xlm-roberta') {
+        console.warn('⚠️ RAG desactivat: No hi ha OPENAI_API_KEY a Vercel. Usant només mode sense context.');
+      } else {
+        try {
+          console.log('🔍 Generant embedding i cercant context RAG...');
+          const queryEmbedding = await generateEmbedding(message, provider, openaiApiKey);
+          const topK = Math.max(5, complexity.suggestedTopK);
+          
+          // Prioritzar articles de la Constitució quan la pregunta és clarament constitucional
+          // Detectem si la pregunta menciona "article", "constitució", o pregunta directament sobre la Constitució
+          const isConstitutionQuestion = 
+            message.toLowerCase().includes('article') ||
+            message.toLowerCase().includes('constitució') ||
+            message.toLowerCase().includes('constitución') ||
+            articleNumber !== null ||
+            articleKeywords.length > 0 ||
+            isValidConstitutionQuestion(message);
+          
+          if (isConstitutionQuestion) {
+            console.log('📜 Prioritzant articles de la Constitució sobre doctrina');
+          }
+          
+          const semanticMatches = retrieveTopMatches(queryEmbedding, topK, undefined, isConstitutionQuestion);
+          semanticMatches.forEach(match => matchesMap.set(match.entry.id, match));
+        } catch (ragError: any) {
+          // Si RAG falla (ex: out of memory, API error), continuar sense context
+          console.error('❌ Error RAG (continuar sense context):', ragError?.message || ragError);
+          // matchesMap es queda buit, el chat continuarà sense context del RAG
+        }
       }
-      
-      const semanticMatches = retrieveTopMatches(queryEmbedding, topK, undefined, isConstitutionQuestion);
-      semanticMatches.forEach(match => matchesMap.set(match.entry.id, match));
-    }
 
     // Si es detecta un article específic per número, afegir-lo (funciona amb o sense RAG)
     if (articleNumber) {

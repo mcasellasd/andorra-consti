@@ -37,18 +37,23 @@ export async function generateEmbedding(
 
 /**
  * Determina el proveïdor d'embeddings basant-se en les variables d'entorn
+ * 
+ * IMPORTANT per Vercel:
+ * - Sempre prioritza OpenAI si hi ha clau API (evita carregar XLM-RoBERTa que causa OOM)
+ * - XLM-RoBERTa només es usa localment amb EMBEDDING_PROVIDER=xlm-roberta
  */
 export function getEmbeddingProvider(): EmbeddingProvider {
-  const provider = process.env.EMBEDDING_PROVIDER?.toLowerCase();
-  
-  if (provider === 'xlm-roberta' || provider === 'xlm') {
+  // Si explícitament es demana XLM-RoBERTa, usar-lo (només per desenvolvimento local)
+  if (process.env.EMBEDDING_PROVIDER === 'xlm-roberta') {
     return 'xlm-roberta';
   }
   
-  // Per defecte, utilitza OpenAI si hi ha clau API, sinó XLM-RoBERTa
+  // Per defecte: usar OpenAI si hi ha clau API (recomanat per Vercel)
   if (process.env.OPENAI_API_KEY) {
     return 'openai';
   }
   
+  // Fallback local: XLM-RoBERTa
+  // NOTA: A Vercel, si no hi ha OPENAI_API_KEY, el RAG es deshabilitarà
   return 'xlm-roberta';
 }

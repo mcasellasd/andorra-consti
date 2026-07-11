@@ -242,6 +242,10 @@ export function getAIActCompliancePrompt(): string {
   } else if (process.env.HUGGINGFACE_API_KEY) {
     modelInfo = 'una IA (Mistral-7B-Instruct-v0.3)';
     modelProvider = 'Mistral-7B-Instruct-v0.3 de Mistral AI via Hugging Face';
+  } else if (process.env.OPENAI_API_KEY) {
+    const openAIModel = process.env.OPENAI_CHAT_MODEL || 'gpt-4o-mini';
+    modelInfo = `una IA (${openAIModel})`;
+    modelProvider = `${openAIModel} d'OpenAI`;
   } else {
     modelInfo = 'una IA';
     modelProvider = 'model d\'intel·ligència artificial';
