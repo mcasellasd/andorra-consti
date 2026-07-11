@@ -3,6 +3,8 @@
  * Relacionada amb articles de la Constitució i el Codi Civil
  */
 
+import { jurisprudenciaImportedTC } from './jurisprudencia-tc-imported';
+
 export interface SentenciaAndorra {
   id: string; // Ex: "TSA-2023-045"
   tribunal: string; // "Tribunal Superior d'Andorra", "Tribunal de Corts", etc.
@@ -24,20 +26,14 @@ export interface SentenciaAndorra {
  * existeixen a la base de dades d'articles. Utilitzar el script validate-jurisprudencia.ts
  * per validar tota la base de dades.
  */
+
+// Sentències del Tribunal Constitucional importades (auto-generades)
+// Executar: npx tsx scripts/importar-sentencies-tc.ts per regenerar
+// ⚠️  NOTA: jurisprudenciaImportedTC conté 47 sentències del TC (2014-2026)
+
 export const jurisprudenciaDatabase: SentenciaAndorra[] = [
-  // Aquí s'afegiran els casos de jurisprudència d'Andorra
-  // Exemple de format:
-  // {
-  //   id: "TSA-2023-001",
-  //   tribunal: "Tribunal Superior d'Andorra",
-  //   numero: "001/2023",
-  //   data: "2023-01-15",
-  //   titol: "Sentència sobre interpretació de l'article 1 de la Constitució",
-  //   resum: "La sentència interpreta l'article 1 de la Constitució d'Andorra establint...",
-  //   articles_afectats: ["CONST_001"],
-  //   codi: "constitucio",
-  //   tags: ["sobirania", "estat", "interpretació"]
-  // }
+  ...jurisprudenciaImportedTC,
+  // Afegir més sentències manualment aquí si cal (sentències no TC, altre tribunal, etc.)
 ];
 
 /**

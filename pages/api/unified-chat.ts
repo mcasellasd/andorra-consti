@@ -6,6 +6,7 @@ import { generateEmbedding, getEmbeddingProvider } from '../../lib/embeddings';
 import { retrieveTopMatches, getArticleByNumber, getArticleById } from '../../lib/rag/corpus';
 import { RetrievedContext } from '../../lib/rag/types';
 import { detectArticleReference, detectArticleByKeywords, detectComplexity } from '../../lib/rag/detect-complexity';
+import { getJurisprudenciaForArticle } from '../../data/jurisprudencia-andorra';
 
 // ============================================================================
 // RAG ACTIVAT - Recuperació de context de la Constitució d'Andorra
@@ -155,6 +156,40 @@ export default async function handler(
         console.log(`✅ Article detectat per paraules clau i afegit: ${articleId}`);
       }
     });
+
+    // 🔍 Recuperar jurisprudència relacionada amb l'article detectat
+    if (articleNumber) {
+      const articleId = `CONST_${articleNumber.padStart(3, '0')}`;
+      const relatedJurisprudence = getJurisprudenciaForArticle(articleId);
+      
+      if (relatedJurisprudence.length > 0) {
+        console.log(`📋 Trobades ${relatedJurisprudence.length} sentències TC relacionades amb Article ${articleNumber}`);
+        
+        // Convertir sentències a KnowledgeEntry compatible amb RAG
+        relatedJurisprudence.forEach((sentencia, idx) => {
+          const sentenciaEntry = {
+            id: sentencia.id,
+            category: 'Jurisprudència',
+            topic: sentencia.titol || `Sentència ${sentencia.numero}`,
+            content: `${sentencia.tribunal} (${sentencia.data}): ${sentencia.resum}`,
+            legalReference: sentencia.numero,
+            keyConcepts: sentencia.tags || [],
+          };
+          
+          const jurisprudenceContext: RetrievedContext = {
+            entry: sentenciaEntry,
+            score: 0.88 - (idx * 0.02), // Decreix lleument per cada sentència (0.88, 0.86, 0.84...)
+            bookId: 'DOCTRINA' // Les sentències es categoritzen com doctrina per mantenir compatibilitat
+          };
+          
+          // Afegir només si no está ja al map (evitar duplicats)
+          if (!matchesMap.has(sentencia.id)) {
+            matchesMap.set(sentencia.id, jurisprudenceContext);
+            console.log(`  ✅ Sentència afegida: ${sentencia.id} - ${sentencia.tribunal}`);
+          }
+        });
+      }
+    }
 
     // Quan es pregunta per un article concret, reduïm el nombre de fonts per evitar confusions
     const defaultTopK = process.env.RAG_ENABLED === 'true' ? Math.max(5, complexity.suggestedTopK) : 10;
