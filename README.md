@@ -91,6 +91,21 @@ npm run build
 npm start
 ```
 
+### Regenerar artefactes RAG locals
+
+Els fitxers grans de `data/rag/` es consideren artefactes generats i no es versionen.
+Per reconstruir-los localment, executa la cadena de processat + embeddings segons el teu corpus:
+
+```bash
+npm run process:doctrina
+npm run process:doctrina:xlm
+npm run unificar:corpus
+npm run embed:doctrina
+npm run embed:aprenentatge
+```
+
+Per corpus específics de llibre, també tens scripts dedicats (`embed:llibre-primer`, `embed:llibre-segon`, `embed:llibre-tercer`, `embed:llibre-sise`).
+
 ## 📁 Estructura del Projecte
 
 *(Estructura simplificada; el repositori inclou més carpetes i scripts.)*

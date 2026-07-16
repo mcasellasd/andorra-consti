@@ -1,9 +1,5 @@
 # generated data
-data/rag/**
-!data/rag/.keep
-# Exceptions: corpus RAG necessari per desplegament (Railway)
-!data/rag/constitucio-unified.json
-!data/rag/constitucio-unified-embeddings.json
+data/rag/
 # dependencies
 node_modules
 .pnp
@@ -21,6 +17,9 @@ build
 
 # misc
 .DS_Store
+*.backup.*
+*_2.*
+* 2.*
 *.pem
 *.zip
 
