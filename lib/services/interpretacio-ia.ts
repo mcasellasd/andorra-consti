@@ -6,15 +6,15 @@
  */
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { GUIA_CATALA_JURIDIC } from '../../lib/prompts/guia-catala-juridic';
-import { ASPECTES_JURISPRUDENCIA_ANDORRANA } from '../../lib/prompts/aspectes-jurisprudencia-andorra';
+import { GUIA_CATALA_JURIDIC } from '../prompts/guia-catala-juridic';
+import { ASPECTES_JURISPRUDENCIA_ANDORRANA } from '../prompts/aspectes-jurisprudencia-andorra';
 import { InterpretacioIA, Exemple } from '../../data/codis/types';
 import { getJurisprudenciaForArticle } from '../../data/jurisprudencia-andorra';
-import { getArticleById } from '../../lib/article-helpers';
+import { getArticleById } from '../article-helpers';
 import { getDoctrinaByArticleId } from '../../data/doctrina';
-import { generateText } from '../../lib/llm';
+import { generateText } from '../llm';
 
-interface InterpretacioRequest {
+export interface InterpretacioRequest {
   article_id: string;
   text_oficial: string;
   numeracio: string;
@@ -24,7 +24,7 @@ interface InterpretacioRequest {
 // Configurar timeout màxim per Vercel (Pro: 300s, Hobby: 10s -> 60s amb config)
 export const maxDuration = 60;
 
-export default async function handler(
+export async function interpretacioIAHandler(
   req: NextApiRequest,
   res: NextApiResponse<InterpretacioIA | { error: string }>
 ) {
@@ -129,8 +129,8 @@ export default async function handler(
     if (process.env.RAG_ENABLED === 'true') {
       try {
         const runRag = async () => {
-          const { generateEmbedding } = await import('../../lib/embeddings/index');
-          const { retrieveTopMatches } = await import('../../lib/rag/corpus');
+          const { generateEmbedding } = await import('../embeddings/index');
+          const { retrieveTopMatches } = await import('../rag/corpus');
           console.log(`🧠 Generant embedding RAG per a article ${article_id} amb XLM-RoBERTa...`);
           const embedding = await generateEmbedding(`${article?.titol || ''} ${text_oficial}`, 'xlm-roberta');
           return retrieveTopMatches(embedding, 5);
@@ -840,4 +840,41 @@ ${ragContext}`;
       error: error instanceof Error ? error.message : 'Error desconegut',
     });
   }
+}
+
+export async function generateInterpretacioIA(payload: InterpretacioRequest): Promise<InterpretacioIA> {
+  let statusCode = 200;
+  let responseBody: InterpretacioIA | { error: string } | null = null;
+
+  const res = {
+    status(code: number) {
+      statusCode = code;
+      return this;
+    },
+    json(body: InterpretacioIA | { error: string }) {
+      responseBody = body;
+      return this;
+    },
+    end() {
+      return this;
+    }
+  } as unknown as NextApiResponse<InterpretacioIA | { error: string }>;
+
+  const req = {
+    method: 'POST',
+    body: payload
+  } as NextApiRequest;
+
+  await interpretacioIAHandler(req, res);
+
+  if (statusCode >= 400) {
+    const errorMessage = (responseBody as { error?: string } | null)?.error || 'Error al generar la interpretació';
+    throw new Error(errorMessage);
+  }
+
+  if (!responseBody || 'error' in responseBody) {
+    throw new Error('Error al generar la interpretació');
+  }
+
+  return responseBody;
 }

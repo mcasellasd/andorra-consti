@@ -41,7 +41,7 @@ const InterpretacioIA: React.FC<InterpretacioIAProps> = ({ article, idioma, onTo
     setError(null);
 
     try {
-      const resposta = await fetch('/api/interpretacio-ia', {
+      const resposta = await fetch('/api/unified-chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

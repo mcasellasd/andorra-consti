@@ -3,10 +3,13 @@ import { generateText } from '../../lib/llm';
 import { checkAIActCompliance, getAIActCompliancePrompt } from '../../lib/rag/quality-assessment';
 import { validateResponseQuality } from '../../lib/rag/response-quality';
 import { generateEmbedding, getEmbeddingProvider } from '../../lib/embeddings';
-import { retrieveTopMatches, getArticleByNumber, getArticleById } from '../../lib/rag/corpus';
+import { retrieveTopMatches, getArticleById } from '../../lib/rag/corpus';
 import { RetrievedContext } from '../../lib/rag/types';
 import { detectArticleReference, detectArticleByKeywords, detectComplexity } from '../../lib/rag/detect-complexity';
 import { getJurisprudenciaForArticle } from '../../data/jurisprudencia-andorra';
+import { articlesConstitucio } from '../../data/codis/constitucio/articles-template';
+import { InterpretacioIA } from '../../data/codis/types';
+import { generateInterpretacioIA, type InterpretacioRequest } from '../../lib/services/interpretacio-ia';
 
 // ============================================================================
 // RAG ACTIVAT - Recuperació de context de la Constitució d'Andorra
@@ -24,6 +27,8 @@ interface UnifiedChatRequest {
   maxTokens?: number;
   temperature?: number;
 }
+
+type UnifiedRequest = UnifiedChatRequest | InterpretacioRequest;
 
 interface UnifiedChatResponse {
   response?: string;
@@ -61,10 +66,22 @@ function isValidConstitutionQuestion(message: string): boolean {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<UnifiedChatResponse>
+  res: NextApiResponse<UnifiedChatResponse | InterpretacioIA>
 ) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const requestBody = req.body as UnifiedRequest;
+
+  // Compatibilitat amb l'antic endpoint /api/interpretacio-ia
+  if (isInterpretacioRequest(requestBody)) {
+    try {
+      const interpretacio = await generateInterpretacioIA(requestBody);
+      return res.status(200).json(interpretacio);
+    } catch (error: any) {
+      return res.status(500).json({ error: error?.message || 'Error al generar la interpretació' });
+    }
   }
 
   const {
@@ -73,13 +90,25 @@ export default async function handler(
     locale = 'ca',
     maxTokens = 800,
     temperature = 0.5
-  } = req.body as UnifiedChatRequest;
+  } = requestBody as UnifiedChatRequest;
 
   const validLocale: LocaleChat = ['ca', 'es', 'fr'].includes(locale) ? locale : 'ca';
 
   if (!message || !message.trim()) {
     const errMsg = validLocale === 'es' ? 'Mensaje vacío.' : validLocale === 'fr' ? 'Message vide.' : 'Missatge buit.';
     return res.status(400).json({ error: errMsg });
+  }
+
+  // Validació portada de /api/rag/chat: detectar articles inexistents abans de processar
+  const invalidRequestArticles = findUnknownArticles(message);
+  if (invalidRequestArticles.length) {
+    const invalidMsg =
+      validLocale === 'es'
+        ? `Los artículos siguientes no existen en la Constitución: ${invalidRequestArticles.join(', ')}. Revisa la numeración e inténtalo de nuevo.`
+        : validLocale === 'fr'
+          ? `Les articles suivants n'existent pas dans la Constitution : ${invalidRequestArticles.join(', ')}. Vérifiez la numérotation et réessayez.`
+          : `Els articles següents no existeixen a la Constitució: ${invalidRequestArticles.join(', ')}. Revisa la numeració i torna-ho a intentar.`;
+    return res.status(400).json({ error: invalidMsg });
   }
 
   // 1. Validació bàsica
@@ -312,6 +341,18 @@ ${contextBlock}`;
       temperature,
     });
 
+    // Validació portada de /api/rag/chat: rebutjar respostes amb articles inexistents
+    const invalidAnswerArticles = findUnknownArticles(generatedText);
+    if (invalidAnswerArticles.length) {
+      const invalidAnswerMsg =
+        validLocale === 'es'
+          ? `La respuesta generada mencionaba artículos inexistentes (${invalidAnswerArticles.join(', ')}). Reformula la consulta o especifica un artículo válido.`
+          : validLocale === 'fr'
+            ? `La réponse générée mentionnait des articles inexistants (${invalidAnswerArticles.join(', ')}). Reformulez la requête ou précisez un article valide.`
+            : `La resposta generada mencionava articles inexistents (${invalidAnswerArticles.join(', ')}). Reformula la consulta o especifica un article vàlid.`;
+      return res.status(502).json({ error: invalidAnswerMsg });
+    }
+
     // 5. Validació AI Act (Post-processat ràpid)
     const complianceResult = checkAIActCompliance(generatedText);
 
@@ -457,3 +498,50 @@ function buildContextBlock(matches: RetrievedContext[]): string {
 export const config = {
   maxDuration: 60,
 };
+
+function isInterpretacioRequest(body: UnifiedRequest): body is InterpretacioRequest {
+  const candidate = body as Partial<InterpretacioRequest>;
+  const validIdioma = candidate.idioma === 'ca' || candidate.idioma === 'es' || candidate.idioma === 'fr';
+  return !!candidate.article_id && !!candidate.text_oficial && !!candidate.numeracio && validIdioma;
+}
+
+const articleIndex = buildArticleIndex();
+
+function buildArticleIndex(): Set<string> {
+  const set = new Set<string>();
+  articlesConstitucio.forEach((article) => {
+    const normalized = normalizeArticleNumber(article.numeracio);
+    if (normalized) {
+      set.add(normalized);
+    }
+  });
+  return set;
+}
+
+function findUnknownArticles(text: string): string[] {
+  const references = extractArticleNumbers(text);
+  if (!references.length) {
+    return [];
+  }
+  return references.filter((ref) => !articleIndex.has(ref));
+}
+
+function extractArticleNumbers(text: string): string[] {
+  const pattern = /(?:article|art\.?)\s+(\d+)/gi;
+  const results = new Set<string>();
+  let match: RegExpExecArray | null;
+  while ((match = pattern.exec(text)) !== null) {
+    const normalized = normalizeArticleNumber(match[1]);
+    if (normalized) {
+      results.add(normalized);
+    }
+  }
+  return Array.from(results);
+}
+
+function normalizeArticleNumber(raw?: string | null): string | null {
+  if (!raw) {
+    return null;
+  }
+  return raw.replace(/^article\s+/i, '').trim();
+}
