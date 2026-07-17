@@ -17,6 +17,12 @@ import { generateInterpretacioIA, type InterpretacioRequest } from '../../lib/se
 
 type LocaleChat = 'ca' | 'es' | 'fr';
 
+const RATE_LIMIT_MAX_REQUESTS = 20;
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const MAX_MESSAGE_LENGTH = 2000;
+
+const ipRequestLog = new Map<string, number[]>();
+
 interface UnifiedChatRequest {
   message: string;
   conversationHistory?: Array<{
@@ -74,6 +80,14 @@ export default async function handler(
 
   const requestBody = req.body as UnifiedRequest;
 
+  const clientIp = getClientIp(req);
+  const rateLimitResult = checkIpRateLimit(clientIp);
+  if (!rateLimitResult.allowed) {
+    const retrySeconds = rateLimitResult.retryAfterSeconds;
+    const rateLimitMsg = buildRateLimitTrilingualMessage(retrySeconds);
+    return res.status(429).json({ error: rateLimitMsg });
+  }
+
   // Compatibilitat amb l'antic endpoint /api/interpretacio-ia
   if (isInterpretacioRequest(requestBody)) {
     try {
@@ -97,6 +111,16 @@ export default async function handler(
   if (!message || !message.trim()) {
     const errMsg = validLocale === 'es' ? 'Mensaje vacío.' : validLocale === 'fr' ? 'Message vide.' : 'Missatge buit.';
     return res.status(400).json({ error: errMsg });
+  }
+
+  if (message.trim().length > MAX_MESSAGE_LENGTH) {
+    const tooLongMsg =
+      validLocale === 'es'
+        ? `El mensaje supera el máximo de ${MAX_MESSAGE_LENGTH} caracteres.`
+        : validLocale === 'fr'
+          ? `Le message dépasse la limite de ${MAX_MESSAGE_LENGTH} caractères.`
+          : `El missatge supera el màxim de ${MAX_MESSAGE_LENGTH} caràcters.`;
+    return res.status(400).json({ error: tooLongMsg });
   }
 
   // Validació portada de /api/rag/chat: detectar articles inexistents abans de processar
@@ -544,4 +568,50 @@ function normalizeArticleNumber(raw?: string | null): string | null {
     return null;
   }
   return raw.replace(/^article\s+/i, '').trim();
+}
+
+function getClientIp(req: NextApiRequest): string {
+  const forwardedFor = req.headers['x-forwarded-for'];
+  if (forwardedFor) {
+    const first = Array.isArray(forwardedFor) ? forwardedFor[0] : forwardedFor.split(',')[0];
+    return first.trim();
+  }
+
+  const realIp = req.headers['x-real-ip'];
+  if (realIp) {
+    return Array.isArray(realIp) ? realIp[0] : realIp;
+  }
+
+  return req.socket?.remoteAddress || 'unknown';
+}
+
+function checkIpRateLimit(ip: string): { allowed: boolean; retryAfterSeconds: number } {
+  const now = Date.now();
+  const windowStart = now - RATE_LIMIT_WINDOW_MS;
+  const timestamps = ipRequestLog.get(ip) || [];
+  const recentTimestamps = timestamps.filter((ts) => ts > windowStart);
+
+  if (recentTimestamps.length >= RATE_LIMIT_MAX_REQUESTS) {
+    const oldestTimestamp = recentTimestamps[0];
+    const retryAfterMs = Math.max((oldestTimestamp + RATE_LIMIT_WINDOW_MS) - now, 1000);
+    return {
+      allowed: false,
+      retryAfterSeconds: Math.ceil(retryAfterMs / 1000),
+    };
+  }
+
+  recentTimestamps.push(now);
+  ipRequestLog.set(ip, recentTimestamps);
+
+  return {
+    allowed: true,
+    retryAfterSeconds: 0,
+  };
+}
+
+function buildRateLimitTrilingualMessage(retryAfterSeconds: number): string {
+  const msgCa = `Has superat el límit de ${RATE_LIMIT_MAX_REQUESTS} peticions en 10 minuts. Torna-ho a provar en ${retryAfterSeconds} segons.`;
+  const msgEs = `Has superado el límite de ${RATE_LIMIT_MAX_REQUESTS} peticiones en 10 minutos. Vuelve a intentarlo en ${retryAfterSeconds} segundos.`;
+  const msgFr = `Vous avez dépassé la limite de ${RATE_LIMIT_MAX_REQUESTS} requêtes en 10 minutes. Réessayez dans ${retryAfterSeconds} secondes.`;
+  return `${msgCa} | ${msgEs} | ${msgFr}`;
 }
