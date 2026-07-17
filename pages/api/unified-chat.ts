@@ -10,6 +10,7 @@ import { getJurisprudenciaForArticle } from '../../data/jurisprudencia-andorra';
 import { articlesConstitucio } from '../../data/codis/constitucio/articles-template';
 import { InterpretacioIA } from '../../data/codis/types';
 import { generateInterpretacioIA, type InterpretacioRequest } from '../../lib/services/interpretacio-ia';
+import { appendTraceabilityLog, buildRagContextFingerprint } from '../../lib/traceability/audit-log';
 
 // ============================================================================
 // RAG ACTIVAT - Recuperació de context de la Constitució d'Andorra
@@ -395,6 +396,39 @@ ${contextBlock}`;
             ? `**Avertissement :** La réponse mentionne l'article ou les articles ${articlesList}, qui ne figuraient pas dans le contexte consulté. Vérifiez les références avec la Constitution.\n\n`
             : `**Avís:** La resposta menciona l'article o els articles ${articlesList}, que no figuraven en el context consultat. Verifiqueu les referències amb la Constitució.\n\n`;
       responseToReturn = warningMsg + generatedText;
+    }
+
+    // Traçabilitat mínima: només hashos i metadades (sense text personal en clar)
+    try {
+      const ragContextFingerprint = buildRagContextFingerprint(
+        matches.map((m) => ({
+          id: m.entry.id,
+          content: m.entry.content,
+        }))
+      );
+
+      await appendTraceabilityLog({
+        userMessage: message,
+        ragContextFingerprint,
+        generatedResponse: generatedText,
+        scores: {
+          aiActCompliance: {
+            score: complianceResult.score,
+            compliant: complianceResult.aiActCompliant,
+            warnings: complianceResult.warnings,
+          },
+          responseQuality: {
+            valid: qualityResult.valid,
+            score: qualityResult.score,
+            warnings: qualityResult.warnings,
+            citedInResponse: qualityResult.citedInResponse,
+            citedNotInContext: qualityResult.citedNotInContext,
+            suggestions: qualityResult.suggestions,
+          },
+        },
+      });
+    } catch (traceabilityError: any) {
+      console.error('⚠️ Error registrant traçabilitat:', traceabilityError?.message || traceabilityError);
     }
 
     // 7. Preparar fonts per retornar (tipus real: Constitució o Doctrina segons bookId)
