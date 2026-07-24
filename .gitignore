@@ -1,5 +1,3 @@
-# generated data
-data/rag/
 # dependencies
 node_modules
 .pnp
