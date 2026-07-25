@@ -106,6 +106,7 @@ export interface CorpusDocumentSummary {
  */
 export function getCorpusDocumentsList(): CorpusDocumentSummary[] {
   const constitution: KnowledgeEntry[] = [];
+  const tc: KnowledgeEntry[] = [];
   const doctrina: KnowledgeEntry[] = [];
 
   for (const entry of corpus.knowledge) {
@@ -116,8 +117,14 @@ export function getCorpusDocumentsList(): CorpusDocumentSummary[] {
       entry.category === 'doctrina' ||
       entry.category === 'Jurisprudència' ||
       entry.category === 'jurisprudència';
+    const isTC =
+      entry.id.startsWith('TC_') ||
+      entry.category?.includes('Tribunal Constitucional');
+
     if (isDoctrina) {
       doctrina.push(entry);
+    } else if (isTC) {
+      tc.push(entry);
     } else {
       constitution.push(entry);
     }
@@ -149,6 +156,15 @@ export function getCorpusDocumentsList(): CorpusDocumentSummary[] {
       name: "Constitució d'Andorra",
       description: desc,
       count: constitution.length
+    });
+  }
+
+  if (tc.length > 0) {
+    result.push({
+      id: 'TRIBUNAL_CONSTITUCIONAL',
+      name: 'Llei del Tribunal Constitucional',
+      description: 'Llei 21/2023 de text consolidat del Tribunal Constitucional',
+      count: tc.length
     });
   }
 
