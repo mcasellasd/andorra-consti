@@ -252,17 +252,22 @@ export default function UnifiedChatbot({
 
   const getSourceLink = (source: Source): string | null => {
     // Articles de la Constitució: enllaç a la pàgina de l'article
-    if (source.code === 'constitucio' && source.id.startsWith('CONST_')) {
+    if (source.id.startsWith('CONST_')) {
       return `/codis/constitucio/article/${source.id}`;
     }
-    // Doctrina: sense pàgina de cerca, retornem null per no fer link trencat
-    if (source.code === 'doctrina') {
+    // Articles del Tribunal Constitucional
+    if (source.id.startsWith('TC_')) {
       return null;
     }
-    return `/codis/constitucio/article/${source.id}`;
+    // Doctrina / Jurisprudència
+    if (source.code === 'doctrina' || source.id.startsWith('DOCTRINA_')) {
+      return null;
+    }
+    return null;
   };
 
   const getSourceLabel = (source: Source) => {
+    if (source.id.startsWith('TC_')) return 'TC';
     return source.code === 'doctrina' ? 'Doctrina' : 'CONST';
   };
 
@@ -283,11 +288,14 @@ export default function UnifiedChatbot({
               const source = message.sources?.find(s => s.id === id);
               if (source) {
                 // Trobem la font, mostrem etiqueta interactiva
-                const label = source.code === 'doctrina'
-                  ? 'Doctrina'
-                  : source.number
-                    ? `Art. ${source.number}`
-                    : 'Font';
+                const isTC = id.startsWith('TC_');
+                const label = isTC
+                  ? (source.number ? `TC · ${source.number}` : 'Llei TC')
+                  : source.code === 'doctrina'
+                    ? 'Doctrina'
+                    : source.number
+                      ? `Art. ${source.number}`
+                      : 'Font';
 
                 // Retallem el contingut per al tooltip
                 const contentPreview = source.content
