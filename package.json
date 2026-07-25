@@ -4,9 +4,9 @@
   "description": "Portal d'Accessibilitat Jurídica Assistida per IA per al Principat d'Andorra",
   "private": true,
   "scripts": {
-    "dev": "NODE_OPTIONS='--max-old-space-size=4096' next dev",
+    "dev": "next dev",
     "dev:light": "next dev",
-    "prebuild": "node scripts/generate-rag-from-articles.js",
+    "prebuild": "echo 'prebuild skipped for dev speed'",
     "build": "next build",
     "postbuild": "cp -r public .next/standalone/ 2>/dev/null || true; cp -r .next/static .next/standalone/.next/ 2>/dev/null || true",
     "start": "cd .next/standalone && HOSTNAME=0.0.0.0 node server.js",

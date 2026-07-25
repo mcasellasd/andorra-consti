@@ -8,10 +8,8 @@ import { getIdiomaActual, type Idioma } from '../../../../lib/i18n';
 import { getDoctrinaByArticleId, type DoctrinaCase } from '../../../../data/doctrina';
 
 // Components
-import { ArticleBreadcrumb } from '../../../../components/article/ArticleBreadcrumb';
 import { ArticleHeader } from '../../../../components/article/ArticleHeader';
 import { ArticleContent } from '../../../../components/article/ArticleContent';
-import { ArticleSidebar } from '../../../../components/article/ArticleSidebar';
 
 const ArticleConstitucioPage: React.FC = () => {
   const router = useRouter();
@@ -19,7 +17,6 @@ const ArticleConstitucioPage: React.FC = () => {
   const [article, setArticle] = useState<ArticleAndorra | null>(null);
   const [idioma, setIdioma] = useState<Idioma>('ca');
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [interpretacio, setInterpretacio] = useState<InterpretacioIAType | null>(null);
   const [doctrina, setDoctrina] = useState<DoctrinaCase[]>([]);
@@ -88,14 +85,6 @@ const ArticleConstitucioPage: React.FC = () => {
 
   const handleGenerateAssistencia = async () => {
     if (!article) return;
-
-    setActiveTab('Resum');
-
-    // Scroll to sidebar on mobile
-    const sidebar = document.getElementById('article-sidebar');
-    if (sidebar && window.innerWidth < 1024) {
-      sidebar.scrollIntoView({ behavior: 'smooth' });
-    }
 
     // Comprovar si ja tenim el resum per aquest idioma
     if (interpretacio?.resum?.[idioma]) {
@@ -202,43 +191,28 @@ const ArticleConstitucioPage: React.FC = () => {
       </Head>
       <Layout>
         <div className="min-h-screen flex flex-col bg-background">
-          {/* Breadcrumb */}
-          <ArticleBreadcrumb article={article} idioma={idioma} />
-
           {/* Header */}
           <ArticleHeader
             article={article}
             idioma={idioma}
             previousArticle={previousArticle}
             nextArticle={nextArticle}
+            onGenerateAssistencia={handleGenerateAssistencia}
+            isGenerating={isGenerating}
           />
 
           {/* Main content area */}
-          <main className="flex-1 w-full max-w-6xl mx-auto px-6 lg:px-8 py-8 lg:py-12">
-            <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-              {/* Main article content */}
-              <div className="flex-1 min-w-0">
-                <ArticleContent
-                  article={article}
-                  idioma={idioma}
-                  onGenerateAssistencia={handleGenerateAssistencia}
-                  isGenerating={isGenerating}
-                />
-              </div>
-
-              {/* Sidebar */}
-              <aside id="article-sidebar" className="w-full lg:w-80 shrink-0 scroll-mt-24">
-                <ArticleSidebar
-                  activeTab={activeTab}
-                  setActiveTab={setActiveTab}
-                  isGenerating={isGenerating}
-                  article={article}
-                  idioma={idioma}
-                  interpretacio={interpretacio}
-                  doctrina={doctrina}
-                />
-              </aside>
-            </div>
+          <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+            <ArticleContent
+              article={article}
+              idioma={idioma}
+              interpretacio={interpretacio}
+              doctrina={doctrina}
+              previousArticle={previousArticle}
+              nextArticle={nextArticle}
+              onGenerateAssistencia={handleGenerateAssistencia}
+              isGenerating={isGenerating}
+            />
           </main>
         </div>
       </Layout>
