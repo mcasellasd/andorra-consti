@@ -200,13 +200,13 @@ const InterpretacioIA: React.FC<InterpretacioIAProps> = ({ article, idioma, onTo
                 </section>
               )}
 
-              {/* Doctrina i jurisprudència */}
+              {/* Comentari Doctrinal IA */}
               {interpretacio.doctrina_jurisprudencia && (
                 <section className="interpretacio-section">
                   <h3>
-                    {idioma === 'ca' && 'Doctrina i jurisprudència'}
-                    {idioma === 'es' && 'Doctrina y jurisprudencia'}
-                    {idioma === 'fr' && 'Doctrine et jurisprudence'}
+                    {idioma === 'ca' && 'Comentari doctrinal IA'}
+                    {idioma === 'es' && 'Comentario doctrinal IA'}
+                    {idioma === 'fr' && 'Commentaire doctrinal IA'}
                   </h3>
                   <p>{interpretacio.doctrina_jurisprudencia}</p>
                 </section>

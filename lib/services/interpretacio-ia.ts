@@ -195,11 +195,10 @@ La interpretació IA es mostra en tres seccions del sidebar:
 1. **RESUM**: Resum **explicatiu** en **llenguatge planer** (2 a 5 frases segons la densitat). **Traduïu** el text oficial a paraules senzilles: què vol dir, què implica en la pràctica. Inclou la interpretació **en conjunt** i **tots** els punts concrets (cada apartat; què regula, a qui afecta). Vocabulari accessible, sense jargon jurídic sense explicar. No copiïs el text literal; explica amb les teves paraules.
 2. **EXEMPLES**: Exactament 2 o 3 exemples pràctics quotidians.
    - ⚠️ REGLA D'OR: L'exemple ha de ser sobre un tema que l'article regula EXPLÍCITAMENT. Si l'article parla de detenció, no parlis d'impostos.
-   - Cada exemple ha de començar amb "Exemple aplicat:" seguit de la situació concreta derivada directament del text legal.
-3. **DOCTRINA**: Comentari jurídic breu (1-3 frases) basat en el text de l’article:
-   - Sempre escriu un comentari jurídic basat en el text literal (abast, límits, obligacions/drets i conseqüències pràctiques).
-   - Si el context inclou jurisprudència o doctrina rellevant, integra-la com a suport en 1 frase (sense inventar ni exagerar).
-   - No facis disclaimers del tipus "no hi ha jurisprudència" ni "no puc fer anàlisi": has de produir comentari jurídic igualment.
+ 3. **DOCTRINA**: Comentari únicament doctrinal (1-3 frases) basat en el text de l’article i la doctrina jurídica:
+   - Sempre escriu un comentari estrictament doctrinal sobre la naturalesa, abast, principis i fonaments jurídics de la norma.
+   - Centra el comentari en l'anàlisi doctrinal i teòrica del dret. NO incloguis referències a jurisprudència ni a sentències en aquest camp.
+   - No facis disclaimers del tipus "no hi ha doctrina": produeix sempre l'anàlisi doctrinal teòrica de l'article.
 
 Respon en format JSON amb aquesta estructura EXACTA (cap text abans ni després; comença per { i acaba per }):
 {
@@ -208,7 +207,7 @@ Respon en format JSON amb aquesta estructura EXACTA (cap text abans ni després;
     {"cas": "Exemple aplicat: (cas realista i específic d'aquest article, 1–2 frases)", "idioma": "ca"},
     {"cas": "Exemple aplicat: (segon cas realista i específic, 1–2 frases)", "idioma": "ca"}
   ],
-  "doctrina_jurisprudencia": "1–3 frases de comentari jurídic basat en l'article; si hi ha jurisprudència/doctrina al context, integra-la breument (sense inventar)."
+  "doctrina_jurisprudencia": "1–3 frases de comentari únicament doctrinal basat en l'article i la doctrina jurídica (sense incloure jurisprudència)."
 }
 
 ⚠️ CRÍTIC: Respon ÚNICAMENT amb el JSON. El primer caràcter ha de ser { i l'últim }. Cap text abans ni després. ⚠️
@@ -221,7 +220,7 @@ ${ASPECTES_JURISPRUDENCIA_ANDORRANA}`,
 
 INTERPRETACIÓN COMPLETA: Debes interpretar la norma **en conjunto** (sentido general, finalidad, coherencia con el contexto constitucional) y **también** los puntos concretos de la ley (apartados, incisos, obligaciones o derechos específicos que establece el artículo).
 
-PRIORIDAD ABSOLUTA: Primero interpreta el **texto literal** del artículo en lenguaje llano. La jurisprudencia/doctrina es **opcional** y solo debe usarse si aparece en el contexto. Aunque NO haya jurisprudencia/doctrina, debes generar igualmente el resumen, los ejemplos y un comentario jurídico basado en el texto del artículo.
+PRIORIDAD ABSOLUTA: Primero interpreta el **texto literal** del artículo en lenguaje llano. Aunque NO haya doctrina previa, debes generar igualmente el resumen, los ejemplos y un comentario únicamente doctrinal basado en el texto del artículo.
 
 **ARTÍCULO ${numeracio} A INTERPRETAR:**
 "${text_oficial}"${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
@@ -237,7 +236,7 @@ PRIORIDAD ABSOLUTA: Primero interpreta el **texto literal** del artículo en len
 - NO hables de temas que NO estén explícitamente en el artículo proporcionado.
 - NO escribas nada fuera del JSON. Nada antes ni después.
 - NO copies ni reutilices frases plantilla del prompt (p. ej. "Resumen descriptivo...", "situación concreta...", "...").
-- NO digas que “no puedes” dar ejemplos o comentario por falta de jurisprudencia/doctrina.
+- NO digas que “no puedes” dar ejemplos o comentario por falta de doctrina.
 
 REGLA FUNDAMENTAL: Solo puedes hablar de lo que dice este artículo. Si el artículo NO menciona residencia, inmigración, procedimientos administrativos u otros temas, NO hables de ellos.
 
@@ -254,10 +253,10 @@ La interpretación IA se muestra en tres secciones del sidebar:
 2. **EJEMPLOS**: Exactamente 2 o 3 ejemplos prácticos cotidianos.
    - ⚠️ REGLA DE ORO: El ejemplo debe ser sobre un tema que el artículo regula EXPLÍCITAMENTE. Si el artículo habla de detención, no hables de impuestos.
    - Cada ejemplo debe empezar con "Ejemplo aplicado:" seguido de la situación concreta derivada directamente del texto legal.
-3. **DOCTRINA**: Comentario jurídico breve (1-3 frases) basado en el texto del artículo:
-   - Escribe siempre un comentario jurídico basado en el texto literal (alcance, límites, obligaciones/derechos y consecuencias prácticas).
-   - Si el contexto incluye jurisprudencia o doctrina relevante, intégrala como apoyo en 1 frase (sin inventar ni exagerar).
-   - No hagas disclaimers del tipo "no hay jurisprudencia" ni "no puedo hacer análisis": debes producir comentario jurídico igualmente.
+3. **DOCTRINA**: Comentario únicamente doctrinal (1-3 frases) basado en el texto del artículo y la doctrina jurídica:
+   - Escribe un comentario estrictamente doctrinal sobre el análisis teórico, principios, naturaleza jurídica y alcance de la norma.
+   - NO incluyas referencias a jurisprudencia ni a sentencias en este campo.
+   - No hagas disclaimers del tipo "no hay doctrina": debes producir el análisis doctrinal teórico igualmente.
 
 Responde en formato JSON con esta estructura EXACTA (nada antes ni después; empieza por { y acaba por }):
 {
@@ -266,7 +265,7 @@ Responde en formato JSON con esta estructura EXACTA (nada antes ni después; emp
     {"cas": "Ejemplo aplicado: (caso realista y específico de este artículo, 1–2 frases)", "idioma": "es"},
     {"cas": "Ejemplo aplicado: (segundo caso realista y específico, 1–2 frases)", "idioma": "es"}
   ],
-  "doctrina_jurisprudencia": "1–3 frases de comentario jurídico basado en el artículo; si hay jurisprudencia/doctrina en el contexto, intégrala brevemente (sin inventar)."
+  "doctrina_jurisprudencia": "1–3 frases de comentario únicamente doctrinal basado en el artículo y la doctrina jurídica (sin incluir jurisprudencia)."
 }
 
 ⚠️ CRÍTICO: Responde ÚNICAMENTE con el JSON. El primer carácter debe ser { y el último }. Nada antes ni después. ⚠️`,
@@ -276,7 +275,7 @@ Responde en formato JSON con esta estructura EXACTA (nada antes ni después; emp
 
 INTERPRÉTATION COMPLÈTE: Tu dois interpréter la norme **dans son ensemble** (sens général, finalité, cohérence avec le contexte constitutionnel) et **aussi** les points concrets de la loi (paragraphes, alinéas, obligations ou droits spécifiques que l'article établit).
 
-PRIORITÉ ABSOLUE: Interprète d'abord le **texte littéral** de l'article en langage simple. La jurisprudence/doctrine est **optionnelle** et ne doit être utilisée que si elle apparaît dans le contexte. Même s'il n'y a PAS de jurisprudence/doctrine, tu dois quand même générer le résumé, les exemples et un commentaire juridique basé sur le texte de l'article.
+PRIORITÉ ABSOLUE: Interprète d'abord le **texte littéral** de l'article en langage simple. Même s'il n'y a PAS de doctrine préalable, tu dois quand même générer le résumé, les exemples et un commentaire uniquement doctrinal basé sur le texte de l'article.
 
 **ARTICLE ${numeracio} À INTERPRÉTER:**
 "${text_oficial}"${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
@@ -292,7 +291,7 @@ PRIORITÉ ABSOLUE: Interprète d'abord le **texte littéral** de l'article en la
 - Ne parle PAS de sujets qui NE sont PAS explicitement dans l'article fourni.
 - N'écris RIEN en dehors du JSON. Rien avant ni après.
 - Ne copie pas / ne réutilise pas les phrases modèle du prompt (p. ex. "Résumé descriptif...", "situation concrète...", "...").
-- Ne dis pas que tu “ne peux pas” donner des exemples ou un commentaire faute de jurisprudence/doctrine.
+- Ne dis pas que tu “ne peux pas” donner des exemples ou un commentaire faute de doctrine.
 
 RÈGLE FONDAMENTALE: Tu ne peux parler que de ce que dit cet article. Si l'article NE mentionne PAS la résidence, l'immigration, les procédures administratives ou d'autres sujets, N'en parle PAS.
 
@@ -309,16 +308,22 @@ L'interprétation IA s'affiche dans trois sections de la barre latérale:
 2. **EXEMPLES**: Exactement 2 ou 3 exemples pratiques quotidiens.
    - ⚠️ RÈGLE D'OR: L'exemple doit porter sur un sujet que l'article régit EXPLICITEMENT. Si l'article parle de détention, ne parle pas d'impôts.
    - Chaque exemple doit commencer par "Exemple appliqué:" suivi de la situation concrète directement dérivée du texte légal.
-3. **DOCTRINE**: Commentaire juridique bref (1-3 phrases) basé sur le texte de l'article:
-   - Écris toujours un commentaire juridique basé sur le texte littéral (portée, limites, obligations/droits et conséquences pratiques).
-   - Si le contexte contient une jurisprudence ou une doctrine pertinente, intègre-la comme appui en 1 phrase (sans inventer ni exagérer).
-   - Ne fais pas de disclaimers du type "pas de jurisprudence" ni "je ne peux pas analyser": tu dois produire le commentaire juridique quand même.
+3. **DOCTRINE**: Commentaire uniquement doctrinal (1-3 phrases) basé sur le texte de l'article et la doctrine juridique:
+   - Écris un commentaire strictement doctrinal sur l'analyse théorique, les principes, la nature juridique et la portée de la norme.
+   - N'inclus PAS de références à la jurisprudence ni aux arrêts dans ce champ.
+   - Ne fais pas de disclaimers du type "pas de doctrine": tu dois produire l'analyse doctrinale théorique quand même.
 
-Réponds en format JSON avec cette structure EXACTE (rien avant ni après; commence par { et finis par }):
+Réponds en format JSON avec cette structure EXACTA (rien avant ni après; commence par { et finis par }):
 {
   "resum": "Écris un résumé SPÉCIFIQUE et descriptif de cet article (2 à 5 phrases selon la densité; couvre tous les points de l'article; sans placeholders).",
   "exemples": [
     {"cas": "Exemple appliqué: (cas réaliste et spécifique à cet article, 1–2 phrases)", "idioma": "fr"},
+    {"cas": "Exemple appliqué: (deuxième cas réaliste et spécifique, 1–2 phrases)", "idioma": "fr"}
+  ],
+  "doctrina_jurisprudencia": "1–3 phrases de commentaire uniquement doctrinal basé sur l'article et la doctrine juridique (sans inclure de jurisprudence)."
+}
+
+⚠️ CRITIQUE: Réponds UNIQUEMENT avec le JSON. Le premier caractère doit être { et le dernier }. Rien avant ni après. ⚠️`écifique à cet article, 1–2 phrases)", "idioma": "fr"},
     {"cas": "Exemple appliqué: (deuxième cas réaliste et spécifique, 1–2 phrases)", "idioma": "fr"}
   ],
   "doctrina_jurisprudencia": "1–3 phrases de commentaire juridique basé sur l'article; si le contexte contient jurisprudence/doctrine, intègre-la brièvement (sans inventer)."
@@ -340,7 +345,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 - La teva resposta HA DE SER ÚNICAMENT un objecte JSON vàlid. CAP text abans ni després.
 - El primer caràcter HA DE SER { i l'últim HA DE SER }. Sense introduccions, conclusions, enllaços, preguntes, explicacions ni "Espero haver ajudat".
 - NO escriguis res fora del JSON. NO afegeixis comentaris ni explicacions.
-- Mantén cada camp clar: resum 2 a 5 frases segons la densitat (descriptiu, tots els punts de l'article); cada exemple ha de començar amb "Exemple aplicat:" i tenir 1–2 frases; doctrina_jurisprudencia 1–3 frases.
+- Mantén cada camp clar: resum 2 a 5 frases segons la densitat (descriptiu, tots els punts de l'article); cada exemple ha de començar amb "Exemple aplicat:" i tenir 1–2 frases; doctrina_jurisprudencia 1–3 frases de comentari únicament doctrinal.
 - EXEMPLE DE FORMAT CORRECTE (copia aquesta estructura exacta):
 {
   "resum": "...",
@@ -354,7 +359,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 - Tu respuesta DEBE SER ÚNICAMENTE un objeto JSON válido. NADA antes ni después.
 - El primer carácter DEBE SER { y el último DEBE SER }. Sin introducciones, conclusiones, enlaces, preguntas, explicaciones ni "Espero haber ayudado".
 - NO escribas nada fuera del JSON. NO añadas comentarios ni explicaciones.
-- Mantén cada campo claro: resumen 2 a 5 frases según la densidad (descriptivo, todos los puntos del artículo); cada ejemplo debe empezar con "Ejemplo aplicado:" y tener 1–2 frases; doctrina_jurisprudencia 1–3 frases.
+- Mantén cada campo claro: resumen 2 a 5 frases según la densidad (descriptivo, todos los puntos del artículo); cada ejemplo debe empezar con "Ejemplo aplicado:" y tener 1–2 frases; doctrina_jurisprudencia 1–3 frases de comentario únicamente doctrinal.
 - EJEMPLO DE FORMATO CORRECTO (copia esta estructura exacta):
 {
   "resum": "...",
@@ -368,7 +373,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 - Ta réponse DOIT ÊTRE UNIQUEMENT un objet JSON valide. Rien avant ni après.
 - Le premier caractère DOIT ÊTRE { et le dernier DOIT ÊTRE }. Pas d'introduction, conclusion, liens, questions ni "J'espère vous avoir aidé".
 - N'écris RIEN en dehors du JSON. N'ajoute PAS de commentaires ni d'explications.
-- Garde chaque champ clair: résumé 2 à 5 phrases selon la densité (descriptif, tous les points de l'article); chaque exemple doit commencer par "Exemple appliqué:" et avoir 1–2 phrases; doctrina_jurisprudencia 1–3 phrases.
+- Garde chaque champ clair: résumé 2 à 5 phrases selon la densité (descriptif, tous les points de l'article); chaque exemple doit commencer par "Exemple appliqué:" et avoir 1–2 phrases; doctrina_jurisprudencia 1–3 phrases de commentaire uniquement doctrinal.
 - EXEMPLE DE FORMAT CORRECT (copie cette structure exacte):
 {
   "resum": "...",
@@ -394,10 +399,10 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
         : `Analyse l'ARTICLE 2: "1. La langue officielle de l'État est le catalan..."\n\nContexte: (vide)`;
 
     const exampleAssistant = idioma === 'ca'
-      ? `{"resum":"Aquest article defineix els símbols d'identitat d'Andorra: el català com a única llengua oficial i els símbols tradicionals. També fixa la capitalitat a Andorra la Vella.","exemples":["Un ciutadà vol presentar una sol·licitud al Govern i té dret a ser atès en català.","En un acte oficial internacional, s'ha d'utilitzar la bandera i l'escut tradicionals d'Andorra."],"doctrina_jurisprudencia":"La cooficialitat d'altres llengües no està reconeguda constitucionalment. El català és l'única llengua de l'administració."}`
+      ? `{"resum":"Aquest article defineix els símbols d'identitat d'Andorra: el català com a única llengua oficial i els símbols tradicionals. També fixa la capitalitat a Andorra la Vella.","exemples":["Un ciutadà vol presentar una sol·licitud al Govern i té dret a ser atès en català.","En un acte oficial internacional, s'ha d'utilitzar la bandera i l'escut tradicionals d'Andorra."],"doctrina_jurisprudencia":"La doctrina constitucional considera el català com a eix vertebrador de la identitat nacional andorrana i principi rector de l'activitat de totes les institucions públiques."}`
       : idioma === 'es'
-        ? `{"resum":"Este artículo define los símbolos de identidad de Andorra: el catalán como única lengua oficial y los símbolos tradicionales. También fija la capitalidad en Andorra la Vella.","exemples":["Un ciudadano quiere presentar una solicitud al Gobierno y tiene derecho a ser atendido en catalán.","En un acto oficial internacional, se debe utilizar la bandera y el escudo tradicionales de Andorra."],"doctrina_jurisprudencia":"La cooficialidad de otras lenguas no está reconocida constitucionalmente."}`
-        : `{"resum":"Cet article définit les symboles d'identité de l'Andorre : le catalan comme seule langue officielle et les symboles traditionnels. Il fixe également la capitale à Andorre-la-Vieille.","exemples":["Un citoyen souhaite soumettre une demande au Gouvernement et a le droit d'être servi en catalan.","Lors d'une cérémonie officielle internationale, le drapeau et les armoiries traditionnels doivent être utilisés."],"doctrina_jurisprudencia":"La co-officialité d'autres langues n'est pas reconnue constitutionnellement."}`;
+        ? `{"resum":"Este artículo define los símbolos de identidad de Andorra: el catalán como única lengua oficial y los símbolos tradicionales. También fija la capitalidad en Andorra la Vella.","exemples":["Un ciudadano quiere presentar una solicitud al Gobierno y tiene derecho a ser atendido en catalán.","En un acto oficial internacional, se debe utilizar la bandera y el escudo tradicionales de Andorra."],"doctrina_jurisprudencia":"La doctrina constitucional considera el catalán como eje vertebrador de la identidad nacional andorrana y principio rector de la actividad de las instituciones públicas."}`
+        : `{"resum":"Cet article définit les symboles d'identité de l'Andorre : le catalan comme seule langue officielle et les symboles traditionnels. Il fixe également la capitale à Andorre-la-Vieille.","exemples":["Un citoyen souhaite soumettre une demande au Gouvernement et a le droit d'être servi en catalan.","Lors d'une cérémonie officielle internationale, le drapeau et les armoiries traditionnels doivent être utilisés."],"doctrina_jurisprudencia":"La doctrine constitutionnelle considère le catalan comme l'axe vertébrateur de l'identité nationale andorrane et le principe directeur des institutions publiques."}`;
 
     // Exemple One-Shot 2 (Article 8) - EXEMPLES COM A STRINGS SIMPLES
     const exampleUser2 = idioma === 'ca'
@@ -407,10 +412,10 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
         : `Analyse l'ARTICLE 8: "1. La Constitution reconnaît le droit à la vie..."\n\nContexte: (vide)`;
 
     const exampleAssistant2 = idioma === 'ca'
-      ? `{"resum":"Es reconeix el dret a la vida com a dret fonamental inviolable i es prohibeix absolutament la pena de mort i la tortura.","exemples":["Un presoner denuncia maltractaments físics; la Constitució ho prohibeix terminantment.","El debat sobre l'avortament es basa en la protecció de la vida en les seves diferents fases."],"doctrina_jurisprudencia":"La prohibició de la pena de mort és absoluta. La protecció en 'diferents fases' fonamenta la restricció de l'avortament."}`
+      ? `{"resum":"Es reconeix el dret a la vida com a dret fonamental inviolable i es prohibeix absolutament la pena de mort i la tortura.","exemples":["Un presoner denuncia maltractaments físics; la Constitució ho prohibeix terminantment.","El debat sobre l'avortament es basa en la protecció de la vida en les seves diferents fases."],"doctrina_jurisprudencia":"La doctrina jurídica configura el dret a la vida com el valor suprem del sistema constitucional, del qual deriven la resta de drets fonamentals i la prohibició absoluta de la pena de mort."}`
       : idioma === 'es'
-        ? `{"resum":"Se reconoce el derecho a la vida como derecho fundamental inviolable y se prohíbe absolutamente la pena de muerte y la tortura.","exemples":["Un prisionero denuncia maltratos físicos; la Constitución lo prohíbe terminantemente.","El debate sobre el aborto se basa en la protección de la vida en sus diferentes fases."],"doctrina_jurisprudencia":"La prohibición de la pena de muerte es absoluta."}`
-        : `{"resum":"Le droit à la vie est reconnu comme un droit fondamental inviolable et la peine de mort ainsi que la torture sont absolument interdites.","exemples":["Un prisonnier dénonce des mauvais traitements physiques; la Constitution l'interdit formellement.","Le débat sur l'avortement repose sur la protection de la vie dans ses différentes phases."],"doctrina_jurisprudencia":"L'interdiction de la peine de mort est absolue."}`;
+        ? `{"resum":"Se reconoce el derecho a la vida como derecho fundamental inviolable y se prohíbe absolutamente la pena de muerte y la tortura.","exemples":["Un prisionero denuncia maltratos físicos; la Constitución lo prohíbe terminantemente.","El debate sobre el aborto se basa en la protección de la vida en sus diferentes fases."],"doctrina_jurisprudencia":"La doctrina jurídica configura el derecho a la vida como el valor supremo del sistema constitucional, del que derivan los demás derechos fundamentales y la prohibición absoluta de la pena de muerte."}`
+        : `{"resum":"Le droit à la vie est reconnu comme un droit fondamental inviolable et la peine de mort ainsi que la torture sont absolument interdites.","exemples":["Un prisonnier dénonce des mauvais traitements physiques; la Constitution l'interdit formellement.","Le débat sur l'avortement repose sur la protection de la vie dans ses différentes phases."],"doctrina_jurisprudencia":"La doctrine juridique formule le droit à la vie comme la valeur suprême du système constitutionnel, dont découlent les autres droits fondamentaux et l'interdiction absolue de la peine de mort."}`;
 
     // Prompt Real - Reforçat per evitar copiar exemples
     const promptReal = idioma === 'ca'
@@ -745,10 +750,10 @@ ${ragContext}`;
 
         const fix2 =
           idioma === 'ca'
-            ? `Reescriu NOMÉS aquests camps per a l'ARTICLE ${numeracio} (sense repetir el text literal):\n\n- "exemples": Array de 2 o 3 frases simples explicant exemples pràctics (NO placeholders).\n- "doctrina_jurisprudencia": 1–3 frases de comentari jurídic.\n\nRespon ÚNICAMENT amb un JSON vàlid:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Exemple aplicat: ...", "Exemple aplicat: ..."],\n  "doctrina_jurisprudencia": "..."\n}`
+            ? `Reescriu NOMÉS aquests camps per a l'ARTICLE ${numeracio} (sense repetir el text literal):\n\n- "exemples": Array de 2 o 3 frases simples explicant exemples pràctics (NO placeholders).\n- "doctrina_jurisprudencia": 1–3 frases de comentari únicament doctrinal (sense referències a jurisprudència).\n\nRespon ÚNICAMENT amb un JSON vàlid:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Exemple aplicat: ...", "Exemple aplicat: ..."],\n  "doctrina_jurisprudencia": "..."\n}`
             : idioma === 'es'
-              ? `Reescribe SOLO estos campos para el ARTÍCULO ${numeracio}:\n\n- "exemples": Array de 2 o 3 frases simples (Ejemplos prácticos).\n- "doctrina_jurisprudencia": 1–3 frases de comentario jurídico.\n\nResponde ÚNICAMENTE con un JSON válido:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Ejemplo aplicado: ...", "Ejemplo aplicado: ..."],\n  "doctrina_jurisprudencia": "..."\n}`
-              : `Réécris UNIQUEMENT ces champs pour l'ARTICLE ${numeracio}:\n\n- "exemples": Tableau de 2 ou 3 phrases simples (Exemples pratiques).\n- "doctrina_jurisprudencia": 1–3 phrases de commentaire juridique.\n\nRéponds UNIQUEMENT avec un JSON valide:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Exemple appliqué: ...", "Exemple appliqué: ..."],\n  "doctrina_jurisprudencia": "..."\n}`;
+              ? `Reescribe SOLO estos campos para el ARTÍCULO ${numeracio}:\n\n- "exemples": Array de 2 o 3 frases simples (Ejemplos prácticos).\n- "doctrina_jurisprudencia": 1–3 frases de comentario únicamente doctrinal (sin referencias a jurisprudencia).\n\nResponde ÚNICAMENTE con un JSON válido:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Ejemplo aplicado: ...", "Ejemplo aplicado: ..."],\n  "doctrina_jurisprudencia": "..."\n}`
+              : `Réécris UNIQUEMENT ces champs pour l'ARTICLE ${numeracio}:\n\n- "exemples": Tableau de 2 ou 3 phrases simples (Exemples pratiques).\n- "doctrina_jurisprudencia": 1–3 phrases de commentaire uniquement doctrinal (sans références à la jurisprudence).\n\nRéponds UNIQUEMENT avec un JSON valide:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Exemple appliqué: ...", "Exemple appliqué: ..."],\n  "doctrina_jurisprudencia": "..."\n}`;
 
         const fix2Messages = [
           { role: 'system', content: systemPromptBase },
