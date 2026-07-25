@@ -323,12 +323,6 @@ Réponds en format JSON avec cette structure EXACTA (rien avant ni après; comme
   "doctrina_jurisprudencia": "1–3 phrases de commentaire uniquement doctrinal basé sur l'article et la doctrine juridique (sans inclure de jurisprudence)."
 }
 
-⚠️ CRITIQUE: Réponds UNIQUEMENT avec le JSON. Le premier caractère doit être { et le dernier }. Rien avant ni après. ⚠️`écifique à cet article, 1–2 phrases)", "idioma": "fr"},
-    {"cas": "Exemple appliqué: (deuxième cas réaliste et spécifique, 1–2 phrases)", "idioma": "fr"}
-  ],
-  "doctrina_jurisprudencia": "1–3 phrases de commentaire juridique basé sur l'article; si le contexte contient jurisprudence/doctrine, intègre-la brièvement (sans inventer)."
-}
-
 ⚠️ CRITIQUE: Réponds UNIQUEMENT avec le JSON. Le premier caractère doit être { et le dernier }. Rien avant ni après. ⚠️`,
     };
 
