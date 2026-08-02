@@ -10,6 +10,7 @@ import { getDoctrinaByArticleId, type DoctrinaCase } from '../../../../data/doct
 // Components
 import { ArticleHeader } from '../../../../components/article/ArticleHeader';
 import { ArticleContent } from '../../../../components/article/ArticleContent';
+import { ArticleForcaNormativa } from '../../../../components/article/ArticleForcaNormativa';
 
 const ArticleConstitucioPage: React.FC = () => {
   const router = useRouter();
@@ -203,6 +204,11 @@ const ArticleConstitucioPage: React.FC = () => {
 
           {/* Main content area */}
           <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+            {/* Força normativa: va primer perquè és la informació més accionable
+                (és un dret reclamable o un mandat a l'Estat?). Vegeu
+                docs/REDISSENY-INTERPRETACIO-ARTICLE.md */}
+            <ArticleForcaNormativa articleNumber={article.numeracio} codi={article.codi} />
+
             <ArticleContent
               article={article}
               idioma={idioma}

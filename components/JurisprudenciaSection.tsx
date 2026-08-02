@@ -4,6 +4,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { getJurisprudenciaForArticle, type SentenciaAndorra } from '../data/jurisprudencia-andorra';
+import { getContextConstitucional } from '../lib/prompts/context-constitucional';
 import { t, type Idioma } from '../lib/i18n';
 
 interface JurisprudenciaSectionProps {
@@ -32,6 +33,9 @@ const JurisprudenciaSection: React.FC<JurisprudenciaSectionProps> = ({
   }, [articleId]);
 
   const formatDate = (dateString: string): string => {
+    // Precisió d'any: la font només porta l'any per a la majoria de causes.
+    // No s'inventa el dia ni el mes.
+    if (/^\d{4}$/.test(dateString)) return dateString;
     try {
       const date = new Date(dateString);
       return date.toLocaleDateString(idioma === 'ca' ? 'ca-ES' : idioma === 'es' ? 'es-ES' : 'fr-FR', {
@@ -44,8 +48,20 @@ const JurisprudenciaSection: React.FC<JurisprudenciaSectionProps> = ({
     }
   };
 
+  // Estat buit explicat. Abans es retornava null i quedava una capsa amb títol i
+  // res a dins. 31 dels 107 articles no tenen cap causa al TC, i saber-ho és
+  // informació sobre l'article: sense via d'empara, difícilment hi arriben.
   if (sentencies.length === 0) {
-    return null; // No mostrar res si no hi ha jurisprudència
+    // Només per a la Constitució: un id com «cc-art-001» donaria un context erroni.
+    const ctx = /^CONST_/i.test(articleId) ? getContextConstitucional(articleId) : null;
+    const motiu = ctx && !ctx.empara
+      ? ' És el que sol passar amb els articles que no tenen via de recurs d’empara: rarament arriben a l’alt tribunal.'
+      : '';
+    return (
+      <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground, #6b7280)', margin: 0, lineHeight: 1.6 }}>
+        Cap resolució del Tribunal Constitucional del corpus (1994-2026) invoca aquest article.{motiu}
+      </p>
+    );
   }
 
   return (
