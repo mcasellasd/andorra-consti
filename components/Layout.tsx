@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { Globe, Menu, X } from 'lucide-react';
-import UnifiedChatbot from './UnifiedChatbot';
 import { getIdiomaActual, setIdioma, t, idiomesDisponibles, nomsIdiomes, type Idioma } from '../lib/i18n';
+
+const UnifiedChatbot = dynamic(() => import('./UnifiedChatbot'), {
+  ssr: false,
+});
 
 interface LayoutProps {
   children: React.ReactNode;

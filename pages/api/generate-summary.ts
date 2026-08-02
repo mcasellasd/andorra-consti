@@ -5,6 +5,8 @@ import { checkAIActCompliance, checkPlainLanguage, getAIActCompliancePrompt } fr
 import { getJurisprudenciaForArticle } from '../../data/jurisprudencia-andorra';
 import { getArticleIdByNumber, detectCodiFromArticle } from '../../lib/article-helpers';
 import { getContextConstitucional, blocContextPrompt } from '../../lib/prompts/context-constitucional';
+import { REGLES_DRET_PLANER } from '../../lib/prompts/dret-planer';
+import { solapamentLiteral, instruccioReescriptura } from '../../lib/rag/solapament-literal';
 import { generateText } from '../../lib/llm';
 
 interface GenerateSummaryRequest {
@@ -24,6 +26,12 @@ interface GenerateSummaryResponse {
     score: number;
     compliant: boolean;
     issues: string[];
+  };
+  /** Coincidència literal amb el text de la norma. Per sobre del llindar, s'ha refet. */
+  solapamentLiteral?: {
+    percentatge: number;
+    excessiu: boolean;
+    fragments: string[];
   };
   error?: string;
 }
@@ -72,7 +80,7 @@ Contingut (fragment fins a 2.000 caràcters):
 ${articleContent.substring(0, 2000)}${jurisprudenciaContext}
 
 Necessito una interpretació orientativa que segueixi estrictament aquestes indicacions:
-1. Escriu un apartat titulat "Resum (${ctxConst ? `article ${ctxConst.article} de la Constitució` : articleNumber})" amb 4 a 6 frases (o més si l'article és dens) en català planer que expliquin els punts essencials, què regula l'article, a qui afecta i la finalitat. Sigues descriptiu i clar. IMPORTANT: NO repeteixis el text literal de la llei. Adapta el contingut utilitzant llenguatge natural i planer, explicant amb les teves pròpies paraules què significa i què regula l'article. El text ha de ser fidel al significat i l'àmbit d'aplicació, però utilitzant un vocabulari i estructures diferents al text jurídic formal. Recorda indicar el llibre, secció o títol si aporta context.
+1. Escriu un apartat titulat "Resum (${ctxConst ? `article ${ctxConst.article} de la Constitució` : articleNumber})" amb 4 a 6 frases seguint les regles de dret planer i els tres moviments (què obliga i a qui / per a què serveix / què vol dir a la pràctica). Ha de ser fidel al significat, però NO pot conservar l'estructura ni el vocabulari de la frase legal: si el resultat es pot obtenir esborrant paraules de l'article original, no serveix.
 2. Tanca la resposta amb un paràgraf breu sota l'etiqueta "Avís" que indiqui que la informació és orientativa, no constitueix assessorament legal i que ha estat generada amb suport d'intel·ligència artificial (Llama-3.3-70B de Groq), animant a consultar professionals en cas de dubte.
 3. No incloguis cap exemple pràctic en aquesta resposta. Si consideres que en caldria cap, limita't a recordar que es pot sol·licitar un exemple específic.
 4. Evita cites literals llargues i no inventis dades, jurisprudència ni reformes inexistents.
@@ -104,6 +112,8 @@ Quan responguis:
 - Recorda sempre que això és orientatiu i no constitueix assessorament legal; recomana consultar professionals quan calgui.
 - Utilitza llenguatge propi del dret civil andorrà, però amb explicacions accessibles per a un públic general.
 
+${REGLES_DRET_PLANER}
+
 ${getAIActCompliancePrompt()}
 
 ${GUIA_CATALA_JURIDIC}
@@ -115,10 +125,26 @@ ${ASPECTES_JURISPRUDENCIA_ANDORRANA}`;
       { role: 'user', content: prompt },
     ];
 
-    const summary = await generateText(messages, {
-      maxTokens: 350,
+    let summary = await generateText(messages, {
+      maxTokens: 450,
       temperature: 0.7,
     });
+
+    // Porta determinista: si l'explicació és un calc del text legal, es refà una
+    // vegada retornant al model els fragments literals detectats. Sense això, la
+    // instrucció «no copiïs» es queda en intenció.
+    let solapament = solapamentLiteral(articleContent, summary);
+    if (solapament.excessiu) {
+      summary = await generateText(
+        [
+          ...messages,
+          { role: 'assistant', content: summary },
+          { role: 'user', content: instruccioReescriptura(solapament) },
+        ],
+        { maxTokens: 450, temperature: 0.85 }
+      );
+      solapament = solapamentLiteral(articleContent, summary);
+    }
 
     // Validar compliment amb AI Act
     const aiActValidation = checkAIActCompliance(summary);
@@ -137,6 +163,11 @@ ${ASPECTES_JURISPRUDENCIA_ANDORRANA}`;
         score: plainLanguageValidation.score,
         compliant: plainLanguageValidation.compliant,
         issues: plainLanguageValidation.issues,
+      },
+      solapamentLiteral: {
+        percentatge: solapament.percentatge,
+        excessiu: solapament.excessiu,
+        fragments: solapament.fragments,
       },
     });
   } catch (error: any) {
