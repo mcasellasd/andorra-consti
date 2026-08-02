@@ -4,6 +4,7 @@ import { ASPECTES_JURISPRUDENCIA_ANDORRANA } from '../../lib/prompts/aspectes-ju
 import { checkAIActCompliance, checkPlainLanguage, getAIActCompliancePrompt } from '../../lib/rag/quality-assessment';
 import { getJurisprudenciaForArticle } from '../../data/jurisprudencia-andorra';
 import { getArticleIdByNumber, detectCodiFromArticle } from '../../lib/article-helpers';
+import { getContextConstitucional, blocContextPrompt } from '../../lib/prompts/context-constitucional';
 import { generateText } from '../../lib/llm';
 
 interface GenerateSummaryRequest {
@@ -60,20 +61,34 @@ export default async function handler(
         .join('\n')}\n`;
     }
 
-    const prompt = `Context normatiu:
-Article: ${articleNumber}
+    // Context estructural: títol, capítol i força normativa reals de l'article.
+    // Sense això el model atribueix caràcter de dret fonamental a principis rectors.
+    const ctxConst = codi === 'constitucio' ? getContextConstitucional(articleNumber) : null;
+    const blocContext = ctxConst ? `${blocContextPrompt(ctxConst)}\n\n` : '';
+
+    const prompt = `${blocContext}Article: ${articleNumber}
 Títol: ${articleTitle}
 Contingut (fragment fins a 2.000 caràcters):
 ${articleContent.substring(0, 2000)}${jurisprudenciaContext}
 
 Necessito una interpretació orientativa que segueixi estrictament aquestes indicacions:
-1. Escriu un apartat titulat "Resum (${articleNumber} CCA)" amb 4 a 6 frases (o més si l'article és dens) en català planer que expliquin els punts essencials, què regula l'article, a qui afecta i la finalitat. Sigues descriptiu i clar. IMPORTANT: NO repeteixis el text literal de la llei. Adapta el contingut utilitzant llenguatge natural i planer, explicant amb les teves pròpies paraules què significa i què regula l'article. El text ha de ser fidel al significat i l'àmbit d'aplicació, però utilitzant un vocabulari i estructures diferents al text jurídic formal. Recorda indicar el llibre, secció o títol si aporta context.
+1. Escriu un apartat titulat "Resum (${ctxConst ? `article ${ctxConst.article} de la Constitució` : articleNumber})" amb 4 a 6 frases (o més si l'article és dens) en català planer que expliquin els punts essencials, què regula l'article, a qui afecta i la finalitat. Sigues descriptiu i clar. IMPORTANT: NO repeteixis el text literal de la llei. Adapta el contingut utilitzant llenguatge natural i planer, explicant amb les teves pròpies paraules què significa i què regula l'article. El text ha de ser fidel al significat i l'àmbit d'aplicació, però utilitzant un vocabulari i estructures diferents al text jurídic formal. Recorda indicar el llibre, secció o títol si aporta context.
 2. Tanca la resposta amb un paràgraf breu sota l'etiqueta "Avís" que indiqui que la informació és orientativa, no constitueix assessorament legal i que ha estat generada amb suport d'intel·ligència artificial (Llama-3.3-70B de Groq), animant a consultar professionals en cas de dubte.
 3. No incloguis cap exemple pràctic en aquesta resposta. Si consideres que en caldria cap, limita't a recordar que es pot sol·licitar un exemple específic.
 4. Evita cites literals llargues i no inventis dades, jurisprudència ni reformes inexistents.
 5. Mantén un to respectuós, clar i didàctic.`;
 
-    const systemMessage = `Ets un assistent jurídic digital que ajuda a interpretar els llibres del Codi Civil d'Andorra de forma comprensible. Treballes per un equip d'estudiants de dret; la finalitat és acadèmica i divulgativa. Mantén un to respectuós, clar i didàctic.
+    const normaNom = codi === 'constitucio'
+      ? "la Constitució del Principat d'Andorra"
+      : "els llibres del Codi Civil d'Andorra";
+
+    const systemMessage = `Ets un assistent jurídic digital que ajuda a interpretar ${normaNom} de forma comprensible. Treballes per un equip d'estudiants de dret; la finalitat és acadèmica i divulgativa. Mantén un to respectuós, clar i didàctic.
+
+REGLA INNEGOCIABLE SOBRE LA FORÇA NORMATIVA:
+Si el context indica que l'article és un principi rector, un deure o una norma orgànica, NO el pots
+descriure com un «dret fonamental» ni suggerir que es pot reclamar davant dels tribunals com si ho fos.
+Aquesta distinció és el punt on més fàcilment s'indueix la persona a error, i és més important que la
+fluïdesa de l'explicació. Si dubtes, atén-te literalment al bloc de context normatiu.
 
 Objectiu principal:
 1. Generar resums entenedors dels articles explicant el contingut essencial amb llenguatge clar i estructurat, però sense repetir el text literal de la norma. L'objectiu és adaptar al llenguatge planer utilitzant paraules i estructures diferents al text jurídic formal, mantenint la fidelitat al significat però transformant la forma.
@@ -84,7 +99,7 @@ Abans de respondre:
 - No inventis jurisprudència, dates ni reformes inexistents.
 
 Quan responguis:
-- Cita el número exacte de l'article (ex. "Article 1 CCA") i, si és rellevant, el llibre, títol o secció.
+- Cita el número exacte de l'article i, si és rellevant, el títol, capítol o llibre. Per a la Constitució digues "article N de la Constitució"; no facis servir mai l'abreviatura "CCA", que designa el Codi Civil.
 - Proporciona primer un resum descriptiu (4-6 frases, o més si cal) en català planer quan es demani un resum. CRÍTIC: Utilitza les teves pròpies paraules, NO repeteixis frases del text legal. Transforma el llenguatge jurídic formal en explicacions naturals i comprensibles.
 - Recorda sempre que això és orientatiu i no constitueix assessorament legal; recomana consultar professionals quan calgui.
 - Utilitza llenguatge propi del dret civil andorrà, però amb explicacions accessibles per a un públic general.
