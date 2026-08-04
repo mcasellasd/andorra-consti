@@ -203,7 +203,7 @@ const ArticleConstitucioPage: React.FC = () => {
           />
 
           {/* Main content area */}
-          <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+          <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
             {/* Força normativa: va primer perquè és la informació més accionable
                 (és un dret reclamable o un mandat a l'Estat?). Vegeu
                 docs/REDISSENY-INTERPRETACIO-ARTICLE.md */}
