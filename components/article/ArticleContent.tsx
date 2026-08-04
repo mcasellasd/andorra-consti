@@ -430,7 +430,7 @@ export function ArticleContent({
               </>
             )}
           </div>
-        </div>
+        </aside>
       </div>
 
       <ArticleNavigation previousArticle={previousArticle} nextArticle={nextArticle} idioma={idioma} />
