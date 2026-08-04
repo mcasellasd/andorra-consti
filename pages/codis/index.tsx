@@ -11,6 +11,7 @@ import { articlesConstitucio } from '../../data/codis/constitucio/articles-templ
 
 const CodisPage: React.FC = () => {
   const idioma = getIdiomaActual();
+  const totalArticles = articlesConstitucio.filter(art => art.id !== 'CONST_PREAMB').length;
 
   return (
     <>
@@ -54,7 +55,7 @@ const CodisPage: React.FC = () => {
                     {idioma === 'fr' && 'Constitution de la Principauté d\'Andorre (1993)'}
                   </p>
                   <p style={{ color: '#475569', fontSize: '0.875rem' }}>
-                    {articlesConstitucio.length} {idioma === 'ca' ? 'articles' : idioma === 'es' ? 'artículos' : 'articles'}
+                    {totalArticles} {idioma === 'ca' ? 'articles' : idioma === 'es' ? 'artículos' : 'articles'}
                   </p>
                 </div>
                 <Link

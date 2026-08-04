@@ -11,6 +11,7 @@ import { articlesConstitucio } from '../../../data/codis/constitucio/articles-te
 
 const ConstitucioPage: React.FC = () => {
   const idioma = getIdiomaActual();
+  const totalArticles = articlesConstitucio.filter(art => art.id !== 'CONST_PREAMB').length;
 
   const estructura = articlesConstitucio.reduce((acc, article) => {
     const titol = idioma === 'ca'
@@ -65,7 +66,7 @@ const ConstitucioPage: React.FC = () => {
                 {idioma === 'fr' && 'Constitution approuvée le 4 mai 1993'}
               </p>
             </div>
-            <div className="constitution-index-pill">{articlesConstitucio.length} {idioma === 'ca' ? 'articles' : idioma === 'es' ? 'artículos' : 'articles'}</div>
+            <div className="constitution-index-pill">{totalArticles} {idioma === 'ca' ? 'articles' : idioma === 'es' ? 'artículos' : 'articles'}</div>
           </header>
 
           {articlesConstitucio.length === 0 ? (
