@@ -3,7 +3,11 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { getJurisprudenciaForArticle, type SentenciaAndorra } from '../data/jurisprudencia-andorra';
+// IMPORTANT: no importis `data/jurisprudencia-andorra` en aquest fitxer.
+// És un component de client i Next empaquetaria tota la base de sentències al
+// bundle del navegador. Es demana per API a /api/jurisprudencia/[articleId].
+// Només s'importa el TIPUS, que desapareix en compilar.
+import type { SentenciaAndorra } from '../data/jurisprudencia-andorra';
 import { getContextConstitucional } from '../lib/prompts/context-constitucional';
 import { t, type Idioma } from '../lib/i18n';
 
@@ -20,16 +24,30 @@ const JurisprudenciaSection: React.FC<JurisprudenciaSectionProps> = ({
 }) => {
   const [sentencies, setSentencies] = useState<SentenciaAndorra[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [carregant, setCarregant] = useState(true);
 
   useEffect(() => {
-    // Carregar jurisprudència relacionada amb l'article
-    const relatedJurisprudence = getJurisprudenciaForArticle(articleId);
-    setSentencies(relatedJurisprudence);
-    
-    // Obrir automàticament si hi ha sentències
-    if (relatedJurisprudence.length > 0) {
-      setIsOpen(true);
-    }
+    let cancellat = false;
+    setCarregant(true);
+
+    fetch(`/api/jurisprudencia/${encodeURIComponent(articleId)}`)
+      .then((r) => (r.ok ? r.json() : { sentencies: [] }))
+      .then((d) => {
+        if (cancellat) return;
+        const trobades: SentenciaAndorra[] = d.sentencies ?? [];
+        setSentencies(trobades);
+        if (trobades.length > 0) setIsOpen(true);
+      })
+      .catch(() => {
+        if (!cancellat) setSentencies([]);
+      })
+      .finally(() => {
+        if (!cancellat) setCarregant(false);
+      });
+
+    return () => {
+      cancellat = true;
+    };
   }, [articleId]);
 
   const formatDate = (dateString: string): string => {
@@ -47,6 +65,14 @@ const JurisprudenciaSection: React.FC<JurisprudenciaSectionProps> = ({
       return dateString;
     }
   };
+
+  if (carregant) {
+    return (
+      <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground, #6b7280)', margin: 0 }}>
+        Cercant jurisprudència…
+      </p>
+    );
+  }
 
   // Estat buit explicat. Abans es retornava null i quedava una capsa amb títol i
   // res a dins. 31 dels 107 articles no tenen cap causa al TC, i saber-ho és

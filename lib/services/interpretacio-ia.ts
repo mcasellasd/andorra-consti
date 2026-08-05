@@ -168,7 +168,7 @@ export async function interpretacioIAHandler(
 
 ⚠️ TASCA: Interpreta ÚNICAMENT aquest article específic. No parlis d'altres articles ni temes no relacionats. ⚠️
 
-PRIORITAT ABSOLUTA: Primer interpreta el **text literal** de l’article en llenguatge planer. La jurisprudència/doctrina és **opcional** i només s'ha d'usar si apareix al context. Encara que NO hi hagi jurisprudència/doctrina, has de generar igualment el resum, els exemples i un comentari jurídic basat en el text de l'article.
+PRIORITAT ABSOLUTA: Primer interpreta el **text literal** de l’article en llenguatge planer. La jurisprudència/doctrina és **opcional** i només s'ha d'usar si apareix al context. Encara que NO hi hagi jurisprudència/doctrina, has de generar igualment la interpretació completa basada en el text de l'article.
 
 **ARTICLE ${numeracio} A INTERPRETAR:**
 "${text_oficial}"${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
@@ -189,16 +189,16 @@ LLENGUATGE PLANER I EXPLICATIU: El text oficial està en català. La teva feina 
 
 PÚBLIC: Hi ha usuaris que necessiten més explicació. El resum ha de ser **suficient** per a qui necessiti més detall: inclou **tots** els apartats o incisos de l'article (no només els primers). Si l'article té diversos punts numerats, menciona o resumeix cadascun en llenguatge planer. En articles densos, pots fer el resum una mica més llarg (3 a 5 frases) per cobrir-ho tot.
 
-⚠️ ESTRUCTURA OBLIGATÒRIA: La teva resposta s'ha d'encabir en TRES llocs específics ⚠️
+⚠️ ESTRUCTURA OBLIGATÒRIA: La teva resposta s'ha d'encabir en sis llocs específics ⚠️
 
-La interpretació IA es mostra en tres seccions del sidebar:
-1. **RESUM**: Resum **explicatiu** en **llenguatge planer** (2 a 5 frases segons la densitat). **Traduïu** el text oficial a paraules senzilles: què vol dir, què implica en la pràctica. Inclou la interpretació **en conjunt** i **tots** els punts concrets (cada apartat; què regula, a qui afecta). Vocabulari accessible, sense jargon jurídic sense explicar. No copiïs el text literal; explica amb les teves paraules.
-2. **EXEMPLES**: Exactament 2 o 3 exemples pràctics quotidians.
-   - ⚠️ REGLA D'OR: L'exemple ha de ser sobre un tema que l'article regula EXPLÍCITAMENT. Si l'article parla de detenció, no parlis d'impostos.
- 3. **DOCTRINA**: Comentari únicament doctrinal (1-3 frases) basat en el text de l’article i la doctrina jurídica:
-   - Sempre escriu un comentari estrictament doctrinal sobre la naturalesa, abast, principis i fonaments jurídics de la norma.
-   - Centra el comentari en l'anàlisi doctrinal i teòrica del dret. NO incloguis referències a jurisprudència ni a sentències en aquest camp.
-   - No facis disclaimers del tipus "no hi ha doctrina": produeix sempre l'anàlisi doctrinal teòrica de l'article.
+La interpretació IA es mostra en el sidebar de l'article amb les següents seccions:
+1. **RESUM**: Resum **explicatiu** en **llenguatge planer** (2 a 5 frases segons la densitat). **Traduïu** el text oficial a paraules senzilles: què vol dir, què implica en la pràctica. Inclou la interpretació **en conjunt** i **tots** els punts concrets.
+2. **EXEMPLES**: Exactament 2 o 3 exemples pràctics quotidians rellevants per a l'article.
+   - ⚠️ REGLA D'OR: L'exemple ha de ser sobre un tema que l'article regula EXPLÍCITAMENT.
+3. **FINALITAT** ("Què et permet / què et limita"): Explica clarament què permet fer o quina limitació/prohibició estableix expressament aquest article en el dia a dia (1-2 frases clares).
+4. **DESTINATARIS** ("Àmbit d'aplicació"): A qui o a què s'aplica aquest article (ex. tots els ciutadans, poders públics, coprínceps, etc.) en 1-2 frases clares.
+5. **APLICACIO** ("Impacte pràctic"): Explica quin és l'impacte pràctic immediat o la utilitat directa d'aquest article per a les persones o la societat (1-2 frases clares).
+6. **DOCTRINA**: Comentari doctrinal (1-3 frases) sobre els principis jurídics i fonaments de l'article, sense referències a sentències específiques.
 
 Respon en format JSON amb aquesta estructura EXACTA (cap text abans ni després; comença per { i acaba per }):
 {
@@ -207,20 +207,20 @@ Respon en format JSON amb aquesta estructura EXACTA (cap text abans ni després;
     {"cas": "Exemple aplicat: (cas realista i específic d'aquest article, 1–2 frases)", "idioma": "ca"},
     {"cas": "Exemple aplicat: (segon cas realista i específic, 1–2 frases)", "idioma": "ca"}
   ],
+  "finalitat": "Explica de forma planera què permet o limita exactament l'article (1-2 frases).",
+  "destinataris": "Indica de forma planera a qui o a què s'aplica el contingut de l'article (1-2 frases).",
+  "aplicacio": "Explica quin és l'impacte o utilitat pràctica de l'article (1-2 frases).",
   "doctrina_jurisprudencia": "1–3 frases de comentari únicament doctrinal basat en l'article i la doctrina jurídica (sense incloure jurisprudència)."
 }
 
-⚠️ CRÍTIC: Respon ÚNICAMENT amb el JSON. El primer caràcter ha de ser { i l'últim }. Cap text abans ni després. ⚠️
-
-${GUIA_CATALA_JURIDIC}
-${ASPECTES_JURISPRUDENCIA_ANDORRANA}`,
+⚠️ CRÍTIC: Respon ÚNICAMENT amb el JSON. El primer caràcter ha de ser { i l'últim }. Cap text abans ni després. ⚠️`,
       es: `Eres un experto en derecho andorrano. El artículo siguiente es de la **Constitución del Principado de Andorra**.
 
 ⚠️ TAREA: Interpreta ÚNICAMENTE este artículo específico. No hables de otros artículos ni temas no relacionados. ⚠️
 
 INTERPRETACIÓN COMPLETA: Debes interpretar la norma **en conjunto** (sentido general, finalidad, coherencia con el contexto constitucional) y **también** los puntos concretos de la ley (apartados, incisos, obligaciones o derechos específicos que establece el artículo).
 
-PRIORIDAD ABSOLUTA: Primero interpreta el **texto literal** del artículo en lenguaje llano. Aunque NO haya doctrina previa, debes generar igualmente el resumen, los ejemplos y un comentario únicamente doctrinal basado en el texto del artículo.
+PRIORIDAD ABSOLUTA: Primero interpreta el **texto literal** del artículo en lenguaje llano. Aunque NO haya doctrina previa, debes generar igualmente la interpretación completa basada en el texto del artículo.
 
 **ARTÍCULO ${numeracio} A INTERPRETAR:**
 "${text_oficial}"${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
@@ -235,7 +235,7 @@ PRIORIDAD ABSOLUTA: Primero interpreta el **texto literal** del artículo en len
 - NO añadas despedidas, saludos ni información de contacto.
 - NO hables de temas que NO estén explícitamente en el artículo proporcionado.
 - NO escribas nada fuera del JSON. Nada antes ni después.
-- NO copies ni reutilices frases plantilla del prompt (p. ej. "Resumen descriptivo...", "situación concreta...", "...").
+- NO copies ni dejes frases plantilla del prompt (p. ej. "Resumen descriptivo...", "situación concreta...", "...").
 - NO digas que “no puedes” dar ejemplos o comentario por falta de doctrina.
 
 REGLA FUNDAMENTAL: Solo puedes hablar de lo que dice este artículo. Si el artículo NO menciona residencia, inmigración, procedimientos administrativos u otros temas, NO hables de ellos.
@@ -244,19 +244,18 @@ IMPORTANTE: NO repitas el texto literal del artículo. Adapta el contenido utili
 
 LENGUAJE LLANO Y EXPLICATIVO: El texto oficial está en catalán. Tu tarea es **traducir** el significado a lenguaje llano: explica qué quiere decir con palabras sencillas y cotidianas, sin repetir el lenguaje jurídico. El resumen debe ser **explicativo** (qué implica en la práctica, por qué importa) y en **lenguaje llano** (vocabulario accesible, frases cortas, sin jerga sin explicar).
 
-PÚBLICO: Hay usuarios que necesitan más explicación. El resumen debe ser **suficiente** para quien necesite más detalle: incluye **todos** los apartados o incisos del artículo (no solo los primeros). Si el artículo tiene varios puntos numerados, menciona o resume cada uno en lenguaje llano. En artículos densos, puedes alargar el resumen (3 a 5 frases) para cubrirlo todo.
+PÚBLICO: Hay usuarios que necesitan más explicación. El resumen debe ser **suiciente** para quien necesite más detalle: incluye **todos** los apartados o incisos del artículo (no solo los primeros). Si el artículo tiene varios puntos de la ley, menciona o resume cada uno en lenguaje llano. En artículos densos, puedes alargar el resumen (3 a 5 frases) para verlo todo.
 
-⚠️ ESTRUCTURA OBLIGATORIA: Tu respuesta debe encajarse en TRES lugares específicos ⚠️
+⚠️ ESTRUCTURA OBLIGATORIA: Tu respuesta debe encajarse en seis lugares específicos ⚠️
 
-La interpretación IA se muestra en tres secciones del sidebar:
-1. **RESUMEN**: Resumen **explicativo** en **lenguaje llano** (2 a 5 frases según la densidad). **Traduce** el texto oficial a palabras sencillas: qué quiere decir, qué implica en la práctica. Incluye la interpretación **en conjunto** y **todos** los puntos concretos (cada apartado; qué regula, a quién afecta). Vocabulario accesible, sin jerga jurídica sin explicar. No copies el texto literal; explica con tus propias palabras.
-2. **EJEMPLOS**: Exactamente 2 o 3 ejemplos prácticos cotidianos.
-   - ⚠️ REGLA DE ORO: El ejemplo debe ser sobre un tema que el artículo regula EXPLÍCITAMENTE. Si el artículo habla de detención, no hables de impuestos.
-   - Cada ejemplo debe empezar con "Ejemplo aplicado:" seguido de la situación concreta derivada directamente del texto legal.
-3. **DOCTRINA**: Comentario únicamente doctrinal (1-3 frases) basado en el texto del artículo y la doctrina jurídica:
-   - Escribe un comentario estrictamente doctrinal sobre el análisis teórico, principios, naturaleza jurídica y alcance de la norma.
-   - NO incluyas referencias a jurisprudencia ni a sentencias en este campo.
-   - No hagas disclaimers del tipo "no hay doctrina": debes producir el análisis doctrinal teórico igualmente.
+La interpretación IA se muestra en el sidebar con las siguientes secciones:
+1. **RESUMEN**: Resumen **explicativo** en **lenguaje llano** (2 a 5 frases según la densidad). **Traduce** el texto oficial a palabras sencillas: qué quiere decir, qué implica en la práctica. Incluye la interpretación **en conjunto** y **todos** los puntos concretos.
+2. **EJEMPLOS**: Exactamente 2 o 3 ejemplos prácticos cotidianos relevantes para el artículo.
+   - ⚠️ REGLA DE ORO: El ejemplo debe ser sobre un tema que el artículo regula EXPLÍCITAMENTE.
+3. **FINALITAT** ("Qué permite / qué limita"): Explica claramente qué permite hacer o qué limitación/prohibición establece expresamente este artículo en el día a día (1-2 frases claras).
+4. **DESTINATARIS** ("Ámbito de aplicación"): A quién o a qué se aplica este artículo (ej. todos los ciudadanos, poderes públicos, copríncipes, etc.) en 1-2 frases claras.
+5. **APLICACIO** ("Impacto práctico"): Explica cuál es el impacto práctico inmediato o la utilidad directa de este artículo para las personas o la sociedad (1-2 frases claras).
+6. **DOCTRINA**: Comentario doctrinal (1-3 frases) sobre los principios jurídicos y fundamentos del artículo, sin referencias a sentencias específicas.
 
 Responde en formato JSON con esta estructura EXACTA (nada antes ni después; empieza por { y acaba por }):
 {
@@ -265,6 +264,9 @@ Responde en formato JSON con esta estructura EXACTA (nada antes ni después; emp
     {"cas": "Ejemplo aplicado: (caso realista y específico de este artículo, 1–2 frases)", "idioma": "es"},
     {"cas": "Ejemplo aplicado: (segundo caso realista y específico, 1–2 frases)", "idioma": "es"}
   ],
+  "finalitat": "Explica de forma llana qué permite o limita exactamente el artículo (1-2 frases).",
+  "destinataris": "Indica de forma llana a quién o a qué se aplica el contenido del artículo (1-2 frases).",
+  "aplicacio": "Explica cuál es el impacto o utilidad práctica del artículo (1-2 frases).",
   "doctrina_jurisprudencia": "1–3 frases de comentario únicamente doctrinal basado en el artículo y la doctrina jurídica (sin incluir jurisprudencia)."
 }
 
@@ -275,12 +277,12 @@ Responde en formato JSON con esta estructura EXACTA (nada antes ni después; emp
 
 INTERPRÉTATION COMPLÈTE: Tu dois interpréter la norme **dans son ensemble** (sens général, finalité, cohérence avec le contexte constitutionnel) et **aussi** les points concrets de la loi (paragraphes, alinéas, obligations ou droits spécifiques que l'article établit).
 
-PRIORITÉ ABSOLUE: Interprète d'abord le **texte littéral** de l'article en langage simple. Même s'il n'y a PAS de doctrine préalable, tu dois quand même générer le résumé, les exemples et un commentaire uniquement doctrinal basé sur le texte de l'article.
+PRIORITÉ ABSOLUTE: Interprète d'abord le **texte littéral** de l'article en langage simple. Même s'il n'y a PAS de doctrine préalable, tu dois quand même générer la fiche d'interprétation complète basée sur le texte de l'article.
 
 **ARTICLE ${numeracio} À INTERPRÉTER:**
 "${text_oficial}"${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
 
-⚠️ RÈGLE ABSOLUE SUR LA LANGUE ET LA TRADUCTION ⚠️
+⚠️ RÈGLE ABSOLUTE SUR LA LANGUE ET LA TRADUCTION ⚠️
 - Le texte littéral de l'article est en catalan (langue officielle) et ne doit JAMAIS être traduit.
 - Ta réponse (résumé, exemples, interprétation) DOIT être COMPLÈTEMENT en FRANÇAIS.
 - Exemple correct: "Selon l'Art. ${numeracio}: '${text_oficial.substring(0, 50)}...' Cela signifie que..."
@@ -301,27 +303,30 @@ LANGAGE SIMPLE ET EXPLICATIF: Le texte officiel est en catalan. Ta tâche est de
 
 PUBLIC: Certains utilisateurs ont besoin de plus d'explication. Le résumé doit être **suffisant** pour qui a besoin de plus de détail : inclus **tous** les paragraphes ou alinéas de l'article (pas seulement les premiers). Si l'article a plusieurs points numérotés, mentionne ou résume chacun en langage simple. Pour les articles denses, tu peux allonger le résumé (3 à 5 phrases) pour tout couvrir.
 
-⚠️ STRUCTURE OBLIGATOIRE: Ta réponse doit s'encadrer dans TROIS endroits spécifiques ⚠️
+⚠️ STRUCTURE OBLIGATOIRE: Ta réponse doit s'encadrer dans six endroits spécifiques ⚠️
 
-L'interprétation IA s'affiche dans trois sections de la barre latérale:
-1. **RÉSUMÉ**: Résumé **explicatif** en **langage simple** (2 à 5 phrases selon la densité). **Traduis** le texte officiel en mots simples: ce que cela veut dire, ce que cela implique en pratique. Inclus l'interprétation **dans son ensemble** et **tous** les points concrets (chaque paragraphe; ce qu'il régit, à qui il s'applique). Vocabulaire accessible, pas de jargon juridique sans l'expliquer. Ne copie pas le texte littéral; explique avec tes propres mots.
-2. **EXEMPLES**: Exactement 2 ou 3 exemples pratiques quotidiens.
-   - ⚠️ RÈGLE D'OR: L'exemple doit porter sur un sujet que l'article régit EXPLICITEMENT. Si l'article parle de détention, ne parle pas d'impôts.
-   - Chaque exemple doit commencer par "Exemple appliqué:" suivi de la situation concrète directement dérivée du texte légal.
-3. **DOCTRINE**: Commentaire uniquement doctrinal (1-3 phrases) basé sur le texte de l'article et la doctrine juridique:
-   - Écris un commentaire strictement doctrinal sur l'analyse théorique, les principes, la nature juridique et la portée de la norme.
-   - N'inclus PAS de références à la jurisprudence ni aux arrêts dans ce champ.
-   - Ne fais pas de disclaimers du type "pas de doctrine": tu dois produire l'analyse doctrinale théorique quand même.
+L'interprétation IA s'affiche dans la barre latérale avec les sections suivantes:
+1. **RÉSUMÉ**: Résumé **explicatif** en **langage simple** (2 à 5 phrases selon la densité). **Traduis** le texte officiel en mots simples.
+2. **EXEMPLES**: Exactament 2 ou 3 exemples pratiques quotidiens pertinents pour l'article.
+   - ⚠️ RÈGLE D'OR: L'exemple doit porter sur un sujet que l'article régit EXPLICITEMENT.
+3. **FINALITAT** ("Ce que cela permet / limite"): Explique clairement ce que cet article permet de faire ou quelle limitation/interdiction il établit expressément au quotidien (1-2 phrases).
+4. **DESTINATARIS** ("Champ d'application"): À qui ou à quoi s'applique cet article (ex. tous les citoyens, pouvoirs publics, coprinces, etc.) en 1-2 phrases.
+5. **APLICACIO** ("Impact pratique"): Explique quel est l'impact pratique immédiat ou l'utilité directe de cet article pour les personnes ou la société (1-2 phrases).
+6. **DOCTRINE**: Commentaire doctrinal (1-3 phrases) sur les principes juridiques et fondements de l'article, sans référence à des décisions de justice spécifiques.
 
-Réponds en format JSON avec cette structure EXACTA (rien avant ni après; commence par { et finis par }):
+Réponds en format JSON avec cette structure EXACTE (rien avant ni après; commence par { et finis par }):
 {
   "resum": "Écris un résumé SPÉCIFIQUE et descriptif de cet article (2 à 5 phrases selon la densité; couvre tous les points de l'article; sans placeholders).",
   "exemples": [
     {"cas": "Exemple appliqué: (cas réaliste et spécifique à cet article, 1–2 phrases)", "idioma": "fr"},
     {"cas": "Exemple appliqué: (deuxième cas réaliste et spécifique, 1–2 phrases)", "idioma": "fr"}
   ],
+  "finalitat": "Explique de manière simple ce que l'article permet ou limite exactement (1-2 phrases).",
+  "destinataris": "Indique de manière simple à qui ou à quoi s'applique le contenu de l'article (1-2 phrases).",
+  "aplicacio": "Explique quel est l'impact ou l'utilité pratique de l'article (1-2 phrases).",
   "doctrina_jurisprudencia": "1–3 phrases de commentaire uniquement doctrinal basé sur l'article et la doctrine juridique (sans inclure de jurisprudence)."
 }
+
 
 ⚠️ CRITIQUE: Réponds UNIQUEMENT avec le JSON. Le premier caractère doit être { et le dernier }. Rien avant ni après. ⚠️`,
     };
@@ -339,11 +344,14 @@ Réponds en format JSON avec cette structure EXACTA (rien avant ni après; comme
 - La teva resposta HA DE SER ÚNICAMENT un objecte JSON vàlid. CAP text abans ni després.
 - El primer caràcter HA DE SER { i l'últim HA DE SER }. Sense introduccions, conclusions, enllaços, preguntes, explicacions ni "Espero haver ajudat".
 - NO escriguis res fora del JSON. NO afegeixis comentaris ni explicacions.
-- Mantén cada camp clar: resum 2 a 5 frases segons la densitat (descriptiu, tots els punts de l'article); cada exemple ha de començar amb "Exemple aplicat:" i tenir 1–2 frases; doctrina_jurisprudencia 1–3 frases de comentari únicament doctrinal.
+- Mantén cada camp clar: resum 2 a 5 frases; exemples és un array d'exemples pràctics reals de l'article; finalitat (què et permet/limita) en 1-2 frases; destinataris (àmbit d'aplicació) en 1-2 frases; aplicacio (impacte pràctic) en 1-2 frases; doctrina_jurisprudencia en 1-3 frases de comentari doctrinal.
 - EXEMPLE DE FORMAT CORRECTE (copia aquesta estructura exacta):
 {
   "resum": "...",
   "exemples": [{"cas": "Exemple aplicat: ...", "idioma": "ca"}],
+  "finalitat": "...",
+  "destinataris": "...",
+  "aplicacio": "...",
   "doctrina_jurisprudencia": "..."
 }
 `;
@@ -353,11 +361,14 @@ Réponds en format JSON avec cette structure EXACTA (rien avant ni après; comme
 - Tu respuesta DEBE SER ÚNICAMENTE un objeto JSON válido. NADA antes ni después.
 - El primer carácter DEBE SER { y el último DEBE SER }. Sin introducciones, conclusiones, enlaces, preguntas, explicaciones ni "Espero haber ayudado".
 - NO escribas nada fuera del JSON. NO añadas comentarios ni explicaciones.
-- Mantén cada campo claro: resumen 2 a 5 frases según la densidad (descriptivo, todos los puntos del artículo); cada ejemplo debe empezar con "Ejemplo aplicado:" y tener 1–2 frases; doctrina_jurisprudencia 1–3 frases de comentario únicamente doctrinal.
+- Mantén cada campo claro: resumen 2 a 5 frases; exemples es un array de ejemplos prácticos reales del artículo; finalitat (qué permite/limita) en 1-2 frases; destinataris (ámbito de aplicación) en 1-2 frases; aplicacio (impacto práctico) en 1-2 frases; doctrina_jurisprudencia en 1-3 frases de comentario doctrinal.
 - EJEMPLO DE FORMATO CORRECTO (copia esta estructura exacta):
 {
   "resum": "...",
   "exemples": [{"cas": "Ejemplo aplicado: ...", "idioma": "es"}],
+  "finalitat": "...",
+  "destinataris": "...",
+  "aplicacio": "...",
   "doctrina_jurisprudencia": "..."
 }
 `;
@@ -367,11 +378,14 @@ Réponds en format JSON avec cette structure EXACTA (rien avant ni après; comme
 - Ta réponse DOIT ÊTRE UNIQUEMENT un objet JSON valide. Rien avant ni après.
 - Le premier caractère DOIT ÊTRE { et le dernier DOIT ÊTRE }. Pas d'introduction, conclusion, liens, questions ni "J'espère vous avoir aidé".
 - N'écris RIEN en dehors du JSON. N'ajoute PAS de commentaires ni d'explications.
-- Garde chaque champ clair: résumé 2 à 5 phrases selon la densité (descriptif, tous les points de l'article); chaque exemple doit commencer par "Exemple appliqué:" et avoir 1–2 phrases; doctrina_jurisprudencia 1–3 phrases de commentaire uniquement doctrinal.
+- Garde chaque champ clair: résumé 2 à 5 phrases; exemples est un tableau d'exemples pratiques réels de l'article; finalitat (ce que cela permet/limite) en 1-2 phrases; destinataris (champ d'application) en 1-2 phrases; aplicacio (impact pratique) en 1-2 phrases; doctrina_jurisprudencia en 1-3 phrases de commentaire doctrinal.
 - EXEMPLE DE FORMAT CORRECT (copie cette structure exacte):
 {
   "resum": "...",
   "exemples": [{"cas": "Exemple appliqué: ...", "idioma": "fr"}],
+  "finalitat": "...",
+  "destinataris": "...",
+  "aplicacio": "...",
   "doctrina_jurisprudencia": "..."
 }
 `;
@@ -380,10 +394,10 @@ Réponds en format JSON avec cette structure EXACTA (rien avant ni après; comme
     // Reduïm la complexitat del JSON per evitar errors de sintaxi del model.
 
     const systemPromptBase = idioma === 'ca'
-      ? `Ets un assistent jurídic expert en dret andorrà. La teva única funció és analitzar articles de la Constitució i generar fitxes explicatives en format JSON simplificat. La teva resposta (resum, exemples, doctrina_jurisprudencia) ha de ser íntegrament en català. Respon NOMÉS en català.`
+      ? `Ets un assistent jurídic expert en dret andorrà. La teva única funció és analitzar articles de la Constitució i generar fitxes explicatives en format JSON simplificat. La teva resposta (resum, exemples, finalitat, destinataris, aplicacio, doctrina_jurisprudencia) ha de ser íntegrament en català. Respon NOMÉS en català.`
       : idioma === 'es'
-        ? `Eres un asistente experto en derecho andorrano. Tu única función es analizar artículos de la Constitución y generar fichas explicativas en formato JSON simplificado. Tu respuesta (resum, exemples, doctrina_jurisprudencia) debe ser íntegramente en castellano. Responde SOLO en castellano.`
-        : `Tu es un assistant expert en droit andorran. Ta seule fonction est d'analyser des articles de la Constitution et de générer des fiches explicatives en format JSON simplifié. Ta réponse (resum, exemples, doctrina_jurisprudencia) doit être entièrement en français. Réponds UNIQUEMENT en français.`;
+        ? `Eres un asistente experto en derecho andorrano. Tu única función es analizar artículos de la Constitución y generar fichas explicativas en formato JSON simplificado. Tu respuesta (resum, exemples, finalitat, destinataris, aplicacio, doctrina_jurisprudencia) debe ser íntegramente en castellano. Responde SOLO en castellano.`
+        : `Tu es un assistant expert en droit andorran. Ta seule fonction est d'analyser des articles de la Constitution et de générer des fiches explicatives en format JSON simplifié. Ta réponse (resum, exemples, finalitat, destinataris, aplicacio, doctrina_jurisprudencia) doit être entièrement en français. Réponds UNIQUEMENT en français.`;
 
     // Exemple One-Shot 1 (Article 2) - EXEMPLES COM A STRINGS SIMPLES
     const exampleUser = idioma === 'ca'
@@ -393,10 +407,10 @@ Réponds en format JSON avec cette structure EXACTA (rien avant ni après; comme
         : `Analyse l'ARTICLE 2: "1. La langue officielle de l'État est le catalan..."\n\nContexte: (vide)`;
 
     const exampleAssistant = idioma === 'ca'
-      ? `{"resum":"Aquest article defineix els símbols d'identitat d'Andorra: el català com a única llengua oficial i els símbols tradicionals. També fixa la capitalitat a Andorra la Vella.","exemples":["Un ciutadà vol presentar una sol·licitud al Govern i té dret a ser atès en català.","En un acte oficial internacional, s'ha d'utilitzar la bandera i l'escut tradicionals d'Andorra."],"doctrina_jurisprudencia":"La doctrina constitucional considera el català com a eix vertebrador de la identitat nacional andorrana i principi rector de l'activitat de totes les institucions públiques."}`
+      ? `{"resum":"Aquest article defineix els símbols d'identitat d'Andorra: el català com a única llengua oficial i els símbols tradicionals. També fixa la capitalitat a Andorra la Vella.","exemples":["Un ciutadà vol presentar una sol·licitud al Govern i té dret a ser atès en català.","En un acte oficial internacional, s'ha d'utilitzar la bandera i l'escut tradicionals d'Andorra."],"finalitat":"Permet l'ús oficial del català com a llengua de l'Estat i estableix oficialment els símbols nacionals.","destinataris":"S'aplica a totes les administracions públiques, institucions, ciutadans d'Andorra i actes oficials de l'Estat.","aplicacio":"Els tràmits oficials s'han de fer en català i les institucions han d'utilitzar exclusivament els símbols oficials definits.","doctrina_jurisprudencia":"La doctrina constitucional considera el català com a eix vertebrador de la identitat nacional andorrana i principi rector de l'activitat de totes les institucions públiques."}`
       : idioma === 'es'
-        ? `{"resum":"Este artículo define los símbolos de identidad de Andorra: el catalán como única lengua oficial y los símbolos tradicionales. También fija la capitalidad en Andorra la Vella.","exemples":["Un ciudadano quiere presentar una solicitud al Gobierno y tiene derecho a ser atendido en catalán.","En un acto oficial internacional, se debe utilizar la bandera y el escudo tradicionales de Andorra."],"doctrina_jurisprudencia":"La doctrina constitucional considera el catalán como eje vertebrador de la identidad nacional andorrana y principio rector de la actividad de las instituciones públicas."}`
-        : `{"resum":"Cet article définit les symboles d'identité de l'Andorre : le catalan comme seule langue officielle et les symboles traditionnels. Il fixe également la capitale à Andorre-la-Vieille.","exemples":["Un citoyen souhaite soumettre une demande au Gouvernement et a le droit d'être servi en catalan.","Lors d'une cérémonie officielle internationale, le drapeau et les armoiries traditionnels doivent être utilisés."],"doctrina_jurisprudencia":"La doctrine constitutionnelle considère le catalan comme l'axe vertébrateur de l'identité nationale andorrane et le principe directeur des institutions publiques."}`;
+        ? `{"resum":"Este artículo define los símbolos de identidad de Andorra: el catalán como única lengua oficial y los símbolos tradicionales. También fija la capitalidad en Andorra la Vella.","exemples":["Un ciudadano quiere presentar una solicitud al Gobierno y tiene derecho a ser atendido en catalán.","En un acto oficial internacional, se debe utilizar la bandera y el escudo tradicionales de Andorra."],"finalitat":"Permite el uso oficial del catalán como lengua del Estado y establece oficialmente los símbolos nacionales.","destinataris":"Se aplica a todas las administraciones públicas, instituciones, ciudadanos de Andorra y actos oficiales del Estado.","aplicacio":"Los trámites oficiales deben realizarse en catalán y las instituciones deben usar exclusivamente los símbolos oficiales definidos.","doctrina_jurisprudencia":"La doctrina constitucional considera el catalán como eje vertebrador de la identidad nacional andorrana y principio rector de la actividad de las instituciones públicas."}`
+        : `{"resum":"Cet article définit les symboles d'identité de l'Andorre : le catalan comme seule langue officielle et les symboles traditionnels. Il fixe également la capitale à Andorre-la-Vieille.","exemples":["Un citoyen souhaite soumettre une demande au Gouvernement et a le droit d'être servi en catalan.","Lors d'une cérémonie officielle internationale, le drapeau et les armoiries traditionnels doivent être utilisés."],"finalitat":"Permet l'usage officiel du catalan comme langue de l'État et établit officiellement les symboles nationaux.","destinataris":"S'applique à toutes les administrations publiques, institutions, citoyens d'Andorre et actes officiels de l'État.","aplicacio":"Les démarches officielles doivent être effectuées en catalan et les institutions doivent utiliser exclusivement les symboles officiels définis.","doctrina_jurisprudencia":"La doctrine constitutionnelle considère le catalan comme l'axe vertébrateur de l'identité nationale andorrane et le principe directeur des institutions publiques."}`;
 
     // Exemple One-Shot 2 (Article 8) - EXEMPLES COM A STRINGS SIMPLES
     const exampleUser2 = idioma === 'ca'
@@ -406,10 +420,10 @@ Réponds en format JSON avec cette structure EXACTA (rien avant ni après; comme
         : `Analyse l'ARTICLE 8: "1. La Constitution reconnaît le droit à la vie..."\n\nContexte: (vide)`;
 
     const exampleAssistant2 = idioma === 'ca'
-      ? `{"resum":"Es reconeix el dret a la vida com a dret fonamental inviolable i es prohibeix absolutament la pena de mort i la tortura.","exemples":["Un presoner denuncia maltractaments físics; la Constitució ho prohibeix terminantment.","El debat sobre l'avortament es basa en la protecció de la vida en les seves diferents fases."],"doctrina_jurisprudencia":"La doctrina jurídica configura el dret a la vida com el valor suprem del sistema constitucional, del qual deriven la resta de drets fonamentals i la prohibició absoluta de la pena de mort."}`
+      ? `{"resum":"Es reconeix el dret a la vida com a dret fonamental inviolable i es prohibeix absolutament la pena de mort i la tortura.","exemples":["Un presoner denuncia maltractaments físics; la Constitució ho prohibeix terminantment.","El debat sobre l'avortament es basa en la protecció de la vida en les seves diferents fases."],"finalitat":"Garanteix el dret de qualsevol persona a viure de forma segura i prohibeix qualsevol acció que atempti contra la seva integritat física.","destinataris":"Afecta totes les persones que es trobin a Andorra, així com els poders públics i forces de seguretat de l'Estat.","aplicacio":"Cap llei ni autoritat pot aplicar la pena de mort ni permetre maltractaments a detinguts o ciutadans.","doctrina_jurisprudencia":"La doctrina jurídica configura el dret a la vida com el valor suprem del sistema constitucional, del qual deriven la resta de drets fonamentals i la prohibició absoluta de la pena de mort."}`
       : idioma === 'es'
-        ? `{"resum":"Se reconoce el derecho a la vida como derecho fundamental inviolable y se prohíbe absolutamente la pena de muerte y la tortura.","exemples":["Un prisionero denuncia maltratos físicos; la Constitución lo prohíbe terminantemente.","El debate sobre el aborto se basa en la protección de la vida en sus diferentes fases."],"doctrina_jurisprudencia":"La doctrina jurídica configura el derecho a la vida como el valor supremo del sistema constitucional, del que derivan los demás derechos fundamentales y la prohibición absoluta de la pena de muerte."}`
-        : `{"resum":"Le droit à la vie est reconnu comme un droit fondamental inviolable et la peine de mort ainsi que la torture sont absolument interdites.","exemples":["Un prisonnier dénonce des mauvais traitements physiques; la Constitution l'interdit formellement.","Le débat sur l'avortement repose sur la protection de la vie dans ses différentes phases."],"doctrina_jurisprudencia":"La doctrine juridique formule le droit à la vie comme la valeur suprême du système constitutionnel, dont découlent les autres droits fondamentaux et l'interdiction absolue de la peine de mort."}`;
+        ? `{"resum":"Se reconoce el derecho a la vida como derecho fundamental inviolable y se prohíbe absolutamente la pena de muerte y la tortura.","exemples":["Un prisionero denuncia maltratos físicos; la Constitución lo prohíbe terminantemente.","El debate sobre el aborto se basa en la protección de la vida en sus diferentes fases."],"finalitat":"Garantiza el derecho de cualquier persona a vivir de forma segura y prohíbe cualquier acción que atente contra su integridad física.","destinataris":"Afecta a todas las personas que se encuentren en Andorra, así como a los poderes públicos y fuerzas de seguridad del Estado.","aplicacio":"Ninguna ley ni autoridad puede aplicar la pena de muerte ni permitir maltratos a detenidos o ciudadanos.","doctrina_jurisprudencia":"La doctrina jurídica configura el derecho a la vida como el valor supremo del sistema constitucional, del que derivan los demás derechos fundamentales y la prohibición absoluta de la pena de muerte."}`
+        : `{"resum":"Le droit à la vie est reconnu comme un droit fondamental inviolable et la peine de mort ainsi que la torture sont absolument interdites.","exemples":["Un prisonnier dénonce des mauvais traitements physiques; la Constitution l'interdit formellement.","Le débat sur l'avortement repose sur la protection de la vie dans ses différentes phases."],"finalitat":"Garantit le droit de toute personne à vivre en sécurité et interdit toute action portant atteinte à son intégrité physique.","destinataris":"Concerne toutes les personnes se trouvant en Andorre, ainsi que les pouvoirs publics et les forces de sécurité de l'État.","aplicacio":"Aucune loi ni autorité ne peut appliquer la peine de mort ni autoriser la maltraitance des détenus ou des citoyens.","doctrina_jurisprudencia":"La doctrine juridique formule le droit à la vie comme la valeur suprême du système constitutionnel, dont découlent les autres droits fondamentaux et l'interdiction absolue de la peine de mort."}`;
 
     // Prompt Real - Reforçat per evitar copiar exemples
     const promptReal = idioma === 'ca'
@@ -517,7 +531,7 @@ ${ragContext}`;
 
     const extractFromPlainText = (text: string, idiomaActual: 'ca' | 'es' | 'fr') => {
       const clean = (text || '').trim();
-      if (!clean) return { resum: '', exemples: [] as Exemple[], doctrina: '' };
+      if (!clean) return { resum: '', exemples: [] as Exemple[], finalitat: '', destinataris: '', aplicacio: '', doctrina: '' };
 
       // Heurística d'extracció d'exemples més flexible:
       // Accepta: "Exemple aplicat:", "Exemple:", "Exemple 1:", "- Exemple:", etc.
@@ -543,6 +557,20 @@ ${ragContext}`;
         }
       }
 
+      // Heurístiques per a finalitat, destinataris i aplicació
+      const finalitatRegex = /(?:finali[td]a[td]|permet|limita)[:\s]+(.*?)(?=\n\s*(?:destinatari|aplicaci|doctrin|exemple|resum)|$)/i;
+      const destinatarisRegex = /(?:destinatari|àmbit|ambit|aplicació|aplicacion)[:\s]+(.*?)(?=\n\s*(?:finali|aplicaci|doctrin|exemple|resum)|$)/i;
+      const aplicacioRegex = /(?:aplicació|aplicacion|impacte|impacto|pràctic|practico)[:\s]+(.*?)(?=\n\s*(?:finali|destinatari|doctrin|exemple|resum)|$)/i;
+
+      const finalitatMatch = clean.match(finalitatRegex);
+      const finalitat = finalitatMatch ? finalitatMatch[1].trim() : '';
+
+      const destinatarisMatch = clean.match(destinatarisRegex);
+      const destinataris = destinatarisMatch ? destinatarisMatch[1].trim() : '';
+
+      const aplicacioMatch = clean.match(aplicacioRegex);
+      const aplicacio = aplicacioMatch ? aplicacioMatch[1].trim() : '';
+
       // Heurística d'extracció de doctrina: agafar l’últim paràgraf si conté "doctrina"/"jurisprud"
       const paragraphs = clean.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
       const doctrinePara =
@@ -553,7 +581,7 @@ ${ragContext}`;
       // Resum: primer paràgraf (si existeix), o tot el text si només n'hi ha un
       const resum = paragraphs[0] || clean;
 
-      return { resum, exemples, doctrina: doctrinePara };
+      return { resum, exemples, finalitat, destinataris, aplicacio, doctrina: doctrinePara };
     };
 
     // Funció helper per parsejar JSON amb múltiples estratègies
@@ -703,10 +731,10 @@ ${ragContext}`;
 
       const fixPrompt =
         idioma === 'ca'
-          ? `${prompt}\n\n⚠️ IMPORTANT: La teva resposta anterior copiava frases plantilla.\n- PROHIBIT usar literalment instruccions o placeholders (\"Resum descriptiu...\", \"situació concreta\", \"...\").\n- Escriu contingut ESPECÍFIC d'aquest article: resum descriptiu (2–3 frases semi llargues) + 2–3 exemples realistes.\nRespon ÚNICAMENT amb el JSON.`
+          ? `${prompt}\n\n⚠️ IMPORTANT: La teva resposta anterior copiava frases plantilla.\n- PROHIBIT usar literalment instruccions o placeholders (\"Resum descriptiu...\", \"situació concreta\", \"...\").\n- Escriu contingut ESPECÍFIC d'aquest article: resum descriptiu (2–5 frases) + 2–3 exemples realistes + finalitat + destinataris + aplicació + doctrina.\nRespon ÚNICAMENT amb el JSON.`
           : idioma === 'es'
-            ? `${prompt}\n\n⚠️ IMPORTANTE: Tu respuesta anterior copiaba frases plantilla.\n- PROHIBIDO usar literalmente instrucciones o placeholders (\"Resumen descriptivo...\", \"situación concreta\", \"...\").\n- Escribe contenido ESPECÍFICO de este artículo: resumen descriptivo (2–3 frases semi largas) + 2–3 ejemplos realistas.\nResponde ÚNICAMENTE con el JSON.`
-            : `${prompt}\n\n⚠️ IMPORTANT: Ta réponse précédente copiait des phrases modèle.\n- INTERDIT d'utiliser littéralement les instructions ou placeholders (\"Résumé descriptif...\", \"situation concrète\", \"...\").\n- Écris un contenu SPÉCIFIQUE à cet article: résumé descriptif (2–3 phrases semi longues) + 2–3 exemples réalistes.\nRéponds UNIQUEMENT avec le JSON.`;
+            ? `${prompt}\n\n⚠️ IMPORTANTE: Tu respuesta anterior copiaba frases plantilla.\n- PROHIBIDO usar literalmente instrucciones o placeholders (\"Resumen descriptivo...\", \"situación concreta\", \"...\").\n- Escribe contenido ESPECÍFICO de este artículo: resumen descriptivo (2–5 frases) + 2–3 ejemplos realistas + finalitat + destinataris + aplicació + doctrina.\nResponde ÚNICAMENTE con el JSON.`
+            : `${prompt}\n\n⚠️ IMPORTANT: Ta réponse précédente copiait des phrases modèle.\n- INTERDIT d'utiliser littéralement les instructions ou placeholders (\"Résumé descriptif...\", \"situation concrète\", \"...\").\n- Écris un contenu SPÉCIFIQUE à cet article: résumé descriptif (2–5 phrases) + 2–3 exemples réalistes + finalitat + destinataris + aplicació + doctrine.\nRéponds UNIQUEMENT avec le JSON.`;
 
       const fixMessages = [
         { role: 'system', content: systemPromptBase },
@@ -744,10 +772,10 @@ ${ragContext}`;
 
         const fix2 =
           idioma === 'ca'
-            ? `Reescriu NOMÉS aquests camps per a l'ARTICLE ${numeracio} (sense repetir el text literal):\n\n- "exemples": Array de 2 o 3 frases simples explicant exemples pràctics (NO placeholders).\n- "doctrina_jurisprudencia": 1–3 frases de comentari únicament doctrinal (sense referències a jurisprudència).\n\nRespon ÚNICAMENT amb un JSON vàlid:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Exemple aplicat: ...", "Exemple aplicat: ..."],\n  "doctrina_jurisprudencia": "..."\n}`
+            ? `Reescriu NOMÉS aquests camps per a l'ARTICLE ${numeracio} (sense repetir el text literal):\n\n- "exemples": Array de 2 o 3 exemples pràctics (NO placeholders).\n- "finalitat": 1-2 frases explicant què permet/limita l'article.\n- "destinataris": 1-2 frases explicant a qui/què s'aplica.\n- "aplicacio": 1-2 frases explicant l'impacte pràctic.\n- "doctrina_jurisprudencia": 1–3 frases de comentari únicament doctrinal.\n\nRespon ÚNICAMENT amb un JSON vàlid:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Exemple aplicat: ...", "Exemple aplicat: ..."],\n  "finalitat": "${coalesceString(parsedObj0.finalitat)}",\n  "destinataris": "${coalesceString(parsedObj0.destinataris)}",\n  "aplicacio": "${coalesceString(parsedObj0.aplicacio)}",\n  "doctrina_jurisprudencia": "..."\n}`
             : idioma === 'es'
-              ? `Reescribe SOLO estos campos para el ARTÍCULO ${numeracio}:\n\n- "exemples": Array de 2 o 3 frases simples (Ejemplos prácticos).\n- "doctrina_jurisprudencia": 1–3 frases de comentario únicamente doctrinal (sin referencias a jurisprudencia).\n\nResponde ÚNICAMENTE con un JSON válido:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Ejemplo aplicado: ...", "Ejemplo aplicado: ..."],\n  "doctrina_jurisprudencia": "..."\n}`
-              : `Réécris UNIQUEMENT ces champs pour l'ARTICLE ${numeracio}:\n\n- "exemples": Tableau de 2 ou 3 phrases simples (Exemples pratiques).\n- "doctrina_jurisprudencia": 1–3 phrases de commentaire uniquement doctrinal (sans références à la jurisprudence).\n\nRéponds UNIQUEMENT avec un JSON valide:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Exemple appliqué: ...", "Exemple appliqué: ..."],\n  "doctrina_jurisprudencia": "..."\n}`;
+              ? `Reescribe SOLO estos campos para el ARTÍCULO ${numeracio}:\n\n- "exemples": Array de 2 o 3 ejemplos prácticos.\n- "finalitat": 1-2 frases explicando qué permite/limita el artículo.\n- "destinataris": 1-2 frases explicando a quién/qué se aplica.\n- "aplicacio": 1-2 frases explicando el impacto práctico.\n- "doctrina_jurisprudencia": 1–3 frases de comentario únicamente doctrinal.\n\nResponde ÚNICAMENTE con un JSON válido:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Ejemplo aplicado: ...", "Ejemplo aplicado: ..."],\n  "finalitat": "${coalesceString(parsedObj0.finalitat)}",\n  "destinataris": "${coalesceString(parsedObj0.destinataris)}",\n  "aplicacio": "${coalesceString(parsedObj0.aplicacio)}",\n  "doctrina_jurisprudencia": "..."\n}`
+              : `Réécris UNIQUEMENT ces champs pour l'ARTICLE ${numeracio}:\n\n- "exemples": Tableau de 2 ou 3 exemples pratiques.\n- "finalitat": 1-2 phrases (ce que cela permet/limite).\n- "destinataris": 1-2 phrases (champ d'application).\n- "aplicacio": 1-2 phrases (impact pratique).\n- "doctrina_jurisprudencia": 1–3 phrases de commentaire uniquement doctrinal.\n\nRéponds UNIQUEMENT avec un JSON valide:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Exemple appliqué: ...", "Exemple appliqué: ..."],\n  "finalitat": "${coalesceString(parsedObj0.finalitat)}",\n  "destinataris": "${coalesceString(parsedObj0.destinataris)}",\n  "aplicacio": "${coalesceString(parsedObj0.aplicacio)}",\n  "doctrina_jurisprudencia": "..."\n}`;
 
         const fix2Messages = [
           { role: 'system', content: systemPromptBase },
@@ -826,9 +854,9 @@ ${ragContext}`;
       jurisprudencia_vinculada: [],
       generat_data: new Date().toISOString().split('T')[0],
       revisat: false,
-      finalitat: String(parsedContent.finalitat ?? ''),
-      destinataris: String(parsedContent.destinataris ?? ''),
-      aplicacio: String(parsedContent.aplicacio ?? ''),
+      finalitat: String(parsedObj.finalitat ?? ''),
+      destinataris: String(parsedObj.destinataris ?? ''),
+      aplicacio: String(parsedObj.aplicacio ?? ''),
       doctrina_jurisprudencia: normalizeDoctrine(parsedObj),
     };
 
