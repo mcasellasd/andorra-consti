@@ -22,6 +22,15 @@ if (!fs.existsSync(OUTPUT_DIR)) {
 
 // Documents de doctrina disponibles
 const DOCUMENTS = {
+  'consuetud-estat-dret': {
+    file: 'LA LLARGA RESISTÈNCIA DEL PRINCIPAT D’AN.txt',
+    title: 'De la consuetud a l’Estat de dret. La llarga resistència del Principat d’Andorra a la modernització política',
+    author: 'Pere Soler Paricio',
+    publication: 'Université de Bretagne Sud, HCTI - EA 4249',
+    date: 's.d.',
+    category: 'doctrina',
+    codi: 'constitucio'
+  },
   '20-anys': {
     file: '20 anys.txt',
     title: 'Aspectes de la jurisprudència andorrana. Balanç de 20 anys de Constitució',
