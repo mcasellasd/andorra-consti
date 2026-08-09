@@ -3,7 +3,7 @@ import { generateText } from '../../lib/llm';
 import { checkAIActCompliance, getAIActCompliancePrompt } from '../../lib/rag/quality-assessment';
 import { validateResponseQuality } from '../../lib/rag/response-quality';
 import { generateEmbedding, getEmbeddingProvider } from '../../lib/embeddings';
-import { retrieveTopMatches, getArticleById } from '../../lib/rag/corpus';
+import { retrieveTopMatches, retrieveHybridMatches, getArticleById } from '../../lib/rag/corpus';
 import { RetrievedContext } from '../../lib/rag/types';
 import { detectArticleReference, detectArticleByKeywords, detectComplexity } from '../../lib/rag/detect-complexity';
 import { getJurisprudenciaForArticle } from '../../data/jurisprudencia-andorra';
@@ -170,22 +170,27 @@ export default async function handler(
           const queryEmbedding = await generateEmbedding(message, provider, openaiApiKey);
           const topK = Math.max(5, complexity.suggestedTopK);
           
-          // Prioritzar articles de la Constitució quan la pregunta és clarament constitucional
-          // Detectem si la pregunta menciona "article", "constitució", o pregunta directament sobre la Constitució
+          // Prioritzar articles de la Constitució només quan la consulta ho demana
+          // explícitament. Les preguntes doctrinals, històriques o sobre el dret
+          // andorrà en general han de poder recuperar doctrina en igualtat de condicions.
           const isConstitutionQuestion = 
             message.toLowerCase().includes('article') ||
             message.toLowerCase().includes('constitució') ||
             message.toLowerCase().includes('constitución') ||
             articleNumber !== null ||
-            articleKeywords.length > 0 ||
-            isValidConstitutionQuestion(message);
+            articleKeywords.length > 0;
           
           if (isConstitutionQuestion) {
             console.log('📜 Prioritzant articles de la Constitució sobre doctrina');
           }
           
-          const semanticMatches = retrieveTopMatches(queryEmbedding, topK, undefined, isConstitutionQuestion);
-          semanticMatches.forEach(match => matchesMap.set(match.entry.id, match));
+          // Les consultes doctrinals generals utilitzen cerca híbrida: la similitud
+          // semàntica aporta context i BM25 dona pes als termes jurídics explícits
+          // (p. ex. "usos", "costums" i "codificació").
+          const retrievedMatches = isConstitutionQuestion
+            ? retrieveTopMatches(queryEmbedding, topK, undefined, true)
+            : retrieveHybridMatches(queryEmbedding, message, topK);
+          retrievedMatches.forEach(match => matchesMap.set(match.entry.id, match));
         } catch (ragError: any) {
           // Si RAG falla (ex: out of memory, API error), continuar sense context
           console.error('❌ Error RAG (continuar sense context):', ragError?.message || ragError);
@@ -348,6 +353,9 @@ CITACIONS EN EL TEXT (OBLIGATORI):
 Quan utilitzis informació d'una font específica del context (sigui article o doctrina), has d'inserir l'ID de la font entre dobles claudàtors al final de la frase o paràgraf corresponent.
 Format: [[ID]]
 Exemple: "La sobirania resideix en el poble andorrà [[CONST_003]]."
+Per a la doctrina, utilitza sempre l'identificador exacte que apareix entre parèntesis
+al costat del títol (per exemple, [[DOCTRINA_USOS_COSTUMS_001]]). No escriguis
+només "Doctrina" ni atribueixis una afirmació a una font doctrinal sense el seu ID.
 
 Context (Constitució i doctrina):
 ${contextBlock}`;

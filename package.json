@@ -17,6 +17,7 @@
     "embed:llibre-tercer": "node scripts/generate-embeddings-llibre-tercer.js",
     "embed:llibre-sise": "node scripts/generate-embeddings-llibre-sise.js",
     "embed:doctrina": "node scripts/generate-embeddings-doctrina.js",
+    "embed:doctrina:local": "node scripts/generate-embeddings-doctrina-local.js",
     "embed:aprenentatge": "node scripts/generate-embeddings-aprenentatge.js",
     "process:doctrina": "node scripts/processar-doctrina-txt.js",
     "process:doctrina:xlm": "npx tsx scripts/processar-doctrina-xlm.ts",

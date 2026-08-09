@@ -350,6 +350,13 @@ export function retrieveHybridMatches(
 ): RetrievedContext[] {
   const queryNorm = vectorNorm(queryEmbedding);
   const k = 60; // Constant RRF estàndard
+  const normalizedQuery = queryText.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const thematicGroups = [
+    ['usos', 'costums'],
+    ['codificacio', 'codi'],
+    ['manual digest', 'politar'],
+    ['tradicio', 'ius commune']
+  ];
 
   // 1. Obtenir resultats semàntics (Top 50)
   // Reutilitzem la lògica de retrieveTopMatches però interna
@@ -385,15 +392,70 @@ export function retrieveHybridMatches(
     const semanticRank = semanticScores.has(id) ? semanticScores.get(id)! : 1000; // Penalització si no hi és
     const bm25Rank = bm25Scores.has(id) ? bm25Scores.get(id)! : 1000;
 
-    const rrfScore = (1 / (k + semanticRank)) + (1 / (k + bm25Rank));
+    let rrfScore = (1 / (k + semanticRank)) + (1 / (k + bm25Rank));
+
+    // Reforç temàtic per evitar que un corpus doctrinal molt gran (com el de
+    // dret processal civil) desplaci una font que coincideix directament amb
+    // el tema de la consulta. El reforç només s'aplica a doctrina i a grups
+    // conceptuals explícits; no altera les consultes constitucionals directes.
+    const entry = corpus.knowledgeById.get(id);
+    const isDoctrina = entry && (
+      entry.id.startsWith('DOCTRINA_') ||
+      entry.id.startsWith('DOC_') ||
+      entry.category === 'Doctrina' ||
+      entry.category === 'doctrina' ||
+      entry.category === 'jurisprudència' ||
+      entry.category === 'Jurisprudència'
+    );
+    if (entry && isDoctrina) {
+      const normalizedEntry = `${entry.topic} ${entry.content} ${(entry.keyConcepts || []).join(' ')}`
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+      for (const group of thematicGroups) {
+        const queryHasTheme = group.some(term => normalizedQuery.includes(term));
+        const entryHasTheme = group.some(term => normalizedEntry.includes(term));
+        if (queryHasTheme && entryHasTheme) {
+          rrfScore += 0.08;
+        }
+      }
+    }
 
     // Normalitzar score per ser semblant a cosine (0-1) encara que RRF és petit
     // Simplement passem el RRF score, però l'ordenem bé
     fusedResults.push({ id, score: rrfScore });
   });
 
+  // Si la consulta activa un tema específic, evitar que fragments doctrinals
+  // d'un altre àmbit (p. ex. dret processal civil) ocupin el lloc de les
+  // fonts que tracten directament el tema preguntat. Les fonts constitucionals
+  // es mantenen com a context complementari.
+  const activeThemes = thematicGroups.filter(group =>
+    group.some(term => normalizedQuery.includes(term))
+  );
+  const filteredResults = activeThemes.length > 0
+    ? fusedResults.filter(({ id }) => {
+        const entry = corpus.knowledgeById.get(id);
+        if (!entry) return false;
+        const isDoctrina = entry.id.startsWith('DOCTRINA_') ||
+          entry.id.startsWith('DOC_') ||
+          entry.category === 'Doctrina' ||
+          entry.category === 'doctrina' ||
+          entry.category === 'jurisprudència' ||
+          entry.category === 'Jurisprudència';
+        if (!isDoctrina) return true;
+        const normalizedEntry = `${entry.topic} ${entry.content} ${(entry.keyConcepts || []).join(' ')}`
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '');
+        return activeThemes.some(group =>
+          group.some(term => normalizedQuery.includes(term) && normalizedEntry.includes(term))
+        );
+      })
+    : fusedResults;
+
   // Ordenar i agafar Top K
-  const topResults = fusedResults
+  const topResults = filteredResults
     .sort((a, b) => b.score - a.score)
     .slice(0, topK);
 
