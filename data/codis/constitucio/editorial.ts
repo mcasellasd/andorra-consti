@@ -626,6 +626,24 @@ for (const [articleId, draft] of Object.entries(draftsP2P3)) {
   });
 }
 
+const preambul = editorial.CONST_PREAMB;
+if (preambul) {
+  Object.assign(preambul, institutionalDraft(
+    'El preàmbul expressa la voluntat sobirana del poble andorrà de construir un ordre constitucional basat en la llibertat, la justícia, la democràcia, els drets humans, la pau i la cooperació. També connecta la Constitució amb la història i la identitat pròpies d’Andorra.',
+    'Ofereix la clau de lectura política i axiològica de la Constitució: explica quins valors i finalitats vol servir el text constitucional.',
+    'S’adreça a tota la comunitat constitucional —institucions, tribunals, ciutadania i residents— com a marc de sentit, no com una llista autònoma de drets exigibles.',
+    'Pot utilitzar-se per interpretar principis i drets quan hi hagi dubtes sobre la finalitat constitucional d’una norma, sempre juntament amb els articles operatius.',
+    'El preàmbul no substitueix els articles ni crea per si sol una via processal o un dret subjectiu independent; la seva força és principalment interpretativa i orientadora.',
+    ['Sobirania', 'Llibertat', 'Justícia', 'Democràcia', 'Drets humans', 'Pau', 'Identitat constitucional'],
+    ['Quins valors declara el poble andorrà?', 'Com ajuda el preàmbul a interpretar els articles?', 'Quina diferència hi ha entre una finalitat constitucional i un dret directament exigible?'],
+    ['Llegeix-lo com el marc de finalitats de la Constitució.', 'No confonguis valor interpretatiu amb una norma processal autònoma.', 'Relaciona’l amb els articles 1, 3, 4 i 5.']
+  ), {
+    estat: 'en-revisio',
+    articles_relacionats: ['Article 1', 'Article 3', 'Article 4', 'Article 5'],
+    notes_revisio: 'Borrador editorial del preàmbul; pendent de revisió històrica, jurídica i terminològica abans de publicar.',
+  });
+}
+
 export const editorialConstitucio = editorial;
 
 export function getEditorialConstitucional(articleId: string): ConstitutionalEditorialEntry | null {
@@ -645,4 +663,16 @@ export function validarEditorialConstitucio(): string[] {
     }
     return errors.map((error) => `${entry.article_id}: ${error}`);
   });
+}
+
+export function resumCoberturaEditorial() {
+  const entries = Object.values(editorialConstitucio);
+  return {
+    total: entries.length,
+    ambContingut: entries.filter((entry) => entry.resum.ca && entry.finalitat.ca && entry.aplicacio.ca).length,
+    enRevisio: entries.filter((entry) => entry.estat === 'en-revisio').length,
+    publicats: entries.filter((entry) => entry.estat === 'publicat').length,
+    pendents: entries.filter((entry) => entry.estat === 'pendent').length,
+    errors: validarEditorialConstitucio(),
+  };
 }
