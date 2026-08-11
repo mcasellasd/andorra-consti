@@ -676,3 +676,50 @@ export function resumCoberturaEditorial() {
     errors: validarEditorialConstitucio(),
   };
 }
+
+export interface EditorialAuditReport {
+  total: number;
+  ambContingutCatala: number;
+  pendentsCastella: number;
+  pendentsFrances: number;
+  enRevisio: number;
+  publicats: number;
+  fontsInvalides: string[];
+  incoherenciesForcaNormativa: string[];
+}
+
+/** Informe de preparació editorial; no substitueix la revisió jurídica humana. */
+export function auditarEditorialConstitucio(): EditorialAuditReport {
+  const entries = Object.values(editorialConstitucio);
+  const incoherenciesForcaNormativa: string[] = [];
+
+  for (const entry of entries) {
+    const article = articlesConstitucio.find((item) => item.id === entry.article_id);
+    const context = article ? getContextConstitucional(article.numeracio) : null;
+    const textEditorial = [
+      entry.resum.ca,
+      entry.finalitat.ca,
+      entry.destinataris.ca,
+      entry.aplicacio.ca,
+      entry.limits.ca,
+    ].join(' ').toLowerCase();
+
+    if (context?.forca === 'principi-rector' && /dret fonamental|recurs d.empara|directament exigible/.test(textEditorial)) {
+      incoherenciesForcaNormativa.push(`${entry.article_id}: el text pot atribuir una força normativa superior a la del capítol V`);
+    }
+    if (context?.forca === 'organica' && /dret fonamental|recurs d.empara/.test(textEditorial)) {
+      incoherenciesForcaNormativa.push(`${entry.article_id}: una norma orgànica no s’hauria de descriure com a dret fonamental o emparable`);
+    }
+  }
+
+  return {
+    total: entries.length,
+    ambContingutCatala: entries.filter((entry) => entry.resum.ca && entry.finalitat.ca && entry.aplicacio.ca).length,
+    pendentsCastella: entries.filter((entry) => !entry.resum.es || !entry.finalitat.es || !entry.aplicacio.es).length,
+    pendentsFrances: entries.filter((entry) => !entry.resum.fr || !entry.finalitat.fr || !entry.aplicacio.fr).length,
+    enRevisio: entries.filter((entry) => entry.estat === 'en-revisio').length,
+    publicats: entries.filter((entry) => entry.estat === 'publicat').length,
+    fontsInvalides: validarEditorialConstitucio(),
+    incoherenciesForcaNormativa,
+  };
+}
