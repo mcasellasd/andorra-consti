@@ -33,3 +33,7 @@ El feedback d’usuari és anònim, queda pendent de revisió i no modifica el c
 ## Versions
 
 Cada registre editorial incorpora versió, data d’actualització i equip revisor. Git conserva l’historial de canvis i les versions antigues no s’eliminen.
+
+## Ampliació legal
+
+La legislació i la jurisprudència disposen d’un catàleg de fonts separat del registre editorial constitucional. Les normes conserven l’enllaç documental i les resolucions conserven tribunal, número, data, resum i articles relacionats quan aquests IDs són vàlids. Tots els registres nous comencen com a `pendent`; incorporar una font al catàleg no equival a publicar-ne una interpretació.

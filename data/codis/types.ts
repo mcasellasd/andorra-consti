@@ -151,6 +151,27 @@ export interface ConstitutionalKnowledgeDocument {
   updatedAt: string;
 }
 
+export type LegalKnowledgeType = 'legislation' | 'jurisprudence';
+
+export interface LegalKnowledgeDocument {
+  id: string;
+  type: LegalKnowledgeType;
+  title: string;
+  officialText?: string;
+  officialUrl?: string;
+  sourceReference: string;
+  publicationYear?: number;
+  subtype?: string;
+  tribunal?: string;
+  caseNumber?: string;
+  date?: string;
+  summary?: string;
+  relatedIds: string[];
+  editorialStatus: EditorialStatus;
+  version: string;
+  updatedAt: string;
+}
+
 export interface Modificacio {
   data: string;
   llei: string; // "Llei qualificada 35/2022"
