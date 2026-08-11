@@ -200,6 +200,45 @@ const InterpretacioIA: React.FC<InterpretacioIAProps> = ({ article, idioma, onTo
                 </section>
               )}
 
+              {/* Límits i context */}
+              {interpretacio.limits && (
+                <section className="interpretacio-section">
+                  <h3>
+                    {idioma === 'ca' && 'Límits i excepcions'}
+                    {idioma === 'es' && 'Límites y excepciones'}
+                    {idioma === 'fr' && 'Limites et exceptions'}
+                  </h3>
+                  <p>{interpretacio.limits}</p>
+                </section>
+              )}
+
+              {interpretacio.context && (
+                <section className="interpretacio-section">
+                  <h3>
+                    {idioma === 'ca' && 'Context constitucional'}
+                    {idioma === 'es' && 'Contexto constitucional'}
+                    {idioma === 'fr' && 'Contexte constitutionnel'}
+                  </h3>
+                  <p>{interpretacio.context}</p>
+                </section>
+              )}
+
+              {/* Preguntes d'aprenentatge */}
+              {interpretacio.preguntes_aprenentatge && interpretacio.preguntes_aprenentatge.length > 0 && (
+                <section className="interpretacio-section">
+                  <h3>
+                    {idioma === 'ca' && 'Per pensar-hi'}
+                    {idioma === 'es' && 'Para reflexionar'}
+                    {idioma === 'fr' && 'Pour réfléchir'}
+                  </h3>
+                  <ul>
+                    {interpretacio.preguntes_aprenentatge.map((pregunta, index) => (
+                      <li key={index}>{pregunta}</li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
               {/* Comentari Doctrinal IA */}
               {interpretacio.doctrina_jurisprudencia && (
                 <section className="interpretacio-section">
@@ -209,6 +248,24 @@ const InterpretacioIA: React.FC<InterpretacioIAProps> = ({ article, idioma, onTo
                     {idioma === 'fr' && 'Commentaire doctrinal IA'}
                   </h3>
                   <p>{interpretacio.doctrina_jurisprudencia}</p>
+                </section>
+              )}
+
+              {/* Fonts declarades */}
+              {interpretacio.fonts && interpretacio.fonts.length > 0 && (
+                <section className="interpretacio-section">
+                  <h3>
+                    {idioma === 'ca' && 'Fonts utilitzades'}
+                    {idioma === 'es' && 'Fuentes utilizadas'}
+                    {idioma === 'fr' && 'Sources utilisées'}
+                  </h3>
+                  <ul>
+                    {interpretacio.fonts.map((font) => (
+                      <li key={`${font.tipus}-${font.id}`}>
+                        <span>{font.referencia}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </section>
               )}
 
@@ -223,7 +280,9 @@ const InterpretacioIA: React.FC<InterpretacioIAProps> = ({ article, idioma, onTo
                   <ul>
                     {interpretacio.articles_relacionats.map((articleId) => (
                       <li key={articleId}>
-                        <a href={`/codis/civil/article/${articleId}`}>{articleId}</a>
+                        <a href={articleId.startsWith('CONST_')
+                          ? `/codis/constitucio/article/${articleId}`
+                          : `/codis/civil/article/${articleId}`}>{articleId}</a>
                       </li>
                     ))}
                   </ul>
@@ -238,4 +297,3 @@ const InterpretacioIA: React.FC<InterpretacioIAProps> = ({ article, idioma, onTo
 };
 
 export default InterpretacioIA;
-

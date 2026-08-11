@@ -44,6 +44,14 @@ interface CorpusData {
   embeddings: NormalizedEmbedding[];
 }
 
+function isDoctrinaEntry(entry: KnowledgeEntry): boolean {
+  const category = (entry.category || '').toLowerCase();
+  return entry.id.startsWith('DOCTRINA_') ||
+    entry.id.startsWith('DOC_') ||
+    category.includes('doctrina') ||
+    category.includes('jurisprud');
+}
+
 // Carregar Constitució i Doctrina
 const corpus: CorpusData = loadCorpus(
   [...(constitucioKnowledge as KnowledgeEntry[]), ...(doctrinaKnowledge as KnowledgeEntry[])],
@@ -110,13 +118,7 @@ export function getCorpusDocumentsList(): CorpusDocumentSummary[] {
   const doctrina: KnowledgeEntry[] = [];
 
   for (const entry of corpus.knowledge) {
-    const isDoctrina =
-      entry.id.startsWith('DOCTRINA_') ||
-      entry.id.startsWith('DOC_') ||
-      entry.category === 'Doctrina' ||
-      entry.category === 'doctrina' ||
-      entry.category === 'Jurisprudència' ||
-      entry.category === 'jurisprudència';
+    const isDoctrina = isDoctrinaEntry(entry);
     const isTC =
       entry.id.startsWith('TC_') ||
       entry.category?.includes('Tribunal Constitucional');
@@ -247,22 +249,13 @@ export function retrieveTopMatches(
         const entryData = corpus.knowledgeById.get(entry.id);
         if (entryData) {
           // Articles de la Constitució: IDs que comencen amb CONST_ i no són doctrina
-          const isConstitutionArticle = entry.id.startsWith('CONST_') && 
-            !entry.id.startsWith('DOCTRINA_') &&
-            entryData.category !== 'Doctrina' &&
-            entryData.category !== 'doctrina' &&
-            entryData.category !== 'jurisprudència' &&
-            entryData.category !== 'Jurisprudència';
+          const isDoctrina = isDoctrinaEntry(entryData);
+          const isConstitutionArticle = entry.id.startsWith('CONST_') && !isDoctrina;
           
           if (isConstitutionArticle) {
             // Boost del 40% per articles constitucionals (prioritat alta)
             score = Math.min(1.0, score * 1.4);
-          } else if (entry.id.startsWith('DOCTRINA_') || 
-                     entry.id.startsWith('DOC_') ||
-                     entryData.category === 'Doctrina' ||
-                     entryData.category === 'doctrina' ||
-                     entryData.category === 'jurisprudència' ||
-                     entryData.category === 'Jurisprudència') {
+          } else if (isDoctrina) {
             // Penalització del 25% per doctrina quan es prioritza Constitució
             score = score * 0.75;
           }
@@ -287,11 +280,7 @@ export function retrieveTopMatches(
     if (entry) {
       // Determinar l'ID del llibre segons l'ID de l'entrada
       let bookId: 'CONSTITUCIO' | 'DOCTRINA' = 'CONSTITUCIO';
-      const isDoctrina = entry.id.startsWith('DOCTRINA_') || 
-                         entry.id.startsWith('DOC_') || 
-                         entry.category === 'Doctrina' ||
-                         entry.category === 'doctrina' ||
-                         entry.category === 'jurisprudència';
+      const isDoctrina = isDoctrinaEntry(entry);
       
       if (isDoctrina) {
         bookId = 'DOCTRINA';

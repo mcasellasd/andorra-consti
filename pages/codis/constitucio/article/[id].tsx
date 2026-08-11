@@ -3,9 +3,10 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Layout from '../../../../components/Layout';
 import { articlesConstitucio } from '../../../../data/codis/constitucio/articles-template';
-import { ArticleAndorra, InterpretacioIA as InterpretacioIAType } from '../../../../data/codis/types';
+import { ArticleAndorra } from '../../../../data/codis/types';
 import { getIdiomaActual, type Idioma } from '../../../../lib/i18n';
 import { getDoctrinaByArticleId, type DoctrinaCase } from '../../../../data/doctrina';
+import { getEditorialConstitucional } from '../../../../data/codis/constitucio/editorial';
 
 // Components
 import { ArticleHeader } from '../../../../components/article/ArticleHeader';
@@ -18,8 +19,7 @@ const ArticleConstitucioPage: React.FC = () => {
   const [article, setArticle] = useState<ArticleAndorra | null>(null);
   const [idioma, setIdioma] = useState<Idioma>('ca');
   const [loading, setLoading] = useState(true);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [interpretacio, setInterpretacio] = useState<InterpretacioIAType | null>(null);
+  const [editorial, setEditorial] = useState<ReturnType<typeof getEditorialConstitucional>>(null);
   const [doctrina, setDoctrina] = useState<DoctrinaCase[]>([]);
 
   useEffect(() => {
@@ -42,22 +42,12 @@ const ArticleConstitucioPage: React.FC = () => {
     };
   }, [article?.id]);
 
-  // Clau de sessionStorage per guardar interpretacions per article (sessió)
-  const SESSION_STORAGE_KEY = 'dretplaner_interpretacio';
-
   useEffect(() => {
     if (id && typeof id === 'string') {
       const articleTrobat = articlesConstitucio.find((art) => art.id === id);
       if (articleTrobat) {
         setArticle(articleTrobat);
-        // Carregar interpretació des de la memòria de sessió si n'hi ha
-        try {
-          const raw = typeof window !== 'undefined' && sessionStorage.getItem(`${SESSION_STORAGE_KEY}_${articleTrobat.id}`);
-          const cached = raw ? (JSON.parse(raw) as InterpretacioIAType) : null;
-          setInterpretacio(cached?.article_id === articleTrobat.id ? cached : null);
-        } catch {
-          setInterpretacio(null);
-        }
+        setEditorial(getEditorialConstitucional(articleTrobat.id));
       }
       setLoading(false);
     }
@@ -82,72 +72,6 @@ const ArticleConstitucioPage: React.FC = () => {
     const currentIndex = articlesConstitucio.findIndex((art) => art.id === currentId);
     if (currentIndex === -1 || currentIndex === articlesConstitucio.length - 1) return null;
     return articlesConstitucio[currentIndex + 1];
-  };
-
-  const handleGenerateAssistencia = async () => {
-    if (!article) return;
-
-    // Comprovar si ja tenim el resum per aquest idioma
-    if (interpretacio?.resum?.[idioma]) {
-      setIsGenerating(false);
-      return;
-    }
-
-    setIsGenerating(true);
-
-    try {
-      const resposta = await fetch('/api/unified-chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          article_id: article.id,
-          idioma: idioma,
-          text_oficial: article.text_oficial,
-          numeracio: article.numeracio,
-        }),
-      });
-
-      if (!resposta.ok) {
-        throw new Error('Error al generar la interpretació');
-      }
-
-      const data: InterpretacioIAType = await resposta.json();
-
-      const merged: InterpretacioIAType = interpretacio
-        ? {
-            ...data,
-            resum: {
-              ca: data.resum?.ca ?? interpretacio.resum?.ca ?? '',
-              es: data.resum?.es ?? interpretacio.resum?.es ?? '',
-              fr: data.resum?.fr ?? interpretacio.resum?.fr ?? '',
-            },
-            exemples: [
-              ...(interpretacio.exemples || []).filter((e) => e.idioma !== idioma),
-              ...(data.exemples || []),
-            ],
-            finalitat: data.finalitat ?? interpretacio.finalitat,
-            destinataris: data.destinataris ?? interpretacio.destinataris,
-            aplicacio: data.aplicacio ?? interpretacio.aplicacio,
-            doctrina_jurisprudencia: data.doctrina_jurisprudencia ?? interpretacio.doctrina_jurisprudencia,
-          }
-        : data;
-
-      setInterpretacio(merged);
-
-      try {
-        if (typeof window !== 'undefined') {
-          sessionStorage.setItem(`${SESSION_STORAGE_KEY}_${article.id}`, JSON.stringify(merged));
-        }
-      } catch {
-        // sessionStorage pot fallar (p. ex. mode privat)
-      }
-    } catch (error) {
-      console.error('Error generant Assistencia:', error);
-    } finally {
-      setIsGenerating(false);
-    }
   };
 
   if (!router.isReady || loading) {
@@ -198,8 +122,6 @@ const ArticleConstitucioPage: React.FC = () => {
             idioma={idioma}
             previousArticle={previousArticle}
             nextArticle={nextArticle}
-            onGenerateAssistencia={handleGenerateAssistencia}
-            isGenerating={isGenerating}
           />
 
           {/* Main content area */}
@@ -212,12 +134,10 @@ const ArticleConstitucioPage: React.FC = () => {
             <ArticleContent
               article={article}
               idioma={idioma}
-              interpretacio={interpretacio}
+              editorial={editorial}
               doctrina={doctrina}
               previousArticle={previousArticle}
               nextArticle={nextArticle}
-              onGenerateAssistencia={handleGenerateAssistencia}
-              isGenerating={isGenerating}
             />
           </main>
         </div>

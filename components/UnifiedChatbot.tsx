@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { getIdiomaActual, type Idioma } from '../lib/i18n';
+import type { ChatArticleSection } from './chatUtils';
 
 type Source = {
   type: 'constitucio' | 'doctrina';
@@ -38,6 +39,7 @@ export default function UnifiedChatbot({
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [idioma, setIdioma] = useState<Idioma>('ca');
   const [ragDocuments, setRagDocuments] = useState<Array<{ id: string; name: string; description: string; count: number }>>([]);
+  const [chatFocus, setChatFocus] = useState<ChatArticleSection | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -160,7 +162,8 @@ export default function UnifiedChatbot({
             })),
             locale,
             maxTokens: 800,
-            temperature: 0.7
+            temperature: 0.7,
+            focus: chatFocus,
           })
         });
 
@@ -204,7 +207,7 @@ export default function UnifiedChatbot({
         setLoading(false);
       }
     },
-    [input, loading, privacyAccepted, messages, idioma]
+    [input, loading, privacyAccepted, messages, idioma, chatFocus]
   );
 
   // Escoltar events per obrir el chatbot des de qualsevol lloc
@@ -213,9 +216,11 @@ export default function UnifiedChatbot({
       const customEvent = event as CustomEvent<{
         question?: string;
         autoSubmit?: boolean;
+        focus?: ChatArticleSection | null;
       }>;
       setIsOpen(true);
       setPrivacyAccepted(true);
+      setChatFocus(customEvent.detail?.focus || null);
 
       // Enviar pregunta si hi ha
       if (customEvent.detail?.question && customEvent.detail.question.trim()) {
@@ -432,6 +437,18 @@ export default function UnifiedChatbot({
               </div>
             </div>
           </div>
+
+          {chatFocus && (
+            <div className="chatbot-focus-banner" role="status">
+              <div>
+                <strong>{idioma === 'ca' ? 'Apartat prioritari' : idioma === 'es' ? 'Apartado prioritario' : 'Paragraphe prioritaire'}</strong>
+                <span>{chatFocus.articleNumber} · {chatFocus.sectionNumber}. {chatFocus.sectionText}</span>
+              </div>
+              <button type="button" onClick={() => setChatFocus(null)}>
+                {idioma === 'ca' ? 'Treure prioritat' : idioma === 'es' ? 'Quitar prioridad' : 'Retirer la priorité'}
+              </button>
+            </div>
+          )}
 
           <div className="chatbot-messages">
             {messages.length === 0 && (
@@ -1033,4 +1050,3 @@ export default function UnifiedChatbot({
     </>
   );
 }
-

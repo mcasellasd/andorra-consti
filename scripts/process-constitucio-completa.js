@@ -60,7 +60,10 @@ function extractArticles(text) {
   // Millorar la regex per capturar millor els articles
   // Utilitzem [\s\S] en lloc de . per capturar també salts de línia
   // El lookahead ha de ser més específic per capturar tot el contingut fins al següent article o títol
-  const articleRegex2 = /Article\s+(\d+)(?:\.|:)?\s*([\s\S]+?)(?=\n\s*Article\s+\d+|\nTítol\s+[IVX]+|Disposició|Disposicions|$)/gi;
+  // Només reconèixer «Article N» quan és un encapçalament al principi de línia.
+  // Si no, les referències internes —p. ex. «article 99 de la Constitució»—
+  // es poden interpretar erròniament com un article nou i duplicar-lo.
+  const articleRegex2 = /^[ \t]*Article\s+(\d+)(?:\.|:)?[ \t]*([\s\S]+?)(?=^[ \t]*Article\s+\d+|^[ \t]*Títol\s+[IVX]+|^[ \t]*Disposició|^[ \t]*Disposicions|(?![\s\S]))/gim;
   
   while ((articleMatch = articleRegex2.exec(text)) !== null) {
     const numero = parseInt(articleMatch[1]);
@@ -186,4 +189,3 @@ function main() {
 }
 
 main();
-

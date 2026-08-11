@@ -11,6 +11,14 @@ export interface OpenChatOptions {
   // Paràmetres de compatibilitat amb l'API antiga
   // bookId?: BookId; // REMOVED
   maximized?: boolean; // Ignorat, el chatbot sempre s'obre en modal
+  focus?: ChatArticleSection;
+}
+
+export interface ChatArticleSection {
+  articleId: string;
+  articleNumber: string;
+  sectionNumber: number;
+  sectionText: string;
 }
 
 /**
@@ -23,10 +31,10 @@ export function openChat(options: OpenChatOptions = {}) {
     detail: {
       question: options.question || '',
       codeScope: 'constitucio',
-      autoSubmit: options.autoSubmit || false
+      autoSubmit: options.autoSubmit || false,
+      focus: options.focus || null,
     }
   });
 
   window.dispatchEvent(event);
 }
-

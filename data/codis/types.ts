@@ -63,6 +63,115 @@ export interface ArticleAndorra {
   }[];
 }
 
+export type EditorialStatus = 'pendent' | 'en-revisio' | 'revisat' | 'publicat';
+
+export interface EditorialText {
+  ca: string;
+  es?: string;
+  fr?: string;
+}
+
+export interface ConstitutionalEditorialSource {
+  id: string;
+  tipus: 'constitucio' | 'legislacio' | 'jurisprudencia' | 'doctrina';
+  referencia: string;
+}
+
+/** Contingut pedagògic supervisat, separat del text oficial de l'article. */
+export interface ConstitutionalEditorialEntry {
+  article_id: string;
+  estat: EditorialStatus;
+  resum: EditorialText;
+  finalitat: EditorialText;
+  destinataris: EditorialText;
+  aplicacio: EditorialText;
+  limits: EditorialText;
+  conceptes_clau: string[];
+  preguntes_aprenentatge: string[];
+  pistes_aprenentatge: string[];
+  articles_relacionats: string[];
+  fonts: ConstitutionalEditorialSource[];
+  aprenentatge?: ConstitutionalLearningContent;
+  versio?: string;
+  actualitzat_el?: string;
+  revisor?: string;
+  notes_revisio?: string;
+}
+
+export type LearningDifficulty = 'inicial' | 'intermedi' | 'avançat';
+
+export interface ConstitutionalLearningQuestion {
+  id: string;
+  pregunta: string;
+  pista?: string;
+  resposta_orientativa: string;
+  fonts: string[];
+}
+
+export interface ConstitutionalLearningContent {
+  objectiu: string;
+  dificultat: LearningDifficulty;
+  conceptes_previs: string[];
+  passos: string[];
+  preguntes: ConstitutionalLearningQuestion[];
+  errors_frequents: string[];
+  exemple_practic?: string;
+  criteri_comprensio: string;
+}
+
+export interface LearningProgress {
+  articleId: string;
+  completedSteps: string[];
+  answeredQuestions: string[];
+  lastVisitedAt: string;
+  completed: boolean;
+}
+
+export type FeedbackType = 'ajuda' | 'confusio' | 'possible-error' | 'suggeriment';
+
+export interface EditorialFeedback {
+  id: string;
+  articleId: string;
+  section: string;
+  tipus: FeedbackType;
+  missatge?: string;
+  createdAt: string;
+  priority: 'alta' | 'mitjana' | 'baixa';
+  status: 'pendent' | 'en-revisio' | 'resolt';
+}
+
+export interface ConstitutionalKnowledgeDocument {
+  id: string;
+  type: 'article' | 'chapter' | 'source' | 'jurisprudence';
+  title: string;
+  officialText?: string;
+  editorial?: ConstitutionalEditorialEntry;
+  relatedIds: string[];
+  version: string;
+  updatedAt: string;
+}
+
+export type LegalKnowledgeType = 'legislation' | 'jurisprudence';
+
+export interface LegalKnowledgeDocument {
+  id: string;
+  type: LegalKnowledgeType;
+  title: string;
+  officialText?: string;
+  officialUrl?: string;
+  sourceReference: string;
+  publicationYear?: number;
+  subtype?: string;
+  tribunal?: string;
+  caseNumber?: string;
+  date?: string;
+  summary?: string;
+  relatedIds: string[];
+  editorialStatus: EditorialStatus;
+  version: string;
+  updatedAt: string;
+}
+
 export interface Modificacio {
   data: string;
   llei: string; // "Llei qualificada 35/2022"
@@ -85,7 +194,17 @@ export interface InterpretacioIA {
   finalitat?: string; // Per a què serveix la norma
   destinataris?: string; // A qui va dirigida
   aplicacio?: string; // Com s'aplica
+  limits?: string; // Límits i excepcions explicats per la IA
+  context?: string; // Context històric o constitucional
+  preguntes_aprenentatge?: string[]; // Preguntes per a la pestanya Aprendre
   doctrina_jurisprudencia?: string; // Com ho veu la doctrina i jurisprudència
+  fonts?: InterpretacioFont[]; // Fonts explícites utilitzades per la interpretació
+}
+
+export interface InterpretacioFont {
+  id: string;
+  tipus: 'constitucio' | 'jurisprudencia' | 'doctrina' | 'legislacio';
+  referencia: string;
 }
 
 export interface Exemple {
@@ -116,4 +235,3 @@ export interface CodiMetadata {
     fr: string;
   };
 }
-

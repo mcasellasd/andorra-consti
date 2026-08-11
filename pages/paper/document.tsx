@@ -15,10 +15,10 @@ const PaperPage: React.FC<PaperDocumentProps> = ({ html, toc }) => {
   return (
     <>
       <Head>
-        <title>Paper Acadèmic · El dret a la claredat constitucional · dretplaner.ad</title>
+        <title>Paper Acadèmic · La claredat constitucional com a tecnologia de planificació social · dretplaner.ad</title>
         <meta
           name="description"
-          content="Paper acadèmic: El dret a la claredat constitucional. IA i adequació tecnològica com a garanties de la cohesió jurídica a Andorra."
+          content="Document complet del paper acadèmic: La claredat constitucional com a tecnologia de planificació social. IA consultiva i dret a comprendre a Andorra."
         />
       </Head>
       <Layout>

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Scale, Sparkles, Loader2, ChevronDown } from 'lucide-react';
-import { Button } from '../ui/button';
-import { ArticleAndorra, InterpretacioIA as InterpretacioIAType } from '../../data/codis/types';
+import { Scale, ChevronDown } from 'lucide-react';
+import { ArticleAndorra } from '../../data/codis/types';
 import { type DoctrinaCase } from '../../data/doctrina';
 import { type Idioma, t } from '../../lib/i18n';
 import JurisprudenciaSection from '../JurisprudenciaSection';
@@ -9,24 +8,17 @@ import JurisprudenciaSection from '../JurisprudenciaSection';
 interface ArticleJurisprudenceSectionProps {
   article: ArticleAndorra;
   idioma: Idioma;
-  interpretacio: InterpretacioIAType | null;
   doctrina?: DoctrinaCase[];
-  onGenerateAssistencia: () => void;
-  isGenerating: boolean;
 }
 
 export function ArticleJurisprudenceSection({
   article,
   idioma,
-  interpretacio,
   doctrina,
-  onGenerateAssistencia,
-  isGenerating,
 }: ArticleJurisprudenceSectionProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const hasDogmatica = !!article.dimensions_comprensio?.dogmatica;
-  const hasAIDoctrina = !!interpretacio?.doctrina_jurisprudencia;
   const hasDoctrinaCases = !!(doctrina && doctrina.length > 0);
 
   return (
@@ -44,29 +36,6 @@ export function ArticleJurisprudenceSection({
         </div>
 
         <div className="flex items-center gap-3">
-          {!hasAIDoctrina && !hasDogmatica && (
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onGenerateAssistencia();
-                setIsOpen(true);
-              }}
-              disabled={isGenerating}
-              className="bg-white dark:bg-slate-900 text-indigo-800 dark:text-indigo-300 border-indigo-300 dark:border-indigo-700 hover:bg-indigo-50 text-xs font-semibold gap-1.5 shadow-xs"
-            >
-              {isGenerating ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <Sparkles className="h-3.5 w-3.5 text-indigo-500" />
-              )}
-              <span>{t(idioma, 'article.interpretacioIA')}</span>
-            </Button>
-          )}
-
           <ChevronDown className="h-5 w-5 text-indigo-700 dark:text-indigo-300 transition-transform duration-200 group-open:rotate-180" />
         </div>
       </summary>
@@ -111,19 +80,6 @@ export function ArticleJurisprudenceSection({
           </div>
         )}
 
-        {/* Doctrina IA */}
-        {hasAIDoctrina && (
-          <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-lg border border-indigo-200/80 dark:border-indigo-800/50 shadow-xs space-y-2">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-800 dark:text-indigo-300 flex items-center gap-1.5">
-              <Sparkles className="h-3.5 w-3.5 text-indigo-500" />
-              {t(idioma, 'article.doctrinaJurisprudenciaIA')}
-            </h4>
-            <p className="text-sm lg:text-base text-foreground/90 leading-relaxed whitespace-pre-line">
-              {interpretacio!.doctrina_jurisprudencia}
-            </p>
-          </div>
-        )}
-
         {/* Doctrina Relacionada (Articles d'opinió / estudis) */}
         {hasDoctrinaCases && (
           <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-lg border border-indigo-200/80 dark:border-indigo-800/50 shadow-xs space-y-3">
@@ -158,18 +114,9 @@ export function ArticleJurisprudenceSection({
           />
         </div>
 
-        {!hasDogmatica && !hasAIDoctrina && (
+        {!hasDogmatica && !hasDoctrinaCases && (
           <div className="text-center py-4">
-            {isGenerating ? (
-              <div className="flex flex-col items-center justify-center gap-2 text-indigo-800 dark:text-indigo-300">
-                <Loader2 className="h-6 w-6 animate-spin" />
-                <p className="text-sm font-medium">{t(idioma, 'article.analitzantDoctrina')}</p>
-              </div>
-            ) : (
-              <p className="text-xs text-muted-foreground">
-                {t(idioma, 'article.doctrinaDisponible')}
-              </p>
-            )}
+            <p className="text-xs text-muted-foreground">{t(idioma, 'article.doctrinaDisponible')}</p>
           </div>
         )}
       </div>

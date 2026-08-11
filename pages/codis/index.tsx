@@ -75,6 +75,17 @@ const CodisPage: React.FC = () => {
               </div>
             </div>
           </section>
+
+          <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
+            <Link href="/legislacio" style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1.5rem', textDecoration: 'none', color: 'inherit' }}>
+              <h2 style={{ fontSize: '1.35rem', fontWeight: 600, marginBottom: '0.5rem' }}>Legislació d&apos;Andorra</h2>
+              <p style={{ color: '#64748b', margin: 0 }}>Normes i reglaments amb fonts documentals identificades →</p>
+            </Link>
+            <Link href="/jurisprudencia" style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1.5rem', textDecoration: 'none', color: 'inherit' }}>
+              <h2 style={{ fontSize: '1.35rem', fontWeight: 600, marginBottom: '0.5rem' }}>Jurisprudència</h2>
+              <p style={{ color: '#64748b', margin: 0 }}>Resolucions estructurades i articles constitucionals relacionats →</p>
+            </Link>
+          </section>
         </div>
       </Layout>
     </>
@@ -82,4 +93,3 @@ const CodisPage: React.FC = () => {
 };
 
 export default CodisPage;
-
