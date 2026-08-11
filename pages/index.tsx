@@ -2,12 +2,13 @@ import React, { useCallback, useState, useEffect } from 'react';
 import Head from 'next/head';
 import Layout from '../components/Layout';
 import Link from 'next/link';
-import { Shield, Users, Scale, FileCheck, Landmark, Check } from 'lucide-react';
+import { Shield, Users, Scale, FileCheck, Landmark, Check, ArrowRight, BookOpen, MessageCircle, History } from 'lucide-react';
 import { MultilingualBanner } from '../components/MultilingualBanner';
 import { getIdiomaActual, t, type Idioma } from '../lib/i18n';
 
 const IndexPage: React.FC = () => {
   const [idioma, setIdioma] = useState<Idioma>('ca');
+  const [selectedPath, setSelectedPath] = useState('drets');
 
   useEffect(() => {
     setIdioma(getIdiomaActual());
@@ -42,6 +43,31 @@ const IndexPage: React.FC = () => {
     t(idioma, 'home.pregunta6'),
   ];
 
+  const paths = [
+    {
+      id: 'drets',
+      icon: Shield,
+      title: idioma === 'ca' ? 'Drets i llibertats' : idioma === 'es' ? 'Derechos y libertades' : 'Droits et libertés',
+      copy: idioma === 'ca' ? 'Què pot exigir una persona i quines garanties té davant dels poders públics?' : idioma === 'es' ? '¿Qué puede exigir una persona y qué garantías tiene ante los poderes públicos?' : 'Que peut exiger une personne et quelles garanties a-t-elle face aux pouvoirs publics?',
+      href: '/codis/constitucio?part=drets'
+    },
+    {
+      id: 'institucions',
+      icon: Landmark,
+      title: idioma === 'ca' ? 'Institucions' : idioma === 'es' ? 'Instituciones' : 'Institutions',
+      copy: idioma === 'ca' ? 'Com s’organitza l’Estat i qui pren les decisions que ens afecten?' : idioma === 'es' ? '¿Cómo se organiza el Estado y quién toma las decisiones que nos afectan?' : 'Comment l’État est-il organisé et qui prend les décisions qui nous concernent?',
+      href: '/codis/constitucio?part=institucions'
+    },
+    {
+      id: 'convivencia',
+      icon: Users,
+      title: idioma === 'ca' ? 'Vida col·lectiva' : idioma === 'es' ? 'Vida colectiva' : 'Vie collective',
+      copy: idioma === 'ca' ? 'Quins principis comparteix la comunitat i com es protegeix l’interès general?' : idioma === 'es' ? '¿Qué principios comparte la comunidad y cómo se protege el interés general?' : 'Quels principes la communauté partage-t-elle et comment l’intérêt général est-il protégé?',
+      href: '/codis/constitucio?part=principis'
+    }
+  ];
+  const selectedPathData = paths.find((path) => path.id === selectedPath) || paths[0];
+
   return (
     <>
       <Head>
@@ -53,30 +79,26 @@ const IndexPage: React.FC = () => {
         <meta name="description" content={t(idioma, 'home.descripcio')} />
       </Head>
       <Layout>
-        <section className="home-banner">
-          <div className="home-banner-mountains" aria-hidden="true">
-            <div className="home-banner-peak home-banner-peak-1" />
-            <div className="home-banner-peak home-banner-peak-2" />
-            <div className="home-banner-peak home-banner-peak-3" />
-          </div>
+        <section className="home-banner home-banner--editorial">
+          <div className="home-banner-orbit" aria-hidden="true" />
           <div className="home-banner-content">
             <span className="home-banner-eyebrow">
-              {idioma === 'ca' ? 'Constitució d\'Andorra · 1993' : idioma === 'es' ? 'Constitución de Andorra · 1993' : 'Constitution d\'Andorre · 1993'}
+              {idioma === 'ca' ? 'Constitució · Andorra · Vida col·lectiva' : idioma === 'es' ? 'Constitución · Andorra · Vida colectiva' : 'Constitution · Andorre · Vie collective'}
             </span>
             <h1 className="home-banner-title">
-              {t(idioma, 'home.titol')}<br />
-              <span>{t(idioma, 'home.subtitol')}</span>
+              {idioma === 'ca' ? <>La Constitució<br /><span>també és <em>teva.</em></span></> : <>{t(idioma, 'home.titol')}<br /><span>{t(idioma, 'home.subtitol')}</span></>}
             </h1>
-            <p className="home-banner-desc">{t(idioma, 'home.descripcio')}</p>
+            <p className="home-banner-desc">{idioma === 'ca' ? 'Una Constitució coneguda és una Constitució viva.' : t(idioma, 'home.descripcio')}</p>
             <div className="home-banner-actions">
-              <Link href="#estructura" className="home-banner-btn home-banner-btn--primary" scroll={false}>
-                {t(idioma, 'home.comença')} →
+              <Link href="#explora" className="home-banner-btn home-banner-btn--primary" scroll={false}>
+                {idioma === 'ca' ? 'Explora la Constitució' : t(idioma, 'home.comença')} <ArrowRight size={17} />
               </Link>
               <button type="button" onClick={() => openChat()} className="home-banner-btn home-banner-btn--ghost">
-                {t(idioma, 'home.aprenDret')} →
+                <MessageCircle size={17} /> {t(idioma, 'home.aprenDret')}
               </button>
             </div>
           </div>
+          <div className="home-banner-note"><span>1993</span><strong>Una eina per entendre<br />el país que compartim.</strong></div>
         </section>
 
         <div className="page-shell">
@@ -84,6 +106,33 @@ const IndexPage: React.FC = () => {
             <div className="home-section-card">
               <MultilingualBanner />
             </div>
+          </section>
+
+          <section id="explora" className="home-section home-explore-section">
+            <div className="section-heading home-section-heading--wide">
+              <div>
+                <span className="home-kicker">{idioma === 'ca' ? 'Comença per una situació' : idioma === 'es' ? 'Empieza por una situación' : 'Commencez par une situation'}</span>
+                <h2>{idioma === 'ca' ? 'On apareix la Constitució en la teva vida?' : idioma === 'es' ? '¿Dónde aparece la Constitución en tu vida?' : 'Où la Constitution apparaît-elle dans votre vie ?'}</h2>
+              </div>
+              <p>{idioma === 'ca' ? 'Tria un itinerari i descobreix quins articles t’ajuden a entendre’l.' : idioma === 'es' ? 'Elige un itinerario y descubre qué artículos te ayudan a entenderlo.' : 'Choisissez un parcours et découvrez les articles qui vous aident à le comprendre.'}</p>
+            </div>
+            <div className="home-path-grid" role="group" aria-label="Situacions per explorar">
+              {paths.map(({ id, icon: Icon, title, copy }) => (
+                <button key={id} type="button" className={`home-path-card${selectedPath === id ? ' is-selected' : ''}`} onClick={() => setSelectedPath(id)} aria-pressed={selectedPath === id}>
+                  <Icon size={21} /><strong>{title}</strong><span>{copy}</span>
+                </button>
+              ))}
+            </div>
+            <div className="home-path-result">
+              <div><span className="home-path-label">{idioma === 'ca' ? 'Itinerari seleccionat' : idioma === 'es' ? 'Itinerario seleccionado' : 'Parcours sélectionné'}</span><h3>{selectedPathData.title}</h3><p>{selectedPathData.copy}</p></div>
+              <Link href={selectedPathData.href} className="home-path-link">{idioma === 'ca' ? 'Veure els articles' : idioma === 'es' ? 'Ver los artículos' : 'Voir les articles'} <ArrowRight size={17} /></Link>
+            </div>
+          </section>
+
+          <section className="home-context-strip">
+            <div className="home-context-icon"><History size={22} /></div>
+            <div><span className="home-kicker">{idioma === 'ca' ? 'Per interpretar, cal entendre' : idioma === 'es' ? 'Para interpretar, hay que entender' : 'Pour interpréter, il faut comprendre'}</span><h2>{idioma === 'ca' ? 'D’on ve la Constitució?' : idioma === 'es' ? '¿De dónde viene la Constitución?' : 'D’où vient la Constitution ?'}</h2><p>{idioma === 'ca' ? 'Conèixer el seu context, els seus motius i els seus debats ajuda a llegir-la amb més criteri.' : idioma === 'es' ? 'Conocer su contexto, sus motivos y sus debates ayuda a leerla con más criterio.' : 'Connaître son contexte, ses motifs et ses débats aide à la lire avec plus de discernement.'}</p></div>
+            <Link href="/codis/constitucio#preambul" className="home-context-link"><BookOpen size={17} /> {idioma === 'ca' ? 'Llegir el context' : idioma === 'es' ? 'Leer el contexto' : 'Lire le contexte'}</Link>
           </section>
 
           <section id="estructura" className="home-section">
