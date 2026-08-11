@@ -3245,6 +3245,41 @@ a {
   font-size: 0.82rem;
 }
 
+.chatbot-focus-banner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid rgba(99, 102, 241, 0.18);
+  background: #eef2ff;
+  color: #3730a3;
+  font-size: 0.78rem;
+}
+
+.chatbot-focus-banner > div {
+  display: grid;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+.chatbot-focus-banner span {
+  overflow: hidden;
+  color: #475569;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chatbot-focus-banner button {
+  flex: 0 0 auto;
+  border: 0;
+  background: transparent;
+  color: #3730a3;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .article-split-divider {
   width: 12px;
   min-height: 100%;

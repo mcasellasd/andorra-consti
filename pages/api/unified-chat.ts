@@ -33,6 +33,11 @@ interface UnifiedChatRequest {
   locale?: LocaleChat;
   maxTokens?: number;
   temperature?: number;
+  focus?: {
+    articleId: string;
+    articleNumber: string;
+    sectionNumber: number;
+  } | null;
 }
 
 type UnifiedRequest = UnifiedChatRequest | InterpretacioRequest;
@@ -104,10 +109,21 @@ export default async function handler(
     conversationHistory = [],
     locale = 'ca',
     maxTokens = 800,
-    temperature = 0.5
+    temperature = 0.5,
+    focus = null
   } = requestBody as UnifiedChatRequest;
 
   const validLocale: LocaleChat = ['ca', 'es', 'fr'].includes(locale) ? locale : 'ca';
+
+  const focusedArticle = focus?.articleId
+    ? articlesConstitucio.find((article) => article.id === focus.articleId)
+    : null;
+  const focusedSectionText = focusedArticle && Number.isInteger(focus?.sectionNumber)
+    ? focusedArticle.text_oficial
+      .split('\n')
+      .map((line) => line.trim())
+      .find((line) => new RegExp(`^${focus!.sectionNumber}\\.`).test(line)) || null
+    : null;
 
   if (!message || !message.trim()) {
     const errMsg = validLocale === 'es' ? 'Mensaje vacío.' : validLocale === 'fr' ? 'Message vide.' : 'Missatge buit.';
@@ -318,6 +334,10 @@ ${officialTextBlock}
       ? `\nLa pregunta es refereix a l'Article ${articleNumber}. Assegura't que la teva resposta reflecteixi el contingut de l'Article ${articleNumber} del context i no atribueixis cap contingut d'un altre article a l'Article ${articleNumber}.\n`
       : '';
 
+    const sectionFocusInstruction = focusedArticle && focusedSectionText && focus
+      ? `\nFOCUS PRIORITARI DE L'USUARI:\nL'usuari ha destacat l'apartat ${focus.sectionNumber} de ${focusedArticle.numeracio}. Aprofundeix primer en aquest apartat, explica el seu sentit, funció, efectes pràctics i límits, i després relaciona'l amb la resta de l'article només si és útil. El text literal verificat és: «${focusedSectionText}»\n`
+      : '';
+
     // Prompt del Sistema amb context RAG
     const systemPrompt = `${languageInstruction}Ets un expert en la Constitució d'Andorra i Dret Andorrà.
 Respon de manera clara, concisa i precisa.
@@ -336,6 +356,7 @@ CITA ELS ARTICLES CORRECTAMENT:
 - NO atribueixis mai el contingut d'un article a un altre. Cada bloc del context correspon a UN sol article o font; no barregis el contingut entre blocs.
 - Si parles de més d'un article, indica clarament quin contingut pertany a quin article.
 ${articleFocusInstruction}
+${sectionFocusInstruction}
 
 JERARQUIA NORMATIVA:
 - La Constitució és la NORMA SUPREMA de l'ordenament jurídic andorrà (Article 3).

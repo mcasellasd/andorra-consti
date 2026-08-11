@@ -8,7 +8,7 @@ import { ArticleJurisprudenceSection } from './ArticleJurisprudenceSection';
 import { ArticleNavigation } from './ArticleNavigation';
 import { getContextConstitucional } from '../../lib/prompts/context-constitucional';
 import { getInterpretacioBaseConstitucional } from '../../lib/constitutional-interpretation';
-import { openChat } from '../chatUtils';
+import { openChat, type ChatArticleSection } from '../chatUtils';
 import { clearLearningProgress, getLearningProgress, updateLearningProgress } from '../../lib/aprenentatge/progres-local';
 import { saveEditorialFeedback } from '../../lib/editorial/feedback-local';
 
@@ -59,6 +59,22 @@ export function ArticleContent({
   ).slice(0, 8);
   const articlesDeFonament = contextConstitucional?.fonament.map((articleRef) => `Article ${articleRef}`) ?? [];
   const articlesRelacionatsMostrats = articlesRelacionats.length > 0 ? articlesRelacionats : articlesDeFonament;
+  const selectedChatSection: ChatArticleSection | undefined = activeApartat === null
+    ? undefined
+    : (() => {
+      const sectionText = articleText
+        .split('\n')
+        .map((line) => line.trim())
+        .find((line) => new RegExp(`^${activeApartat}\\.`).test(line));
+      return sectionText
+        ? {
+          articleId: article.id,
+          articleNumber: article.numeracio,
+          sectionNumber: activeApartat,
+          sectionText,
+        }
+        : undefined;
+    })();
   const preguntesAprenentatge = (editorial?.aprenentatge?.preguntes?.length
     ? editorial.aprenentatge.preguntes.map((question) => question.pregunta)
     : editorial?.preguntes_aprenentatge?.length
@@ -404,7 +420,13 @@ export function ArticleContent({
                     <button
                       type="button"
                       className="article-chat-link"
-                      onClick={() => openChat({ question: `Vull entendre millor ${article.numeracio} de la Constitució d'Andorra.`, codeScope: 'constitucio' })}
+                      onClick={() => openChat({
+                        question: selectedChatSection
+                          ? `Vull aprofundir en l'apartat ${selectedChatSection.sectionNumber} de ${article.numeracio}.`
+                          : `Vull entendre millor ${article.numeracio} de la Constitució d'Andorra.`,
+                        codeScope: 'constitucio',
+                        focus: selectedChatSection,
+                      })}
                     >
                       <Lightbulb size={15} /> {copy.xat}
                     </button>
