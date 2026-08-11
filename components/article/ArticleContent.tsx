@@ -1,43 +1,47 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ExternalLink, Tag } from 'lucide-react';
-import { ArticleAndorra, InterpretacioIA as InterpretacioIAType } from '../../data/codis/types';
+import Link from 'next/link';
+import { ArrowRight, CheckCircle2, ExternalLink, Lightbulb, Tag } from 'lucide-react';
+import { ArticleAndorra, ConstitutionalEditorialEntry } from '../../data/codis/types';
 import { type DoctrinaCase } from '../../data/doctrina';
 import { type Idioma, t } from '../../lib/i18n';
-import { ArticleSummarySection } from './ArticleSummarySection';
-import { ArticleExampleSection } from './ArticleExampleSection';
 import { ArticleJurisprudenceSection } from './ArticleJurisprudenceSection';
 import { ArticleNavigation } from './ArticleNavigation';
+import { getContextConstitucional } from '../../lib/prompts/context-constitucional';
+import { getInterpretacioBaseConstitucional } from '../../lib/constitutional-interpretation';
+import { openChat } from '../chatUtils';
 
 interface ArticleContentProps {
   article: ArticleAndorra;
   idioma: Idioma;
-  interpretacio: InterpretacioIAType | null;
+  editorial: ConstitutionalEditorialEntry | null;
   doctrina?: DoctrinaCase[];
   previousArticle?: ArticleAndorra | null;
   nextArticle?: ArticleAndorra | null;
-  onGenerateAssistencia: () => void;
-  isGenerating: boolean;
 }
 
 export function ArticleContent({
   article,
   idioma,
-  interpretacio,
+  editorial,
   doctrina,
   previousArticle,
   nextArticle,
-  onGenerateAssistencia,
-  isGenerating,
 }: ArticleContentProps) {
   const articleText = article.text_oficial;
+  const contextConstitucional = article.codi === 'constitucio'
+    ? getContextConstitucional(article.numeracio)
+    : null;
+  const interpretacioBase = article.codi === 'constitucio'
+    ? getInterpretacioBaseConstitucional(article.numeracio)
+    : null;
   const splitRef = useRef<HTMLDivElement | null>(null);
   const [splitPct, setSplitPct] = useState(52);
   const [isDraggingSplit, setIsDraggingSplit] = useState(false);
   const [activeApartat, setActiveApartat] = useState<number | null>(null);
   const [activeInterpretacioTab, setActiveInterpretacioTab] = useState<'essencial' | 'aplicacio' | 'context' | 'aprendre'>('essencial');
+  const [revealedLearningQuestions, setRevealedLearningQuestions] = useState<Record<number, boolean>>({});
 
-  const exemplesEnIdioma = interpretacio?.exemples?.filter((e) => e.idioma === idioma) ?? [];
-  const conceptesClau = interpretacio?.conceptes_clau ?? [];
+  const conceptesClau = editorial?.conceptes_clau ?? [];
   const termesSupervisats = article.dimensions_comprensio?.simplificacio_supervisada?.termes_clau ?? [];
   const etiquetes =
     idioma === 'ca'
@@ -45,8 +49,27 @@ export function ArticleContent({
       : article.idiomes?.tags?.[idioma] || article.tags || [];
   const glossari = Array.from(new Set([...conceptesClau, ...termesSupervisats, ...etiquetes])).slice(0, 12);
   const articlesRelacionats = Array.from(
-    new Set([...(interpretacio?.articles_relacionats ?? []), ...(article.enllacos ?? [])])
+    new Set([...(editorial?.articles_relacionats ?? []), ...(article.enllacos ?? [])])
   ).slice(0, 8);
+  const articlesDeFonament = contextConstitucional?.fonament.map((articleRef) => `Article ${articleRef}`) ?? [];
+  const articlesRelacionatsMostrats = articlesRelacionats.length > 0 ? articlesRelacionats : articlesDeFonament;
+  const preguntesAprenentatge = (editorial?.preguntes_aprenentatge?.length
+    ? editorial.preguntes_aprenentatge
+    : interpretacioBase?.preguntes) ?? [
+      idioma === 'ca' ? 'Quin és el nucli d’aquest article?' : idioma === 'es' ? '¿Cuál es el núcleo de este artículo?' : 'Quel est le cœur de cet article?',
+      idioma === 'ca' ? 'A qui s’adreça i en quin àmbit s’aplica?' : idioma === 'es' ? '¿A quién se dirige y en qué ámbito se aplica?' : 'À qui s’adresse-t-il et dans quel domaine s’applique-t-il ?',
+      idioma === 'ca' ? 'Quins límits o garanties cal tenir presents?' : idioma === 'es' ? '¿Qué límites o garantías deben tenerse presentes?' : 'Quelles limites ou garanties faut-il garder à l’esprit ?'
+    ];
+  const pistesAprenentatge = [
+    editorial?.finalitat.ca || interpretacioBase?.destinataris || '',
+    editorial?.destinataris.ca || interpretacioBase?.aplicacio || '',
+    editorial?.limits.ca || interpretacioBase?.limits || '',
+  ];
+  const editorialText = (value?: { ca: string; es?: string; fr?: string }) => value?.[idioma] || value?.ca || '';
+
+  useEffect(() => {
+    setRevealedLearningQuestions({});
+  }, [article.id, idioma]);
 
   const copy = {
     essencial: idioma === 'ca' ? 'Essencial' : idioma === 'es' ? 'Esencial' : 'Essentiel',
@@ -64,6 +87,15 @@ export function ArticleContent({
     paraulesClau: idioma === 'ca' ? 'Paraules jurídiques clau' : idioma === 'es' ? 'Palabras jurídicas clave' : 'Mots juridiques clés',
     itinerari: idioma === 'ca' ? 'Itinerari recomanat' : idioma === 'es' ? 'Itinerario recomendado' : 'Itinéraire recommandé',
     autoavaluacio: idioma === 'ca' ? 'Autoavaluació ràpida' : idioma === 'es' ? 'Autoevaluación rápida' : 'Autoévaluation rapide',
+    comAprendre: idioma === 'ca' ? 'Llegeix, relaciona i comprova' : idioma === 'es' ? 'Lee, relaciona y comprueba' : 'Lis, relie et vérifie',
+    progrés: idioma === 'ca' ? '3 passos per entendre aquest article' : idioma === 'es' ? '3 pasos para entender este artículo' : '3 étapes pour comprendre cet article',
+    pista: idioma === 'ca' ? 'Veure una pista' : idioma === 'es' ? 'Ver una pista' : 'Voir un indice',
+    amagaPista: idioma === 'ca' ? 'Amagar pista' : idioma === 'es' ? 'Ocultar pista' : 'Masquer l’indice',
+    respostaOrientativa: idioma === 'ca' ? 'Orientació' : idioma === 'es' ? 'Orientación' : 'Orientation',
+    pendent: idioma === 'ca' ? 'Contingut pendent de revisió editorial' : idioma === 'es' ? 'Contenido pendiente de revisión editorial' : 'Contenu en attente de révision éditoriale',
+    revisio: idioma === 'ca' ? 'En revisió editorial' : idioma === 'es' ? 'En revisión editorial' : 'En révision éditoriale',
+    xat: idioma === 'ca' ? 'Preguntar al xat sobre aquest article' : idioma === 'es' ? 'Preguntar al chat sobre este artículo' : 'Interroger le chat sur cet article',
+    font: idioma === 'ca' ? 'Fonts verificades' : idioma === 'es' ? 'Fuentes verificadas' : 'Sources vérifiées',
     noDisponible: idioma === 'ca' ? 'No disponible encara.' : idioma === 'es' ? 'Aún no disponible.' : 'Pas encore disponible.',
     jurisprudenciaHint:
       idioma === 'ca'
@@ -304,56 +336,57 @@ export function ArticleContent({
           <div className="article-section-stack">
             {activeInterpretacioTab === 'essencial' && (
               <>
-                <ArticleSummarySection
-                  article={article}
-                  idioma={idioma}
-                  interpretacio={interpretacio}
-                  onGenerateAssistencia={onGenerateAssistencia}
-                  isGenerating={isGenerating}
-                />
+                <div className="article-card article-guidance-card article-editorial-summary">
+                  <div className="article-editorial-heading">
+                    <div>
+                      <h3>{t(idioma, 'article.resum')}</h3>
+                      <span className={`article-editorial-status article-editorial-status--${editorial?.estat || 'pendent'}`}>
+                        {editorial?.estat === 'en-revisio' ? copy.revisio : copy.pendent}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      className="article-chat-link"
+                      onClick={() => openChat({ question: `Vull entendre millor ${article.numeracio} de la Constitució d'Andorra.`, codeScope: 'constitucio' })}
+                    >
+                      <Lightbulb size={15} /> {copy.xat}
+                    </button>
+                  </div>
+                  {editorialText(editorial?.resum) ? (
+                    <p>{editorialText(editorial?.resum)}</p>
+                  ) : (
+                    <p className="article-editorial-empty">{copy.pendent}</p>
+                  )}
+                </div>
 
                 <div className="article-card article-guidance-card">
                   <h3>{copy.permetLimita}</h3>
-                  <p>{interpretacio?.finalitat || interpretacio?.aplicacio || article.norma || copy.noDisponible}</p>
+                  <p>{editorialText(editorial?.finalitat) || interpretacioBase?.context.quePucFer || copy.noDisponible}</p>
                 </div>
 
                 <div className="article-card article-guidance-card">
                   <h3>{copy.ambitAplicacio}</h3>
-                  <p>{interpretacio?.destinataris || article.ambit || copy.noDisponible}</p>
+                  <p>{editorialText(editorial?.destinataris) || article.ambit || interpretacioBase?.destinataris || copy.noDisponible}</p>
                 </div>
 
                 <div className="article-card article-guidance-card">
                   <h3>{copy.limitsExcepcions}</h3>
-                  <p>{copy.limitsHint}</p>
+                  <p>{editorialText(editorial?.limits) || interpretacioBase?.limits || copy.limitsHint}</p>
                 </div>
               </>
             )}
 
             {activeInterpretacioTab === 'aplicacio' && (
               <>
-                <ArticleExampleSection
-                  article={article}
-                  idioma={idioma}
-                  interpretacio={interpretacio}
-                  onGenerateAssistencia={onGenerateAssistencia}
-                  isGenerating={isGenerating}
-                />
-
                 <div className="article-card article-guidance-card">
                   <h3>{copy.impactePractic}</h3>
-                  <p>{article.dimensions_comprensio?.aplicabilitat_residencia?.ajuda_practica || interpretacio?.aplicacio || copy.noDisponible}</p>
+                  <p>{editorialText(editorial?.aplicacio) || article.dimensions_comprensio?.aplicabilitat_residencia?.ajuda_practica || interpretacioBase?.aplicacio || copy.noDisponible}</p>
                 </div>
 
                 <div className="article-card article-guidance-card">
                   <h3>{copy.confusions}</h3>
                   <p>{copy.confusionsHint}</p>
-                  {exemplesEnIdioma.length > 0 && (
-                    <ul className="article-guidance-list">
-                      {exemplesEnIdioma.slice(0, 2).map((exemple, index) => (
-                        <li key={index}>{exemple.cas}</li>
-                      ))}
-                    </ul>
-                  )}
+                  {editorial?.notes_revisio && <p className="article-editorial-note">{editorial.notes_revisio}</p>}
                 </div>
               </>
             )}
@@ -363,22 +396,28 @@ export function ArticleContent({
                 <ArticleJurisprudenceSection
                   article={article}
                   idioma={idioma}
-                  interpretacio={interpretacio}
                   doctrina={doctrina}
-                  onGenerateAssistencia={onGenerateAssistencia}
-                  isGenerating={isGenerating}
                 />
 
                 <div className="article-card article-guidance-card">
                   <h3>{copy.doctrinal}</h3>
-                  <p>{interpretacio?.doctrina_jurisprudencia || copy.noDisponible}</p>
+                  <p>{copy.noDisponible}</p>
+                </div>
+
+                <div className="article-card article-guidance-card">
+                  <h3>{copy.font}</h3>
+                  {editorial?.fonts.length ? (
+                    <ul className="article-guidance-list">
+                      {editorial.fonts.map((font) => <li key={font.id}>{font.referencia}</li>)}
+                    </ul>
+                  ) : <p>{copy.noDisponible}</p>}
                 </div>
 
                 <div className="article-card article-guidance-card">
                   <h3>{copy.relacioArticles}</h3>
-                  {articlesRelacionats.length > 0 ? (
+                  {articlesRelacionatsMostrats.length > 0 ? (
                     <ul className="article-guidance-list article-guidance-list--chips">
-                      {articlesRelacionats.map((item) => (
+                      {articlesRelacionatsMostrats.map((item) => (
                         <li key={item}>{item}</li>
                       ))}
                     </ul>
@@ -396,7 +435,16 @@ export function ArticleContent({
 
             {activeInterpretacioTab === 'aprendre' && (
               <>
-                <div className="article-card article-guidance-card">
+                <div className="article-learning-intro">
+                  <div className="article-learning-intro__icon" aria-hidden="true"><Lightbulb size={20} /></div>
+                  <div>
+                    <p className="article-learning-intro__eyebrow">{copy.aprendre}</p>
+                    <h3>{copy.comAprendre}</h3>
+                    <p>{copy.progrés}</p>
+                  </div>
+                </div>
+
+                <div className="article-card article-guidance-card article-learning-card">
                   <h3>{copy.paraulesClau}</h3>
                   {glossari.length > 0 ? (
                     <ul className="article-guidance-list article-guidance-list--chips">
@@ -409,23 +457,67 @@ export function ArticleContent({
                   )}
                 </div>
 
-                <div className="article-card article-guidance-card">
+                <div className="article-card article-guidance-card article-learning-card">
                   <h3>{copy.itinerari}</h3>
-                  <ul className="article-guidance-list">
-                    <li>{t(idioma, 'article.textOficial')}</li>
-                    <li>{t(idioma, 'article.resum')}</li>
-                    <li>{idioma === 'ca' ? 'Exemples i aplicació pràctica' : idioma === 'es' ? 'Ejemplos y aplicación práctica' : 'Exemples et application pratique'}</li>
-                    <li>{t(idioma, 'article.jurisprudencia')}</li>
-                  </ul>
+                  <ol className="article-learning-path">
+                    {[
+                      t(idioma, 'article.textOficial'),
+                      t(idioma, 'article.resum'),
+                      idioma === 'ca' ? 'Exemples i aplicació pràctica' : idioma === 'es' ? 'Ejemplos y aplicación práctica' : 'Exemples et application pratique',
+                      t(idioma, 'article.jurisprudencia'),
+                    ].map((step, index) => (
+                      <li key={step}>
+                        <span className="article-learning-path__marker"><CheckCircle2 size={15} /></span>
+                        <span>{step}</span>
+                        {index < 3 && <ArrowRight className="article-learning-path__arrow" size={15} aria-hidden="true" />}
+                      </li>
+                    ))}
+                  </ol>
+                  <p className="article-learning-note">
+                    {idioma === 'ca' ? 'Objectiu: poder explicar la norma amb les teves paraules i situar-la dins la Constitució.' : idioma === 'es' ? 'Objetivo: poder explicar la norma con tus palabras y situarla dentro de la Constitución.' : 'Objectif : pouvoir expliquer la norme avec vos mots et la situer dans la Constitution.'}
+                  </p>
                 </div>
 
-                <div className="article-card article-guidance-card">
-                  <h3>{copy.autoavaluacio}</h3>
-                  <ul className="article-guidance-list">
-                    <li>{idioma === 'ca' ? 'Qui és el destinatari principal d\'aquest article?' : idioma === 'es' ? '¿Quién es el destinatario principal de este artículo?' : 'Qui est le destinataire principal de cet article?'}</li>
-                    <li>{idioma === 'ca' ? 'Quina acció o limitació estableix expressament?' : idioma === 'es' ? '¿Qué acción o limitación establece expresamente?' : 'Quelle action ou limitation établit-il explicitement?'}</li>
-                    <li>{idioma === 'ca' ? 'Hi ha excepcions textuals a tenir presents?' : idioma === 'es' ? '¿Hay excepciones textuales a tener presentes?' : 'Y a-t-il des exceptions textuelles à prendre en compte?'}</li>
-                  </ul>
+                <div className="article-card article-guidance-card article-learning-card article-learning-questions">
+                  <div className="article-learning-card__heading">
+                    <div>
+                      <h3>{copy.autoavaluacio}</h3>
+                      <p>{idioma === 'ca' ? 'Intenta respondre abans d’obrir cada pista.' : idioma === 'es' ? 'Intenta responder antes de abrir cada pista.' : 'Essayez de répondre avant d’ouvrir chaque indice.'}</p>
+                    </div>
+                    <span className="article-learning-count">{preguntesAprenentatge.length}</span>
+                  </div>
+                  <ol className="article-learning-questions-list">
+                    {preguntesAprenentatge.map((pregunta, index) => {
+                      const hasHint = Boolean(pistesAprenentatge[index]);
+                      const isRevealed = revealedLearningQuestions[index];
+                      return (
+                        <li key={pregunta}>
+                          <div className="article-learning-question">
+                            <span>{index + 1}</span>
+                            <p>{pregunta}</p>
+                          </div>
+                          {hasHint && (
+                            <>
+                              <button
+                                type="button"
+                                className="article-learning-hint-button"
+                                onClick={() => setRevealedLearningQuestions((current) => ({ ...current, [index]: !current[index] }))}
+                                aria-expanded={isRevealed}
+                              >
+                                <Lightbulb size={15} /> {isRevealed ? copy.amagaPista : copy.pista}
+                              </button>
+                              {isRevealed && (
+                                <div className="article-learning-hint">
+                                  <strong>{copy.respostaOrientativa}</strong>
+                                  <p>{pistesAprenentatge[index]}</p>
+                                </div>
+                              )}
+                            </>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ol>
                 </div>
               </>
             )}

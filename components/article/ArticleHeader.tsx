@@ -1,24 +1,21 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Copy, Check, Sparkles, ChevronRight, Scale, Calendar, Tag, ShieldCheck } from 'lucide-react';
+import { Copy, Check, MessageCircle, ChevronRight, Scale, Calendar, Tag, ShieldCheck } from 'lucide-react';
 import { Button } from '../ui/button';
 import { ArticleAndorra } from '../../data/codis/types';
 import { t, type Idioma } from '../../lib/i18n';
+import { openChat } from '../chatUtils';
 
 interface ArticleHeaderProps {
   article: ArticleAndorra;
   idioma?: Idioma;
   previousArticle?: ArticleAndorra | null;
   nextArticle?: ArticleAndorra | null;
-  onGenerateAssistencia?: () => void;
-  isGenerating?: boolean;
 }
 
 export function ArticleHeader({
   article,
   idioma = 'ca',
-  onGenerateAssistencia,
-  isGenerating,
 }: ArticleHeaderProps) {
   const [copied, setCopied] = useState(false);
 
@@ -78,12 +75,15 @@ export function ArticleHeader({
               )}
             </Button>
 
-            {onGenerateAssistencia && (
-              <Button type="button" size="sm" onClick={onGenerateAssistencia} disabled={isGenerating} className="article-action-btn article-action-btn--primary">
-                <Sparkles className="article-action-icon" />
-                <span>{t(idioma, 'article.assisteixMe')}</span>
-              </Button>
-            )}
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => openChat({ question: `Vull entendre millor ${article.numeracio} de la Constitució d'Andorra.`, codeScope: 'constitucio' })}
+              className="article-action-btn article-action-btn--primary"
+            >
+              <MessageCircle className="article-action-icon" />
+              <span>{idioma === 'ca' ? 'Preguntar al xat' : idioma === 'es' ? 'Preguntar al chat' : 'Interroger le chat'}</span>
+            </Button>
           </div>
         </div>
 

@@ -19,10 +19,10 @@ const PaperIndexPage: React.FC<PaperIndexProps> = ({ html, toc }) => {
   return (
     <>
       <Head>
-        <title>Paper Acadèmic · dretplaner.ad</title>
+        <title>Paper Acadèmic · La claredat constitucional com a tecnologia de planificació social · dretplaner.ad</title>
         <meta
           name="description"
-          content="Índex de l'estructura del paper acadèmic: El dret a la claredat constitucional. IA i adequació tecnològica com a garanties de la cohesió jurídica a Andorra."
+          content="Índex de l'estructura del paper acadèmic: La claredat constitucional com a tecnologia de planificació social. IA consultiva i dret a comprendre a Andorra."
         />
       </Head>
       <Layout>
@@ -31,7 +31,7 @@ const PaperIndexPage: React.FC<PaperIndexProps> = ({ html, toc }) => {
           <div className="paper-hero">
             <h1 className="paper-hero-title">Paper Acadèmic</h1>
             <p className="paper-hero-subtitle">
-              El dret a la claredat constitucional: Intel·ligència Artificial i adequació tecnològica com a garanties de la cohesió jurídica a Andorra
+              La claredat constitucional com a tecnologia de planificació social: Intel·ligència Artificial consultiva i dret a comprendre al Principat d'Andorra
             </p>
             <Link
               href="/paper/document"
@@ -88,73 +88,97 @@ const PaperIndexPage: React.FC<PaperIndexProps> = ({ html, toc }) => {
 
               <div className="paper-structure">
                 <div className="paper-section-card">
-                  <h3>0. Dret Planer. Una plataforma IA per al Dret a Comprendre</h3>
+                  <h3>Capítol I: Introducció — El Dret a la Claredat Constitucional en l&apos;Era de la IA</h3>
                   <ul className="paper-outline">
-                    <li>Introducció: El dret a comprendre a l&apos;era de la intel·ligència artificial</li>
-                    <li>0.1. Funcionament (Mode Xat, Anàlisi individual)</li>
-                    <li>0.2. Objecte de l&apos;estudi</li>
-                    <li>III. El dret a comprendre (doctrina, àmbit internacional, català, Andorra)</li>
+                    <li>1. Delimitació filosòfica i la instrumentalitat teleològica del dret</li>
+                    <li>2. El dret a comprendre com a requisit de legitimitat i dignitat</li>
+                    <li>3. El cas d&apos;Andorra: Tensió sociolingüística i vulnerabilitat cognitiva</li>
+                    <li>4. La Intel·ligència Artificial com a &apos;Rampa Cognitiva&apos; i el risc d&apos;Incapacitació Digital</li>
+                    <li>5. Formalització de la recerca: Preguntes i Hipòtesis</li>
                   </ul>
                 </div>
 
                 <div className="paper-section-card">
-                  <h3>1. El repte de la comprensió normativa a Andorra</h3>
+                  <h3>Capítol II: El dret a comprendre en l&apos;estat social i democràtic de dret</h3>
                   <ul className="paper-outline">
-                    <li>1.1. Context sociodemogràfic singular</li>
-                    <li>1.1.1. La funció del dret: <em>ignorantia iuris non excusat</em></li>
+                    <li>1. Fonamentació teòrica i dogmàtica: De l&apos;opacitat a la claredat jurídica</li>
+                    <li>2. El marc iberoamericà i l&apos;emergència de la &quot;justícia cognitiva&quot;</li>
+                    <li>3. L&apos;arquitectura del dret a comprendre al Principat d&apos;Andorra</li>
+                    <li>4. Cohesió social i llengua oficial: El català clar com a rampa cognitiva</li>
+                    <li>5. El model de &quot;Doble Document&quot; i la mediació algorítmica supervisada</li>
+                    <li>6. Conclusions: Cap a una Dogmàtica de la Transparència Algorítmica</li>
                   </ul>
                 </div>
 
                 <div className="paper-section-card">
-                  <h3>2. La Constitució andorrana</h3>
+                  <h3>Capítol III: La Regla de Reconeixement, l&apos;Agència Compartida i la Realitat Sociolingüística d&apos;Andorra</h3>
                   <ul className="paper-outline">
-                    <li>2.1. Andorra sota la lupa de Hart: La Constitució com a Regla de Reconeixement &quot;viva&quot;</li>
+                    <li>1. Fonaments de l&apos;Ordenament: La Regla de Reconeixement i la Coordinació Social</li>
+                    <li>2. La &quot;Planning Theory of Law&quot;: El Dret Andorrà com a Tecnologia Social</li>
+                    <li>3. Acceptació Interna i Compromís Conjunt en una Societat Plural</li>
+                    <li>4. Capes de Vulnerabilitat Cognitiva i el Deure Actiu de l&apos;Estat</li>
+                    <li>5. Realitat Sociolingüística Polièdrica i el Prototip de RAG Trilingüe</li>
+                    <li>6. Conclusions: Cap a una Dogmàtica de la Transparència Algorítmica</li>
                   </ul>
                 </div>
 
                 <div className="paper-section-card">
-                  <h3>IV. Marc teòric-jurídic de la Intel·ligència Artificial i principis rectors</h3>
+                  <h3>Capítol IV: El Marc Teòric-Jurídic de la Intel·ligència Artificial i els Principis de Governança Pública a Andorra</h3>
                   <ul className="paper-outline">
-                    <li>V.2. La distinció funcional: IA generativa vs. IA consultiva</li>
-                    <li>V.3. Pluralisme vs. "Canonització": Gestió del dissens i "guardrails" en matèries sensibles</li>
-                    <li>V.4. IA generativa i riscos jurídics: De la versemblança a la veracitat</li>
-                    <li>Estat de l&apos;art (anglès, castellà, català, Andorra)</li>
+                    <li>1. Fonamentació Conceptual: La Dicotomia entre la IA Estreta i la IA Generativa</li>
+                    <li>2. L&apos;Arquitectura RAG com a Dret Planer Tecnològic i &quot;Responsible AI by Design&quot;</li>
+                    <li>3. Gestió de la Incertesa i Pluralisme Doctrinal: El Silenci Estratègic</li>
+                    <li>4. El Principi de Supervisió Humana Universal i la No-Substitució</li>
+                    <li>5. Sobirania Digital, Privadesa i Encaix Normatiu al Principat</li>
                   </ul>
                 </div>
 
                 <div className="paper-section-card">
-                  <h3>VI. Proof of Concept: Dret Planer</h3>
+                  <h3>Capítol V: Disseny de l&apos;Arquitectura RAG, Governança de Dades i Teoria de la Planificació</h3>
                   <ul className="paper-outline">
-                    <li>VI.1. Dret Planer: una plataforma d&apos;IA per al dret a comprendre a Andorra</li>
-                    <li>VI.2. Dret Planer com a facilitador tecnològic</li>
-                    <li>VI.10. Encaix normatiu i règim de responsabilitat</li>
-                    <li>VI.11. Limitacions tècniques i full de ruta</li>
-                    <li>VI.12. Síntesi</li>
+                    <li>1. El Laboratori Empíric: Visió General de l&apos;Stack Tècnic de &quot;Dret Planer&quot;</li>
+                    <li>2. L&apos;Arquitectura RAG com a Homologia de la Teoria de la Planificació de Shapiro</li>
+                    <li>3. Governança de Dades i Guardrails Temporals: La Persistència del Pla</li>
+                    <li>4. El RAG vs. &quot;Rules as Code&quot;: Textura Oberta i &quot;Phronesis&quot; Humana</li>
+                    <li>5. Seguretat, Sobirania de Dades i el Projecte AINA</li>
                   </ul>
                 </div>
 
                 <div className="paper-section-card">
-                  <h3>VII. Conclusions</h3>
+                  <h3>Capítol VI: L&apos;instrument d&apos;avaluació: disseny, diagnòstic i construcció</h3>
                   <ul className="paper-outline">
-                    <li>VII.1. La tecnologia com a constitucionalisme aplicat</li>
-                    <li>VII.2. El futur: sobirania digital jurídica</li>
-                    <li>VII.3. Tancament: Dret Planer com a infraestructura de justícia cognitiva</li>
+                    <li>1. Què s&apos;ha de mesurar</li>
+                    <li>2. Disseny comparatiu i congelació de la configuració</li>
+                    <li>3. Diagnòstic: per què el primer intent no mesurava</li>
+                    <li>4. L&apos;instrument construït (Delimitació, afirmacions verificables, rúbriques, reserva d&apos;abstenció)</li>
+                    <li>5. Mètriques (Recuperació, fidelitat i citacions, abstenció i seguretat, llengua i comprensibilitat)</li>
+                    <li>6-9. Mancances, protocol de repetició, amenaces a la validesa i ordre de les fases</li>
                   </ul>
                 </div>
 
                 <div className="paper-section-card">
-                  <h3>Bibliografia (APA 7)</h3>
+                  <h3>Capítol VII: Conclusions, límits i treball futur</h3>
                   <ul className="paper-outline">
-                    <li>Normativa (Constitució, Codi Civil, Llei 6/2024, Llei 29/2021, AI Act)</li>
-                    <li>Doctrina citada al text (Carretero, Fuller, Hart, Serra, Vilajosana)</li>
-                    <li>Doctrina i jurisprudència del corpus del projecte (REFERENCIES-APA7)</li>
-                    <li>Referències tècniques (AINA, Groq/Llama 70B, RAG, LLM)</li>
+                    <li>1-3. Resposta a la pregunta de recerca, estat de les hipòtesis, diagnòstic d&apos;interpretabilitat</li>
+                    <li>4-6. L&apos;instrument construït, resultats sense consulta, troballa constitucional col·lateral</li>
+                    <li>7-8. Marc teòric revisat, sobirania declarada i arquitectura real</li>
+                    <li>9-10. Full de ruta i límits de l&apos;estudi</li>
+                  </ul>
+                </div>
+
+                <div className="paper-section-card">
+                  <h3>Bibliografia de la Tesi — Dret Planer (v2)</h3>
+                  <ul className="paper-outline">
+                    <li>1. Enquadrament Estratègic i Metodològic de la v2</li>
+                    <li>2. Bloc I: Normativa i Legislació (Andorra i Unió Europea)</li>
+                    <li>3. Bloc II: Jurisprudència i Informes Institucionals</li>
+                    <li>4. Bloc III: Doctrina Científica i Literatura Acadèmica</li>
+                    <li>5. Bloc IV: Recursos Tècnics i d&apos;Intel·ligència Artificial</li>
                   </ul>
                   <p className="paper-biblio-note">
-                    Les referències completes i el corpus del projecte es detallen al document i a{' '}
-                    <code>docs/REFERENCIES-APA7.md</code>.
+                    Les referències completes de la compilació v2 es detallen al document complet.
                   </p>
-                  <Link href="/paper/document#bibliografia" className="paper-inline-link">
+                  <Link href="/paper/document#bibliografia-de-la-tesi-dret-planer-v2" className="paper-inline-link">
                     Anar a la bibliografia al document →
                   </Link>
                 </div>
@@ -164,13 +188,12 @@ const PaperIndexPage: React.FC<PaperIndexProps> = ({ html, toc }) => {
             <section className="legal-section paper-features">
               <h2>Característiques del paper</h2>
               <ul className="paper-features-list">
-                <li><strong>Títol:</strong> El dret a la claredat constitucional</li>
-                <li><strong>Focus:</strong> IA estreta, RAG, Dret Planer / Prudència.ad</li>
-                <li><strong>Contribució:</strong> Història del desenvolupament, metodologia, validació (43 preguntes)</li>
-                <li><strong>Marc:</strong> Llei 6/2024, Llei 29/2021, AI Act (risc limitat)</li>
-                <li><strong>Generació:</strong> Llama 70B via Groq (Salamandra es va provar però no era viable)</li>
-                <li><strong>Referències:</strong> APA 7; normativa, doctrina i corpus (REFERENCIES-APA7)</li>
-                <li><strong>Punt clau:</strong> La IA ajuda a comprendre, NO substitueix l&apos;advocat</li>
+                <li><strong>Títol:</strong> La claredat constitucional com a tecnologia de planificació social: Intel·ligència Artificial consultiva i dret a comprendre al Principat d&apos;Andorra</li>
+                <li><strong>Focus:</strong> IA estreta/consultiva, RAG (Parent-Document Retrieval), Dret Planer</li>
+                <li><strong>Contribució:</strong> Marc teòric, disseny, governança i validació empírica de l&apos;IA com a rampa cognitiva</li>
+                <li><strong>Marc:</strong> Llei 6/2024 (llengua pròpia), Llei 29/2021 (LQPD), AI Act de la UE, Codi d&apos;Ètica de l&apos;IA</li>
+                <li><strong>Stack tècnic:</strong> Next.js, FastAPI, Llama 3.3/70B sobre Groq, embeddings d&apos;AINA</li>
+                <li><strong>Punt clau:</strong> El dret a comprendre com a requisit de legitimitat i dignitat, sota supervisió humana</li>
               </ul>
             </section>
 

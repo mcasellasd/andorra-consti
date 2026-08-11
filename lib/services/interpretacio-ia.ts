@@ -8,7 +8,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { GUIA_CATALA_JURIDIC } from '../prompts/guia-catala-juridic';
 import { ASPECTES_JURISPRUDENCIA_ANDORRANA } from '../prompts/aspectes-jurisprudencia-andorra';
-import { InterpretacioIA, Exemple } from '../../data/codis/types';
+import { InterpretacioIA, Exemple, InterpretacioFont } from '../../data/codis/types';
 import { getJurisprudenciaForArticle } from '../../data/jurisprudencia-andorra';
 import { getArticleById } from '../article-helpers';
 import { getDoctrinaByArticleId } from '../../data/doctrina';
@@ -394,10 +394,10 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
     // Reduïm la complexitat del JSON per evitar errors de sintaxi del model.
 
     const systemPromptBase = idioma === 'ca'
-      ? `Ets un assistent jurídic expert en dret andorrà. La teva única funció és analitzar articles de la Constitució i generar fitxes explicatives en format JSON simplificat. La teva resposta (resum, exemples, finalitat, destinataris, aplicacio, doctrina_jurisprudencia) ha de ser íntegrament en català. Respon NOMÉS en català.`
+      ? `Ets un assistent jurídic expert en dret andorrà. La teva única funció és analitzar articles de la Constitució i generar fitxes explicatives en format JSON simplificat. La teva resposta (resum, exemples, finalitat, destinataris, aplicacio, limits, context, preguntes_aprenentatge, doctrina_jurisprudencia i fonts) ha de ser íntegrament en català. Separa sempre el text oficial de la teva explicació. No inventis jurisprudència, doctrina, dates ni fonts: si no tens una font fiable en el context rebut, deixa el camp buit o usa un array buit. Les fonts només poden referir-se al material proporcionat. Respon NOMÉS en català.`
       : idioma === 'es'
-        ? `Eres un asistente experto en derecho andorrano. Tu única función es analizar artículos de la Constitución y generar fichas explicativas en formato JSON simplificado. Tu respuesta (resum, exemples, finalitat, destinataris, aplicacio, doctrina_jurisprudencia) debe ser íntegramente en castellano. Responde SOLO en castellano.`
-        : `Tu es un assistant expert en droit andorran. Ta seule fonction est d'analyser des articles de la Constitution et de générer des fiches explicatives en format JSON simplifié. Ta réponse (resum, exemples, finalitat, destinataris, aplicacio, doctrina_jurisprudencia) doit être entièrement en français. Réponds UNIQUEMENT en français.`;
+        ? `Eres un asistente experto en derecho andorrano. Tu única función es analizar artículos de la Constitución y generar fichas explicativas en formato JSON simplificado. Tu respuesta (resum, exemples, finalitat, destinataris, aplicacio, limits, context, preguntes_aprenentatge, doctrina_jurisprudencia y fonts) debe ser íntegramente en castellano. Separa siempre el texto oficial de tu explicación. No inventes jurisprudencia, doctrina, fechas ni fuentes: si no tienes una fuente fiable en el contexto recibido, deja el campo vacío o usa un array vacío. Las fuentes solo pueden referirse al material proporcionado. Responde SOLO en castellano.`
+        : `Tu es un assistant expert en droit andorran. Ta seule fonction est d'analyser des articles de la Constitution et de générer des fiches explicatives en format JSON simplifié. Ta réponse (resum, exemples, finalitat, destinataris, aplicacio, limits, context, preguntes_aprenentatge, doctrina_jurisprudencia et fonts) doit être entièrement en français. Sépare toujours le texte officiel de ton explication. N'invente pas de jurisprudence, doctrine, dates ni sources : si tu ne disposes pas d'une source fiable dans le contexte reçu, laisse le champ vide ou utilise un tableau vide. Les sources doivent uniquement renvoyer au matériel fourni. Réponds UNIQUEMENT en français.`;
 
     // Exemple One-Shot 1 (Article 2) - EXEMPLES COM A STRINGS SIMPLES
     const exampleUser = idioma === 'ca'
@@ -527,6 +527,29 @@ ${ragContext}`;
         rawObj.jurisprudencia,
         rawObj.jurisprudència
       );
+    };
+
+    const normalizeLearningQuestions = (rawValue: unknown): string[] => {
+      if (!Array.isArray(rawValue)) return [];
+      return rawValue
+        .filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
+        .map((value) => value.trim())
+        .slice(0, 5);
+    };
+
+    const normalizeSources = (rawValue: unknown): InterpretacioFont[] => {
+      if (!Array.isArray(rawValue)) return [];
+      const tipusValids: InterpretacioFont['tipus'][] = ['constitucio', 'jurisprudencia', 'doctrina', 'legislacio'];
+      return rawValue.flatMap((value) => {
+        if (!value || typeof value !== 'object') return [];
+        const source = value as Record<string, unknown>;
+        const id = typeof source.id === 'string' ? source.id.trim() : '';
+        const referencia = typeof source.referencia === 'string' ? source.referencia.trim() : '';
+        const tipus = typeof source.tipus === 'string' && tipusValids.includes(source.tipus as InterpretacioFont['tipus'])
+          ? source.tipus as InterpretacioFont['tipus']
+          : null;
+        return id && referencia && tipus ? [{ id, tipus, referencia }] : [];
+      }).slice(0, 12);
     };
 
     const extractFromPlainText = (text: string, idiomaActual: 'ca' | 'es' | 'fr') => {
@@ -822,6 +845,10 @@ ${ragContext}`;
         finalitat: '',
         destinataris: '',
         aplicacio: '',
+        limits: '',
+        context: '',
+        preguntes_aprenentatge: [],
+        fonts: [],
         doctrina_jurisprudencia: extracted.doctrina,
       };
       return res.status(200).json(interpretacio);
@@ -857,6 +884,10 @@ ${ragContext}`;
       finalitat: String(parsedObj.finalitat ?? ''),
       destinataris: String(parsedObj.destinataris ?? ''),
       aplicacio: String(parsedObj.aplicacio ?? ''),
+      limits: coalesceString(parsedObj.limits, parsedObj.limits_excepcions),
+      context: coalesceString(parsedObj.context, parsedObj.context_constitucional),
+      preguntes_aprenentatge: normalizeLearningQuestions(parsedObj.preguntes_aprenentatge ?? parsedObj.preguntes),
+      fonts: normalizeSources(parsedObj.fonts),
       doctrina_jurisprudencia: normalizeDoctrine(parsedObj),
     };
 
