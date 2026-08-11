@@ -1,6 +1,6 @@
 import { articlesConstitucio } from './articles';
 import { getContextConstitucional } from '../../../lib/prompts/context-constitucional';
-import type { ConstitutionalEditorialEntry, EditorialText } from '../types';
+import type { ConstitutionalEditorialEntry, EditorialText, ConstitutionalLearningContent } from '../types';
 
 const text = (ca = '', es?: string, fr?: string): EditorialText => ({ ca, es, fr });
 
@@ -527,6 +527,36 @@ for (const [articleId, draft] of Object.entries(draftsP1)) {
   });
 }
 
+function buildLearningContent(entry: ConstitutionalEditorialEntry): ConstitutionalLearningContent {
+  const questions = entry.preguntes_aprenentatge.map((pregunta, index) => ({
+    id: `${entry.article_id}-q${index + 1}`,
+    pregunta,
+    pista: entry.pistes_aprenentatge[index],
+    resposta_orientativa: index === 0 ? entry.resum.ca : index === 1 ? entry.aplicacio.ca : entry.limits.ca,
+    fonts: entry.fonts.map((font) => font.id),
+  }));
+
+  return {
+    objectiu: entry.resum.ca
+      ? `Entendre el nucli de ${articleNumber(entry.article_id)} i saber situar-lo dins la Constitució.`
+      : 'Identificar la funció de l’article i relacionar-lo amb el conjunt de la Constitució.',
+    dificultat: entry.article_id === 'CONST_PREAMB' || Number(entry.article_id.replace('CONST_', '')) <= 10 ? 'inicial' : 'intermedi',
+    conceptes_previs: entry.articles_relacionats.slice(0, 3),
+    passos: ['Llegir el text oficial i identificar-ne els elements', 'Relacionar el contingut amb un cas o situació', 'Respondre les preguntes i comprovar l’orientació'],
+    preguntes: questions,
+    errors_frequents: ['No confondre l’explicació editorial amb el text oficial vinculant.', 'No atribuir a l’article una força normativa diferent de la que té dins la Constitució.'],
+    exemple_practic: entry.aplicacio.ca || undefined,
+    criteri_comprensio: 'Pots explicar amb paraules pròpies què protegeix o regula l’article, a qui s’adreça i quins límits té.',
+  };
+}
+
+for (const entry of Object.values(editorial)) {
+  entry.aprenentatge = buildLearningContent(entry);
+  entry.versio = '1.0.0';
+  entry.actualitzat_el = '2026-08-11';
+  entry.revisor = 'Equip editorial Dret Planer';
+}
+
 function institutionalDraft(
   resum: string,
   finalitat: string,
@@ -660,6 +690,12 @@ export function validarEditorialConstitucio(): string[] {
     }
     if (entry.estat === 'publicat' && (!entry.resum.ca || entry.preguntes_aprenentatge.length === 0 || entry.fonts.length === 0)) {
       errors.push('registre publicat incomplet');
+    }
+    if (!entry.aprenentatge?.objectiu || !entry.aprenentatge.criteri_comprensio) {
+      errors.push('contingut d’aprenentatge incomplet');
+    }
+    if (entry.aprenentatge && entry.aprenentatge.preguntes.some((question) => !question.id || !question.pregunta || !question.resposta_orientativa || question.fonts.length === 0)) {
+      errors.push('pregunta d’aprenentatge incompleta');
     }
     return errors.map((error) => `${entry.article_id}: ${error}`);
   });

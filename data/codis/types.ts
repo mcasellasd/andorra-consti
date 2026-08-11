@@ -91,7 +91,64 @@ export interface ConstitutionalEditorialEntry {
   pistes_aprenentatge: string[];
   articles_relacionats: string[];
   fonts: ConstitutionalEditorialSource[];
+  aprenentatge?: ConstitutionalLearningContent;
+  versio?: string;
+  actualitzat_el?: string;
+  revisor?: string;
   notes_revisio?: string;
+}
+
+export type LearningDifficulty = 'inicial' | 'intermedi' | 'avançat';
+
+export interface ConstitutionalLearningQuestion {
+  id: string;
+  pregunta: string;
+  pista?: string;
+  resposta_orientativa: string;
+  fonts: string[];
+}
+
+export interface ConstitutionalLearningContent {
+  objectiu: string;
+  dificultat: LearningDifficulty;
+  conceptes_previs: string[];
+  passos: string[];
+  preguntes: ConstitutionalLearningQuestion[];
+  errors_frequents: string[];
+  exemple_practic?: string;
+  criteri_comprensio: string;
+}
+
+export interface LearningProgress {
+  articleId: string;
+  completedSteps: string[];
+  answeredQuestions: string[];
+  lastVisitedAt: string;
+  completed: boolean;
+}
+
+export type FeedbackType = 'ajuda' | 'confusio' | 'possible-error' | 'suggeriment';
+
+export interface EditorialFeedback {
+  id: string;
+  articleId: string;
+  section: string;
+  tipus: FeedbackType;
+  missatge?: string;
+  createdAt: string;
+  priority: 'alta' | 'mitjana' | 'baixa';
+  status: 'pendent' | 'en-revisio' | 'resolt';
+}
+
+export interface ConstitutionalKnowledgeDocument {
+  id: string;
+  type: 'article' | 'chapter' | 'source' | 'jurisprudence';
+  title: string;
+  officialText?: string;
+  editorial?: ConstitutionalEditorialEntry;
+  relatedIds: string[];
+  version: string;
+  updatedAt: string;
 }
 
 export interface Modificacio {

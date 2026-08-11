@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, ExternalLink, Lightbulb, Tag } from 'lucide-react';
-import { ArticleAndorra, ConstitutionalEditorialEntry } from '../../data/codis/types';
+import { AlertTriangle, ArrowRight, CheckCircle2, ExternalLink, Lightbulb, RotateCcw, Tag, ThumbsUp } from 'lucide-react';
+import { ArticleAndorra, ConstitutionalEditorialEntry, EditorialFeedback, FeedbackType, LearningProgress } from '../../data/codis/types';
 import { type DoctrinaCase } from '../../data/doctrina';
 import { type Idioma, t } from '../../lib/i18n';
 import { ArticleJurisprudenceSection } from './ArticleJurisprudenceSection';
@@ -9,6 +9,8 @@ import { ArticleNavigation } from './ArticleNavigation';
 import { getContextConstitucional } from '../../lib/prompts/context-constitucional';
 import { getInterpretacioBaseConstitucional } from '../../lib/constitutional-interpretation';
 import { openChat } from '../chatUtils';
+import { clearLearningProgress, getLearningProgress, updateLearningProgress } from '../../lib/aprenentatge/progres-local';
+import { saveEditorialFeedback } from '../../lib/editorial/feedback-local';
 
 interface ArticleContentProps {
   article: ArticleAndorra;
@@ -40,6 +42,10 @@ export function ArticleContent({
   const [activeApartat, setActiveApartat] = useState<number | null>(null);
   const [activeInterpretacioTab, setActiveInterpretacioTab] = useState<'essencial' | 'aplicacio' | 'context' | 'aprendre'>('essencial');
   const [revealedLearningQuestions, setRevealedLearningQuestions] = useState<Record<number, boolean>>({});
+  const [learningProgress, setLearningProgress] = useState<LearningProgress>(() => getLearningProgress(article.id));
+  const [feedbackType, setFeedbackType] = useState<FeedbackType | null>(null);
+  const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [feedbackSent, setFeedbackSent] = useState(false);
 
   const conceptesClau = editorial?.conceptes_clau ?? [];
   const termesSupervisats = article.dimensions_comprensio?.simplificacio_supervisada?.termes_clau ?? [];
@@ -53,23 +59,72 @@ export function ArticleContent({
   ).slice(0, 8);
   const articlesDeFonament = contextConstitucional?.fonament.map((articleRef) => `Article ${articleRef}`) ?? [];
   const articlesRelacionatsMostrats = articlesRelacionats.length > 0 ? articlesRelacionats : articlesDeFonament;
-  const preguntesAprenentatge = (editorial?.preguntes_aprenentatge?.length
-    ? editorial.preguntes_aprenentatge
+  const preguntesAprenentatge = (editorial?.aprenentatge?.preguntes?.length
+    ? editorial.aprenentatge.preguntes.map((question) => question.pregunta)
+    : editorial?.preguntes_aprenentatge?.length
+      ? editorial.preguntes_aprenentatge
     : interpretacioBase?.preguntes) ?? [
       idioma === 'ca' ? 'Quin és el nucli d’aquest article?' : idioma === 'es' ? '¿Cuál es el núcleo de este artículo?' : 'Quel est le cœur de cet article?',
       idioma === 'ca' ? 'A qui s’adreça i en quin àmbit s’aplica?' : idioma === 'es' ? '¿A quién se dirige y en qué ámbito se aplica?' : 'À qui s’adresse-t-il et dans quel domaine s’applique-t-il ?',
       idioma === 'ca' ? 'Quins límits o garanties cal tenir presents?' : idioma === 'es' ? '¿Qué límites o garantías deben tenerse presentes?' : 'Quelles limites ou garanties faut-il garder à l’esprit ?'
     ];
-  const pistesAprenentatge = [
-    editorial?.finalitat.ca || interpretacioBase?.destinataris || '',
-    editorial?.destinataris.ca || interpretacioBase?.aplicacio || '',
-    editorial?.limits.ca || interpretacioBase?.limits || '',
-  ];
+  const pistesAprenentatge = editorial?.aprenentatge?.preguntes?.length
+    ? editorial.aprenentatge.preguntes.map((question) => question.pista || question.resposta_orientativa)
+    : [
+      editorial?.finalitat.ca || interpretacioBase?.destinataris || '',
+      editorial?.destinataris.ca || interpretacioBase?.aplicacio || '',
+      editorial?.limits.ca || interpretacioBase?.limits || '',
+    ];
   const editorialText = (value?: { ca: string; es?: string; fr?: string }) => value?.[idioma] || value?.ca || '';
 
   useEffect(() => {
     setRevealedLearningQuestions({});
+    setLearningProgress(getLearningProgress(article.id));
+    setFeedbackType(null);
+    setFeedbackMessage('');
+    setFeedbackSent(false);
   }, [article.id, idioma]);
+
+  useEffect(() => {
+    if (activeInterpretacioTab === 'aprendre') {
+      setLearningProgress((current) => updateLearningProgress(article.id, {}));
+    }
+  }, [activeInterpretacioTab, article.id]);
+
+  const learningSteps = editorial?.aprenentatge?.passos ?? [
+    t(idioma, 'article.textOficial'),
+    t(idioma, 'article.resum'),
+    idioma === 'ca' ? 'Comprovar la comprensió' : idioma === 'es' ? 'Comprobar la comprensión' : 'Vérifier la compréhension',
+  ];
+
+  const toggleLearningStep = (index: number) => {
+    const steps = learningProgress.completedSteps.includes(String(index))
+      ? learningProgress.completedSteps.filter((step) => step !== String(index))
+      : [...learningProgress.completedSteps, String(index)];
+    setLearningProgress(updateLearningProgress(article.id, { completedSteps: steps, completed: steps.length === learningSteps.length }));
+  };
+
+  const markQuestionAnswered = (index: number) => {
+    if (learningProgress.answeredQuestions.includes(String(index))) return;
+    setLearningProgress(updateLearningProgress(article.id, { answeredQuestions: [...learningProgress.answeredQuestions, String(index)] }));
+  };
+
+  const submitFeedback = () => {
+    if (!feedbackType) return;
+    const feedback: EditorialFeedback = {
+      id: `${article.id}-${Date.now()}`,
+      articleId: article.id,
+      section: activeInterpretacioTab,
+      tipus: feedbackType,
+      missatge: feedbackMessage.trim() || undefined,
+      createdAt: new Date().toISOString(),
+      priority: feedbackType === 'possible-error' ? 'alta' : feedbackType === 'confusio' ? 'mitjana' : 'baixa',
+      status: 'pendent',
+    };
+    saveEditorialFeedback(feedback);
+    setFeedbackSent(true);
+    setFeedbackMessage('');
+  };
 
   const copy = {
     essencial: idioma === 'ca' ? 'Essencial' : idioma === 'es' ? 'Esencial' : 'Essentiel',
@@ -94,6 +149,8 @@ export function ArticleContent({
     respostaOrientativa: idioma === 'ca' ? 'Orientació' : idioma === 'es' ? 'Orientación' : 'Orientation',
     pendent: idioma === 'ca' ? 'Contingut pendent de revisió editorial' : idioma === 'es' ? 'Contenido pendiente de revisión editorial' : 'Contenu en attente de révision éditoriale',
     revisio: idioma === 'ca' ? 'En revisió editorial' : idioma === 'es' ? 'En revisión editorial' : 'En révision éditoriale',
+    revisat: idioma === 'ca' ? 'Revisat editorialment' : idioma === 'es' ? 'Revisado editorialmente' : 'Révisé éditorialement',
+    publicat: idioma === 'ca' ? 'Contingut editorial publicat' : idioma === 'es' ? 'Contenido editorial publicado' : 'Contenu éditorial publié',
     xat: idioma === 'ca' ? 'Preguntar al xat sobre aquest article' : idioma === 'es' ? 'Preguntar al chat sobre este artículo' : 'Interroger le chat sur cet article',
     font: idioma === 'ca' ? 'Fonts verificades' : idioma === 'es' ? 'Fuentes verificadas' : 'Sources vérifiées',
     noDisponible: idioma === 'ca' ? 'No disponible encara.' : idioma === 'es' ? 'Aún no disponible.' : 'Pas encore disponible.',
@@ -341,7 +398,7 @@ export function ArticleContent({
                     <div>
                       <h3>{t(idioma, 'article.resum')}</h3>
                       <span className={`article-editorial-status article-editorial-status--${editorial?.estat || 'pendent'}`}>
-                        {editorial?.estat === 'en-revisio' ? copy.revisio : copy.pendent}
+                        {editorial?.estat === 'en-revisio' ? copy.revisio : editorial?.estat === 'revisat' ? copy.revisat : editorial?.estat === 'publicat' ? copy.publicat : copy.pendent}
                       </span>
                     </div>
                     <button
@@ -356,6 +413,9 @@ export function ArticleContent({
                     <p>{editorialText(editorial?.resum)}</p>
                   ) : (
                     <p className="article-editorial-empty">{copy.pendent}</p>
+                  )}
+                  {editorial?.versio && (
+                    <p className="article-editorial-meta">Versió editorial {editorial.versio} · Actualitzat el {editorial.actualitzat_el || '—'} · {editorial.revisor || 'Equip editorial'}</p>
                   )}
                 </div>
 
@@ -440,7 +500,13 @@ export function ArticleContent({
                   <div>
                     <p className="article-learning-intro__eyebrow">{copy.aprendre}</p>
                     <h3>{copy.comAprendre}</h3>
-                    <p>{copy.progrés}</p>
+                    <p>{editorial?.aprenentatge?.objectiu || copy.progrés}</p>
+                    <div className="article-learning-progress" aria-label="Progrés d'aprenentatge">
+                      <span>{learningProgress.completedSteps.length}/{learningSteps.length} passos completats</span>
+                      <button type="button" onClick={() => { clearLearningProgress(article.id); setLearningProgress(getLearningProgress(article.id)); }}>
+                        <RotateCcw size={14} /> Reiniciar
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -460,21 +526,18 @@ export function ArticleContent({
                 <div className="article-card article-guidance-card article-learning-card">
                   <h3>{copy.itinerari}</h3>
                   <ol className="article-learning-path">
-                    {[
-                      t(idioma, 'article.textOficial'),
-                      t(idioma, 'article.resum'),
-                      idioma === 'ca' ? 'Exemples i aplicació pràctica' : idioma === 'es' ? 'Ejemplos y aplicación práctica' : 'Exemples et application pratique',
-                      t(idioma, 'article.jurisprudencia'),
-                    ].map((step, index) => (
+                    {learningSteps.map((step, index) => (
                       <li key={step}>
-                        <span className="article-learning-path__marker"><CheckCircle2 size={15} /></span>
-                        <span>{step}</span>
-                        {index < 3 && <ArrowRight className="article-learning-path__arrow" size={15} aria-hidden="true" />}
+                        <button type="button" className={`article-learning-path__step ${learningProgress.completedSteps.includes(String(index)) ? 'is-complete' : ''}`} onClick={() => toggleLearningStep(index)} aria-pressed={learningProgress.completedSteps.includes(String(index))}>
+                          <span className="article-learning-path__marker"><CheckCircle2 size={15} /></span>
+                          <span>{step}</span>
+                        </button>
+                        {index < learningSteps.length - 1 && <ArrowRight className="article-learning-path__arrow" size={15} aria-hidden="true" />}
                       </li>
                     ))}
                   </ol>
                   <p className="article-learning-note">
-                    {idioma === 'ca' ? 'Objectiu: poder explicar la norma amb les teves paraules i situar-la dins la Constitució.' : idioma === 'es' ? 'Objetivo: poder explicar la norma con tus palabras y situarla dentro de la Constitución.' : 'Objectif : pouvoir expliquer la norme avec vos mots et la situer dans la Constitution.'}
+                    {editorial?.aprenentatge?.criteri_comprensio || (idioma === 'ca' ? 'Objectiu: poder explicar la norma amb les teves paraules i situar-la dins la Constitució.' : idioma === 'es' ? 'Objetivo: poder explicar la norma con tus palabras y situarla dentro de la Constitución.' : 'Objectif : pouvoir expliquer la norme avec vos mots et la situer dans la Constitution.')}
                   </p>
                 </div>
 
@@ -510,6 +573,9 @@ export function ArticleContent({
                                 <div className="article-learning-hint">
                                   <strong>{copy.respostaOrientativa}</strong>
                                   <p>{pistesAprenentatge[index]}</p>
+                                  <button type="button" className="article-learning-answer-button" onClick={() => markQuestionAnswered(index)} aria-pressed={learningProgress.answeredQuestions.includes(String(index))}>
+                                    <CheckCircle2 size={14} /> {learningProgress.answeredQuestions.includes(String(index)) ? 'Resposta revisada' : 'Marcar com a revisada'}
+                                  </button>
                                 </div>
                               )}
                             </>
@@ -518,6 +584,40 @@ export function ArticleContent({
                       );
                     })}
                   </ol>
+                  {editorial?.aprenentatge?.errors_frequents?.length ? (
+                    <div className="article-learning-common-errors">
+                      <strong><AlertTriangle size={15} /> Errors freqüents</strong>
+                      <ul>{editorial.aprenentatge.errors_frequents.map((error) => <li key={error}>{error}</li>)}</ul>
+                    </div>
+                  ) : null}
+                </div>
+
+                <div className="article-card article-feedback-card">
+                  <div className="article-learning-card__heading">
+                    <div>
+                      <h3>Com t’ha ajudat aquesta explicació?</h3>
+                      <p>El teu feedback és anònim i queda pendent de revisió editorial.</p>
+                    </div>
+                    <ThumbsUp size={19} aria-hidden="true" />
+                  </div>
+                  <div className="article-feedback-actions">
+                    {([
+                      ['ajuda', 'M’ha ajudat'],
+                      ['confusio', 'És confusa'],
+                      ['possible-error', 'Possible error'],
+                      ['suggeriment', 'Suggeriment'],
+                    ] as Array<[FeedbackType, string]>).map(([type, label]) => (
+                      <button key={type} type="button" className={feedbackType === type ? 'is-selected' : ''} onClick={() => setFeedbackType(type)} aria-pressed={feedbackType === type}>{label}</button>
+                    ))}
+                  </div>
+                  {feedbackType && !feedbackSent && (
+                    <div className="article-feedback-form">
+                      <label htmlFor="editorial-feedback">Comentari opcional</label>
+                      <textarea id="editorial-feedback" value={feedbackMessage} onChange={(event) => setFeedbackMessage(event.target.value)} maxLength={500} placeholder="Què hauríem de revisar?" />
+                      <button type="button" onClick={submitFeedback}>Enviar feedback</button>
+                    </div>
+                  )}
+                  {feedbackSent && <p className="article-feedback-success">Gràcies. El feedback queda pendent de revisió editorial.</p>}
                 </div>
               </>
             )}
