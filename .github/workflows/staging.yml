@@ -1,0 +1,37 @@
+name: Staging acceptance
+
+on:
+  workflow_dispatch:
+    inputs:
+      staging_base_url:
+        description: Railway staging URL
+        required: true
+        type: string
+
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: staging
+    env:
+      UPSTASH_VECTOR_REST_URL: ${{ secrets.UPSTASH_VECTOR_REST_URL }}
+      UPSTASH_VECTOR_REST_TOKEN: ${{ secrets.UPSTASH_VECTOR_REST_TOKEN }}
+      UPSTASH_VECTOR_NAMESPACE: corpus-v1
+      STAGING_BASE_URL: ${{ inputs.staging_base_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Validate required secrets
+        run: |
+          test -n "$UPSTASH_VECTOR_REST_URL"
+          test -n "$UPSTASH_VECTOR_REST_TOKEN"
+      - name: Migrate and verify corpus
+        run: npm run rag:migrate
+      - name: Evaluate retrieval quality
+        run: npm run rag:evaluate
+      - name: Verify deployed contracts
+        run: npm run staging:smoke

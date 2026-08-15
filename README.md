@@ -28,7 +28,7 @@ Portal web d'accés gratuït que democratitza el coneixement jurídic andorrà m
 
 ### 💬 Chatbot Dret Planer
 - Consultes en llenguatge natural sobre la Constitució
-- **Cerca semàntica** amb embeddings multilingües (XLM-RoBERTa)
+- **Cerca híbrida** gestionada amb Upstash Vector (BGE-M3 + BM25)
 - **Generació de text** amb Llama 70B (via Groq)
 - Referències a articles específics amb enllaços directes
 - Disponible des de qualsevol pàgina (floating button)
@@ -63,12 +63,14 @@ Crea un fitxer `.env` a l'arrel del projecte:
 # Generació de text (recomanat): Groq - Llama-3.3-70B
 GROQ_API_KEY=gsk-la-teva-clau-groq
 
-# Opcional: Embeddings (OpenAI) o XLM-RoBERTa (local, gratuït)
-OPENAI_API_KEY=sk-la-teva-clau-api-aqui
-EMBEDDING_PROVIDER=xlm-roberta
+# Recuperació híbrida i límits compartits
+UPSTASH_VECTOR_REST_URL=https://...
+UPSTASH_VECTOR_REST_TOKEN=...
+UPSTASH_REDIS_REST_URL=https://...
+UPSTASH_REDIS_REST_TOKEN=...
 ```
 
-**Nota**: Per al chatbot i la interpretació IA es fa servir Groq (Llama-3.3-70B). Per a embeddings pots utilitzar XLM-RoBERTa (gratuït) o OpenAI. Veure [XLM-ROBERTA-SETUP.md](./docs/XLM-ROBERTA-SETUP.md) per embeddings locals.
+**Nota**: Groq genera les respostes i Upstash Vector genera els embeddings densos i dispersos sense carregar cap model al procés Next.js.
 
 ### Executar en desenvolupament
 
@@ -180,17 +182,17 @@ andorra-consti/
 ## 🔧 Stack Tecnològic
 
 ### Frontend
-- **Next.js 14** - Framework React (Pages Router)
+- **Next.js 16** i **React 19** - Framework web (Pages Router)
 - **TypeScript** - Tipat estàtic
 - **Tailwind CSS** - Estilització responsive
 
 ### Intel·ligència Artificial
 - **Groq API** - Generació de text amb Llama-3.3-70B-Versatile (Inference-as-a-Service)
-- **XLM-RoBERTa-base** - Embeddings multilingües locals (via Transformers.js)
-- **OpenAI API** - Opció alternativa per a embeddings (text-embedding-3-large)
+- **Upstash Vector** - Índex híbrid BGE-M3 + BM25 en regió UE
+- **Upstash Redis** - Límits de consum i bloquejos administratius compartits
 
 ### Arquitectura RAG
-- **Cerca semàntica** amb similitud cosinus
+- **Cerca híbrida** densa i dispersa amb similitud cosinus
 - **Chunking intel·ligent** per articles i seccions
 - **Prompts rics** amb context jurídic andorrà
 - **Control de qualitat** amb sistema de valoració de respostes
@@ -212,7 +214,7 @@ El projecte implementa les millors pràctiques en matèria de propietat intel·l
 ### Principis Ètics i Tècnics
 - **Transparència total**: Sempre cita les fonts originals
 - **Traçabilitat**: Arquitectura RAG que permet verificar cada resposta
-- **Sobirania tecnològica**: Embeddings locals (XLM-RoBERTa), models oberts
+- **Minimització del runtime**: cap model d’embeddings ni vectors locals al desplegament
 - **Control humà**: La IA assisteix, no substitueix el criteri jurídic
 - **Privacitat**: No es recullen dades personals dels usuaris
 
@@ -226,7 +228,7 @@ Per això, **Dret Planer no pretén ser una font de dret**, sinó una eina pedag
 
 ### ✅ Completat (v1.0 - Constitució)
 - [x] **Preàmbul i 107 articles de la Constitució** processats i estructurats
-- [x] **Sistema RAG complet** amb embeddings XLM-RoBERTa
+- [x] **Sistema RAG híbrid** amb Upstash Vector
 - [x] **Chatbot funcional** amb Llama 70B (Groq)
 - [x] **Sistema d'idiomes** (i18n) - CA, ES, FR
 - [x] **Paper acadèmic integrat** amb bibliografia APA 7
@@ -253,7 +255,7 @@ Per això, **Dret Planer no pretén ser una font de dret**, sinó una eina pedag
 ### ✅ FASE 1: Proof of Concept - Constitució (Completat)
 - Infraestructura base amb Next.js + TypeScript
 - Preàmbul i 107 articles de la Constitució processats
-- Sistema RAG amb XLM-RoBERTa + Llama 70B
+- Sistema RAG amb Upstash Vector + Llama 70B
 - Chatbot funcional amb traçabilitat
 - Paper acadèmic documentant el sistema
 - Interfície multilingüe (CA, ES, FR)

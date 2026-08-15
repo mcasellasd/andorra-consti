@@ -3,6 +3,8 @@ import Head from 'next/head';
 import Layout from '../components/Layout';
 import { preguntesControl, type PreguntaControl } from '@/data/preguntes-control';
 import type { ResultatAvaluacio, InformeAvaluacio } from '@/lib/evaluacio/preguntes-control';
+import type { GetServerSideProps } from 'next';
+import { ADMIN_COOKIE, verifyAdminSession } from '@/lib/security/admin-session';
 
 interface AnalisiAvaluacio {
   puntsFortes: string[];
@@ -510,3 +512,10 @@ export default function PreguntesControlPage() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  if (!verifyAdminSession(req.cookies[ADMIN_COOKIE])) {
+    return { redirect: { destination: '/admin-login', permanent: false } };
+  }
+  return { props: {} };
+};

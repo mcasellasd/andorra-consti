@@ -295,18 +295,7 @@ export async function generateWithSalamandraLocal(
     dateString?: string;
   } = {}
 ): Promise<string> {
-  // Importació dinàmica per evitar que Next.js bundli @xenova/transformers
-  const { pipeline } = await import('@xenova/transformers');
-
-  const generator = await pipeline('text-generation', 'BSC-LT/salamandra-2b-instruct', {
-    quantized: true, // Necessari per estalviar memòria
-  });
-
-  const prompt = formatChatML(messages, options.dateString);
-  const output = await generator(prompt, {
-    max_new_tokens: options.maxTokens || 350,
-    temperature: options.temperature || 0.7,
-  });
-
-  return (output as any)[0]?.generated_text?.trim() || '';
+  void messages;
+  void options;
+  throw new Error('La generació local s’ha retirat del runtime; configura un proveïdor LLM remot.');
 }

@@ -1,98 +1,200 @@
-/**
- * Corpus RAG per a la Constitució d'Andorra
- * Només treballem amb la Constitució, no amb el Codi Civil
- */
+import { FusionAlgorithm, Index, QueryMode, type QueryResult } from '@upstash/vector';
+import { articlesConstitucio } from '../../data/codis/constitucio/articles';
+import type { KnowledgeEntry, RetrievedContext } from './types';
 
-import type { EmbeddingEntry, KnowledgeEntry, RetrievedContext } from './types';
-import { BM25 } from './bm25';
+export const DEFAULT_CORPUS_NAMESPACE = 'corpus-v1';
 
-// Intentar carregar el corpus unificat, si no existeix, carregar només la Constitució
-let constitucioKnowledge: any = [];
-let constitucioEmbeddings: any = [];
-let unifiedLoaded = false;
-
-try {
-  // @ts-ignore - Dynamic import per permetre fallback
-  constitucioKnowledge = require('../../data/rag/constitucio-unified.json');
-  // @ts-ignore
-  constitucioEmbeddings = require('../../data/rag/constitucio-unified-embeddings.json');
-  unifiedLoaded = true;
-} catch {
-  // Si no existeix el corpus unificat, utilitzar només la Constitució
-  try {
-    constitucioKnowledge = require('../../data/rag/constitucio.json');
-    constitucioEmbeddings = require('../../data/rag/constitucio-embeddings.json');
-  } catch {
-    constitucioKnowledge = [];
-    constitucioEmbeddings = [];
+export class RagUnavailableError extends Error {
+  constructor(message = 'El servei de recuperació semàntica no està disponible') {
+    super(message);
+    this.name = 'RagUnavailableError';
   }
 }
 
-// Carregar doctrina (només si no tenim el corpus unificat, per evitar duplicats i permetre fallback)
-// Nota: El corpus unificat JA inclou la doctrina processada.
-// Hem eliminat la càrrega legacy de '20-anys.json' per evitar errors de build si no existeix.
-let doctrinaKnowledge: any = [];
-let doctrinaEmbeddings: any = [];
-
-interface NormalizedEmbedding extends EmbeddingEntry {
-  norm: number;
+interface RagMetadata {
+  [key: string]: unknown;
+  category?: string;
+  topic?: string;
+  keyConcepts?: string[];
+  legalReference?: string;
+  implications?: string;
+  section?: string;
+  methodology?: string;
+  hierarchicalOrder?: string;
+  distinction?: string;
+  corollaries?: string;
+  enforcement?: string;
+  applicationFields?: string[];
+  practicalUse?: string;
+  rationale?: string;
+  proceduralConsequence?: string;
+  evidenceRequirement?: string;
+  commonErrors?: string;
+  practicalImplication?: string;
+  judicialDuty?: string;
+  historicalContext?: string;
+  bookId?: string;
+  numeracio?: string;
+  sourceType: 'constitucio' | 'doctrina';
 }
 
-interface CorpusData {
-  knowledge: KnowledgeEntry[];
-  knowledgeById: Map<string, KnowledgeEntry>;
-  embeddings: NormalizedEmbedding[];
+let vectorIndex: Index<RagMetadata> | null = null;
+
+function getVectorIndex(): Index<RagMetadata> {
+  const url = process.env.UPSTASH_VECTOR_REST_URL;
+  const token = process.env.UPSTASH_VECTOR_REST_TOKEN;
+  if (!url || !token) {
+    throw new RagUnavailableError('Falten UPSTASH_VECTOR_REST_URL o UPSTASH_VECTOR_REST_TOKEN');
+  }
+
+  vectorIndex ??= new Index<RagMetadata>({ url, token });
+  return vectorIndex;
 }
 
-// Carregar Constitució i Doctrina
-const corpus: CorpusData = loadCorpus(
-  [...(constitucioKnowledge as KnowledgeEntry[]), ...(doctrinaKnowledge as KnowledgeEntry[])],
-  [...(constitucioEmbeddings as EmbeddingEntry[]), ...(doctrinaEmbeddings as EmbeddingEntry[])]
-);
-
-// Inicialitzar índex de cerca híbrida (BM25)
-const bm25 = new BM25();
-bm25.buildIndex(corpus.knowledge.map(entry => ({
-  id: entry.id,
-  content: entry.content,
-  topic: entry.topic
-})));
-
-function loadCorpus(
-  knowledgeRaw: unknown,
-  embeddingsRaw: unknown
-): CorpusData {
-  const knowledge = (knowledgeRaw as KnowledgeEntry[]) ?? [];
-
-  const knowledgeById = new Map<string, KnowledgeEntry>();
-  knowledge.forEach((entry) => {
-    knowledgeById.set(entry.id, entry);
-  });
-
-  const embeddings = ((embeddingsRaw as EmbeddingEntry[]) ?? []).map(
-    (entry) => ({
-      ...entry,
-      norm: vectorNorm(entry.embedding)
-    })
-  );
+function articleToKnowledgeEntry(articleId: string): KnowledgeEntry | null {
+  const article = articlesConstitucio.find((candidate) => candidate.id === articleId);
+  if (!article) return null;
 
   return {
-    knowledge,
-    knowledgeById,
-    embeddings
+    id: article.id,
+    category: 'Constitució',
+    topic: article.titol || article.numeracio,
+    content: article.text_oficial,
+    keyConcepts: article.tags || [],
+    legalReference: article.numeracio,
+    section: article.capitol || article.titol,
+    bookId: 'CONSTITUCIO',
+    numeracio: article.numeracio,
   };
 }
 
-export function getAvailableBooks(): string[] {
-  // Retornem també DOCTRINA si n'hi ha
-  return corpus.knowledge.length > 0 ? ['CONSTITUCIO', 'DOCTRINA'] : [];
+function mapQueryResult(result: QueryResult<RagMetadata>): RetrievedContext | null {
+  const metadata = result.metadata;
+  if (!metadata || !result.data) return null;
+
+  const bookId = metadata.sourceType === 'doctrina' ? 'DOCTRINA' : 'CONSTITUCIO';
+  return {
+    bookId,
+    score: result.score,
+    entry: {
+      id: String(result.id),
+      category: metadata.category || (bookId === 'DOCTRINA' ? 'Doctrina' : 'Constitució'),
+      topic: metadata.topic || String(result.id),
+      content: result.data,
+      keyConcepts: metadata.keyConcepts || [],
+      legalReference: metadata.legalReference,
+      implications: metadata.implications,
+      section: metadata.section,
+      methodology: metadata.methodology,
+      hierarchicalOrder: metadata.hierarchicalOrder,
+      distinction: metadata.distinction,
+      corollaries: metadata.corollaries,
+      enforcement: metadata.enforcement,
+      applicationFields: metadata.applicationFields,
+      practicalUse: metadata.practicalUse,
+      rationale: metadata.rationale,
+      proceduralConsequence: metadata.proceduralConsequence,
+      evidenceRequirement: metadata.evidenceRequirement,
+      commonErrors: metadata.commonErrors,
+      practicalImplication: metadata.practicalImplication,
+      judicialDuty: metadata.judicialDuty,
+      historicalContext: metadata.historicalContext,
+      bookId,
+      numeracio: metadata.numeracio,
+    },
+  };
+}
+
+async function queryBySource(
+  query: string,
+  sourceType: RagMetadata['sourceType'],
+  topK: number
+): Promise<RetrievedContext[]> {
+  const results = await getVectorIndex().query({
+    data: query,
+    topK,
+    filter: `sourceType = '${sourceType}'`,
+    includeData: true,
+    includeMetadata: true,
+    queryMode: QueryMode.HYBRID,
+    fusionAlgorithm: FusionAlgorithm.RRF,
+  }, {
+    namespace: process.env.UPSTASH_VECTOR_NAMESPACE || DEFAULT_CORPUS_NAMESPACE,
+  });
+
+  return results.map(mapQueryResult).filter((item): item is RetrievedContext => item !== null);
+}
+
+/** Cerca híbrida remota. No genera ni carrega embeddings dins del procés Next.js. */
+export async function retrieveHybridMatches(
+  queryText: string,
+  topK = 5,
+  prioritizeConstitution = false
+): Promise<RetrievedContext[]> {
+  if (!queryText.trim()) return [];
+
+  try {
+    if (!prioritizeConstitution) {
+      const results = await getVectorIndex().query({
+        data: queryText,
+        topK,
+        includeData: true,
+        includeMetadata: true,
+        queryMode: QueryMode.HYBRID,
+        fusionAlgorithm: FusionAlgorithm.RRF,
+      }, {
+        namespace: process.env.UPSTASH_VECTOR_NAMESPACE || DEFAULT_CORPUS_NAMESPACE,
+      });
+      return results.map(mapQueryResult).filter((item): item is RetrievedContext => item !== null);
+    }
+
+    const constitutionTarget = Math.max(1, Math.ceil(topK * 0.6));
+    const doctrineTarget = Math.max(0, topK - constitutionTarget);
+    const [constitution, doctrine] = await Promise.all([
+      queryBySource(queryText, 'constitucio', constitutionTarget),
+      doctrineTarget ? queryBySource(queryText, 'doctrina', doctrineTarget) : Promise.resolve([]),
+    ]);
+    return [...constitution, ...doctrine].slice(0, topK);
+  } catch (error) {
+    if (error instanceof RagUnavailableError) throw error;
+    const detail = error instanceof Error ? error.message : 'Error desconegut';
+    throw new RagUnavailableError(detail);
+  }
+}
+
+/** Àlies temporal per als consumidors antics. */
+export async function retrieveTopMatches(
+  queryText: string,
+  topK = 3,
+  _books?: string[],
+  prioritizeConstitution = false
+): Promise<RetrievedContext[]> {
+  return retrieveHybridMatches(queryText, topK, prioritizeConstitution);
+}
+
+export function getArticleById(articleId: string): KnowledgeEntry | null {
+  return articleToKnowledgeEntry(articleId);
+}
+
+export function getArticlesByIds(articleIds: string[]): KnowledgeEntry[] {
+  return articleIds.map(articleToKnowledgeEntry).filter((entry): entry is KnowledgeEntry => entry !== null);
+}
+
+export function getArticleByNumber(articleNumber: string): KnowledgeEntry | null {
+  const normalized = articleNumber.replace(/^Article\s+/i, '').trim().padStart(3, '0');
+  return articleToKnowledgeEntry(`CONST_${normalized}`);
 }
 
 export function getKnowledgeEntries(): KnowledgeEntry[] {
-  return corpus.knowledge.slice();
+  return articlesConstitucio
+    .map((article) => articleToKnowledgeEntry(article.id))
+    .filter((entry): entry is KnowledgeEntry => entry !== null);
 }
 
-/** Resum d’un document/font del corpus per mostrar a l’usuari abans de contestar */
+export function getAvailableBooks(): string[] {
+  return ['CONSTITUCIO', 'DOCTRINA'];
+}
+
 export interface CorpusDocumentSummary {
   id: string;
   name: string;
@@ -100,408 +202,23 @@ export interface CorpusDocumentSummary {
   count: number;
 }
 
-/**
- * Retorna la llista de documents/fonts que el RAG pot consultar abans de contestar.
- * Útil per mostrar a l’usuari què hi ha al corpus (Constitució, doctrina, etc.).
- */
 export function getCorpusDocumentsList(): CorpusDocumentSummary[] {
-  const constitution: KnowledgeEntry[] = [];
-  const tc: KnowledgeEntry[] = [];
-  const doctrina: KnowledgeEntry[] = [];
-
-  for (const entry of corpus.knowledge) {
-    const isDoctrina =
-      entry.id.startsWith('DOCTRINA_') ||
-      entry.id.startsWith('DOC_') ||
-      entry.category === 'Doctrina' ||
-      entry.category === 'doctrina' ||
-      entry.category === 'Jurisprudència' ||
-      entry.category === 'jurisprudència';
-    const isTC =
-      entry.id.startsWith('TC_') ||
-      entry.category?.includes('Tribunal Constitucional');
-
-    if (isDoctrina) {
-      doctrina.push(entry);
-    } else if (isTC) {
-      tc.push(entry);
-    } else {
-      constitution.push(entry);
-    }
-  }
-
-  const result: CorpusDocumentSummary[] = [];
-
-  if (constitution.length > 0) {
-    const hasPreamb = constitution.some(e => e.id === 'CONST_PREAMB');
-    const articles = constitution.filter(e => e.id !== 'CONST_PREAMB');
-    const nums = articles
-      .map(e => {
-        const m = e.id.match(/^CONST_(\d+)$/);
-        return m ? parseInt(m[1], 10) : null;
-      })
-      .filter((n): n is number => n !== null);
-    const minArt = nums.length ? Math.min(...nums) : 0;
-    const maxArt = nums.length ? Math.max(...nums) : 0;
-    const desc =
-      hasPreamb && nums.length
-        ? `Preàmbul i articles 1–${maxArt}`
-        : hasPreamb
-          ? 'Preàmbul'
-          : nums.length
-            ? `Articles ${minArt}–${maxArt}`
-            : 'Constitució';
-    result.push({
-      id: 'CONSTITUCIO',
-      name: "Constitució d'Andorra",
-      description: desc,
-      count: constitution.length
-    });
-  }
-
-  if (tc.length > 0) {
-    result.push({
-      id: 'TRIBUNAL_CONSTITUCIONAL',
-      name: 'Llei del Tribunal Constitucional',
-      description: 'Llei 21/2023 de text consolidat del Tribunal Constitucional',
-      count: tc.length
-    });
-  }
-
-  if (doctrina.length > 0) {
-    result.push({
-      id: 'DOCTRINA',
-      name: 'Doctrina i jurisprudència',
-      description: 'Textos doctrinaris, comentaris i jurisprudència relacionada',
-      count: doctrina.length
-    });
-  }
-
-  return result;
-}
-
-/**
- * Busca un article específic per ID al corpus
- * @param articleId - ID de l'article (ex: "CONST_019")
- * @returns L'entrada de coneixement si es troba, null si no
- */
-export function getArticleById(articleId: string): KnowledgeEntry | null {
-  return corpus.knowledgeById.get(articleId) || null;
-}
-
-/**
- * Busca múltiples articles per IDs
- * @param articleIds - Array d'IDs d'articles
- * @returns Array d'entrades de coneixement trobades
- */
-export function getArticlesByIds(articleIds: string[]): KnowledgeEntry[] {
-  return articleIds
-    .map(id => corpus.knowledgeById.get(id))
-    .filter((entry): entry is KnowledgeEntry => entry !== null && entry !== undefined);
-}
-
-/**
- * Busca articles per número d'article a la Constitució
- * @param articleNumber - Número de l'article (ex: "19", "Article 19")
- * @returns L'entrada de coneixement si es troba, null si no
- */
-export function getArticleByNumber(articleNumber: string): KnowledgeEntry | null {
-  // Normalitzar el número (treure "Article" i espais)
-  const normalizedNumber = articleNumber
-    .replace(/^Article\s+/i, '')
-    .trim()
-    .padStart(3, '0'); // "19" -> "019"
-
-  const articleId = `CONST_${normalizedNumber}`;
-  return corpus.knowledgeById.get(articleId) || null;
-}
-
-export function retrieveTopMatches(
-  queryEmbedding: number[],
-  topK = 3,
-  books?: string[], // Ara és opcional i no s'utilitza
-  prioritizeConstitution: boolean = false // Prioritzar articles CONST_* sobre doctrina
-): RetrievedContext[] {
-  const queryNorm = vectorNorm(queryEmbedding);
-  if (queryNorm === 0) {
-    return [];
-  }
-
-  if (!corpus.embeddings.length) {
-    // Corpus buit (ex.: deploy sense data/rag/*.json): retornem [] en lloc de fallar.
-    // El chatbot funcionarà sense context de Constitució/doctrina.
-    return [];
-  }
-
-  const scored = corpus.embeddings
-    .map((entry) => {
-      let score = cosineSimilarity(
-        queryEmbedding,
-        queryNorm,
-        entry.embedding,
-        entry.norm
-      );
-      
-      // Boost per articles de la Constitució quan prioritizeConstitution és true
-      if (prioritizeConstitution) {
-        const entryData = corpus.knowledgeById.get(entry.id);
-        if (entryData) {
-          // Articles de la Constitució: IDs que comencen amb CONST_ i no són doctrina
-          const isConstitutionArticle = entry.id.startsWith('CONST_') && 
-            !entry.id.startsWith('DOCTRINA_') &&
-            entryData.category !== 'Doctrina' &&
-            entryData.category !== 'doctrina' &&
-            entryData.category !== 'jurisprudència' &&
-            entryData.category !== 'Jurisprudència';
-          
-          if (isConstitutionArticle) {
-            // Boost del 40% per articles constitucionals (prioritat alta)
-            score = Math.min(1.0, score * 1.4);
-          } else if (entry.id.startsWith('DOCTRINA_') || 
-                     entry.id.startsWith('DOC_') ||
-                     entryData.category === 'Doctrina' ||
-                     entryData.category === 'doctrina' ||
-                     entryData.category === 'jurisprudència' ||
-                     entryData.category === 'Jurisprudència') {
-            // Penalització del 25% per doctrina quan es prioritza Constitució
-            score = score * 0.75;
-          }
-        }
-      }
-      
-      return {
-        id: entry.id,
-        score
-      };
-    })
-    .filter((item) => Number.isFinite(item.score))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, topK * 2); // Agafar més candidats per després filtrar per tipus
-
-  const results: RetrievedContext[] = [];
-  const constitutionArticles: RetrievedContext[] = [];
-  const doctrinaArticles: RetrievedContext[] = [];
-  
-  for (const { id, score } of scored) {
-    const entry = corpus.knowledgeById.get(id);
-    if (entry) {
-      // Determinar l'ID del llibre segons l'ID de l'entrada
-      let bookId: 'CONSTITUCIO' | 'DOCTRINA' = 'CONSTITUCIO';
-      const isDoctrina = entry.id.startsWith('DOCTRINA_') || 
-                         entry.id.startsWith('DOC_') || 
-                         entry.category === 'Doctrina' ||
-                         entry.category === 'doctrina' ||
-                         entry.category === 'jurisprudència';
-      
-      if (isDoctrina) {
-        bookId = 'DOCTRINA';
-      }
-
-      const context: RetrievedContext = {
-        bookId,
-        entry,
-        score
-      };
-      
-      // Separar per tipus quan es prioritza Constitució
-      if (prioritizeConstitution) {
-        if (isDoctrina) {
-          doctrinaArticles.push(context);
-        } else {
-          constitutionArticles.push(context);
-        }
-      } else {
-        results.push(context);
-      }
-    }
-  }
-  
-  // Si es prioritza Constitució, primer articles constitucionals, després doctrina
-  if (prioritizeConstitution) {
-    // Agafar almenys 60% d'articles constitucionals si n'hi ha suficients
-    // Si n'hi ha pocs, agafar tots els disponibles i omplir amb doctrina
-    const constitutionCount = constitutionArticles.length > 0
-      ? Math.min(Math.ceil(topK * 0.6), constitutionArticles.length)
-      : 0;
-    const doctrinaCount = topK - constitutionCount;
-    
-    results.push(...constitutionArticles.slice(0, constitutionCount));
-    if (doctrinaCount > 0) {
-      results.push(...doctrinaArticles.slice(0, doctrinaCount));
-    }
-    
-    // Si encara no tenim suficients resultats, omplir amb més articles constitucionals si n'hi ha
-    if (results.length < topK && constitutionArticles.length > constitutionCount) {
-      results.push(...constitutionArticles.slice(constitutionCount, topK - results.length + constitutionCount));
-    }
-  }
-  
-  return results.slice(0, topK);
-}
-
-/**
- * Cerca híbrida combinant vectors (semàntica) i BM25 (paraules clau)
- * Utilitza Reciprocal Rank Fusion (RRF) per combinar els resultats
- */
-export function retrieveHybridMatches(
-  queryEmbedding: number[],
-  queryText: string,
-  topK = 5
-): RetrievedContext[] {
-  const queryNorm = vectorNorm(queryEmbedding);
-  const k = 60; // Constant RRF estàndard
-  const normalizedQuery = queryText.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  const thematicGroups = [
-    ['usos', 'costums'],
-    ['codificacio', 'codi'],
-    ['manual digest', 'politar'],
-    ['tradicio', 'ius commune']
+  return [
+    { id: 'CONSTITUCIO', name: "Constitució d'Andorra", description: 'Preàmbul i articles 1–98', count: 99 },
+    { id: 'TRIBUNAL_CONSTITUCIONAL', name: 'Llei del Tribunal Constitucional', description: 'Llei 21/2023 de text consolidat del Tribunal Constitucional', count: 10 },
+    { id: 'DOCTRINA', name: 'Doctrina i jurisprudència', description: 'Textos doctrinaris, comentaris i jurisprudència relacionada', count: 932 },
   ];
-
-  // 1. Obtenir resultats semàntics (Top 50)
-  // Reutilitzem la lògica de retrieveTopMatches però interna
-  const semanticScores = new Map<string, number>();
-  if (queryNorm !== 0 && corpus.embeddings.length > 0) {
-    corpus.embeddings
-      .map(entry => ({
-        id: entry.id,
-        score: cosineSimilarity(queryEmbedding, queryNorm, entry.embedding, entry.norm)
-      }))
-      .filter(item => item.score > 0.1) // Filtrar soroll
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 50)
-      .forEach((item, rank) => {
-        // Guardem el rank semàntic (0-indexed)
-        semanticScores.set(item.id, rank);
-      });
-  }
-
-  // 2. Obtenir resultats BM25 (Top 50)
-  const bm25Results = bm25.search(queryText, 50);
-  const bm25Scores = new Map<string, number>();
-  bm25Results.forEach((item, rank) => {
-    bm25Scores.set(item.id, rank); // Guardem el rank BM25
-  });
-
-  // 3. Fusionar amb RRF
-  // Score = 1/(k + rank_sem) + 1/(k + rank_bm25)
-  const allIds = Array.from(new Set([...Array.from(semanticScores.keys()), ...Array.from(bm25Scores.keys())]));
-  const fusedResults: Array<{ id: string, score: number, debug?: string }> = [];
-
-  allIds.forEach(id => {
-    const semanticRank = semanticScores.has(id) ? semanticScores.get(id)! : 1000; // Penalització si no hi és
-    const bm25Rank = bm25Scores.has(id) ? bm25Scores.get(id)! : 1000;
-
-    let rrfScore = (1 / (k + semanticRank)) + (1 / (k + bm25Rank));
-
-    // Reforç temàtic per evitar que un corpus doctrinal molt gran (com el de
-    // dret processal civil) desplaci una font que coincideix directament amb
-    // el tema de la consulta. El reforç només s'aplica a doctrina i a grups
-    // conceptuals explícits; no altera les consultes constitucionals directes.
-    const entry = corpus.knowledgeById.get(id);
-    const isDoctrina = entry && (
-      entry.id.startsWith('DOCTRINA_') ||
-      entry.id.startsWith('DOC_') ||
-      entry.category === 'Doctrina' ||
-      entry.category === 'doctrina' ||
-      entry.category === 'jurisprudència' ||
-      entry.category === 'Jurisprudència'
-    );
-    if (entry && isDoctrina) {
-      const normalizedEntry = `${entry.topic} ${entry.content} ${(entry.keyConcepts || []).join(' ')}`
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
-      for (const group of thematicGroups) {
-        const queryHasTheme = group.some(term => normalizedQuery.includes(term));
-        const entryHasTheme = group.some(term => normalizedEntry.includes(term));
-        if (queryHasTheme && entryHasTheme) {
-          rrfScore += 0.08;
-        }
-      }
-    }
-
-    // Normalitzar score per ser semblant a cosine (0-1) encara que RRF és petit
-    // Simplement passem el RRF score, però l'ordenem bé
-    fusedResults.push({ id, score: rrfScore });
-  });
-
-  // Si la consulta activa un tema específic, evitar que fragments doctrinals
-  // d'un altre àmbit (p. ex. dret processal civil) ocupin el lloc de les
-  // fonts que tracten directament el tema preguntat. Les fonts constitucionals
-  // es mantenen com a context complementari.
-  const activeThemes = thematicGroups.filter(group =>
-    group.some(term => normalizedQuery.includes(term))
-  );
-  const filteredResults = activeThemes.length > 0
-    ? fusedResults.filter(({ id }) => {
-        const entry = corpus.knowledgeById.get(id);
-        if (!entry) return false;
-        const isDoctrina = entry.id.startsWith('DOCTRINA_') ||
-          entry.id.startsWith('DOC_') ||
-          entry.category === 'Doctrina' ||
-          entry.category === 'doctrina' ||
-          entry.category === 'jurisprudència' ||
-          entry.category === 'Jurisprudència';
-        if (!isDoctrina) return true;
-        const normalizedEntry = `${entry.topic} ${entry.content} ${(entry.keyConcepts || []).join(' ')}`
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '');
-        return activeThemes.some(group =>
-          group.some(term => normalizedQuery.includes(term) && normalizedEntry.includes(term))
-        );
-      })
-    : fusedResults;
-
-  // Ordenar i agafar Top K
-  const topResults = filteredResults
-    .sort((a, b) => b.score - a.score)
-    .slice(0, topK);
-
-  // Construir resposta final
-  const results: RetrievedContext[] = [];
-  for (const { id, score } of topResults) {
-    const entry = corpus.knowledgeById.get(id);
-    if (entry) {
-      // Determinar ID del llibre
-      let bookId: 'CONSTITUCIO' | 'DOCTRINA' = 'CONSTITUCIO';
-      if (entry.id.startsWith('DOCTRINA') || entry.id.startsWith('DOC_') || entry.category === 'Doctrina' || entry.category === 'jurisprudència' || entry.category === 'Jurisprudència') {
-        bookId = 'DOCTRINA';
-      }
-
-      results.push({
-        bookId,
-        entry,
-        score: score * 100 // Escalem per tenir números més llegibles, tot i que el valor absolut no importa tant en RRF
-      });
-    }
-  }
-
-  return results;
 }
 
-function cosineSimilarity(
-  vectorA: number[],
-  normA: number,
-  vectorB: number[],
-  normB: number
-): number {
-  if (normA === 0 || normB === 0) {
-    return 0;
-  }
-  const length = Math.min(vectorA.length, vectorB.length);
-  let dot = 0;
-  for (let i = 0; i < length; i++) {
-    dot += vectorA[i] * vectorB[i];
-  }
-  return dot / (normA * normB);
-}
+export async function getRagHealth(): Promise<{ configured: boolean; reachable: boolean; namespace: string }> {
+  const configured = Boolean(process.env.UPSTASH_VECTOR_REST_URL && process.env.UPSTASH_VECTOR_REST_TOKEN);
+  const namespace = process.env.UPSTASH_VECTOR_NAMESPACE || DEFAULT_CORPUS_NAMESPACE;
+  if (!configured) return { configured, reachable: false, namespace };
 
-function vectorNorm(vector: number[]): number {
-  let sumSquares = 0;
-  for (const value of vector) {
-    sumSquares += value * value;
+  try {
+    await getVectorIndex().info();
+    return { configured, reachable: true, namespace };
+  } catch {
+    return { configured, reachable: false, namespace };
   }
-  return Math.sqrt(sumSquares);
 }

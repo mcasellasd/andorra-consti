@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { articlesConstitucio } from '@/data/codis/constitucio/articles-template';
-import { retrieveTopMatches } from '@/lib/rag/corpus';
+import { RagUnavailableError, retrieveHybridMatches } from '@/lib/rag/corpus';
 import type { RetrievedContext } from '@/lib/rag/types';
-import { generateEmbedding, getEmbeddingProvider } from '@/lib/embeddings';
+import { ragSearchSchema } from '@/lib/api/schemas';
+import { enforceRateLimit } from '@/lib/security/rate-limit';
 
 interface SearchRequestBody {
   query?: string;
@@ -34,24 +35,16 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { query, topK = 6 } = req.body as SearchRequestBody;
-
-  if (!query || typeof query !== 'string' || !query.trim()) {
-    return res.status(400).json({ error: 'Cal indicar un concepte o matèria.' });
+  if (!(await enforceRateLimit(req, res, 'search'))) {
+    return res.status(429).json({ error: 'Has superat el límit de cerques. Torna-ho a provar més tard.' });
   }
 
+  const parsed = ragSearchSchema.safeParse(req.body as SearchRequestBody);
+  if (!parsed.success) return res.status(400).json({ error: parsed.error.issues[0]?.message });
+  const { query, topK } = parsed.data;
+
   try {
-    if (process.env.RAG_ENABLED !== 'true') {
-      return res.status(200).json({ results: [] });
-    }
-    const provider = getEmbeddingProvider();
-    const queryEmbedding = await generateEmbedding(query, provider);
-    const matches = retrieveTopMatches(
-      queryEmbedding,
-      Math.max(1, Math.min(topK, 24)),
-      undefined,
-      false
-    );
+    const matches = await retrieveHybridMatches(query, topK, false);
     const results = matches.map((match) => mapResult(match));
     return res.status(200).json({ results });
   } catch (error: any) {
@@ -59,7 +52,7 @@ export default async function handler(
     const message =
       error?.message ??
       'No s\'ha pogut processar la cerca. Torna-ho a intentar més tard.';
-    return res.status(500).json({ error: message });
+    return res.status(error instanceof RagUnavailableError ? 503 : 500).json({ error: message });
   }
 }
 

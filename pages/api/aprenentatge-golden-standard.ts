@@ -15,27 +15,14 @@ import { validarTotesLesPreguntes, ResultatValidacio } from '../../lib/evaluacio
 import { executarAprenentatgeAutomatic, AprenentatgeResultat } from '../../lib/aprenentatge/aprenentatge-automatic';
 import { preguntesGoldenStandard } from '../../data/preguntes-golden-standard';
 import { PreguntaControl } from '../../data/preguntes-control';
+import { requireAdmin } from '@/lib/security/admin-session';
+import { acquireAdminRun, releaseAdminRun } from '@/lib/security/admin-run';
+import { generateInternalChatResponse } from '@/lib/services/unified-chat-internal';
 
 // Funció helper per obtenir resposta del sistema per a una pregunta
 async function obtenirRespostaSistema(pregunta: PreguntaControl): Promise<string> {
   try {
-    // Utilitzar el sistema de chat unificat per obtenir resposta
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/unified-chat`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        message: pregunta.pregunta,
-        history: []
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error obtenint resposta: ${response.statusText}`);
-    }
-
-    const data = await response.json();
+    const data = await generateInternalChatResponse(pregunta.pregunta);
     return data.response || data.answer || '';
   } catch (error) {
     console.error(`Error obtenint resposta per pregunta ${pregunta.id}:`, error);
@@ -50,6 +37,9 @@ export default async function handler(
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Mètode no permès' });
   }
+  if (!requireAdmin(req, res)) return;
+  const lock = await acquireAdminRun(req, res);
+  if (!lock) return;
 
   try {
     const { mode = 'validacio' } = req.body; // 'validacio' | 'aprenentatge' | 'complet'
@@ -121,5 +111,7 @@ export default async function handler(
       error: error.message || 'S\'ha produït un error inesperat',
       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
+  } finally {
+    await releaseAdminRun(lock);
   }
 }

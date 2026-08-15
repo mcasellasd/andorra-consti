@@ -157,7 +157,7 @@ const LegalNoticePage: React.FC = () => {
                   <strong>Generació de text</strong>: Llama-3.3-70B-Versatile (Groq, Inc.)
                 </li>
                 <li>
-                  <strong>Embeddings</strong>: XLM-RoBERTa-base (executat localment) o text-embedding-3-large (OpenAI OpCo, LLC) si s&apos;utilitza aquesta opció
+                  <strong>Recuperació</strong>: índex híbrid BGE-M3 + BM25 gestionat per Upstash Vector en regió UE
                 </li>
               </ul>
 
@@ -240,4 +240,3 @@ const LegalNoticePage: React.FC = () => {
 };
 
 export default LegalNoticePage;
-

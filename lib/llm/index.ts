@@ -5,16 +5,15 @@
  *   'openai-compatible' → qualsevol API OpenAI-compatible (Scaleway, OVHcloud,
  *                         Mistral, vLLM autoallotjat...). Recomanat per sobirania.
  *   'groq'              → Groq (Llama-3.3-70B). Llegat, es manté per compatibilitat.
- *   'groq-local'        → generació local via @xenova/transformers.
  *
  * Selecció automàtica: si hi ha LLM_BASE_URL al .env → 'openai-compatible'.
  * Si no → 'groq' (comportament antic intacte).
  */
 
-import { generateWithGroq, generateWithGroqLocal } from './groq';
+import { generateWithGroq } from './groq';
 import { generateWithOpenAICompatible } from './openai-compatible';
 
-export type LLMProvider = 'openai-compatible' | 'groq' | 'groq-local' | 'salamandra'; // 'salamandra' = àlies llegat
+export type LLMProvider = 'openai-compatible' | 'groq' | 'salamandra'; // 'salamandra' = àlies llegat
 
 /**
  * Genera text utilitzant el proveïdor especificat
@@ -37,8 +36,6 @@ export async function generateText(
     case 'groq':
     case 'salamandra': // àlies per compatibilitat amb .env antic
       return generateWithGroq(messages, options);
-    case 'groq-local':
-      return generateWithGroqLocal(messages, options);
     default:
       throw new Error(`Proveïdor de LLM desconegut: ${provider}`);
   }
@@ -52,7 +49,6 @@ export function getLLMProvider(): LLMProvider {
   const provider = process.env.LLM_PROVIDER?.toLowerCase();
 
   if (provider === 'openai-compatible') return 'openai-compatible';
-  if (provider === 'groq-local') return 'groq-local';
   if (provider === 'groq') return 'groq';
   if (provider === 'salamandra') return 'groq'; // àlies llegat
 

@@ -1,10 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  turbopack: { root: __dirname },
   // Railway: output standalone per desplegament eficient (imatge més petita, arrencada més ràpida)
   output: 'standalone',
-  // Evitar error ESLint "extensions has been removed" amb Railpack/ESLint 9
-  eslint: { ignoreDuringBuilds: true },
   // Per exportació estàtica (SiteGround): comenta la línia anterior i descomenta: output: 'export',
   images: {
     unoptimized: true, // Necessari per exportació estàtica
@@ -21,17 +20,6 @@ const nextConfig = {
       },
     ];
   },
-  webpack: (config, { isServer }) => {
-    // Exclou @xenova/transformers del bundle del client (només funciona a Node.js)
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        '@xenova/transformers': false,
-      };
-    }
-    return config;
-  },
 }
 
 module.exports = nextConfig
-

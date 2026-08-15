@@ -2,8 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { generateText } from '../../lib/llm';
 import { checkAIActCompliance, getAIActCompliancePrompt } from '../../lib/rag/quality-assessment';
 import { validateResponseQuality } from '../../lib/rag/response-quality';
-import { generateEmbedding, getEmbeddingProvider } from '../../lib/embeddings';
-import { retrieveTopMatches, retrieveHybridMatches, getArticleById } from '../../lib/rag/corpus';
+import { RagUnavailableError, retrieveHybridMatches, getArticleById } from '../../lib/rag/corpus';
 import { RetrievedContext } from '../../lib/rag/types';
 import { detectArticleReference, detectArticleByKeywords, detectComplexity } from '../../lib/rag/detect-complexity';
 import { getJurisprudenciaForArticle } from '../../data/jurisprudencia-andorra';
@@ -11,6 +10,9 @@ import { articlesConstitucio } from '../../data/codis/constitucio/articles-templ
 import { InterpretacioIA } from '../../data/codis/types';
 import { generateInterpretacioIA, type InterpretacioRequest } from '../../lib/services/interpretacio-ia';
 import { appendTraceabilityLog, buildRagContextFingerprint } from '../../lib/traceability/audit-log';
+import { unifiedChatSchema, type UnifiedChatInput } from '../../lib/api/schemas';
+import { enforceRateLimit } from '../../lib/security/rate-limit';
+import { logEvent, requestIdFromHeader } from '../../lib/observability/logger';
 
 // ============================================================================
 // RAG ACTIVAT - Recuperació de context de la Constitució d'Andorra
@@ -18,22 +20,7 @@ import { appendTraceabilityLog, buildRagContextFingerprint } from '../../lib/tra
 
 type LocaleChat = 'ca' | 'es' | 'fr';
 
-const RATE_LIMIT_MAX_REQUESTS = 20;
-const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
-const MAX_MESSAGE_LENGTH = 2000;
-
-const ipRequestLog = new Map<string, number[]>();
-
-interface UnifiedChatRequest {
-  message: string;
-  conversationHistory?: Array<{
-    role: 'user' | 'assistant';
-    content: string;
-  }>;
-  locale?: LocaleChat;
-  maxTokens?: number;
-  temperature?: number;
-}
+type UnifiedChatRequest = UnifiedChatInput;
 
 type UnifiedRequest = UnifiedChatRequest | InterpretacioRequest;
 
@@ -71,22 +58,28 @@ function isValidConstitutionQuestion(message: string): boolean {
   return true;
 }
 
-export default async function handler(
+export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<UnifiedChatResponse | InterpretacioIA>
 ) {
+  return handleUnifiedChatRequest(req, res);
+}
+
+export async function handleUnifiedChatRequest(
+  req: NextApiRequest,
+  res: NextApiResponse<UnifiedChatResponse | InterpretacioIA>,
+  skipRateLimit = false,
+) {
+  const requestStartedAt = Date.now();
+  const requestId = requestIdFromHeader(req.headers['x-request-id']);
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const requestBody = req.body as UnifiedRequest;
 
-  const clientIp = getClientIp(req);
-  const rateLimitResult = checkIpRateLimit(clientIp);
-  if (!rateLimitResult.allowed) {
-    const retrySeconds = rateLimitResult.retryAfterSeconds;
-    const rateLimitMsg = buildRateLimitTrilingualMessage(retrySeconds);
-    return res.status(429).json({ error: rateLimitMsg });
+  if (!skipRateLimit && !(await enforceRateLimit(req, res, 'ai', 1))) {
+    return res.status(429).json({ error: buildRateLimitTrilingualMessage() });
   }
 
   // Compatibilitat amb l'antic endpoint /api/interpretacio-ia
@@ -99,30 +92,14 @@ export default async function handler(
     }
   }
 
-  const {
-    message,
-    conversationHistory = [],
-    locale = 'ca',
-    maxTokens = 800,
-    temperature = 0.5
-  } = requestBody as UnifiedChatRequest;
+  const parsed = unifiedChatSchema.safeParse(requestBody);
+  if (!parsed.success) {
+    return res.status(400).json({ error: parsed.error.issues[0]?.message || 'Petició no vàlida.' });
+  }
+
+  const { message, conversationHistory, locale } = parsed.data;
 
   const validLocale: LocaleChat = ['ca', 'es', 'fr'].includes(locale) ? locale : 'ca';
-
-  if (!message || !message.trim()) {
-    const errMsg = validLocale === 'es' ? 'Mensaje vacío.' : validLocale === 'fr' ? 'Message vide.' : 'Missatge buit.';
-    return res.status(400).json({ error: errMsg });
-  }
-
-  if (message.trim().length > MAX_MESSAGE_LENGTH) {
-    const tooLongMsg =
-      validLocale === 'es'
-        ? `El mensaje supera el máximo de ${MAX_MESSAGE_LENGTH} caracteres.`
-        : validLocale === 'fr'
-          ? `Le message dépasse la limite de ${MAX_MESSAGE_LENGTH} caractères.`
-          : `El missatge supera el màxim de ${MAX_MESSAGE_LENGTH} caràcters.`;
-    return res.status(400).json({ error: tooLongMsg });
-  }
 
   // Validació portada de /api/rag/chat: detectar articles inexistents abans de processar
   const invalidRequestArticles = findUnknownArticles(message);
@@ -151,52 +128,43 @@ export default async function handler(
   }
 
   try {
-    // 2. RAG (opcional): Generar embedding i recuperar context. Desactivat per defecte (RAG_ENABLED=true per activar)
+    // 2. Recuperar context híbrid a Upstash. Els articles explícits tenen fallback local.
     const articleNumber = detectArticleReference(message);
     const articleKeywords = detectArticleByKeywords(message);
     const complexity = detectComplexity(message);
     const matchesMap = new Map<string, RetrievedContext>();
 
-    if (process.env.RAG_ENABLED === 'true') {
-      const provider = getEmbeddingProvider();
-      const openaiApiKey = process.env.OPENAI_API_KEY;
-      
-      // ⚠️ VERCEL WORKAROUND: Si no hi ha OPENAI_API_KEY, RAG es desactiva automàticament
-      if (!openaiApiKey && provider === 'xlm-roberta') {
-        console.warn('⚠️ RAG desactivat: No hi ha OPENAI_API_KEY a Vercel. Usant només mode sense context.');
-      } else {
-        try {
-          console.log('🔍 Generant embedding i cercant context RAG...');
-          const queryEmbedding = await generateEmbedding(message, provider, openaiApiKey);
-          const topK = Math.max(5, complexity.suggestedTopK);
+    let ragUnavailable = false;
+    const ragStartedAt = Date.now();
+    try {
+      const topK = Math.max(5, complexity.suggestedTopK);
           
           // Prioritzar articles de la Constitució només quan la consulta ho demana
           // explícitament. Les preguntes doctrinals, històriques o sobre el dret
           // andorrà en general han de poder recuperar doctrina en igualtat de condicions.
-          const isConstitutionQuestion = 
-            message.toLowerCase().includes('article') ||
-            message.toLowerCase().includes('constitució') ||
-            message.toLowerCase().includes('constitución') ||
-            articleNumber !== null ||
-            articleKeywords.length > 0;
+      const isConstitutionQuestion =
+        message.toLowerCase().includes('article') ||
+        message.toLowerCase().includes('constitució') ||
+        message.toLowerCase().includes('constitución') ||
+        articleNumber !== null ||
+        articleKeywords.length > 0;
           
-          if (isConstitutionQuestion) {
-            console.log('📜 Prioritzant articles de la Constitució sobre doctrina');
-          }
-          
-          // Les consultes doctrinals generals utilitzen cerca híbrida: la similitud
-          // semàntica aporta context i BM25 dona pes als termes jurídics explícits
-          // (p. ex. "usos", "costums" i "codificació").
-          const retrievedMatches = isConstitutionQuestion
-            ? retrieveTopMatches(queryEmbedding, topK, undefined, true)
-            : retrieveHybridMatches(queryEmbedding, message, topK);
-          retrievedMatches.forEach(match => matchesMap.set(match.entry.id, match));
-        } catch (ragError: any) {
-          // Si RAG falla (ex: out of memory, API error), continuar sense context
-          console.error('❌ Error RAG (continuar sense context):', ragError?.message || ragError);
-          // matchesMap es queda buit, el chat continuarà sense context del RAG
-        }
-      }
+      const retrievedMatches = await retrieveHybridMatches(message, topK, isConstitutionQuestion);
+      retrievedMatches.forEach((match) => matchesMap.set(match.entry.id, match));
+      logEvent('rag_complete', {
+        requestId,
+        railwayRequestId: req.headers['x-request-id'] || null,
+        backend: 'upstash',
+        durationMs: Date.now() - ragStartedAt,
+        sourceCount: retrievedMatches.length,
+      });
+    } catch (ragError: unknown) {
+      ragUnavailable = true;
+      console.error(JSON.stringify({
+        event: 'rag_error',
+        backend: 'upstash',
+        error: ragError instanceof Error ? ragError.message : String(ragError),
+      }));
     }
 
     // Si es detecta un article específic per número, afegir-lo (funciona amb o sense RAG)
@@ -228,6 +196,15 @@ export default async function handler(
         console.log(`✅ Article detectat per paraules clau i afegit: ${articleId}`);
       }
     });
+
+    if (ragUnavailable && matchesMap.size === 0) {
+      const unavailable = validLocale === 'es'
+        ? 'La búsqueda jurídica no está disponible temporalmente.'
+        : validLocale === 'fr'
+          ? 'La recherche juridique est temporairement indisponible.'
+          : 'La cerca jurídica no està disponible temporalment.';
+      return res.status(503).json({ error: unavailable });
+    }
 
     // 🔍 Recuperar jurisprudència relacionada amb l'article detectat
     if (articleNumber) {
@@ -264,7 +241,7 @@ export default async function handler(
     }
 
     // Quan es pregunta per un article concret, reduïm el nombre de fonts per evitar confusions
-    const defaultTopK = process.env.RAG_ENABLED === 'true' ? Math.max(5, complexity.suggestedTopK) : 10;
+    const defaultTopK = Math.max(5, complexity.suggestedTopK);
     const topK = articleNumber ? Math.min(5, defaultTopK) : defaultTopK;
     const matches = Array.from(matchesMap.values())
       .sort((a, b) => b.score - a.score)
@@ -369,9 +346,16 @@ ${contextBlock}`;
 
     // 4. Generació de Text (LLM) - Groq Llama-3.3-70B o fallback Hugging Face
     console.log('🤖 Generant resposta amb LLM i context RAG...');
+    const llmStartedAt = Date.now();
     const generatedText = await generateText(finalMessages, {
-      maxTokens,
-      temperature,
+      maxTokens: 800,
+      temperature: 0.5,
+    });
+    logEvent('llm_complete', {
+      requestId,
+      backend: process.env.LLM_PROVIDER || 'groq',
+      durationMs: Date.now() - llmStartedAt,
+      sourceCount: matches.length,
     });
 
     // Validació portada de /api/rag/chat: rebutjar respostes amb articles inexistents
@@ -454,6 +438,12 @@ ${contextBlock}`;
     });
 
     // 8. Retornar resposta (inclou validació qualitativa)
+    logEvent('chat_complete', {
+      requestId,
+      durationMs: Date.now() - requestStartedAt,
+      sourceCount: sources.length,
+      ragBackend: ragUnavailable ? 'local-exact-fallback' : 'upstash',
+    });
     return res.status(200).json({
       response: responseToReturn,
       sources: sources,
@@ -474,12 +464,16 @@ ${contextBlock}`;
 
   } catch (error: any) {
     console.error('❌ Error API Chat:', error);
+    logEvent('chat_error', {
+      requestId,
+      durationMs: Date.now() - requestStartedAt,
+      error: error instanceof Error ? error.name : 'UnknownError',
+    });
     const messageError = error?.message || 'Error intern del servidor';
     
-    // Si és un error de RAG (embeddings no disponibles), retornar error específic
-    if (messageError.includes('No hi ha embeddings disponibles')) {
+    if (error instanceof RagUnavailableError) {
       return res.status(503).json({ 
-        error: 'El sistema RAG no està disponible. Assegura\'t que els embeddings estan generats.' 
+        error: 'La cerca jurídica no està disponible temporalment.'
       });
     }
     
@@ -612,48 +606,9 @@ function normalizeArticleNumber(raw?: string | null): string | null {
   return raw.replace(/^article\s+/i, '').trim();
 }
 
-function getClientIp(req: NextApiRequest): string {
-  const forwardedFor = req.headers['x-forwarded-for'];
-  if (forwardedFor) {
-    const first = Array.isArray(forwardedFor) ? forwardedFor[0] : forwardedFor.split(',')[0];
-    return first.trim();
-  }
-
-  const realIp = req.headers['x-real-ip'];
-  if (realIp) {
-    return Array.isArray(realIp) ? realIp[0] : realIp;
-  }
-
-  return req.socket?.remoteAddress || 'unknown';
-}
-
-function checkIpRateLimit(ip: string): { allowed: boolean; retryAfterSeconds: number } {
-  const now = Date.now();
-  const windowStart = now - RATE_LIMIT_WINDOW_MS;
-  const timestamps = ipRequestLog.get(ip) || [];
-  const recentTimestamps = timestamps.filter((ts) => ts > windowStart);
-
-  if (recentTimestamps.length >= RATE_LIMIT_MAX_REQUESTS) {
-    const oldestTimestamp = recentTimestamps[0];
-    const retryAfterMs = Math.max((oldestTimestamp + RATE_LIMIT_WINDOW_MS) - now, 1000);
-    return {
-      allowed: false,
-      retryAfterSeconds: Math.ceil(retryAfterMs / 1000),
-    };
-  }
-
-  recentTimestamps.push(now);
-  ipRequestLog.set(ip, recentTimestamps);
-
-  return {
-    allowed: true,
-    retryAfterSeconds: 0,
-  };
-}
-
-function buildRateLimitTrilingualMessage(retryAfterSeconds: number): string {
-  const msgCa = `Has superat el límit de ${RATE_LIMIT_MAX_REQUESTS} peticions en 10 minuts. Torna-ho a provar en ${retryAfterSeconds} segons.`;
-  const msgEs = `Has superado el límite de ${RATE_LIMIT_MAX_REQUESTS} peticiones en 10 minutos. Vuelve a intentarlo en ${retryAfterSeconds} segundos.`;
-  const msgFr = `Vous avez dépassé la limite de ${RATE_LIMIT_MAX_REQUESTS} requêtes en 10 minutes. Réessayez dans ${retryAfterSeconds} secondes.`;
+function buildRateLimitTrilingualMessage(): string {
+  const msgCa = 'Has superat el límit de peticions. Torna-ho a provar més tard.';
+  const msgEs = 'Has superado el límite de peticiones. Vuelve a intentarlo más tarde.';
+  const msgFr = 'Vous avez dépassé la limite de requêtes. Réessayez plus tard.';
   return `${msgCa} | ${msgEs} | ${msgFr}`;
 }

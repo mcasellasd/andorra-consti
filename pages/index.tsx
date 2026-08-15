@@ -125,7 +125,7 @@ const IndexPage: React.FC = () => {
               <p>{idioma === 'ca' ? 'Una explicació visual sobre com la Constitució protegeix el patrimoni cultural i natural d\'Andorra (article 34).' : idioma === 'es' ? 'Una explicación visual sobre cómo la Constitución protege el patrimonio cultural y natural de Andorra (artículo 34).' : 'Une explication visuelle sur la façon dont la Constitution protège le patrimoine culturel et naturel d\'Andorre (article 34).'}</p>
             </div>
             <div className="home-video-card">
-              <video controls className="home-video" poster="/images/poster-defensa.jpg">
+              <video controls preload="metadata" className="home-video" poster="/images/poster-defensa.jpg">
                 <source src="/defensa-patrimoni.webm" type="video/webm" />
                 Your browser does not support the video tag.
               </video>

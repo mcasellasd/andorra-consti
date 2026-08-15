@@ -218,31 +218,3 @@ export async function generateWithGroq(
 
   throw new Error('Cal configurar GROQ_API_KEY, HUGGINGFACE_API_KEY o OPENAI_API_KEY a l\'entorn de desplegament');
 }
-
-/**
- * Genera text amb model local (opcional, més lent). Usa Salamandra 2B via @xenova/transformers.
- * NOTA: Aquesta opció local encara utilitza el model Salamandra per compatibilitat.
- */
-export async function generateWithGroqLocal(
-  messages: Array<{ role: string; content: string }>,
-  options: {
-    maxTokens?: number;
-    temperature?: number;
-    dateString?: string;
-  } = {}
-): Promise<string> {
-  // Importació dinàmica per evitar que Next.js bundli @xenova/transformers
-  const { pipeline } = await import('@xenova/transformers');
-
-  const generator = await pipeline('text-generation', 'BSC-LT/salamandra-2b-instruct', {
-    quantized: true, // Necessari per estalviar memòria
-  });
-
-  const prompt = formatChatML(messages, options.dateString);
-  const output = await generator(prompt, {
-    max_new_tokens: options.maxTokens || 350,
-    temperature: options.temperature || 0.7,
-  });
-
-  return (output as any)[0]?.generated_text?.trim() || '';
-}
