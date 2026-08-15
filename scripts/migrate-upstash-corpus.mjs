@@ -7,6 +7,7 @@ const raw = await readFile(sourceUrl);
 const entries = JSON.parse(raw.toString('utf8'));
 const namespace = process.env.UPSTASH_VECTOR_NAMESPACE || 'corpus-v1';
 const expectedCount = 1_041;
+const validateOnly = process.env.UPSTASH_VECTOR_VALIDATE_ONLY === '1';
 
 if (!process.env.UPSTASH_VECTOR_REST_URL || !process.env.UPSTASH_VECTOR_REST_TOKEN) {
   throw new Error('Cal configurar UPSTASH_VECTOR_REST_URL i UPSTASH_VECTOR_REST_TOKEN.');
@@ -22,19 +23,21 @@ const index = new Index({
   token: process.env.UPSTASH_VECTOR_REST_TOKEN,
 });
 
-for (let offset = 0; offset < entries.length; offset += 100) {
-  const batch = entries.slice(offset, offset + 100).map(({ id, content, ...metadata }) => ({
-    id: String(id),
-    data: content,
-    metadata: {
-      ...metadata,
-      sourceType: String(id).startsWith('CONST_') ? 'constitucio' : 'doctrina',
-    },
-  }));
-  await index.upsert(batch, { namespace });
-  process.stdout.write(`\rCarregats ${Math.min(offset + batch.length, entries.length)}/${entries.length}`);
+if (!validateOnly) {
+  for (let offset = 0; offset < entries.length; offset += 100) {
+    const batch = entries.slice(offset, offset + 100).map(({ id, content, ...metadata }) => ({
+      id: String(id),
+      data: content,
+      metadata: {
+        ...metadata,
+        sourceType: String(id).startsWith('CONST_') ? 'constitucio' : 'doctrina',
+      },
+    }));
+    await index.upsert(batch, { namespace });
+    process.stdout.write(`\rCarregats ${Math.min(offset + batch.length, entries.length)}/${entries.length}`);
+  }
+  process.stdout.write('\n');
 }
-process.stdout.write('\n');
 
 let indexedIds = new Set();
 for (let attempt = 0; attempt < 30; attempt += 1) {
@@ -71,13 +74,14 @@ console.log(JSON.stringify({
 async function listIds(vectorIndex, targetNamespace) {
   const found = new Set();
   let cursor = '0';
-  do {
+  while (true) {
     const page = await vectorIndex.range(
       { cursor, limit: 1_000, includeVectors: false, includeMetadata: false, includeData: false },
       { namespace: targetNamespace },
     );
     page.vectors.forEach((vector) => found.add(String(vector.id)));
-    cursor = page.nextCursor;
-  } while (cursor !== '0');
+    if (!page.nextCursor || String(page.nextCursor) === '0') break;
+    cursor = String(page.nextCursor);
+  }
   return found;
 }

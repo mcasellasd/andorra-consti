@@ -4,6 +4,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 type LimitKind = 'ai' | 'search' | 'admin' | 'admin-login';
 
+const REDIS_KEY_PREFIX = 'andorra-consti';
+
 const localAttempts = new Map<string, number[]>();
 let redis: Redis | null | undefined;
 
@@ -52,15 +54,15 @@ export async function enforceRateLimit(
 
 function createLimiter(client: Redis, kind: LimitKind): Ratelimit {
   if (kind === 'ai') {
-    return new Ratelimit({ redis: client, limiter: Ratelimit.slidingWindow(20, '10 m'), prefix: 'rl:ai' });
+    return new Ratelimit({ redis: client, limiter: Ratelimit.slidingWindow(20, '10 m'), prefix: `${REDIS_KEY_PREFIX}:rl:ai` });
   }
   if (kind === 'search') {
-    return new Ratelimit({ redis: client, limiter: Ratelimit.slidingWindow(60, '1 m'), prefix: 'rl:search' });
+    return new Ratelimit({ redis: client, limiter: Ratelimit.slidingWindow(60, '1 m'), prefix: `${REDIS_KEY_PREFIX}:rl:search` });
   }
   if (kind === 'admin') {
-    return new Ratelimit({ redis: client, limiter: Ratelimit.slidingWindow(2, '1 h'), prefix: 'rl:admin' });
+    return new Ratelimit({ redis: client, limiter: Ratelimit.slidingWindow(2, '1 h'), prefix: `${REDIS_KEY_PREFIX}:rl:admin` });
   }
-  return new Ratelimit({ redis: client, limiter: Ratelimit.slidingWindow(5, '10 m'), prefix: 'rl:admin-login' });
+  return new Ratelimit({ redis: client, limiter: Ratelimit.slidingWindow(5, '10 m'), prefix: `${REDIS_KEY_PREFIX}:rl:admin-login` });
 }
 
 function enforceEmergencyLimit(identifier: string, res: NextApiResponse, weight: number): boolean {

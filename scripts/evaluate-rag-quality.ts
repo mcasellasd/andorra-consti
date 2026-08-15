@@ -4,6 +4,12 @@ import { retrieveHybridMatches } from '../lib/rag/corpus';
 
 const requiredHitRate = Number(process.env.RAG_MIN_TOP5_HIT_RATE || '0.95');
 const maximumP95Ms = Number(process.env.RAG_MAX_P95_MS || '750');
+const verbose = process.env.RAG_EVAL_VERBOSE === '1';
+const topK = Number(process.env.RAG_EVAL_TOP_K || '5');
+const selectedIds = new Set((process.env.RAG_EVAL_IDS || '').split(',').filter(Boolean));
+const questions = selectedIds.size
+  ? preguntesGoldenStandard.filter((question) => selectedIds.has(question.id))
+  : preguntesGoldenStandard;
 
 async function main() {
   const results: Array<{
@@ -15,10 +21,11 @@ async function main() {
   durationMs: number;
   }> = [];
 
-for (const question of preguntesGoldenStandard) {
+for (const question of questions) {
   const startedAt = performance.now();
   try {
-    const matches = await retrieveHybridMatches(question.pregunta, 5, true);
+    const query = process.env.RAG_EVAL_QUERY_OVERRIDE || question.pregunta;
+    const matches = await retrieveHybridMatches(query, topK, true);
     const retrieved = matches.map((match) => match.entry.id);
     const expected = question.articlesEsperats;
     results.push({
@@ -40,7 +47,7 @@ for (const question of preguntesGoldenStandard) {
   }
 }
 
-if (results.length !== preguntesGoldenStandard.length) process.exit(1);
+if (results.length !== questions.length) process.exit(1);
 
 const hitRate = results.filter((result) => result.hit).length / results.length;
 const fullCoverageRate = results.filter((result) => result.fullCoverage).length / results.length;
@@ -52,11 +59,13 @@ const passed = hitRate >= requiredHitRate && p95Ms < maximumP95Ms;
 console.log(JSON.stringify({
   corpusNamespace: process.env.UPSTASH_VECTOR_NAMESPACE || 'corpus-v1',
   questions: results.length,
+  topK,
   top5HitRate: Number(hitRate.toFixed(4)),
   top5FullCoverageRate: Number(fullCoverageRate.toFixed(4)),
   p95Ms,
   thresholds: { requiredHitRate, maximumP95Ms },
   failedIds,
+  failures: verbose ? results.filter((result) => !result.hit) : undefined,
   passed,
 }, null, 2));
 

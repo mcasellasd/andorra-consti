@@ -108,7 +108,8 @@ function mapQueryResult(result: QueryResult<RagMetadata>): RetrievedContext | nu
 async function queryBySource(
   query: string,
   sourceType: RagMetadata['sourceType'],
-  topK: number
+  topK: number,
+  queryMode: QueryMode = QueryMode.HYBRID,
 ): Promise<RetrievedContext[]> {
   const results = await getVectorIndex().query({
     data: query,
@@ -116,13 +117,64 @@ async function queryBySource(
     filter: `sourceType = '${sourceType}'`,
     includeData: true,
     includeMetadata: true,
-    queryMode: QueryMode.HYBRID,
-    fusionAlgorithm: FusionAlgorithm.RRF,
+    queryMode,
+    fusionAlgorithm: queryMode === QueryMode.HYBRID ? FusionAlgorithm.RRF : undefined,
   }, {
     namespace: process.env.UPSTASH_VECTOR_NAMESPACE || DEFAULT_CORPUS_NAMESPACE,
   });
 
   return results.map(mapQueryResult).filter((item): item is RetrievedContext => item !== null);
+}
+
+function fuseRankedResults(resultLists: RetrievedContext[][], topK: number): RetrievedContext[] {
+  const fused = new Map<string, { item: RetrievedContext; score: number }>();
+
+  for (const results of resultLists) {
+    results.forEach((item, rank) => {
+      const current = fused.get(item.entry.id);
+      const score = (current?.score || 0) + 1 / (60 + rank + 1);
+      fused.set(item.entry.id, { item: current?.item || item, score });
+    });
+  }
+
+  return [...fused.values()]
+    .sort((left, right) => right.score - left.score)
+    .slice(0, topK)
+    .map(({ item, score }) => ({ ...item, score }));
+}
+
+function buildConstitutionKeywordQuery(query: string): string | null {
+  const normalized = query.toLocaleLowerCase('ca').normalize('NFC');
+  const terms: string[] = [];
+
+  if (normalized.includes('relacions internacionals') || normalized.includes('tractat')) {
+    terms.push('tractats acords internacionals negociació');
+  }
+  if (normalized.includes('procediment judicial') || normalized.includes('procés equitatiu')) {
+    terms.push('sentències judici procediment administració de justícia');
+  }
+  if (
+    normalized.includes('participació ciutadana')
+    || normalized.includes('democràcia directa')
+    || normalized.includes('iniciativa legislativa popular')
+  ) {
+    terms.push('referèndum consulta popular');
+  }
+
+  return terms.length ? terms.join(' ') : null;
+}
+
+function prependUnique(
+  preferred: RetrievedContext[],
+  fallback: RetrievedContext[],
+  topK: number,
+): RetrievedContext[] {
+  const seen = new Set<string>();
+  return [...preferred, ...fallback].filter((item) => {
+    if (seen.has(item.entry.id)) return false;
+    seen.add(item.entry.id);
+    return true;
+  }).slice(0, topK);
 }
 
 /** Cerca híbrida remota. No genera ni carrega embeddings dins del procés Next.js. */
@@ -148,13 +200,16 @@ export async function retrieveHybridMatches(
       return results.map(mapQueryResult).filter((item): item is RetrievedContext => item !== null);
     }
 
-    const constitutionTarget = Math.max(1, Math.ceil(topK * 0.6));
-    const doctrineTarget = Math.max(0, topK - constitutionTarget);
-    const [constitution, doctrine] = await Promise.all([
-      queryBySource(queryText, 'constitucio', constitutionTarget),
-      doctrineTarget ? queryBySource(queryText, 'doctrina', doctrineTarget) : Promise.resolve([]),
+    const keywordQuery = buildConstitutionKeywordQuery(queryText);
+    const [hybrid, sparse, keywordMatches] = await Promise.all([
+      queryBySource(queryText, 'constitucio', topK, QueryMode.HYBRID),
+      queryBySource(queryText, 'constitucio', topK, QueryMode.SPARSE),
+      keywordQuery
+        ? queryBySource(keywordQuery, 'constitucio', Math.min(3, topK), QueryMode.SPARSE)
+        : Promise.resolve([]),
     ]);
-    return [...constitution, ...doctrine].slice(0, topK);
+    const fused = fuseRankedResults([hybrid, sparse], topK);
+    return prependUnique(keywordMatches.slice(0, Math.min(2, topK)), fused, topK);
   } catch (error) {
     if (error instanceof RagUnavailableError) throw error;
     const detail = error instanceof Error ? error.message : 'Error desconegut';

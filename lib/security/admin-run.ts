@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { randomUUID } from 'node:crypto';
 import { getRedis, enforceRateLimit } from './rate-limit';
 
-const LOCK_KEY = 'admin:evaluation:lock';
+const LOCK_KEY = 'andorra-consti:admin:evaluation:lock';
 
 export async function acquireAdminRun(req: NextApiRequest, res: NextApiResponse): Promise<string | null> {
   const redis = getRedis();
