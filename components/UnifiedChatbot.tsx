@@ -158,9 +158,7 @@ export default function UnifiedChatbot({
               role: m.role,
               content: m.content
             })),
-            locale,
-            maxTokens: 800,
-            temperature: 0.7
+            locale
           })
         });
 
@@ -1033,4 +1031,3 @@ export default function UnifiedChatbot({
     </>
   );
 }
-

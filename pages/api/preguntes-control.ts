@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { preguntesControl, type PreguntaControl } from '@/data/preguntes-control';
 import { avaluarResposta, generarInformeAvaluacio, type ResultatAvaluacio } from '@/lib/evaluacio/preguntes-control';
+import { requireAdmin } from '@/lib/security/admin-session';
+import { acquireAdminRun, releaseAdminRun } from '@/lib/security/admin-run';
+import { generateInternalChatResponse } from '@/lib/services/unified-chat-internal';
 
 interface PreguntesControlRequest {
   preguntaId?: string; // Si es proporciona, només s'executa aquesta pregunta
@@ -22,6 +25,9 @@ export default async function handler(
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
+  if (!requireAdmin(req, res)) return;
+  const lock = await acquireAdminRun(req, res);
+  if (!lock) return;
 
   const { preguntaId, categoria, dificultat, executarTotes } = req.body as PreguntesControlRequest;
 
@@ -54,29 +60,7 @@ export default async function handler(
     if (preguntesAExecutar.length === 1 && !executarTotes) {
       const pregunta = preguntesAExecutar[0];
 
-      // Cridar l'API del chatbot
-      const chatResponse = await fetch(`${req.headers.origin || 'http://localhost:3000'}/api/unified-chat`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: pregunta.pregunta,
-          conversationHistory: [],
-          maxTokens: 800,
-          temperature: 0.7
-        })
-      });
-
-      const contentType = chatResponse.headers.get("content-type");
-      if (!chatResponse.ok || !contentType || !contentType.includes("application/json")) {
-        const text = await chatResponse.text();
-        // Intentar extreure un missatge d'error del HTML si és possible, o mostrar els primers caràcters
-        const errorSnippet = text.substring(0, 200).replace(/\n/g, ' ');
-        throw new Error(`Error cridant unified-chat (${chatResponse.status}): ${errorSnippet}...`);
-      }
-
-      const chatData = await chatResponse.json();
+      const chatData = await generateInternalChatResponse(pregunta.pregunta);
 
       const resultat = avaluarResposta(
         pregunta,
@@ -92,26 +76,7 @@ export default async function handler(
 
     for (const pregunta of preguntesAExecutar) {
       try {
-        const chatResponse = await fetch(`${req.headers.origin || 'http://localhost:3000'}/api/unified-chat`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            message: pregunta.pregunta,
-            conversationHistory: [],
-            maxTokens: 800,
-            temperature: 0.7
-          })
-        });
-
-        const contentType = chatResponse.headers.get("content-type");
-        if (!chatResponse.ok || !contentType || !contentType.includes("application/json")) {
-          const text = await chatResponse.text();
-          throw new Error(`Error unified-chat (${chatResponse.status}): ${text.substring(0, 100)}...`);
-        }
-
-        const chatData = await chatResponse.json();
+        const chatData = await generateInternalChatResponse(pregunta.pregunta);
 
         const resultat = avaluarResposta(
           pregunta,
@@ -143,5 +108,7 @@ export default async function handler(
     return res.status(500).json({
       error: error.message || 'S\'ha produït un error inesperat'
     });
+  } finally {
+    await releaseAdminRun(lock);
   }
 }

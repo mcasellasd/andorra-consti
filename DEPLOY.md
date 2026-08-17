@@ -106,12 +106,12 @@ Si el teu pla de SiteGround inclou suport per Node.js:
 
 ---
 
-## Opció 2b: Railway (recomanat per RAG amb XLM-RoBERTa)
+## Opció 2b: Railway (recomanat)
 
-Per desplegament amb RAG actiu (cerca semàntica amb XLM-RoBERTa), Railway és una bona opció perquè ofereix servidors persistents amb més memòria que Vercel serverless.
+Railway executa el runtime lleuger de Next.js; la recuperació híbrida i els límits compartits es deleguen a Upstash.
 
 1. Connecta el repositori a [railway.app](https://railway.app)
-2. Configura les variables d'entorn: `GROQ_API_KEY`, opcionalment `RAG_ENABLED=true`
+2. Configura Groq, Upstash Vector, Upstash Redis i els secrets administratius indicats a `.env.example`
 3. Desplega – Railway detecta Next.js i utilitza els scripts de `package.json` (build, postbuild, start)
 
 📖 **Guia completa:** [docs/RAILWAY-DEPLOY.md](./docs/RAILWAY-DEPLOY.md)
@@ -233,4 +233,3 @@ Per a SiteGround, **recomano l'Opció 1 (exportació estàtica)** perquè:
 - Funciona amb qualsevol pla de hosting
 - No necessita configuració especial
 - És ràpid i fàcil de mantenir
-

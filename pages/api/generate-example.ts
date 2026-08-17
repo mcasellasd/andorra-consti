@@ -6,6 +6,8 @@ import { getJurisprudenciaForArticle } from '../../data/jurisprudencia-andorra';
 import { getArticleIdByNumber, detectCodiFromArticle } from '../../lib/article-helpers';
 import { getContextConstitucional, blocContextPrompt } from '../../lib/prompts/context-constitucional';
 import { generateText } from '../../lib/llm';
+import { articleGenerationSchema } from '@/lib/api/schemas';
+import { enforceRateLimit } from '@/lib/security/rate-limit';
 
 interface GenerateExampleRequest {
   articleNumber: string;
@@ -36,11 +38,10 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { articleNumber, articleTitle, articleContent } = req.body as GenerateExampleRequest;
-
-  if (!articleNumber || !articleTitle || !articleContent) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
+  if (!(await enforceRateLimit(req, res, 'ai', 2))) return res.status(429).json({ error: 'Rate limit exceeded' });
+  const parsed = articleGenerationSchema.safeParse(req.body as GenerateExampleRequest);
+  if (!parsed.success) return res.status(400).json({ error: parsed.error.issues[0]?.message });
+  const { articleNumber, articleTitle, articleContent } = parsed.data;
 
   try {
     // Obtenir article_id per buscar jurisprudència
@@ -145,4 +146,3 @@ ${ASPECTES_JURISPRUDENCIA_ANDORRANA}`;
     return res.status(500).json({ error: error.message || 'Error generating example' });
   }
 }
-

@@ -7,6 +7,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { preguntesControl } from '@/data/preguntes-control';
 import { avaluarResposta, generarInformeAvaluacio } from '@/lib/evaluacio/preguntes-control';
 import { analitzarResultats, generarMilloresPrompt } from '@/lib/aprenentatge/millora-prompts';
+import { requireAdmin } from '@/lib/security/admin-session';
+import { acquireAdminRun, releaseAdminRun } from '@/lib/security/admin-run';
+import { generateInternalChatResponse } from '@/lib/services/unified-chat-internal';
 
 interface AprenentatgeResponse {
   informe?: any;
@@ -27,6 +30,7 @@ export default async function handler(
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
+  if (!requireAdmin(req, res)) return;
 
   const { executarTotes } = req.body;
 
@@ -34,6 +38,8 @@ export default async function handler(
     return res.status(400).json({ error: 'Cal especificar executarTotes=true' });
   }
 
+  const lock = await acquireAdminRun(req, res);
+  if (!lock) return;
   try {
     const resultats: any[] = [];
     const totalPreguntes = preguntesControl.length;
@@ -43,26 +49,7 @@ export default async function handler(
       const pregunta = preguntesControl[i];
 
       try {
-        // Cridar l'API del chatbot
-        const chatResponse = await fetch(`${req.headers.origin || 'http://localhost:3000'}/api/unified-chat`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            message: pregunta.pregunta,
-            conversationHistory: [],
-            maxTokens: 1000,
-            temperature: 0.7
-          })
-        });
-
-        if (!chatResponse.ok) {
-          const errorData = await chatResponse.json();
-          throw new Error(errorData.error || `HTTP ${chatResponse.status}`);
-        }
-
-        const chatData = await chatResponse.json();
+        const chatData = await generateInternalChatResponse(pregunta.pregunta);
 
         const resultat = avaluarResposta(
           pregunta,
@@ -105,5 +92,7 @@ export default async function handler(
     return res.status(500).json({
       error: error.message || 'S\'ha produït un error inesperat'
     });
+  } finally {
+    await releaseAdminRun(lock);
   }
 }

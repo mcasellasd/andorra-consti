@@ -120,27 +120,23 @@ export async function interpretacioIAHandler(
     }
 
     // ============================================================================
-    // RAG FLOW: Recuperació de context amb XLM-RoBERTa (opcional, desactivat per defecte)
-    // Activa amb RAG_ENABLED=true al .env.local si vols context addicional (carrega XLM-RoBERTa, pot trigar)
+    // RAG FLOW: recuperació híbrida gestionada per Upstash Vector.
     // ============================================================================
 
     let ragContext = '';
 
-    if (process.env.RAG_ENABLED === 'true') {
+    if (process.env.RAG_BACKEND === 'upstash' || process.env.RAG_ENABLED === 'true') {
       try {
         const runRag = async () => {
-          const { generateEmbedding } = await import('../embeddings/index');
           const { retrieveTopMatches } = await import('../rag/corpus');
-          console.log(`🧠 Generant embedding RAG per a article ${article_id} amb XLM-RoBERTa...`);
-          const embedding = await generateEmbedding(`${article?.titol || ''} ${text_oficial}`, 'xlm-roberta');
-          return retrieveTopMatches(embedding, 5);
+          return retrieveTopMatches(`${article?.titol || ''} ${text_oficial}`, 5, undefined, true);
         };
         const timeoutPromise = new Promise<any[]>((_, reject) =>
           setTimeout(() => reject(new Error('RAG Timeout (limite excedit)')), 15000)
         );
         const matches = await Promise.race([runRag(), timeoutPromise]);
         if (matches && matches.length > 0) {
-          ragContext = `\n\nCONTEXT ADDICIONAL RECUPERAT (RAG - XLM-RoBERTa):\nUtilitza aquest context per enriquir l'explicació, però prioritza el text oficial de l'article.\n`;
+          ragContext = `\n\nCONTEXT ADDICIONAL RECUPERAT (RAG):\nUtilitza aquest context per enriquir l'explicació, però prioritza el text oficial de l'article.\n`;
           matches.forEach((m: any) => {
             if (m.entry.id !== article_id) {
               ragContext += `- [${m.entry.category}] ${m.entry.topic}: ${m.entry.content.substring(0, 300)}...\n`;

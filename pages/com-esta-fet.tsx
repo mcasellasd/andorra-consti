@@ -1,6 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import Image from 'next/image';
 import Layout from '../components/Layout';
 
 const ComEstaFetPage: React.FC = () => {
@@ -108,13 +109,15 @@ const ComEstaFetPage: React.FC = () => {
 
               <h3>Diagrama: l&apos;arquitectura RAG</h3>
               <figure style={{ margin: '1.5rem 0', textAlign: 'center' }}>
-                <img
+                <Image
                   src="/images/dret-planer-rag-arquitectura.png"
-                  alt="Dret Planer: diagrama del flux RAG — consulta de l'usuari, vectorització, corpus tancat (Constitució 1993 + doctrina), recuperació semàntica, model generatiu i explicació planera"
+                  alt="Dret Planer: consulta, recuperació híbrida del corpus jurídic, model generatiu i explicació planera"
+                  width={1024}
+                  height={1024}
                   style={{ maxWidth: '100%', height: 'auto', borderRadius: '0.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}
                 />
                 <figcaption style={{ marginTop: '0.75rem', fontSize: '0.9rem', color: '#6b7280' }}>
-                  <strong>Dret Planer: L&apos;arquitectura RAG per a la claredat constitucional.</strong> El flux mostra com la consulta es vectoritza, es busca en el corpus tancat i es condiciona la generació per garantir traçabilitat i evitar al·lucinacions.
+                  <strong>Dret Planer: L&apos;arquitectura RAG per a la claredat constitucional.</strong> El flux mostra com la consulta recupera fonts de l&apos;índex híbrid i condiciona la generació per garantir traçabilitat i reduir al·lucinacions.
                 </figcaption>
               </figure>
               <p>
@@ -191,19 +194,18 @@ const ComEstaFetPage: React.FC = () => {
             <section className="legal-section">
               <h2>4. Models d&apos;intel·ligència artificial utilitzats</h2>
               <p>
-                El sistema utilitza models sobirans i contextualment adequats (Projecte AINA per embeddings, Llama 70B via Groq per generació),
+                El sistema utilitza BGE-M3 i BM25 a Upstash Vector per a recuperació, i Llama 70B via Groq per a generació,
                 seleccionats per a la seva funció específica i per evitar biaixos hermenèutics externs:
               </p>
 
               <h3>4.1. Models d&apos;embeddings</h3>
               <p>
-                <strong>Fase 1 (actual)</strong>: <strong>XLM-RoBERTa-base</strong>, model multilingüe que s&apos;executa localment
-                per a la recuperació semàntica (representacions vectorials de 768 dimensions). Oferix privacitat i control total sobre les dades.
+                <strong>Arquitectura actual</strong>: <strong>BGE-M3 + BM25</strong> en un índex híbrid gestionat per Upstash Vector
+                en regió UE. El procés web no descarrega ni carrega cap model d&apos;embeddings.
               </p>
               <p style={{ marginTop: '0.5rem' }}>
-                <strong>Fase 2 (prevista)</strong>: Migració al model <strong>roberta-base-ca-v2</strong> del <strong>Projecte AINA</strong>,
-                entrenat específicament per al català amb un corpus que inclou documents governamentals i jurídics, per millorar la qualitat
-                de la cerca semàntica en text jurídic català.
+                Les consultes combinen senyals densos i dispersos; les preguntes constitucionals reserven almenys un 60% dels resultats
+                a fonts constitucionals quan n&apos;hi ha.
               </p>
 
               <h3>4.2. Models de generació de text</h3>
@@ -212,7 +214,7 @@ const ComEstaFetPage: React.FC = () => {
                 Es va provar inicialment Salamandra-7b-instruct (BSC), però no va resultar viable per a producció; en l&apos;estat actual s&apos;utilitza Llama 70B mitjançant l&apos;API de Groq, amb latència baixa i qualitat adequada per al català, castellà i francès.
               </p>
               <p style={{ marginTop: '0.5rem' }}>
-                L&apos;ús de models com Llama 70B (Groq) i AINA (embeddings previstos) permet mantenir la qualitat de la generació en català i complir amb l&apos;AI Act i els principis d&apos;adequació tecnològica del projecte.
+                L&apos;ús de Llama 70B (Groq) i recuperació híbrida permet mantenir la qualitat en català i la traçabilitat de les fonts.
               </p>
             </section>
 
@@ -240,7 +242,7 @@ const ComEstaFetPage: React.FC = () => {
                   <strong>Llama 70B</strong> (Groq): Model de llenguatge per a la generació de text (explicacions, resums, xat). Via API Groq (Llama-3.3-70B-Versatile).
                 </li>
                 <li>
-                  <strong>XLM-RoBERTa-base</strong>: Model d&apos;embeddings multilingüe executat localment (fase 1). Fase 2: <strong>Projecte AINA</strong> (roberta-base-ca-v2) per al català.
+                  <strong>Upstash Vector</strong>: Índex híbrid BGE-M3 + BM25 allotjat en regió UE.
                 </li>
               </ul>
             </section>
@@ -267,8 +269,8 @@ const ComEstaFetPage: React.FC = () => {
 
               <p style={{ marginTop: '1rem' }}>
                 El corpus s&apos;indexa mitjançant <strong>inferència</strong>: no s&apos;entrena cap xarxa neuronal amb els textos jurídics;
-                els embeddings es generen amb un model preentrenat (XLM-RoBERTa) i es desen en un índex unificat. En temps d&apos;execució,
-                la consulta es compara amb aquest índex per similitud semàntica i els fragments més rellevants es passen al model generatiu com a context.
+                Upstash genera les representacions denses i disperses i les conserva en un namespace versionat. En temps d&apos;execució,
+                la consulta es compara amb aquest índex híbrid i els fragments més rellevants es passen al model generatiu com a context.
               </p>
               <p style={{ marginTop: '0.75rem' }}>
                 El sistema de validació amb <strong>preguntes de control</strong> permet comprovar que el prototip identifica correctament
@@ -347,8 +349,7 @@ const ComEstaFetPage: React.FC = () => {
                   El projecte explora com fer operatiu aquest mandat.
                 </li>
                 <li>
-                  <strong>Sobirania tecnològica</strong>: Embeddings locals (XLM-RoBERTa), models oberts (Llama 70B),
-                  control total sobre les dades.
+                  <strong>Minimització</strong>: cap model ni vector local al runtime, serveis en regió UE i logs sense consultes en clar.
                 </li>
               </ul>
 
@@ -394,7 +395,7 @@ const ComEstaFetPage: React.FC = () => {
               <h3>8.1. Fase 1 completada (v1.0 - Constitució PoC)</h3>
               <ul>
                 <li>✅ Preàmbul i 107 articles de la Constitució processats i estructurats</li>
-                <li>✅ Sistema RAG complet amb embeddings XLM-RoBERTa</li>
+                <li>✅ Sistema RAG híbrid amb Upstash Vector</li>
                 <li>✅ Chatbot funcional amb Llama 70B (Groq)</li>
                 <li>✅ Interfície multilingüe (català, castellà, francès)</li>
                 <li>✅ Paper acadèmic integrat amb bibliografia APA 7</li>
