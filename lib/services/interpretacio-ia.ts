@@ -2,7 +2,7 @@
  * API endpoint per generar interpretació assistida per IA
  * Segons el briefing tècnic de dretplaner.ad
  * 
- * Utilitza Groq (Llama-3.3-70B) o Hugging Face per generar resums, exemples i doctrina
+ * Utilitza Groq (model configurable) o Hugging Face per generar resums, exemples i doctrina
  */
 
 import type { NextApiRequest, NextApiResponse } from 'next';

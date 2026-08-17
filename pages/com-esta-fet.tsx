@@ -194,7 +194,7 @@ const ComEstaFetPage: React.FC = () => {
             <section className="legal-section">
               <h2>4. Models d&apos;intel·ligència artificial utilitzats</h2>
               <p>
-                El sistema utilitza BGE-M3 i BM25 a Upstash Vector per a recuperació, i Llama 70B via Groq per a generació,
+                El sistema utilitza BGE-M3 i BM25 a Upstash Vector per a recuperació, i GPT-OSS 120B via Groq per a generació,
                 seleccionats per a la seva funció específica i per evitar biaixos hermenèutics externs:
               </p>
 
@@ -210,11 +210,11 @@ const ComEstaFetPage: React.FC = () => {
 
               <h3>4.2. Models de generació de text</h3>
               <p>
-                <strong>Llama 70B</strong> (Llama-3.3-70B-Versatile via <strong>Groq</strong>): Genera les explicacions accessibles, resums i respostes del xat (Hermes).
-                Es va provar inicialment Salamandra-7b-instruct (BSC), però no va resultar viable per a producció; en l&apos;estat actual s&apos;utilitza Llama 70B mitjançant l&apos;API de Groq, amb latència baixa i qualitat adequada per al català, castellà i francès.
+                <strong>GPT-OSS 120B</strong> via <strong>Groq</strong>: Genera les explicacions accessibles, resums i respostes del xat (Hermes).
+                Es va provar inicialment Salamandra-7b-instruct (BSC), però no va resultar viable per a producció; en l&apos;estat actual s&apos;utilitza GPT-OSS 120B mitjançant l&apos;API de Groq, amb latència baixa i qualitat adequada per al català, castellà i francès.
               </p>
               <p style={{ marginTop: '0.5rem' }}>
-                L&apos;ús de Llama 70B (Groq) i recuperació híbrida permet mantenir la qualitat en català i la traçabilitat de les fonts.
+                L&apos;ús de GPT-OSS 120B (Groq) i recuperació híbrida permet mantenir la qualitat en català i la traçabilitat de les fonts.
               </p>
             </section>
 
@@ -239,7 +239,7 @@ const ComEstaFetPage: React.FC = () => {
                   <strong>Vercel</strong>: Infraestructura al núvol que assegura un desplegament global d&apos;alta disponibilitat.
                 </li>
                 <li>
-                  <strong>Llama 70B</strong> (Groq): Model de llenguatge per a la generació de text (explicacions, resums, xat). Via API Groq (Llama-3.3-70B-Versatile).
+                  <strong>GPT-OSS 120B</strong> (Groq): Model de llenguatge per a la generació de text (explicacions, resums i xat).
                 </li>
                 <li>
                   <strong>Upstash Vector</strong>: Índex híbrid BGE-M3 + BM25 allotjat en regió UE.
@@ -396,7 +396,7 @@ const ComEstaFetPage: React.FC = () => {
               <ul>
                 <li>✅ Preàmbul i 107 articles de la Constitució processats i estructurats</li>
                 <li>✅ Sistema RAG híbrid amb Upstash Vector</li>
-                <li>✅ Chatbot funcional amb Llama 70B (Groq)</li>
+                <li>✅ Chatbot funcional amb GPT-OSS 120B (Groq)</li>
                 <li>✅ Interfície multilingüe (català, castellà, francès)</li>
                 <li>✅ Paper acadèmic integrat amb bibliografia APA 7</li>
                 <li>✅ Sistema de control de qualitat amb preguntes de validació</li>

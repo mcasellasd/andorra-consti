@@ -4,7 +4,7 @@
  * Proveïdors disponibles:
  *   'openai-compatible' → qualsevol API OpenAI-compatible (Scaleway, OVHcloud,
  *                         Mistral, vLLM autoallotjat...). Recomanat per sobirania.
- *   'groq'              → Groq (Llama-3.3-70B). Llegat, es manté per compatibilitat.
+ *   'groq'              → Groq (model configurat amb GROQ_MODEL).
  *
  * Selecció automàtica: si hi ha LLM_BASE_URL al .env → 'openai-compatible'.
  * Si no → 'groq' (comportament antic intacte).

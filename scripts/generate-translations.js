@@ -1,5 +1,5 @@
 /**
- * Script per generar traduccions d'articles legals amb Groq (Llama-3.3-70B)
+ * Script per generar traduccions d'articles legals amb Groq
  * 
  * Ús:
  *   node scripts/generate-translations.js --lang=es --start=1 --end=10
@@ -29,7 +29,7 @@ const langNames = {
 };
 
 /**
- * Genera traducció amb Groq (Llama-3.3-70B)
+ * Genera traducció amb Groq
  */
 async function translateText(text, targetLang, context = 'article') {
   const GROQ_API_KEY = process.env.GROQ_API_KEY;
@@ -96,7 +96,7 @@ ${Array.isArray(text) ? text.join(', ') : text}`;
         'Authorization': `Bearer ${GROQ_API_KEY}`
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
         messages: [
           {
             role: 'system',

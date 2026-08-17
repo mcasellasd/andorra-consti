@@ -1,6 +1,6 @@
 /**
  * Utilitat per generar text amb LLM
- * Prioritat: Groq (Llama-3.3-70B-Versatile) > Hugging Face (Mistral-7B) > local (opcional)
+ * Prioritat: Groq (model configurable) > Hugging Face (Mistral-7B) > local (opcional)
  */
 
 /**
@@ -66,7 +66,7 @@ function formatMistral(
 }
 
 /**
- * Genera text amb LLM. Prioritat: Groq (Llama-3.3-70B) > Hugging Face (Mistral-7B)
+ * Genera text amb LLM. Prioritat: Groq > Hugging Face (Mistral-7B)
  */
 export async function generateWithGroq(
   messages: Array<{ role: string; content: string }>,
@@ -79,7 +79,7 @@ export async function generateWithGroq(
   // 1. Groq API (recomanat: ràpid i gratuït)
   const groqApiKey = process.env.GROQ_API_KEY;
   if (groqApiKey && groqApiKey.startsWith('gsk_')) {
-    const modelId = 'llama-3.3-70b-versatile'; // Potent i ràpid (Actualitzat v3.3)
+    const modelId = process.env.GROQ_MODEL || 'openai/gpt-oss-120b';
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       headers: {

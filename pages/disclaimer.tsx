@@ -91,7 +91,7 @@ const LegalNoticePage: React.FC = () => {
               </p>
               <p>
                 <strong>Destinataris i transferències.</strong> Les peticions del xat es processen mitjançant l&apos;API
-                de Groq (Groq, Inc., EUA) utilitzant el model Llama-3.3-70B-Versatile. La transferència internacional s&apos;empara en clàusules contractuals
+                de Groq (Groq, Inc., EUA) utilitzant el model GPT-OSS 120B. La transferència internacional s&apos;empara en clàusules contractuals
                 tipus de la Comissió Europea i les garanties complementàries de Groq. No es comparteixen dades amb
                 altres tercers.
               </p>
@@ -154,7 +154,7 @@ const LegalNoticePage: React.FC = () => {
               <h3>7.1. Models utilitzats</h3>
               <ul>
                 <li>
-                  <strong>Generació de text</strong>: Llama-3.3-70B-Versatile (Groq, Inc.)
+                  <strong>Generació de text</strong>: GPT-OSS 120B (Groq, Inc.)
                 </li>
                 <li>
                   <strong>Recuperació</strong>: índex híbrid BGE-M3 + BM25 gestionat per Upstash Vector en regió UE
@@ -185,7 +185,7 @@ const LegalNoticePage: React.FC = () => {
                 </li>
                 <li>
                   <strong>Menció del model</strong> (20 punts): Comprova que es menciona el model o proveïdor
-                  utilitzat (Llama-3.3-70B-Versatile de Groq, Inc.).
+                  utilitzat (GPT-OSS 120B de Groq, Inc.).
                 </li>
                 <li>
                   <strong>Advertències sobre limitacions</strong> (20 punts): Verifica que la resposta inclou
@@ -216,7 +216,7 @@ const LegalNoticePage: React.FC = () => {
                 <li>Les limitacions possibles (errors, simplificacions)</li>
                 <li>La recomanació de consultar professionals per casos específics</li>
                 <li>La clarificació que no constitueix assessorament legal</li>
-                <li>El model d&apos;IA utilitzat (Llama-3.3-70B-Versatile de Groq, Inc.)</li>
+                <li>El model d&apos;IA utilitzat (GPT-OSS 120B de Groq, Inc.)</li>
               </ul>
 
               <p>

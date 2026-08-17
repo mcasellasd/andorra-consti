@@ -14,7 +14,7 @@ if (!API_KEY || !API_KEY.startsWith('gsk_')) {
 console.log('✅ Clau detectada. Provant connexió a Groq...');
 
 const data = JSON.stringify({
-  model: "llama-3.3-70b-versatile",
+  model: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
   messages: [{ role: "user", content: "Digues 'Hola' si em sents." }]
 });
 

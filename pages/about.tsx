@@ -87,7 +87,7 @@ const AboutPage: React.FC = () => {
               </p>
               <ul>
                 <li>Utilitza arquitectura RAG (Retrieval-Augmented Generation) per garantir la traçabilitat</li>
-                <li>Es basa en models de llenguatge oberts (Llama 70B via Groq)</li>
+                <li>Es basa en models de llenguatge oberts (GPT-OSS 120B via Groq)</li>
                 <li>Implementa cerca híbrida gestionada amb Upstash Vector (BGE-M3 + BM25)</li>
                 <li>Respecta els principis de sobirania tecnològica i protecció de dades</li>
               </ul>

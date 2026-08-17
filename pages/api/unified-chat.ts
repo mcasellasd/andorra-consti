@@ -344,7 +344,7 @@ ${contextBlock}`;
       { role: 'user', content: message }
     ];
 
-    // 4. Generació de Text (LLM) - Groq Llama-3.3-70B o fallback Hugging Face
+    // 4. Generació de text (LLM) - Groq configurable o fallback Hugging Face
     console.log('🤖 Generant resposta amb LLM i context RAG...');
     const llmStartedAt = Date.now();
     const generatedText = await generateText(finalMessages, {

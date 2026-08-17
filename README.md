@@ -29,7 +29,7 @@ Portal web d'accés gratuït que democratitza el coneixement jurídic andorrà m
 ### 💬 Chatbot Dret Planer
 - Consultes en llenguatge natural sobre la Constitució
 - **Cerca híbrida** gestionada amb Upstash Vector (BGE-M3 + BM25)
-- **Generació de text** amb Llama 70B (via Groq)
+- **Generació de text** amb GPT-OSS 120B (via Groq)
 - Referències a articles específics amb enllaços directes
 - Disponible des de qualsevol pàgina (floating button)
 - **Transparència**: Sempre mostra les fonts utilitzades
@@ -60,7 +60,7 @@ npm install
 Crea un fitxer `.env` a l'arrel del projecte:
 
 ```bash
-# Generació de text (recomanat): Groq - Llama-3.3-70B
+# Generació de text (recomanat): Groq - GPT-OSS 120B
 GROQ_API_KEY=gsk-la-teva-clau-groq
 
 # Recuperació híbrida i límits compartits
@@ -139,7 +139,7 @@ andorra-consti/
 ├── lib/
 │   ├── i18n.ts                       # Sistema d'internacionalització
 │   ├── llm/
-│   │   ├── groq.ts                   # Client Groq (Llama 70B)
+│   │   ├── groq.ts                   # Client Groq (model configurable)
 │   │   └── index.ts
 │   ├── embeddings/
 │   │   ├── xlm-roberta.ts            # Embeddings locals
@@ -187,7 +187,7 @@ andorra-consti/
 - **Tailwind CSS** - Estilització responsive
 
 ### Intel·ligència Artificial
-- **Groq API** - Generació de text amb Llama-3.3-70B-Versatile (Inference-as-a-Service)
+- **Groq API** - Generació de text amb GPT-OSS 120B (Inference-as-a-Service)
 - **Upstash Vector** - Índex híbrid BGE-M3 + BM25 en regió UE
 - **Upstash Redis** - Límits de consum i bloquejos administratius compartits
 
@@ -229,7 +229,7 @@ Per això, **Dret Planer no pretén ser una font de dret**, sinó una eina pedag
 ### ✅ Completat (v1.0 - Constitució)
 - [x] **Preàmbul i 107 articles de la Constitució** processats i estructurats
 - [x] **Sistema RAG híbrid** amb Upstash Vector
-- [x] **Chatbot funcional** amb Llama 70B (Groq)
+- [x] **Chatbot funcional** amb GPT-OSS 120B (Groq)
 - [x] **Sistema d'idiomes** (i18n) - CA, ES, FR
 - [x] **Paper acadèmic integrat** amb bibliografia APA 7
 - [x] **Pàgina About** amb informació de l'autor
@@ -255,7 +255,7 @@ Per això, **Dret Planer no pretén ser una font de dret**, sinó una eina pedag
 ### ✅ FASE 1: Proof of Concept - Constitució (Completat)
 - Infraestructura base amb Next.js + TypeScript
 - Preàmbul i 107 articles de la Constitució processats
-- Sistema RAG amb Upstash Vector + Llama 70B
+- Sistema RAG amb Upstash Vector + GPT-OSS 120B
 - Chatbot funcional amb traçabilitat
 - Paper acadèmic documentant el sistema
 - Interfície multilingüe (CA, ES, FR)

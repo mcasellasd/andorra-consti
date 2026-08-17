@@ -91,6 +91,7 @@ function checkMentionsModel(text: string): boolean {
   const modelPatterns = [
     'groq',
     'llama-3.3',
+    'gpt-oss',
     'llama-3',
     'llama',
     'mistral',
@@ -237,8 +238,9 @@ export function getAIActCompliancePrompt(): string {
   let modelProvider = '';
   
   if (process.env.GROQ_API_KEY && process.env.GROQ_API_KEY.startsWith('gsk_')) {
-    modelInfo = 'una IA (Llama-3.3-70B-Versatile)';
-    modelProvider = 'Llama-3.3-70B-Versatile de Groq, Inc.';
+    const groqModel = process.env.GROQ_MODEL || 'openai/gpt-oss-120b';
+    modelInfo = `una IA (${groqModel})`;
+    modelProvider = `${groqModel} de Groq, Inc.`;
   } else if (process.env.HUGGINGFACE_API_KEY) {
     modelInfo = 'una IA (Mistral-7B-Instruct-v0.3)';
     modelProvider = 'Mistral-7B-Instruct-v0.3 de Mistral AI via Hugging Face';
@@ -322,7 +324,7 @@ Punts clau:
         'Authorization': `Bearer ${groqApiKey}`,
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
         messages: [
           {
             role: 'system',

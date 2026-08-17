@@ -36,12 +36,12 @@ async function testConnection() {
     if (response.ok) {
       const data = await response.json();
       console.log("✅ Connexió amb Groq EXITOSA!");
-      // Check if llama-3.3-70b-versatile is available
-      const hasModel = data.data.some(m => m.id === 'llama-3.3-70b-versatile');
+      const expectedModel = process.env.GROQ_MODEL || 'openai/gpt-oss-120b';
+      const hasModel = data.data.some(m => m.id === expectedModel);
       if (hasModel) {
-        console.log("✅ Model 'llama-3.3-70b-versatile' disponible.");
+        console.log(`✅ Model '${expectedModel}' disponible.`);
       } else {
-        console.log("⚠️ Model 'llama-3.3-70b-versatile' NO trobat a la llista de models disponibles.");
+        console.log(`⚠️ Model '${expectedModel}' NO trobat a la llista de models disponibles.`);
         console.log("Models disponibles:", data.data.map(m => m.id).join(', '));
       }
     } else {

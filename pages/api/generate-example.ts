@@ -78,7 +78,7 @@ ${articleContent.substring(0, 2000)}${jurisprudenciaContext}
 
 Per aquest article necessito exclusivament:
 1. Un apartat titulat "Exemple 1 (article ${ctxConst ? ctxConst.article + ' de la Constitució' : articleNumber})" amb un cas pràctic realista (150-220 paraules) que il·lustri com s'aplica la norma. Inclou protagonistes, situació concreta, aplicació jurídica i resultat. Evita exemples genèrics del tipus "el Govern aprova polítiques": ha de ser una situació concreta d'una persona o entitat identificable.${exempleContrast}
-2. Un paràgraf final sota l'etiqueta "Avís" recordant que és una aproximació orientativa, que no substitueix l'assessorament legal i que la resposta s'ha generat amb suport d'intel·ligència artificial (Llama-3.3-70B de Groq).
+2. Un paràgraf final sota l'etiqueta "Avís" recordant que és una aproximació orientativa, que no substitueix l'assessorament legal i que la resposta s'ha generat amb suport d'intel·ligència artificial de Groq.
 3. No generis altres exemples ni resums addicionals a menys que siguin imprescindibles per entendre el cas.
 4. Mantén llenguatge clar i accessible però jurídicament rigorós.`;
 

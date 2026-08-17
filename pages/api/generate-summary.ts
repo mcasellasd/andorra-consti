@@ -82,7 +82,7 @@ ${articleContent.substring(0, 2000)}${jurisprudenciaContext}
 
 Necessito una interpretació orientativa que segueixi estrictament aquestes indicacions:
 1. Escriu un apartat titulat "Resum (${ctxConst ? `article ${ctxConst.article} de la Constitució` : articleNumber})" amb 4 a 6 frases seguint les regles de dret planer i els tres moviments (què obliga i a qui / per a què serveix / què vol dir a la pràctica). Ha de ser fidel al significat, però NO pot conservar l'estructura ni el vocabulari de la frase legal: si el resultat es pot obtenir esborrant paraules de l'article original, no serveix.
-2. Tanca la resposta amb un paràgraf breu sota l'etiqueta "Avís" que indiqui que la informació és orientativa, no constitueix assessorament legal i que ha estat generada amb suport d'intel·ligència artificial (Llama-3.3-70B de Groq), animant a consultar professionals en cas de dubte.
+2. Tanca la resposta amb un paràgraf breu sota l'etiqueta "Avís" que indiqui que la informació és orientativa, no constitueix assessorament legal i que ha estat generada amb suport d'intel·ligència artificial de Groq, animant a consultar professionals en cas de dubte.
 3. No incloguis cap exemple pràctic en aquesta resposta. Si consideres que en caldria cap, limita't a recordar que es pot sol·licitar un exemple específic.
 4. Evita cites literals llargues i no inventis dades, jurisprudència ni reformes inexistents.
 5. Mantén un to respectuós, clar i didàctic.`;
