@@ -8,7 +8,11 @@ import { detectArticleReference, detectArticleByKeywords, detectComplexity } fro
 import { getJurisprudenciaForArticle } from '../../data/jurisprudencia-andorra';
 import { articlesConstitucio } from '../../data/codis/constitucio/articles-template';
 import { InterpretacioIA } from '../../data/codis/types';
-import { generateInterpretacioIA, type InterpretacioRequest } from '../../lib/services/interpretacio-ia';
+import {
+  generateInterpretacioIA,
+  InterpretacioRequestError,
+  type InterpretacioRequest,
+} from '../../lib/services/interpretacio-ia';
 import { appendTraceabilityLog, buildRagContextFingerprint } from '../../lib/traceability/audit-log';
 import { unifiedChatSchema, type UnifiedChatInput } from '../../lib/api/schemas';
 import { enforceRateLimit } from '../../lib/security/rate-limit';
@@ -88,7 +92,14 @@ export async function handleUnifiedChatRequest(
       const interpretacio = await generateInterpretacioIA(requestBody);
       return res.status(200).json(interpretacio);
     } catch (error: any) {
-      return res.status(500).json({ error: error?.message || 'Error al generar la interpretació' });
+      logEvent('interpretacio_error', {
+        requestId,
+        error: error instanceof Error ? error.name : 'UnknownError',
+      });
+      if (error instanceof InterpretacioRequestError) {
+        return res.status(error.statusCode).json({ error: error.message });
+      }
+      return res.status(500).json({ error: 'No s’ha pogut generar la interpretació.' });
     }
   }
 
@@ -469,15 +480,13 @@ ${contextBlock}`;
       durationMs: Date.now() - requestStartedAt,
       error: error instanceof Error ? error.name : 'UnknownError',
     });
-    const messageError = error?.message || 'Error intern del servidor';
-    
     if (error instanceof RagUnavailableError) {
       return res.status(503).json({ 
         error: 'La cerca jurídica no està disponible temporalment.'
       });
     }
     
-    return res.status(500).json({ error: messageError });
+    return res.status(500).json({ error: 'No s’ha pogut processar la petició.' });
   }
 }
 
@@ -556,6 +565,11 @@ function buildContextBlock(matches: RetrievedContext[]): string {
 }
 
 export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '64kb',
+    },
+  },
   maxDuration: 60,
 };
 

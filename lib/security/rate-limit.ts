@@ -1,10 +1,12 @@
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
+import { isIP } from 'node:net';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 type LimitKind = 'ai' | 'search' | 'admin' | 'admin-login';
 
 const REDIS_KEY_PREFIX = 'andorra-consti';
+const GLOBAL_AI_IDENTIFIER = 'ai:global';
 
 const localAttempts = new Map<string, number[]>();
 let redis: Redis | null | undefined;
@@ -19,8 +21,15 @@ export function getRedis(): Redis | null {
 
 export function getRequestIp(req: NextApiRequest): string {
   const realIp = req.headers['x-real-ip'];
-  if (realIp) return (Array.isArray(realIp) ? realIp[0] : realIp).trim();
-  return req.socket?.remoteAddress || 'unknown';
+  // Railway must overwrite this header at the trusted proxy boundary. Never
+  // accept comma-separated chains or arbitrary values as client identity.
+  if (typeof realIp === 'string') {
+    const normalized = realIp.trim();
+    if (normalized && isIP(normalized)) return normalized;
+  }
+
+  const remoteAddress = req.socket?.remoteAddress?.trim();
+  return remoteAddress && isIP(remoteAddress) ? remoteAddress : 'unknown';
 }
 
 export async function enforceRateLimit(
@@ -42,6 +51,16 @@ export async function enforceRateLimit(
         res.setHeader('Retry-After', String(Math.max(1, Math.ceil((result.reset - Date.now()) / 1_000))));
         return false;
       }
+
+      if (kind === 'ai') {
+        const globalResult = await createGlobalAiLimiter(client).limit(GLOBAL_AI_IDENTIFIER, { rate: weight });
+        if (!globalResult.success) {
+          setHeaders(res, globalResult.limit, globalResult.remaining, globalResult.reset);
+          res.setHeader('Retry-After', String(Math.max(1, Math.ceil((globalResult.reset - Date.now()) / 1_000))));
+          console.warn(JSON.stringify({ event: 'rate_limit_block', kind, backend: 'redis-global' }));
+          return false;
+        }
+      }
       return true;
     } catch (error) {
       console.error(JSON.stringify({ event: 'rate_limit_redis_error', kind, error: errorMessage(error) }));
@@ -49,7 +68,9 @@ export async function enforceRateLimit(
   }
 
   if (kind === 'admin' || kind === 'admin-login') return false;
-  return enforceEmergencyLimit(identifier, res, weight);
+  const allowedForClient = enforceEmergencyLimit(identifier, res, weight);
+  if (!allowedForClient || kind !== 'ai') return allowedForClient;
+  return enforceEmergencyLimit(GLOBAL_AI_IDENTIFIER, res, weight);
 }
 
 function createLimiter(client: Redis, kind: LimitKind): Ratelimit {
@@ -63,6 +84,14 @@ function createLimiter(client: Redis, kind: LimitKind): Ratelimit {
     return new Ratelimit({ redis: client, limiter: Ratelimit.slidingWindow(2, '1 h'), prefix: `${REDIS_KEY_PREFIX}:rl:admin` });
   }
   return new Ratelimit({ redis: client, limiter: Ratelimit.slidingWindow(5, '10 m'), prefix: `${REDIS_KEY_PREFIX}:rl:admin-login` });
+}
+
+function createGlobalAiLimiter(client: Redis): Ratelimit {
+  return new Ratelimit({
+    redis: client,
+    limiter: Ratelimit.slidingWindow(300, '10 m'),
+    prefix: `${REDIS_KEY_PREFIX}:rl:global-ai`,
+  });
 }
 
 function enforceEmergencyLimit(identifier: string, res: NextApiResponse, weight: number): boolean {

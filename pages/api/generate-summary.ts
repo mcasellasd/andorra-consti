@@ -173,6 +173,6 @@ ${ASPECTES_JURISPRUDENCIA_ANDORRANA}`;
     });
   } catch (error: any) {
     console.error('Error generating summary:', error);
-    return res.status(500).json({ error: error.message || 'Error generating summary' });
+    return res.status(500).json({ error: 'No s’ha pogut generar el resum.' });
   }
 }

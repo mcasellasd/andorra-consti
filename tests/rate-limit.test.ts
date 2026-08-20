@@ -10,6 +10,17 @@ describe('Railway client identity', () => {
     expect(getRequestIp(req)).toBe('203.0.113.7');
   });
 
+  it('rejects invalid or multi-value X-Real-IP and falls back to the socket address', () => {
+    expect(getRequestIp({
+      headers: { 'x-real-ip': 'not-an-ip' },
+      socket: { remoteAddress: '198.51.100.8' },
+    } as never)).toBe('198.51.100.8');
+    expect(getRequestIp({
+      headers: { 'x-real-ip': '203.0.113.7, 198.51.100.8' },
+      socket: { remoteAddress: '198.51.100.9' },
+    } as never)).toBe('198.51.100.9');
+  });
+
   it('charges weighted AI operations in the emergency limiter', async () => {
     const headers = new Map<string, string>();
     const req = { headers: { 'x-real-ip': '203.0.113.99' }, socket: {} } as never;

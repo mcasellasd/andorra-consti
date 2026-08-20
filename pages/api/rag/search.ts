@@ -49,9 +49,9 @@ export default async function handler(
     return res.status(200).json({ results });
   } catch (error: any) {
     console.error('Error al cercador semàntic:', error);
-    const message =
-      error?.message ??
-      'No s\'ha pogut processar la cerca. Torna-ho a intentar més tard.';
+    const message = error instanceof RagUnavailableError
+      ? 'La cerca jurídica no està disponible temporalment.'
+      : 'No s’ha pogut processar la cerca. Torna-ho a intentar més tard.';
     return res.status(error instanceof RagUnavailableError ? 503 : 500).json({ error: message });
   }
 }

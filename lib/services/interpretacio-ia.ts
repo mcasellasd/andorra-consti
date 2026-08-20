@@ -13,12 +13,20 @@ import { getJurisprudenciaForArticle } from '../../data/jurisprudencia-andorra';
 import { getArticleById } from '../article-helpers';
 import { getDoctrinaByArticleId } from '../../data/doctrina';
 import { generateText } from '../llm';
+import { interpretacioRequestSchema } from '../api/schemas';
 
 export interface InterpretacioRequest {
   article_id: string;
   text_oficial: string;
   numeracio: string;
   idioma: 'ca' | 'es' | 'fr';
+}
+
+export class InterpretacioRequestError extends Error {
+  constructor(public readonly statusCode: 400 | 404, message: string) {
+    super(message);
+    this.name = 'InterpretacioRequestError';
+  }
 }
 
 // Configurar timeout màxim per Vercel (Pro: 300s, Hobby: 10s -> 60s amb config)
@@ -38,14 +46,19 @@ export async function interpretacioIAHandler(
   }
 
   try {
-    const { article_id, text_oficial, numeracio, idioma }: InterpretacioRequest = req.body;
+    const parsed = interpretacioRequestSchema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ error: 'Petició d’interpretació no vàlida.' });
 
-    if (!article_id || !text_oficial || !numeracio || !idioma) {
-      return res.status(400).json({ error: 'Paràmetres incomplets' });
-    }
+    const { article_id, idioma } = parsed.data;
 
     // Obtenir l'article complet per obtenir metadades
     const article = getArticleById(article_id);
+    if (!article) return res.status(404).json({ error: 'Article no trobat.' });
+
+    // El client només identifica l'article. El text i la numeració canònics
+    // provenen sempre del corpus local per evitar prompt injection normativa.
+    const text_oficial = article.text_oficial;
+    const numeracio = article.numeracio;
 
     // Obtenir jurisprudència relacionada
     const jurisprudencia = getJurisprudenciaForArticle(article_id);
@@ -625,7 +638,7 @@ ${ragContext}`;
       });
     } catch (error: any) {
       console.error('Error LLM API:', error);
-      return res.status(500).json({ error: `Error al generar la interpretació: ${error.message}` });
+      return res.status(500).json({ error: 'No s’ha pogut generar la interpretació.' });
     }
 
     if (!answer) {
@@ -860,7 +873,7 @@ ${ragContext}`;
   } catch (error) {
     console.error('Error en interpretacio-ia:', error);
     return res.status(500).json({
-      error: error instanceof Error ? error.message : 'Error desconegut',
+      error: 'No s’ha pogut generar la interpretació.',
     });
   }
 }
@@ -892,7 +905,10 @@ export async function generateInterpretacioIA(payload: InterpretacioRequest): Pr
 
   if (statusCode >= 400) {
     const errorMessage = (responseBody as { error?: string } | null)?.error || 'Error al generar la interpretació';
-    throw new Error(errorMessage);
+    if (statusCode === 400 || statusCode === 404) {
+      throw new InterpretacioRequestError(statusCode, errorMessage);
+    }
+    throw new Error('No s’ha pogut generar la interpretació.');
   }
 
   if (!responseBody || 'error' in responseBody) {
