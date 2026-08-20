@@ -14,8 +14,8 @@ import {
   type InterpretacioRequest,
 } from '../../lib/services/interpretacio-ia';
 import { appendTraceabilityLog, buildRagContextFingerprint } from '../../lib/traceability/audit-log';
-import { unifiedChatSchema, type UnifiedChatInput } from '../../lib/api/schemas';
-import { enforceRateLimit } from '../../lib/security/rate-limit';
+import { interpretacioRequestSchema, unifiedChatSchema, type UnifiedChatInput } from '../../lib/api/schemas';
+import { enforceRateLimit, enforceSessionQuota } from '../../lib/security/rate-limit';
 import { logEvent, requestIdFromHeader } from '../../lib/observability/logger';
 
 // ============================================================================
@@ -88,6 +88,14 @@ export async function handleUnifiedChatRequest(
 
   // Compatibilitat amb l'antic endpoint /api/interpretacio-ia
   if (isInterpretacioRequest(requestBody)) {
+    if (!interpretacioRequestSchema.safeParse(requestBody).success) {
+      return res.status(400).json({ error: 'Petició d’interpretació no vàlida.' });
+    }
+    if (!skipRateLimit) {
+      const quotaAllowed = await enforceSessionQuota(req, res);
+      if (quotaAllowed === null) return;
+      if (!quotaAllowed) return res.status(429).json({ error: buildSessionQuotaMessage() });
+    }
     try {
       const interpretacio = await generateInterpretacioIA(requestBody);
       return res.status(200).json(interpretacio);
@@ -136,6 +144,12 @@ export async function handleUnifiedChatRequest(
       response: outOfScopeMsg,
       sources: []
     });
+  }
+
+  if (!skipRateLimit) {
+    const quotaAllowed = await enforceSessionQuota(req, res);
+    if (quotaAllowed === null) return;
+    if (!quotaAllowed) return res.status(429).json({ error: buildSessionQuotaMessage() });
   }
 
   try {
@@ -625,4 +639,8 @@ function buildRateLimitTrilingualMessage(): string {
   const msgEs = 'Has superado el límite de peticiones. Vuelve a intentarlo más tarde.';
   const msgFr = 'Vous avez dépassé la limite de requêtes. Réessayez plus tard.';
   return `${msgCa} | ${msgEs} | ${msgFr}`;
+}
+
+function buildSessionQuotaMessage(): string {
+  return 'Has arribat al límit de 3 consultes d’aquesta sessió. Torna-ho a provar quan caduqui la sessió.';
 }

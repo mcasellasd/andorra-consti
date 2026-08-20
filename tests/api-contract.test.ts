@@ -1,10 +1,15 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 vi.mock('@/lib/llm', () => ({
   generateText: async () => "L’Article 1 defineix Andorra com un Estat independent [[CONST_001]].",
 }));
 import unifiedChat from '@/pages/api/unified-chat';
 import adminLogin from '@/pages/api/admin/login';
+import { SESSION_QUOTA_COOKIE } from '@/lib/security/rate-limit';
+
+beforeAll(() => {
+  process.env.SESSION_QUOTA_SECRET = 'test-session-quota-secret';
+});
 
 function mockResponse() {
   let status = 200;
@@ -91,5 +96,32 @@ describe('API contracts', () => {
     } as never, res.response);
     expect(res.result().status).toBe(200);
     expect(res.result().body).toMatchObject({ response: expect.any(String), sources: expect.any(Array) });
+  });
+
+  it('blocks the fourth valid consultation in the same signed session', async () => {
+    let cookie: string | undefined;
+    for (let index = 0; index < 3; index += 1) {
+      const res = mockResponse();
+      await unifiedChat({
+        method: 'POST',
+        body: { message: `Què estableix l’article 1? ${index}` },
+        headers: { 'x-real-ip': '192.0.2.60' },
+        cookies: cookie ? { [SESSION_QUOTA_COOKIE]: cookie } : {},
+        socket: {},
+      } as never, res.response);
+      expect(res.result().status).toBe(200);
+      const setCookie = res.result().headers.get('Set-Cookie');
+      if (setCookie) cookie = String(setCookie).split(';', 1)[0].split('=', 2)[1];
+    }
+
+    const blocked = mockResponse();
+    await unifiedChat({
+      method: 'POST',
+      body: { message: 'Què estableix l’article 1? quarta' },
+      headers: { 'x-real-ip': '192.0.2.60' },
+      cookies: { [SESSION_QUOTA_COOKIE]: cookie },
+      socket: {},
+    } as never, blocked.response);
+    expect(blocked.result().status).toBe(429);
   });
 });
