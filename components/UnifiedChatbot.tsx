@@ -21,6 +21,12 @@ interface Message {
   sources?: Source[];
 }
 
+interface SessionQuota {
+  limit: number;
+  remaining: number;
+  reset: number;
+}
+
 interface UnifiedChatbotProps {
   initiallyOpen?: boolean;
   className?: string;
@@ -38,6 +44,7 @@ export default function UnifiedChatbot({
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [idioma, setIdioma] = useState<Idioma>('ca');
   const [ragDocuments, setRagDocuments] = useState<Array<{ id: string; name: string; description: string; count: number }>>([]);
+  const [sessionQuota, setSessionQuota] = useState<SessionQuota>({ limit: 3, remaining: 3, reset: 0 });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -47,6 +54,45 @@ export default function UnifiedChatbot({
     const handleIdiomaChange = () => setIdioma(getIdiomaActual());
     window.addEventListener('idiomaChanged', handleIdiomaChange);
     return () => window.removeEventListener('idiomaChanged', handleIdiomaChange);
+  }, []);
+
+  // Recuperar l'últim estat conegut; la resposta del servidor sempre té prioritat.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const storedQuota = window.sessionStorage.getItem('dretplaner.chat.sessionQuota');
+    if (!storedQuota) return;
+    try {
+      const parsed = JSON.parse(storedQuota) as SessionQuota;
+      if (
+        Number.isFinite(parsed.limit) &&
+        Number.isFinite(parsed.remaining) &&
+        Number.isFinite(parsed.reset) &&
+        parsed.reset > Math.floor(Date.now() / 1_000)
+      ) {
+        setSessionQuota(parsed);
+      } else {
+        window.sessionStorage.removeItem('dretplaner.chat.sessionQuota');
+      }
+    } catch {
+      window.sessionStorage.removeItem('dretplaner.chat.sessionQuota');
+    }
+  }, []);
+
+  const updateSessionQuota = useCallback((response: Response) => {
+    const limit = Number(response.headers.get('x-session-quota-limit'));
+    const remaining = Number(response.headers.get('x-session-quota-remaining'));
+    const reset = Number(response.headers.get('x-session-quota-reset'));
+    if (!Number.isFinite(limit) || !Number.isFinite(remaining) || !Number.isFinite(reset)) return;
+
+    const nextQuota = {
+      limit,
+      remaining: Math.max(0, remaining),
+      reset,
+    };
+    setSessionQuota(nextQuota);
+    if (typeof window !== 'undefined') {
+      window.sessionStorage.setItem('dretplaner.chat.sessionQuota', JSON.stringify(nextQuota));
+    }
   }, []);
 
   // Carregar missatges des de sessionStorage al carregar el component
@@ -132,7 +178,7 @@ export default function UnifiedChatbot({
         return;
       }
 
-      if (!questionText || loading) return;
+      if (!questionText || loading || sessionQuota.remaining <= 0) return;
 
       const userMessage: Message = {
         id: Date.now().toString(),
@@ -161,6 +207,8 @@ export default function UnifiedChatbot({
             locale
           })
         });
+
+        updateSessionQuota(response);
 
         if (!response.ok) {
           const data = await response.json();
@@ -202,7 +250,7 @@ export default function UnifiedChatbot({
         setLoading(false);
       }
     },
-    [input, loading, privacyAccepted, messages, idioma]
+    [input, loading, privacyAccepted, messages, idioma, sessionQuota.remaining, updateSessionQuota]
   );
 
   // Escoltar events per obrir el chatbot des de qualsevol lloc
@@ -431,6 +479,33 @@ export default function UnifiedChatbot({
             </div>
           </div>
 
+          <div
+            className={`chatbot-quota ${sessionQuota.remaining <= 1 ? 'chatbot-quota--warning' : ''} ${sessionQuota.remaining <= 0 ? 'chatbot-quota--blocked' : ''}`}
+            role={sessionQuota.remaining <= 1 ? 'alert' : 'status'}
+            aria-live="polite"
+          >
+            <span>
+              {sessionQuota.remaining <= 0
+                ? idioma === 'es'
+                  ? 'Sesión bloqueada: has utilizado las 3 consultas disponibles.'
+                  : idioma === 'fr'
+                    ? 'Session bloquée : vous avez utilisé les 3 questions disponibles.'
+                    : 'Sessió bloquejada: has utilitzat les 3 consultes disponibles.'
+                : sessionQuota.remaining === 1
+                  ? idioma === 'es'
+                    ? 'Aviso: te queda 1 consulta en esta sesión.'
+                    : idioma === 'fr'
+                      ? 'Attention : il vous reste 1 question pour cette session.'
+                      : 'Avís: et queda 1 consulta en aquesta sessió.'
+                  : idioma === 'es'
+                    ? 'Consultas disponibles en esta sesión'
+                    : idioma === 'fr'
+                      ? 'Questions disponibles pour cette session'
+                      : 'Consultes disponibles en aquesta sessió'}
+            </span>
+            <strong>{sessionQuota.remaining}/{sessionQuota.limit}</strong>
+          </div>
+
           <div className="chatbot-messages">
             {messages.length === 0 && (
               <div className="chatbot-welcome">
@@ -593,11 +668,11 @@ export default function UnifiedChatbot({
                       : 'Pregunta sobre la Constitució d\'Andorra...'
                 }
                 className="chatbot-input"
-                disabled={loading || !privacyAccepted}
+                disabled={loading || !privacyAccepted || sessionQuota.remaining <= 0}
               />
               <button
                 type="submit"
-                disabled={loading || !input.trim() || !privacyAccepted}
+                disabled={loading || !input.trim() || !privacyAccepted || sessionQuota.remaining <= 0}
                 className="chatbot-send"
                 aria-label={
                   idioma === 'es' ? 'Enviar mensaje' : idioma === 'fr' ? 'Envoyer le message' : 'Enviar missatge'
@@ -675,6 +750,48 @@ export default function UnifiedChatbot({
         .chatbot-header {
           padding: 1rem;
           border-bottom: 1px solid #e5e5e5;
+        }
+
+        .chatbot-quota {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.75rem;
+          padding: 0.55rem 1rem;
+          background: #eef7f5;
+          border-bottom: 1px solid #cce7e1;
+          color: #174e4b;
+          font-size: 0.78rem;
+        }
+
+        .chatbot-quota strong {
+          flex: 0 0 auto;
+          min-width: 2.5rem;
+          padding: 0.2rem 0.45rem;
+          border-radius: 999px;
+          background: #d5eee8;
+          text-align: center;
+          font-size: 0.75rem;
+        }
+
+        .chatbot-quota--warning {
+          background: #fff8e6;
+          border-bottom-color: #f2d28b;
+          color: #7a4b00;
+        }
+
+        .chatbot-quota--warning strong {
+          background: #fce7b2;
+        }
+
+        .chatbot-quota--blocked {
+          background: #fff0f0;
+          border-bottom-color: #efb4b4;
+          color: #8a1c1c;
+        }
+
+        .chatbot-quota--blocked strong {
+          background: #f8cccc;
         }
 
         .chatbot-header-content {

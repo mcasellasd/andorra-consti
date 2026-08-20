@@ -109,6 +109,22 @@ const ArticleConstitucioPage: React.FC = () => {
         }),
       });
 
+      const quotaLimit = Number(resposta.headers.get('x-session-quota-limit'));
+      const quotaRemaining = Number(resposta.headers.get('x-session-quota-remaining'));
+      const quotaReset = Number(resposta.headers.get('x-session-quota-reset'));
+      if (
+        Number.isFinite(quotaLimit) &&
+        Number.isFinite(quotaRemaining) &&
+        Number.isFinite(quotaReset) &&
+        typeof window !== 'undefined'
+      ) {
+        sessionStorage.setItem('dretplaner.chat.sessionQuota', JSON.stringify({
+          limit: quotaLimit,
+          remaining: Math.max(0, quotaRemaining),
+          reset: quotaReset,
+        }));
+      }
+
       if (!resposta.ok) {
         throw new Error('Error al generar la interpretació');
       }
