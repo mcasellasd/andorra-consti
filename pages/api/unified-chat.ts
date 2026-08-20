@@ -11,6 +11,7 @@ import { articlesConstitucio } from '../../data/codis/constitucio/articles-templ
 import { InterpretacioIA } from '../../data/codis/types';
 import { generateInterpretacioIA, type InterpretacioRequest } from '../../lib/services/interpretacio-ia';
 import { appendTraceabilityLog, buildRagContextFingerprint } from '../../lib/traceability/audit-log';
+import { buildInterlocutorInstructions, parseInterlocutorProfile, type InterlocutorProfile } from '../../lib/interlocutor-profile';
 
 // ============================================================================
 // RAG ACTIVAT - Recuperació de context de la Constitució d'Andorra
@@ -31,6 +32,7 @@ interface UnifiedChatRequest {
     content: string;
   }>;
   locale?: LocaleChat;
+  profile?: InterlocutorProfile;
   maxTokens?: number;
   temperature?: number;
 }
@@ -103,11 +105,13 @@ export default async function handler(
     message,
     conversationHistory = [],
     locale = 'ca',
+    profile: rawProfile,
     maxTokens = 800,
     temperature = 0.5
   } = requestBody as UnifiedChatRequest;
 
   const validLocale: LocaleChat = ['ca', 'es', 'fr'].includes(locale) ? locale : 'ca';
+  const profile = parseInterlocutorProfile(rawProfile);
 
   if (!message || !message.trim()) {
     const errMsg = validLocale === 'es' ? 'Mensaje vacío.' : validLocale === 'fr' ? 'Message vide.' : 'Missatge buit.';
@@ -318,6 +322,8 @@ ${officialTextBlock}
       ? `\nLa pregunta es refereix a l'Article ${articleNumber}. Assegura't que la teva resposta reflecteixi el contingut de l'Article ${articleNumber} del context i no atribueixis cap contingut d'un altre article a l'Article ${articleNumber}.\n`
       : '';
 
+    const interlocutorInstructions = buildInterlocutorInstructions(profile, validLocale);
+
     // Prompt del Sistema amb context RAG
     const systemPrompt = `${languageInstruction}Ets un expert en la Constitució d'Andorra i Dret Andorrà.
 Respon de manera clara, concisa i precisa.
@@ -356,6 +362,8 @@ Exemple: "La sobirania resideix en el poble andorrà [[CONST_003]]."
 Per a la doctrina, utilitza sempre l'identificador exacte que apareix entre parèntesis
 al costat del títol (per exemple, [[DOCTRINA_USOS_COSTUMS_001]]). No escriguis
 només "Doctrina" ni atribueixis una afirmació a una font doctrinal sense el seu ID.
+
+${interlocutorInstructions}
 
 Context (Constitució i doctrina):
 ${contextBlock}`;

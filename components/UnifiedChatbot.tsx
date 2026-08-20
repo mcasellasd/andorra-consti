@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { getIdiomaActual, type Idioma } from '../lib/i18n';
+import { InterlocutorProfileSelector, useInterlocutorProfile } from './InterlocutorProfileSelector';
 
 type Source = {
   type: 'constitucio' | 'doctrina';
@@ -38,6 +39,7 @@ export default function UnifiedChatbot({
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [idioma, setIdioma] = useState<Idioma>('ca');
   const [ragDocuments, setRagDocuments] = useState<Array<{ id: string; name: string; description: string; count: number }>>([]);
+  const { profile, updateProfile, resetProfile } = useInterlocutorProfile();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -159,6 +161,7 @@ export default function UnifiedChatbot({
               content: m.content
             })),
             locale,
+            profile,
             maxTokens: 800,
             temperature: 0.7
           })
@@ -204,7 +207,7 @@ export default function UnifiedChatbot({
         setLoading(false);
       }
     },
-    [input, loading, privacyAccepted, messages, idioma]
+    [input, loading, privacyAccepted, messages, idioma, profile]
   );
 
   // Escoltar events per obrir el chatbot des de qualsevol lloc
@@ -434,6 +437,13 @@ export default function UnifiedChatbot({
           </div>
 
           <div className="chatbot-messages">
+            <InterlocutorProfileSelector
+              idioma={idioma}
+              profile={profile}
+              onChange={updateProfile}
+              onReset={resetProfile}
+              compact
+            />
             {messages.length === 0 && (
               <div className="chatbot-welcome">
                 {ragDocuments.length > 0 && (
@@ -1033,4 +1043,3 @@ export default function UnifiedChatbot({
     </>
   );
 }
-

@@ -7,6 +7,8 @@ import { ArticleSummarySection } from './ArticleSummarySection';
 import { ArticleExampleSection } from './ArticleExampleSection';
 import { ArticleJurisprudenceSection } from './ArticleJurisprudenceSection';
 import { ArticleNavigation } from './ArticleNavigation';
+import { InterlocutorProfileSelector } from '../InterlocutorProfileSelector';
+import type { InterlocutorProfile } from '../../lib/interlocutor-profile';
 
 interface ArticleContentProps {
   article: ArticleAndorra;
@@ -17,6 +19,9 @@ interface ArticleContentProps {
   nextArticle?: ArticleAndorra | null;
   onGenerateAssistencia: () => void;
   isGenerating: boolean;
+  profile: InterlocutorProfile;
+  onProfileChange: (profile: InterlocutorProfile) => void;
+  onProfileReset: () => void;
 }
 
 export function ArticleContent({
@@ -28,6 +33,9 @@ export function ArticleContent({
   nextArticle,
   onGenerateAssistencia,
   isGenerating,
+  profile,
+  onProfileChange,
+  onProfileReset,
 }: ArticleContentProps) {
   const articleText = article.text_oficial;
   const splitRef = useRef<HTMLDivElement | null>(null);
@@ -271,6 +279,8 @@ export function ArticleContent({
         </button>
 
         <aside className="article-interpretacio-column" aria-label="Interpretació de l'article">
+          <InterlocutorProfileSelector idioma={idioma} profile={profile} onChange={onProfileChange} onReset={onProfileReset} compact />
+
           <nav className="article-segmented-tabs" aria-label="Tipus d'interpretació">
             {[
               { id: 'essencial' as const, label: copy.essencial },

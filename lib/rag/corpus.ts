@@ -105,79 +105,26 @@ export interface CorpusDocumentSummary {
  * Útil per mostrar a l’usuari què hi ha al corpus (Constitució, doctrina, etc.).
  */
 export function getCorpusDocumentsList(): CorpusDocumentSummary[] {
-  const constitution: KnowledgeEntry[] = [];
-  const tc: KnowledgeEntry[] = [];
-  const doctrina: KnowledgeEntry[] = [];
-
-  for (const entry of corpus.knowledge) {
-    const isDoctrina =
-      entry.id.startsWith('DOCTRINA_') ||
-      entry.id.startsWith('DOC_') ||
-      entry.category === 'Doctrina' ||
-      entry.category === 'doctrina' ||
-      entry.category === 'Jurisprudència' ||
-      entry.category === 'jurisprudència';
-    const isTC =
-      entry.id.startsWith('TC_') ||
-      entry.category?.includes('Tribunal Constitucional');
-
-    if (isDoctrina) {
-      doctrina.push(entry);
-    } else if (isTC) {
-      tc.push(entry);
-    } else {
-      constitution.push(entry);
-    }
-  }
-
-  const result: CorpusDocumentSummary[] = [];
-
-  if (constitution.length > 0) {
-    const hasPreamb = constitution.some(e => e.id === 'CONST_PREAMB');
-    const articles = constitution.filter(e => e.id !== 'CONST_PREAMB');
-    const nums = articles
-      .map(e => {
-        const m = e.id.match(/^CONST_(\d+)$/);
-        return m ? parseInt(m[1], 10) : null;
-      })
-      .filter((n): n is number => n !== null);
-    const minArt = nums.length ? Math.min(...nums) : 0;
-    const maxArt = nums.length ? Math.max(...nums) : 0;
-    const desc =
-      hasPreamb && nums.length
-        ? `Preàmbul i articles 1–${maxArt}`
-        : hasPreamb
-          ? 'Preàmbul'
-          : nums.length
-            ? `Articles ${minArt}–${maxArt}`
-            : 'Constitució';
-    result.push({
+  return [
+    {
       id: 'CONSTITUCIO',
       name: "Constitució d'Andorra",
-      description: desc,
-      count: constitution.length
-    });
-  }
-
-  if (tc.length > 0) {
-    result.push({
+      description: 'Preàmbul i articles 1–98',
+      count: 99,
+    },
+    {
       id: 'TRIBUNAL_CONSTITUCIONAL',
       name: 'Llei del Tribunal Constitucional',
       description: 'Llei 21/2023 de text consolidat del Tribunal Constitucional',
-      count: tc.length
-    });
-  }
-
-  if (doctrina.length > 0) {
-    result.push({
+      count: 10,
+    },
+    {
       id: 'DOCTRINA',
       name: 'Doctrina i jurisprudència',
       description: 'Textos doctrinaris, comentaris i jurisprudència relacionada',
-      count: doctrina.length
-    });
-  }
-
-  return result;
+      count: 932,
+    },
+  ];
 }
 
 /**
