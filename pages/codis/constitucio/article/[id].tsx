@@ -5,13 +5,12 @@ import Layout from '../../../../components/Layout';
 import { articlesConstitucio } from '../../../../data/codis/constitucio/articles-template';
 import { ArticleAndorra, InterpretacioIA as InterpretacioIAType } from '../../../../data/codis/types';
 import { getIdiomaActual, type Idioma } from '../../../../lib/i18n';
+import { getDoctrinaByArticleId, type DoctrinaCase } from '../../../../data/doctrina';
 
 // Components
 import { ArticleHeader } from '../../../../components/article/ArticleHeader';
 import { ArticleContent } from '../../../../components/article/ArticleContent';
 import { ArticleForcaNormativa } from '../../../../components/article/ArticleForcaNormativa';
-import { useInterlocutorProfile } from '../../../../components/InterlocutorProfileSelector';
-import { getInterlocutorProfileKey } from '../../../../lib/interlocutor-profile';
 
 const ArticleConstitucioPage: React.FC = () => {
   const router = useRouter();
@@ -20,10 +19,9 @@ const ArticleConstitucioPage: React.FC = () => {
   const [idioma, setIdioma] = useState<Idioma>('ca');
   const [loading, setLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState<string | null>(null);
   const [interpretacio, setInterpretacio] = useState<InterpretacioIAType | null>(null);
-  const { profile, updateProfile, resetProfile } = useInterlocutorProfile();
-  const profileKey = getInterlocutorProfileKey(profile);
-  const activeInterpretacio = interpretacio?.profile_key === profileKey ? interpretacio : null;
+  const [doctrina, setDoctrina] = useState<DoctrinaCase[]>([]);
 
   useEffect(() => {
     setIdioma(getIdiomaActual());
@@ -66,6 +64,14 @@ const ArticleConstitucioPage: React.FC = () => {
     }
   }, [id]);
 
+  // Carregar doctrina relacionada
+  useEffect(() => {
+    if (article?.id) {
+      const relatedDoctrina = getDoctrinaByArticleId(article.id);
+      setDoctrina(relatedDoctrina);
+    }
+  }, [article?.id]);
+
   // Trobar articles anterior i següent
   const getPreviousArticle = (currentId: string): ArticleAndorra | null => {
     const currentIndex = articlesConstitucio.findIndex((art) => art.id === currentId);
@@ -83,12 +89,13 @@ const ArticleConstitucioPage: React.FC = () => {
     if (!article) return;
 
     // Comprovar si ja tenim el resum per aquest idioma
-    if (activeInterpretacio?.resum?.[idioma]) {
+    if (interpretacio?.resum?.[idioma]) {
       setIsGenerating(false);
       return;
     }
 
     setIsGenerating(true);
+    setGenerationError(null);
 
     try {
       const resposta = await fetch('/api/unified-chat', {
@@ -101,36 +108,87 @@ const ArticleConstitucioPage: React.FC = () => {
           idioma: idioma,
           text_oficial: article.text_oficial,
           numeracio: article.numeracio,
-          profile,
         }),
       });
 
+      const quotaLimitHeader = resposta.headers.get('x-session-quota-limit');
+      const quotaRemainingHeader = resposta.headers.get('x-session-quota-remaining');
+      const quotaResetHeader = resposta.headers.get('x-session-quota-reset');
+      const quotaLimit = Number(quotaLimitHeader);
+      const quotaRemaining = Number(quotaRemainingHeader);
+      const quotaReset = Number(quotaResetHeader);
+      if (
+        quotaLimitHeader &&
+        quotaRemainingHeader &&
+        quotaResetHeader &&
+        Number.isFinite(quotaLimit) &&
+        Number.isFinite(quotaRemaining) &&
+        Number.isFinite(quotaReset) &&
+        typeof window !== 'undefined'
+      ) {
+        sessionStorage.setItem('dretplaner.chat.sessionQuota', JSON.stringify({
+          limit: quotaLimit,
+          remaining: Math.max(0, quotaRemaining),
+          reset: quotaReset,
+        }));
+      }
+
       if (!resposta.ok) {
-        throw new Error('Error al generar la interpretació');
+        let apiMessage = '';
+        try {
+          const errorBody = await resposta.json() as { error?: unknown };
+          if (typeof errorBody.error === 'string') apiMessage = errorBody.error;
+        } catch {
+          // La resposta pot no ser JSON (per exemple, un error del proxy).
+        }
+
+        const fallback =
+          resposta.status === 429
+            ? idioma === 'es'
+              ? 'Has alcanzado el límite de consultas. Inténtalo más tarde.'
+              : idioma === 'fr'
+                ? 'Vous avez atteint la limite de requêtes. Réessayez plus tard.'
+                : 'Has arribat al límit de consultes. Torna-ho a provar més tard.'
+            : resposta.status >= 500
+              ? idioma === 'es'
+                ? 'El servicio de interpretación no está disponible. Comprueba la configuración del proveedor de IA.'
+                : idioma === 'fr'
+                  ? "Le service d'interprétation n'est pas disponible. Vérifiez la configuration du fournisseur d'IA."
+                  : 'El servei d’interpretació no està disponible. Comprova la configuració del proveïdor d’IA.'
+              : idioma === 'es'
+                ? `La petición no es válida (HTTP ${resposta.status}).`
+                : idioma === 'fr'
+                  ? `La requête n'est pas valide (HTTP ${resposta.status}).`
+                  : `La petició no és vàlida (HTTP ${resposta.status}).`;
+
+        throw new Error(apiMessage || fallback);
       }
 
       const data: InterpretacioIAType = await resposta.json();
 
-      const merged: InterpretacioIAType = activeInterpretacio
+      const merged: InterpretacioIAType = interpretacio
         ? {
             ...data,
             resum: {
-              ca: data.resum?.ca ?? activeInterpretacio.resum?.ca ?? '',
-              es: data.resum?.es ?? activeInterpretacio.resum?.es ?? '',
-              fr: data.resum?.fr ?? activeInterpretacio.resum?.fr ?? '',
+              ca: data.resum?.ca ?? interpretacio.resum?.ca ?? '',
+              es: data.resum?.es ?? interpretacio.resum?.es ?? '',
+              fr: data.resum?.fr ?? interpretacio.resum?.fr ?? '',
             },
             exemples: [
-              ...(activeInterpretacio.exemples || []).filter((e) => e.idioma !== idioma),
+              ...(interpretacio.exemples || []).filter((e) => e.idioma !== idioma),
               ...(data.exemples || []),
             ],
-            finalitat: data.finalitat ?? activeInterpretacio.finalitat,
-            destinataris: data.destinataris ?? activeInterpretacio.destinataris,
-            aplicacio: data.aplicacio ?? activeInterpretacio.aplicacio,
-            doctrina_jurisprudencia: data.doctrina_jurisprudencia ?? activeInterpretacio.doctrina_jurisprudencia,
+            finalitat: data.finalitat ?? interpretacio.finalitat,
+            destinataris: data.destinataris ?? interpretacio.destinataris,
+            aplicacio: data.aplicacio ?? interpretacio.aplicacio,
+            doctrina_jurisprudencia: data.doctrina_jurisprudencia ?? interpretacio.doctrina_jurisprudencia,
+            interpretacio_principal: data.interpretacio_principal ?? interpretacio.interpretacio_principal,
+            lectures_alternatives: data.lectures_alternatives ?? interpretacio.lectures_alternatives,
+            fonts: data.fonts ?? interpretacio.fonts,
+            limits: data.limits ?? interpretacio.limits,
+            context_historic: data.context_historic ?? interpretacio.context_historic,
           }
         : data;
-
-      merged.profile_key = profileKey;
 
       setInterpretacio(merged);
 
@@ -143,6 +201,15 @@ const ArticleConstitucioPage: React.FC = () => {
       }
     } catch (error) {
       console.error('Error generant Assistencia:', error);
+      setGenerationError(
+        error instanceof Error
+          ? error.message
+          : idioma === 'es'
+            ? 'No se ha podido generar la interpretación.'
+            : idioma === 'fr'
+              ? "L'interprétation n'a pas pu être générée."
+              : 'No s’ha pogut generar la interpretació.',
+      );
     } finally {
       setIsGenerating(false);
     }
@@ -200,6 +267,15 @@ const ArticleConstitucioPage: React.FC = () => {
             isGenerating={isGenerating}
           />
 
+          {generationError && (
+            <div
+              role="alert"
+              className="mx-auto mt-4 w-full max-w-7xl px-4 text-sm text-destructive sm:px-6 lg:px-8"
+            >
+              {generationError}
+            </div>
+          )}
+
           {/* Main content area */}
           <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
             {/* Força normativa: va primer perquè és la informació més accionable
@@ -210,14 +286,12 @@ const ArticleConstitucioPage: React.FC = () => {
             <ArticleContent
               article={article}
               idioma={idioma}
-              interpretacio={activeInterpretacio}
+              interpretacio={interpretacio}
+              doctrina={doctrina}
               previousArticle={previousArticle}
               nextArticle={nextArticle}
               onGenerateAssistencia={handleGenerateAssistencia}
               isGenerating={isGenerating}
-              profile={profile}
-              onProfileChange={updateProfile}
-              onProfileReset={resetProfile}
             />
           </main>
         </div>

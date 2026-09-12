@@ -21,6 +21,10 @@ export interface KnowledgeEntry {
   practicalImplication?: string;
   judicialDuty?: string;
   historicalContext?: string;
+  sourceType?: 'constitucio' | 'doctrina' | 'historia_constitucional';
+  source?: string;
+  author?: string;
+  year?: string;
   bookId?: string;
   numeracio?: string;
 }
@@ -39,4 +43,3 @@ export interface RetrievedContext {
   score: number;
   bookId: string;
 }
-

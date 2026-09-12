@@ -70,8 +70,6 @@ export interface Modificacio {
 
 export interface InterpretacioIA {
   article_id: string;
-  /** Perfil explícit que va determinar aquesta explicació dinàmica. */
-  profile_key?: string;
   resum: {
     ca: string;
     es: string;
@@ -87,7 +85,47 @@ export interface InterpretacioIA {
   finalitat?: string; // Per a què serveix la norma
   destinataris?: string; // A qui va dirigida
   aplicacio?: string; // Com s'aplica
-  doctrina_jurisprudencia?: string; // Lectura constitucional basada en el text de l'article
+  doctrina_jurisprudencia?: string; // Com ho veu la doctrina i jurisprudència
+  interpretacio_principal?: string;
+  lectures_alternatives?: InterpretacioLecturaAlternativa[];
+  fonts?: InterpretacioFont[];
+  limits?: InterpretacioLimits;
+  context_historic?: InterpretacioContextHistoric;
+}
+
+export interface InterpretacioContextHistoric {
+  resum: string;
+  fonts: InterpretacioFont[];
+  advertiment: string;
+}
+
+export interface InterpretacioLecturaAlternativa {
+  titol: string;
+  explicacio: string;
+  base?: string;
+}
+
+export type InterpretacioFontTipus =
+  | 'constitucio'
+  | 'legislacio'
+  | 'jurisprudencia'
+  | 'doctrina'
+  | 'institucional'
+  | 'pedagogica'
+  | 'historia_constitucional';
+
+export interface InterpretacioFont {
+  id: string;
+  titol: string;
+  tipus: InterpretacioFontTipus;
+  funcio: string;
+  vigencia?: string;
+}
+
+export interface InterpretacioLimits {
+  permet: string;
+  noPermet: string;
+  incertesa?: string;
 }
 
 export interface Exemple {

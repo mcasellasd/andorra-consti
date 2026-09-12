@@ -1,44 +1,40 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ExternalLink, Tag } from 'lucide-react';
 import { ArticleAndorra, InterpretacioIA as InterpretacioIAType } from '../../data/codis/types';
+import { type DoctrinaCase } from '../../data/doctrina';
 import { type Idioma, t } from '../../lib/i18n';
 import { ArticleSummarySection } from './ArticleSummarySection';
 import { ArticleExampleSection } from './ArticleExampleSection';
+import { ArticleJurisprudenceSection } from './ArticleJurisprudenceSection';
 import { ArticleNavigation } from './ArticleNavigation';
-import { InterlocutorProfileSelector } from '../InterlocutorProfileSelector';
-import type { InterlocutorProfile } from '../../lib/interlocutor-profile';
 
 interface ArticleContentProps {
   article: ArticleAndorra;
   idioma: Idioma;
   interpretacio: InterpretacioIAType | null;
+  doctrina?: DoctrinaCase[];
   previousArticle?: ArticleAndorra | null;
   nextArticle?: ArticleAndorra | null;
   onGenerateAssistencia: () => void;
   isGenerating: boolean;
-  profile: InterlocutorProfile;
-  onProfileChange: (profile: InterlocutorProfile) => void;
-  onProfileReset: () => void;
 }
 
 export function ArticleContent({
   article,
   idioma,
   interpretacio,
+  doctrina,
   previousArticle,
   nextArticle,
   onGenerateAssistencia,
   isGenerating,
-  profile,
-  onProfileChange,
-  onProfileReset,
 }: ArticleContentProps) {
   const articleText = article.text_oficial;
   const splitRef = useRef<HTMLDivElement | null>(null);
   const [splitPct, setSplitPct] = useState(52);
   const [isDraggingSplit, setIsDraggingSplit] = useState(false);
   const [activeApartat, setActiveApartat] = useState<number | null>(null);
-  const [activeInterpretacioTab, setActiveInterpretacioTab] = useState<'essencial' | 'aplicacio' | 'context' | 'aprendre'>('essencial');
+  const [activeInterpretacioTab, setActiveInterpretacioTab] = useState<'interpretacio' | 'fonts' | 'limits' | 'aplicacio'>('interpretacio');
 
   const exemplesEnIdioma = interpretacio?.exemples?.filter((e) => e.idioma === idioma) ?? [];
   const conceptesClau = interpretacio?.conceptes_clau ?? [];
@@ -51,12 +47,15 @@ export function ArticleContent({
   const articlesRelacionats = Array.from(
     new Set([...(interpretacio?.articles_relacionats ?? []), ...(article.enllacos ?? [])])
   ).slice(0, 8);
+  const fonts = interpretacio?.fonts ?? [];
+  const lecturesAlternatives = interpretacio?.lectures_alternatives ?? [];
+  const limits = interpretacio?.limits;
 
   const copy = {
-    essencial: idioma === 'ca' ? 'Essencial' : idioma === 'es' ? 'Esencial' : 'Essentiel',
+    interpretacio: idioma === 'ca' ? 'Interpretació' : idioma === 'es' ? 'Interpretación' : 'Interprétation',
+    fonts: idioma === 'ca' ? 'Fonts i context' : idioma === 'es' ? 'Fuentes y contexto' : 'Sources et contexte',
+    limits: idioma === 'ca' ? 'Límits' : idioma === 'es' ? 'Límites' : 'Limites',
     aplicacio: idioma === 'ca' ? 'Aplicació' : idioma === 'es' ? 'Aplicación' : 'Application',
-    context: idioma === 'ca' ? 'Context' : idioma === 'es' ? 'Contexto' : 'Contexte',
-    aprendre: idioma === 'ca' ? 'Aprendre' : idioma === 'es' ? 'Aprender' : 'Apprendre',
     permetLimita: idioma === 'ca' ? 'Què et permet / què et limita' : idioma === 'es' ? 'Qué permite / qué limita' : 'Ce que cela permet / limite',
     ambitAplicacio: idioma === 'ca' ? 'Àmbit d\'aplicació' : idioma === 'es' ? 'Ámbito de aplicación' : 'Champ d\'application',
     limitsExcepcions: idioma === 'ca' ? 'Límits i excepcions' : idioma === 'es' ? 'Límites y excepciones' : 'Limites et exceptions',
@@ -64,10 +63,28 @@ export function ArticleContent({
     confusions: idioma === 'ca' ? 'Confusions freqüents' : idioma === 'es' ? 'Confusiones frecuentes' : 'Confusions fréquentes',
     relacioArticles: idioma === 'ca' ? 'Relació amb altres articles' : idioma === 'es' ? 'Relación con otros artículos' : 'Lien avec d\'autres articles',
     vigencia: idioma === 'ca' ? 'Estat normatiu i vigència' : idioma === 'es' ? 'Estado normativo y vigencia' : 'État normatif et vigueur',
+    doctrinal: idioma === 'ca' ? 'Context doctrinal' : idioma === 'es' ? 'Contexto doctrinal' : 'Contexte doctrinal',
     paraulesClau: idioma === 'ca' ? 'Paraules jurídiques clau' : idioma === 'es' ? 'Palabras jurídicas clave' : 'Mots juridiques clés',
     itinerari: idioma === 'ca' ? 'Itinerari recomanat' : idioma === 'es' ? 'Itinerario recomendado' : 'Itinéraire recommandé',
     autoavaluacio: idioma === 'ca' ? 'Autoavaluació ràpida' : idioma === 'es' ? 'Autoevaluación rápida' : 'Autoévaluation rapide',
+    lecturaPrincipal: idioma === 'ca' ? 'Interpretació principal' : idioma === 'es' ? 'Interpretación principal' : 'Interprétation principale',
+    lecturesAlternatives: idioma === 'ca' ? 'Lectures alternatives' : idioma === 'es' ? 'Lecturas alternativas' : 'Lectures alternatives',
+    fontsUtilitzades: idioma === 'ca' ? 'Fonts utilitzades' : idioma === 'es' ? 'Fuentes utilizadas' : 'Sources utilisées',
+    fontNormativa: idioma === 'ca' ? 'Font normativa principal' : idioma === 'es' ? 'Fuente normativa principal' : 'Source normative principale',
+    fontInterpretativa: idioma === 'ca' ? 'Context interpretatiu' : idioma === 'es' ? 'Contexto interpretativo' : 'Contexte interprétatif',
+    fontDoctrinal: idioma === 'ca' ? 'Context doctrinal, no font normativa' : idioma === 'es' ? 'Contexto doctrinal, no fuente normativa' : 'Contexte doctrinal, pas une source normative',
+    historic: idioma === 'ca' ? 'Context històric' : idioma === 'es' ? 'Contexto histórico' : 'Contexte historique',
+    historicDisclaimer: idioma === 'ca' ? 'Context històric, no font normativa vigent.' : idioma === 'es' ? 'Contexto histórico, no fuente normativa vigente.' : 'Contexte historique, pas une source normative en vigueur.',
+    permetAfirmar: idioma === 'ca' ? 'Què permet afirmar' : idioma === 'es' ? 'Qué permite afirmar' : 'Ce que cela permet d’affirmer',
+    noPermetAfirmar: idioma === 'ca' ? 'Què no permet afirmar' : idioma === 'es' ? 'Qué no permite afirmar' : 'Ce que cela ne permet pas d’affirmer',
+    incertesa: idioma === 'ca' ? 'Incertesa i revisió' : idioma === 'es' ? 'Incertidumbre y revisión' : 'Incertitude et révision',
     noDisponible: idioma === 'ca' ? 'No disponible encara.' : idioma === 'es' ? 'Aún no disponible.' : 'Pas encore disponible.',
+    jurisprudenciaHint:
+      idioma === 'ca'
+        ? 'La secció de jurisprudència es manté minimitzada per defecte.'
+        : idioma === 'es'
+          ? 'La sección de jurisprudencia se mantiene minimizada por defecto.'
+          : 'La section de jurisprudence reste réduite par défaut.',
     limitsHint:
       idioma === 'ca'
         ? 'Revisa el text literal i les excepcions explícites ("excepte", "sense perjudici", etc.).'
@@ -268,14 +285,12 @@ export function ArticleContent({
         </button>
 
         <aside className="article-interpretacio-column" aria-label="Interpretació de l'article">
-          <InterlocutorProfileSelector idioma={idioma} profile={profile} onChange={onProfileChange} onReset={onProfileReset} compact />
-
           <nav className="article-segmented-tabs" aria-label="Tipus d'interpretació">
             {[
-              { id: 'essencial' as const, label: copy.essencial },
+              { id: 'interpretacio' as const, label: copy.interpretacio },
+              { id: 'fonts' as const, label: copy.fonts },
+              { id: 'limits' as const, label: copy.limits },
               { id: 'aplicacio' as const, label: copy.aplicacio },
-              { id: 'context' as const, label: copy.context },
-              { id: 'aprendre' as const, label: copy.aprendre },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -301,7 +316,7 @@ export function ArticleContent({
           )}
 
           <div className="article-section-stack">
-            {activeInterpretacioTab === 'essencial' && (
+            {activeInterpretacioTab === 'interpretacio' && (
               <>
                 <ArticleSummarySection
                   article={article}
@@ -312,19 +327,24 @@ export function ArticleContent({
                 />
 
                 <div className="article-card article-guidance-card">
-                  <h3>{copy.permetLimita}</h3>
-                  <p>{interpretacio?.finalitat || interpretacio?.aplicacio || article.norma || copy.noDisponible}</p>
+                  <h3>{copy.lecturaPrincipal}</h3>
+                  <p>{interpretacio?.interpretacio_principal || interpretacio?.resum?.[idioma] || copy.noDisponible}</p>
                 </div>
 
-                <div className="article-card article-guidance-card">
-                  <h3>{copy.ambitAplicacio}</h3>
-                  <p>{interpretacio?.destinataris || article.ambit || copy.noDisponible}</p>
-                </div>
-
-                <div className="article-card article-guidance-card">
-                  <h3>{copy.limitsExcepcions}</h3>
-                  <p>{copy.limitsHint}</p>
-                </div>
+                {lecturesAlternatives.length > 0 && (
+                  <div className="article-card article-guidance-card">
+                    <h3>{copy.lecturesAlternatives}</h3>
+                    <div className="article-guidance-list">
+                      {lecturesAlternatives.map((lectura, index) => (
+                        <div key={`${lectura.titol}-${index}`} className="article-guidance-item">
+                          <strong>{lectura.titol}</strong>
+                          <p>{lectura.explicacio}</p>
+                          {lectura.base && <small>{lectura.base}</small>}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </>
             )}
 
@@ -357,15 +377,62 @@ export function ArticleContent({
               </>
             )}
 
-            {activeInterpretacioTab === 'context' && (
+            {activeInterpretacioTab === 'fonts' && (
               <>
                 <div className="article-card article-guidance-card">
-                  <h3>{idioma === 'ca' ? 'Lectura constitucional' : idioma === 'es' ? 'Lectura constitucional' : 'Lecture constitutionnelle'}</h3>
+                  <h3>{copy.fontsUtilitzades}</h3>
+                  {fonts.length > 0 ? (
+                    <div className="article-guidance-list">
+                      {fonts.map((font) => (
+                        <div key={font.id} className="article-guidance-item">
+                          <strong>{font.titol}</strong>
+                          <p>{font.funcio}</p>
+                          <small>{font.tipus}{font.vigencia ? ` · ${font.vigencia}` : ''}</small>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p>{copy.noDisponible}</p>
+                  )}
+                </div>
+
+                <ArticleJurisprudenceSection
+                  article={article}
+                  idioma={idioma}
+                  interpretacio={interpretacio}
+                  doctrina={doctrina}
+                  onGenerateAssistencia={onGenerateAssistencia}
+                  isGenerating={isGenerating}
+                />
+
+                <div className="article-card article-guidance-card">
+                  <h3>{copy.doctrinal}</h3>
                   <p>{interpretacio?.doctrina_jurisprudencia || copy.noDisponible}</p>
                 </div>
 
+                <div className="article-card article-guidance-card" data-testid="context-historic">
+                  <h3>{copy.historic}</h3>
+                  {interpretacio?.context_historic ? (
+                    <>
+                      <p>{interpretacio.context_historic.resum}</p>
+                      <p className="text-xs text-muted-foreground mt-2">{copy.historicDisclaimer}</p>
+                      <div className="article-guidance-list mt-3">
+                        {interpretacio.context_historic.fonts.map((font) => (
+                          <div key={font.id} className="article-guidance-item">
+                            <strong>{font.titol}</strong>
+                            <p>{font.funcio}</p>
+                            {font.vigencia && <small>{font.vigencia}</small>}
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <p>{copy.noDisponible}</p>
+                  )}
+                </div>
+
                 <div className="article-card article-guidance-card">
-                  <h3>{idioma === 'ca' ? 'Relació amb altres articles de la Constitució' : idioma === 'es' ? 'Relación con otros artículos de la Constitución' : 'Lien avec d’autres articles de la Constitution'}</h3>
+                  <h3>{copy.relacioArticles}</h3>
                   {articlesRelacionats.length > 0 ? (
                     <ul className="article-guidance-list article-guidance-list--chips">
                       {articlesRelacionats.map((item) => (
@@ -379,43 +446,33 @@ export function ArticleContent({
 
                 <div className="article-card article-guidance-card">
                   <h3>{copy.vigencia}</h3>
-                  <p>{article.vigencia || copy.noDisponible}</p>
+                  <p>{article.vigencia ? `${article.vigencia}. ${copy.jurisprudenciaHint}` : copy.jurisprudenciaHint}</p>
                 </div>
               </>
             )}
 
-            {activeInterpretacioTab === 'aprendre' && (
+            {activeInterpretacioTab === 'limits' && (
               <>
                 <div className="article-card article-guidance-card">
-                  <h3>{copy.paraulesClau}</h3>
-                  {glossari.length > 0 ? (
-                    <ul className="article-guidance-list article-guidance-list--chips">
-                      {glossari.map((terme) => (
-                        <li key={terme}>{terme}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>{copy.noDisponible}</p>
-                  )}
+                  <h3>{copy.permetAfirmar}</h3>
+                  <p>{limits?.permet || interpretacio?.finalitat || interpretacio?.aplicacio || article.norma || copy.noDisponible}</p>
                 </div>
 
                 <div className="article-card article-guidance-card">
-                  <h3>{copy.itinerari}</h3>
-                  <ul className="article-guidance-list">
-                    <li>{t(idioma, 'article.textOficial')}</li>
-                    <li>{t(idioma, 'article.resum')}</li>
-                    <li>{idioma === 'ca' ? 'Exemples i aplicació pràctica' : idioma === 'es' ? 'Ejemplos y aplicación práctica' : 'Exemples et application pratique'}</li>
-                    <li>{idioma === 'ca' ? 'Relació amb altres articles de la Constitució' : idioma === 'es' ? 'Relación con otros artículos de la Constitución' : 'Lien avec d’autres articles de la Constitution'}</li>
-                  </ul>
+                  <h3>{copy.noPermetAfirmar}</h3>
+                  <p>{limits?.noPermet || copy.confusionsHint}</p>
                 </div>
 
+                {limits?.incertesa && (
+                  <div className="article-card article-guidance-card">
+                    <h3>{copy.incertesa}</h3>
+                    <p>{limits.incertesa}</p>
+                  </div>
+                )}
+
                 <div className="article-card article-guidance-card">
-                  <h3>{copy.autoavaluacio}</h3>
-                  <ul className="article-guidance-list">
-                    <li>{idioma === 'ca' ? 'Qui és el destinatari principal d\'aquest article?' : idioma === 'es' ? '¿Quién es el destinatario principal de este artículo?' : 'Qui est le destinataire principal de cet article?'}</li>
-                    <li>{idioma === 'ca' ? 'Quina acció o limitació estableix expressament?' : idioma === 'es' ? '¿Qué acción o limitación establece expresamente?' : 'Quelle action ou limitation établit-il explicitement?'}</li>
-                    <li>{idioma === 'ca' ? 'Hi ha excepcions textuals a tenir presents?' : idioma === 'es' ? '¿Hay excepciones textuales a tener presentes?' : 'Y a-t-il des exceptions textuelles à prendre en compte?'}</li>
-                  </ul>
+                  <h3>{copy.limitsExcepcions}</h3>
+                  <p>{copy.limitsHint}</p>
                 </div>
               </>
             )}
