@@ -1,33 +1,37 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ExternalLink, Tag } from 'lucide-react';
 import { ArticleAndorra, InterpretacioIA as InterpretacioIAType } from '../../data/codis/types';
-import { type DoctrinaCase } from '../../data/doctrina';
 import { type Idioma, t } from '../../lib/i18n';
 import { ArticleSummarySection } from './ArticleSummarySection';
 import { ArticleExampleSection } from './ArticleExampleSection';
-import { ArticleJurisprudenceSection } from './ArticleJurisprudenceSection';
 import { ArticleNavigation } from './ArticleNavigation';
+import { InterlocutorProfileSelector } from '../InterlocutorProfileSelector';
+import type { InterlocutorProfile } from '../../lib/interlocutor-profile';
 
 interface ArticleContentProps {
   article: ArticleAndorra;
   idioma: Idioma;
   interpretacio: InterpretacioIAType | null;
-  doctrina?: DoctrinaCase[];
   previousArticle?: ArticleAndorra | null;
   nextArticle?: ArticleAndorra | null;
   onGenerateAssistencia: () => void;
   isGenerating: boolean;
+  profile: InterlocutorProfile;
+  onProfileChange: (profile: InterlocutorProfile) => void;
+  onProfileReset: () => void;
 }
 
 export function ArticleContent({
   article,
   idioma,
   interpretacio,
-  doctrina,
   previousArticle,
   nextArticle,
   onGenerateAssistencia,
   isGenerating,
+  profile,
+  onProfileChange,
+  onProfileReset,
 }: ArticleContentProps) {
   const articleText = article.text_oficial;
   const splitRef = useRef<HTMLDivElement | null>(null);
@@ -60,17 +64,10 @@ export function ArticleContent({
     confusions: idioma === 'ca' ? 'Confusions freqüents' : idioma === 'es' ? 'Confusiones frecuentes' : 'Confusions fréquentes',
     relacioArticles: idioma === 'ca' ? 'Relació amb altres articles' : idioma === 'es' ? 'Relación con otros artículos' : 'Lien avec d\'autres articles',
     vigencia: idioma === 'ca' ? 'Estat normatiu i vigència' : idioma === 'es' ? 'Estado normativo y vigencia' : 'État normatif et vigueur',
-    doctrinal: idioma === 'ca' ? 'Context doctrinal' : idioma === 'es' ? 'Contexto doctrinal' : 'Contexte doctrinal',
     paraulesClau: idioma === 'ca' ? 'Paraules jurídiques clau' : idioma === 'es' ? 'Palabras jurídicas clave' : 'Mots juridiques clés',
     itinerari: idioma === 'ca' ? 'Itinerari recomanat' : idioma === 'es' ? 'Itinerario recomendado' : 'Itinéraire recommandé',
     autoavaluacio: idioma === 'ca' ? 'Autoavaluació ràpida' : idioma === 'es' ? 'Autoevaluación rápida' : 'Autoévaluation rapide',
     noDisponible: idioma === 'ca' ? 'No disponible encara.' : idioma === 'es' ? 'Aún no disponible.' : 'Pas encore disponible.',
-    jurisprudenciaHint:
-      idioma === 'ca'
-        ? 'La secció de jurisprudència es manté minimitzada per defecte.'
-        : idioma === 'es'
-          ? 'La sección de jurisprudencia se mantiene minimizada por defecto.'
-          : 'La section de jurisprudence reste réduite par défaut.',
     limitsHint:
       idioma === 'ca'
         ? 'Revisa el text literal i les excepcions explícites ("excepte", "sense perjudici", etc.).'
@@ -271,6 +268,8 @@ export function ArticleContent({
         </button>
 
         <aside className="article-interpretacio-column" aria-label="Interpretació de l'article">
+          <InterlocutorProfileSelector idioma={idioma} profile={profile} onChange={onProfileChange} onReset={onProfileReset} compact />
+
           <nav className="article-segmented-tabs" aria-label="Tipus d'interpretació">
             {[
               { id: 'essencial' as const, label: copy.essencial },
@@ -360,22 +359,13 @@ export function ArticleContent({
 
             {activeInterpretacioTab === 'context' && (
               <>
-                <ArticleJurisprudenceSection
-                  article={article}
-                  idioma={idioma}
-                  interpretacio={interpretacio}
-                  doctrina={doctrina}
-                  onGenerateAssistencia={onGenerateAssistencia}
-                  isGenerating={isGenerating}
-                />
-
                 <div className="article-card article-guidance-card">
-                  <h3>{copy.doctrinal}</h3>
+                  <h3>{idioma === 'ca' ? 'Lectura constitucional' : idioma === 'es' ? 'Lectura constitucional' : 'Lecture constitutionnelle'}</h3>
                   <p>{interpretacio?.doctrina_jurisprudencia || copy.noDisponible}</p>
                 </div>
 
                 <div className="article-card article-guidance-card">
-                  <h3>{copy.relacioArticles}</h3>
+                  <h3>{idioma === 'ca' ? 'Relació amb altres articles de la Constitució' : idioma === 'es' ? 'Relación con otros artículos de la Constitución' : 'Lien avec d’autres articles de la Constitution'}</h3>
                   {articlesRelacionats.length > 0 ? (
                     <ul className="article-guidance-list article-guidance-list--chips">
                       {articlesRelacionats.map((item) => (
@@ -389,7 +379,7 @@ export function ArticleContent({
 
                 <div className="article-card article-guidance-card">
                   <h3>{copy.vigencia}</h3>
-                  <p>{article.vigencia ? `${article.vigencia}. ${copy.jurisprudenciaHint}` : copy.jurisprudenciaHint}</p>
+                  <p>{article.vigencia || copy.noDisponible}</p>
                 </div>
               </>
             )}
@@ -415,7 +405,7 @@ export function ArticleContent({
                     <li>{t(idioma, 'article.textOficial')}</li>
                     <li>{t(idioma, 'article.resum')}</li>
                     <li>{idioma === 'ca' ? 'Exemples i aplicació pràctica' : idioma === 'es' ? 'Ejemplos y aplicación práctica' : 'Exemples et application pratique'}</li>
-                    <li>{t(idioma, 'article.jurisprudencia')}</li>
+                    <li>{idioma === 'ca' ? 'Relació amb altres articles de la Constitució' : idioma === 'es' ? 'Relación con otros artículos de la Constitución' : 'Lien avec d’autres articles de la Constitution'}</li>
                   </ul>
                 </div>
 

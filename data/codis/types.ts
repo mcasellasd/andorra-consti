@@ -70,6 +70,8 @@ export interface Modificacio {
 
 export interface InterpretacioIA {
   article_id: string;
+  /** Perfil explícit que va determinar aquesta explicació dinàmica. */
+  profile_key?: string;
   resum: {
     ca: string;
     es: string;
@@ -85,7 +87,7 @@ export interface InterpretacioIA {
   finalitat?: string; // Per a què serveix la norma
   destinataris?: string; // A qui va dirigida
   aplicacio?: string; // Com s'aplica
-  doctrina_jurisprudencia?: string; // Com ho veu la doctrina i jurisprudència
+  doctrina_jurisprudencia?: string; // Lectura constitucional basada en el text de l'article
 }
 
 export interface Exemple {
@@ -116,4 +118,3 @@ export interface CodiMetadata {
     fr: string;
   };
 }
-

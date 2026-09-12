@@ -3,14 +3,14 @@ import { generateText } from '../../lib/llm';
 import { checkAIActCompliance, getAIActCompliancePrompt } from '../../lib/rag/quality-assessment';
 import { validateResponseQuality } from '../../lib/rag/response-quality';
 import { generateEmbedding, getEmbeddingProvider } from '../../lib/embeddings';
-import { retrieveTopMatches, retrieveHybridMatches, getArticleById } from '../../lib/rag/corpus';
+import { retrieveTopMatches, getArticleById } from '../../lib/rag/corpus';
 import { RetrievedContext } from '../../lib/rag/types';
 import { detectArticleReference, detectArticleByKeywords, detectComplexity } from '../../lib/rag/detect-complexity';
-import { getJurisprudenciaForArticle } from '../../data/jurisprudencia-andorra';
 import { articlesConstitucio } from '../../data/codis/constitucio/articles-template';
 import { InterpretacioIA } from '../../data/codis/types';
 import { generateInterpretacioIA, type InterpretacioRequest } from '../../lib/services/interpretacio-ia';
 import { appendTraceabilityLog, buildRagContextFingerprint } from '../../lib/traceability/audit-log';
+import { buildInterlocutorInstructions, parseInterlocutorProfile, type InterlocutorProfile } from '../../lib/interlocutor-profile';
 
 // ============================================================================
 // RAG ACTIVAT - Recuperació de context de la Constitució d'Andorra
@@ -31,6 +31,7 @@ interface UnifiedChatRequest {
     content: string;
   }>;
   locale?: LocaleChat;
+  profile?: InterlocutorProfile;
   maxTokens?: number;
   temperature?: number;
 }
@@ -103,11 +104,13 @@ export default async function handler(
     message,
     conversationHistory = [],
     locale = 'ca',
+    profile: rawProfile,
     maxTokens = 800,
     temperature = 0.5
   } = requestBody as UnifiedChatRequest;
 
   const validLocale: LocaleChat = ['ca', 'es', 'fr'].includes(locale) ? locale : 'ca';
+  const profile = parseInterlocutorProfile(rawProfile);
 
   if (!message || !message.trim()) {
     const errMsg = validLocale === 'es' ? 'Mensaje vacío.' : validLocale === 'fr' ? 'Message vide.' : 'Missatge buit.';
@@ -170,26 +173,9 @@ export default async function handler(
           const queryEmbedding = await generateEmbedding(message, provider, openaiApiKey);
           const topK = Math.max(5, complexity.suggestedTopK);
           
-          // Prioritzar articles de la Constitució només quan la consulta ho demana
-          // explícitament. Les preguntes doctrinals, històriques o sobre el dret
-          // andorrà en general han de poder recuperar doctrina en igualtat de condicions.
-          const isConstitutionQuestion = 
-            message.toLowerCase().includes('article') ||
-            message.toLowerCase().includes('constitució') ||
-            message.toLowerCase().includes('constitución') ||
-            articleNumber !== null ||
-            articleKeywords.length > 0;
-          
-          if (isConstitutionQuestion) {
-            console.log('📜 Prioritzant articles de la Constitució sobre doctrina');
-          }
-          
-          // Les consultes doctrinals generals utilitzen cerca híbrida: la similitud
-          // semàntica aporta context i BM25 dona pes als termes jurídics explícits
-          // (p. ex. "usos", "costums" i "codificació").
-          const retrievedMatches = isConstitutionQuestion
-            ? retrieveTopMatches(queryEmbedding, topK, undefined, true)
-            : retrieveHybridMatches(queryEmbedding, message, topK);
+          // Qualsevol pregunta es porta al marc constitucional; el corpus ja
+          // està filtrat perquè només contingui entrades CONST_*.
+          const retrievedMatches = retrieveTopMatches(queryEmbedding, topK, ['CONSTITUCIO'], true);
           retrievedMatches.forEach(match => matchesMap.set(match.entry.id, match));
         } catch (ragError: any) {
           // Si RAG falla (ex: out of memory, API error), continuar sense context
@@ -228,40 +214,6 @@ export default async function handler(
         console.log(`✅ Article detectat per paraules clau i afegit: ${articleId}`);
       }
     });
-
-    // 🔍 Recuperar jurisprudència relacionada amb l'article detectat
-    if (articleNumber) {
-      const articleId = `CONST_${articleNumber.padStart(3, '0')}`;
-      const relatedJurisprudence = getJurisprudenciaForArticle(articleId);
-      
-      if (relatedJurisprudence.length > 0) {
-        console.log(`📋 Trobades ${relatedJurisprudence.length} sentències TC relacionades amb Article ${articleNumber}`);
-        
-        // Convertir sentències a KnowledgeEntry compatible amb RAG
-        relatedJurisprudence.forEach((sentencia, idx) => {
-          const sentenciaEntry = {
-            id: sentencia.id,
-            category: 'Jurisprudència',
-            topic: sentencia.titol || `Sentència ${sentencia.numero}`,
-            content: `${sentencia.tribunal} (${sentencia.data}): ${sentencia.resum}`,
-            legalReference: sentencia.numero,
-            keyConcepts: sentencia.tags || [],
-          };
-          
-          const jurisprudenceContext: RetrievedContext = {
-            entry: sentenciaEntry,
-            score: 0.88 - (idx * 0.02), // Decreix lleument per cada sentència (0.88, 0.86, 0.84...)
-            bookId: 'DOCTRINA' // Les sentències es categoritzen com doctrina per mantenir compatibilitat
-          };
-          
-          // Afegir només si no está ja al map (evitar duplicats)
-          if (!matchesMap.has(sentencia.id)) {
-            matchesMap.set(sentencia.id, jurisprudenceContext);
-            console.log(`  ✅ Sentència afegida: ${sentencia.id} - ${sentencia.tribunal}`);
-          }
-        });
-      }
-    }
 
     // Quan es pregunta per un article concret, reduïm el nombre de fonts per evitar confusions
     const defaultTopK = process.env.RAG_ENABLED === 'true' ? Math.max(5, complexity.suggestedTopK) : 10;
@@ -318,6 +270,8 @@ ${officialTextBlock}
       ? `\nLa pregunta es refereix a l'Article ${articleNumber}. Assegura't que la teva resposta reflecteixi el contingut de l'Article ${articleNumber} del context i no atribueixis cap contingut d'un altre article a l'Article ${articleNumber}.\n`
       : '';
 
+    const interlocutorInstructions = buildInterlocutorInstructions(profile, validLocale);
+
     // Prompt del Sistema amb context RAG
     const systemPrompt = `${languageInstruction}Ets un expert en la Constitució d'Andorra i Dret Andorrà.
 Respon de manera clara, concisa i precisa.
@@ -326,9 +280,9 @@ Si no saps la resposta, digues-ho honestament.
 
 ${aiActPrompt}
 
-IMPORTAT: Utilitza ÚNICAMENT la informació del context proporcionat. NO inventis articles ni lleis.
-Si la informació del context no és suficient per respondre, digues-ho honestament.
-El context pot incloure tant articles de la Constitució (CONST_XXX) com fragments de doctrina o jurisprudència (DOCTRINA_XXX). Has d’utilitzar totes les fonts rellevants del context per respondre; no t’limitïs només als articles si hi ha doctrina rellevant.
+IMPORTANT: Utilitza ÚNICAMENT la informació constitucional del context proporcionat. NO inventis articles ni lleis.
+Si la pregunta tracta un altre àmbit, explica com es pot entendre des dels principis constitucionals i indica clarament què no resol la Constitució.
+No utilitzis doctrina, jurisprudència, lleis ordinàries ni altres fonts com a base de la resposta.
 
 CITA ELS ARTICLES CORRECTAMENT:
 - Quan citis la Constitució, indica SEMPRE el número d'article exacte (ex: "Article 19", "Article 3").
@@ -344,20 +298,14 @@ JERARQUIA NORMATIVA:
 - Exemple: Si es diu que el català és la llengua oficial, ho és perquè ho estableix la Constitució (Article 2).
 - Les lleis que emanen de la Constitució són norma superior respecte a altres normes, però sempre estan subordinades a la pròpia Constitució.
 
-PLURALISME INTERPRETATIU:
-- Si detectes que la doctrina o la jurisprudència presenten interpretacions diferents sobre un punt, NO ofereixis una única "veritat oficial".
-- Exposa les diferents postures (ex: "Existeix debat doctrinal sobre...", "El Tribunal Constitucional ha matisat que...").
-- Evita la "canonització" de conceptes jurídics oberts; mostra la complexitat quan sigui necessari.
-
 CITACIONS EN EL TEXT (OBLIGATORI):
-Quan utilitzis informació d'una font específica del context (sigui article o doctrina), has d'inserir l'ID de la font entre dobles claudàtors al final de la frase o paràgraf corresponent.
+Quan utilitzis informació constitucional específica, has d'inserir l'ID de l'article entre dobles claudàtors al final de la frase o paràgraf corresponent.
 Format: [[ID]]
 Exemple: "La sobirania resideix en el poble andorrà [[CONST_003]]."
-Per a la doctrina, utilitza sempre l'identificador exacte que apareix entre parèntesis
-al costat del títol (per exemple, [[DOCTRINA_USOS_COSTUMS_001]]). No escriguis
-només "Doctrina" ni atribueixis una afirmació a una font doctrinal sense el seu ID.
 
-Context (Constitució i doctrina):
+${interlocutorInstructions}
+
+Context constitucional:
 ${contextBlock}`;
 
     // Construïm la llista final de missatges
@@ -440,10 +388,10 @@ ${contextBlock}`;
     }
 
     // 7. Preparar fonts per retornar (tipus real: Constitució o Doctrina segons bookId)
-    const sources = matches.map(({ entry, score, bookId }) => {
-      const code = bookId === 'DOCTRINA' ? 'doctrina' : 'constitucio';
+    const sources = matches.filter(({ entry }) => isConstitutionArticle(entry)).map(({ entry, score }) => {
+      const code = 'constitucio';
       return {
-        type: code as 'constitucio' | 'doctrina',
+        type: code as 'constitucio',
         code,
         id: entry.id,
         title: entry.topic,

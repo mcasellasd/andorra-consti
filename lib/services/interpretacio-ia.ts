@@ -7,18 +7,17 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { GUIA_CATALA_JURIDIC } from '../prompts/guia-catala-juridic';
-import { ASPECTES_JURISPRUDENCIA_ANDORRANA } from '../prompts/aspectes-jurisprudencia-andorra';
 import { InterpretacioIA, Exemple } from '../../data/codis/types';
-import { getJurisprudenciaForArticle } from '../../data/jurisprudencia-andorra';
 import { getArticleById } from '../article-helpers';
-import { getDoctrinaByArticleId } from '../../data/doctrina';
 import { generateText } from '../llm';
+import { buildInterlocutorInstructions, parseInterlocutorProfile, type InterlocutorProfile } from '../interlocutor-profile';
 
 export interface InterpretacioRequest {
   article_id: string;
   text_oficial: string;
   numeracio: string;
   idioma: 'ca' | 'es' | 'fr';
+  profile?: InterlocutorProfile;
 }
 
 // Configurar timeout màxim per Vercel (Pro: 300s, Hobby: 10s -> 60s amb config)
@@ -38,20 +37,22 @@ export async function interpretacioIAHandler(
   }
 
   try {
-    const { article_id, text_oficial, numeracio, idioma }: InterpretacioRequest = req.body;
+    const { article_id, text_oficial, numeracio, idioma, profile: rawProfile }: InterpretacioRequest = req.body;
+    const profile = parseInterlocutorProfile(rawProfile);
 
     if (!article_id || !text_oficial || !numeracio || !idioma) {
       return res.status(400).json({ error: 'Paràmetres incomplets' });
     }
 
+    if (!article_id.startsWith('CONST_')) {
+      return res.status(400).json({ error: 'Només es poden interpretar articles de la Constitució.' });
+    }
+
     // Obtenir l'article complet per obtenir metadades
     const article = getArticleById(article_id);
-
-    // Obtenir jurisprudència relacionada
-    const jurisprudencia = getJurisprudenciaForArticle(article_id);
-
-    // Obtenir doctrina relacionada
-    const doctrinaRelacionada = getDoctrinaByArticleId(article_id);
+    if (!article) {
+      return res.status(404).json({ error: 'Article constitucional no trobat.' });
+    }
 
     // Construir context normatiu
     let contextNormatiu = '';
@@ -82,12 +83,6 @@ export async function interpretacioIAHandler(
           contextNormatiu += `- Data de vigència: ${article.vigencia}\n`;
         }
 
-        if (article.modificacions && article.modificacions.length > 0) {
-          contextNormatiu += `- Modificacions: ${article.modificacions
-            .map(m => `${m.llei} (${m.data})`)
-            .join(', ')}\n`;
-        }
-
         if (article.tags && article.tags.length > 0) {
           const tagsTraduits = article.idiomes?.tags?.[idioma] || article.tags;
           contextNormatiu += `- Àmbits: ${tagsTraduits.join(', ')}\n`;
@@ -95,29 +90,9 @@ export async function interpretacioIAHandler(
       }
     }
 
-    // Construir context de jurisprudència si n'hi ha
-    let jurisprudenciaContext = '';
-    if (jurisprudencia.length > 0) {
-      jurisprudenciaContext = `\n\nJurisprudència rellevant:\n${jurisprudencia
-        .slice(0, 1) // OPTIMITZACIÓ: Limitar a 1 per reduir tokens i temps de resposta (<60s)
-        .map(
-          (sent) =>
-            `- ${sent.tribunal} (${sent.data}): ${sent.resum}`
-        )
-        .join('\n')}\n`;
-    }
-
-    // Construir context de doctrina si n'hi ha (Manual retrieval)
-    let doctrinaContext = '';
-    if (doctrinaRelacionada.length > 0) {
-      doctrinaContext = `\n\nDoctrina acadèmica:\n${doctrinaRelacionada
-        .slice(0, 1) // OPTIMITZACIÓ: Limitar a 1
-        .map(
-          (doc) =>
-            `- ${doc.title}: ${doc.summary}`
-        )
-        .join('\n')}\n`;
-    }
+    // La fitxa es basa només en el text i les metadades constitucionals de l'article.
+    const jurisprudenciaContext = '';
+    const doctrinaContext = '';
 
     // ============================================================================
     // RAG FLOW: Recuperació de context amb XLM-RoBERTa (opcional, desactivat per defecte)
@@ -168,7 +143,7 @@ export async function interpretacioIAHandler(
 
 ⚠️ TASCA: Interpreta ÚNICAMENT aquest article específic. No parlis d'altres articles ni temes no relacionats. ⚠️
 
-PRIORITAT ABSOLUTA: Primer interpreta el **text literal** de l’article en llenguatge planer. La jurisprudència/doctrina és **opcional** i només s'ha d'usar si apareix al context. Encara que NO hi hagi jurisprudència/doctrina, has de generar igualment la interpretació completa basada en el text de l'article.
+PRIORITAT ABSOLUTA: Primer interpreta el **text literal** de l’article en llenguatge planer. No utilitzis doctrina, jurisprudència ni altres fonts externes.
 
 **ARTICLE ${numeracio} A INTERPRETAR:**
 "${text_oficial}"${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
@@ -179,7 +154,7 @@ PRIORITAT ABSOLUTA: Primer interpreta el **text literal** de l’article en llen
 - NO parlis de temes que NO estiguin explícitament a l'article proporcionat.
 - NO escriguis res fora del JSON. Cap text abans ni després.
 - NO copiïs ni reutilitzis frases d'exemple/plantilla del prompt (p. ex. "Resum descriptiu...", "situació concreta...", "...").
-- NO diguis que “no pots” donar exemples o comentari per manca de jurisprudència/doctrina.
+- Si la pregunta o l'exemple surt de l'article, reconduïx-lo als principis constitucionals que sí que hi són presents i indica el límit.
 
 REGLA FONAMENTAL: Només pots parlar del que diu aquest article. Si l'article NO menciona residència, immigració, procediments administratius o altres temes, NO en parlis.
 
@@ -198,7 +173,7 @@ La interpretació IA es mostra en el sidebar de l'article amb les següents secc
 3. **FINALITAT** ("Què et permet / què et limita"): Explica clarament què permet fer o quina limitació/prohibició estableix expressament aquest article en el dia a dia (1-2 frases clares).
 4. **DESTINATARIS** ("Àmbit d'aplicació"): A qui o a què s'aplica aquest article (ex. tots els ciutadans, poders públics, coprínceps, etc.) en 1-2 frases clares.
 5. **APLICACIO** ("Impacte pràctic"): Explica quin és l'impacte pràctic immediat o la utilitat directa d'aquest article per a les persones o la societat (1-2 frases clares).
-6. **DOCTRINA**: Comentari doctrinal (1-3 frases) sobre els principis jurídics i fonaments de l'article, sense referències a sentències específiques.
+6. **LECTURA CONSTITUCIONAL**: Comentari de 1-3 frases sobre els principis constitucionals que es desprenen directament de l'article, sense doctrina ni jurisprudència externa.
 
 Respon en format JSON amb aquesta estructura EXACTA (cap text abans ni després; comença per { i acaba per }):
 {
@@ -210,7 +185,7 @@ Respon en format JSON amb aquesta estructura EXACTA (cap text abans ni després;
   "finalitat": "Explica de forma planera què permet o limita exactament l'article (1-2 frases).",
   "destinataris": "Indica de forma planera a qui o a què s'aplica el contingut de l'article (1-2 frases).",
   "aplicacio": "Explica quin és l'impacte o utilitat pràctica de l'article (1-2 frases).",
-  "doctrina_jurisprudencia": "1–3 frases de comentari únicament doctrinal basat en l'article i la doctrina jurídica (sense incloure jurisprudència)."
+  "doctrina_jurisprudencia": "1–3 frases de lectura constitucional basades únicament en el text i els principis de l'article."
 }
 
 ⚠️ CRÍTIC: Respon ÚNICAMENT amb el JSON. El primer caràcter ha de ser { i l'últim }. Cap text abans ni després. ⚠️`,
@@ -220,7 +195,7 @@ Respon en format JSON amb aquesta estructura EXACTA (cap text abans ni després;
 
 INTERPRETACIÓN COMPLETA: Debes interpretar la norma **en conjunto** (sentido general, finalidad, coherencia con el contexto constitucional) y **también** los puntos concretos de la ley (apartados, incisos, obligaciones o derechos específicos que establece el artículo).
 
-PRIORIDAD ABSOLUTA: Primero interpreta el **texto literal** del artículo en lenguaje llano. Aunque NO haya doctrina previa, debes generar igualmente la interpretación completa basada en el texto del artículo.
+PRIORIDAD ABSOLUTA: Primero interpreta el **texto literal** del artículo en lenguaje llano. No utilices doctrina, jurisprudencia ni otras fuentes externas.
 
 **ARTÍCULO ${numeracio} A INTERPRETAR:**
 "${text_oficial}"${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
@@ -236,7 +211,7 @@ PRIORIDAD ABSOLUTA: Primero interpreta el **texto literal** del artículo en len
 - NO hables de temas que NO estén explícitamente en el artículo proporcionado.
 - NO escribas nada fuera del JSON. Nada antes ni después.
 - NO copies ni dejes frases plantilla del prompt (p. ej. "Resumen descriptivo...", "situación concreta...", "...").
-- NO digas que “no puedes” dar ejemplos o comentario por falta de doctrina.
+- Si la pregunta o l'exemple surt de l'article, reconduïx-lo als principis constitucionals que sí hi són presents i indica el límit.
 
 REGLA FUNDAMENTAL: Solo puedes hablar de lo que dice este artículo. Si el artículo NO menciona residencia, inmigración, procedimientos administrativos u otros temas, NO hables de ellos.
 
@@ -255,7 +230,7 @@ La interpretación IA se muestra en el sidebar con las siguientes secciones:
 3. **FINALITAT** ("Qué permite / qué limita"): Explica claramente qué permite hacer o qué limitación/prohibición establece expresamente este artículo en el día a día (1-2 frases claras).
 4. **DESTINATARIS** ("Ámbito de aplicación"): A quién o a qué se aplica este artículo (ej. todos los ciudadanos, poderes públicos, copríncipes, etc.) en 1-2 frases claras.
 5. **APLICACIO** ("Impacto práctico"): Explica cuál es el impacto práctico inmediato o la utilidad directa de este artículo para las personas o la sociedad (1-2 frases claras).
-6. **DOCTRINA**: Comentario doctrinal (1-3 frases) sobre los principios jurídicos y fundamentos del artículo, sin referencias a sentencias específicas.
+6. **LECTURA CONSTITUCIONAL**: Comentario de 1-3 frases sobre los principios constitucionales que se desprenden directamente del artículo, sin doctrina ni jurisprudencia externa.
 
 Responde en formato JSON con esta estructura EXACTA (nada antes ni después; empieza por { y acaba por }):
 {
@@ -267,7 +242,7 @@ Responde en formato JSON con esta estructura EXACTA (nada antes ni después; emp
   "finalitat": "Explica de forma llana qué permite o limita exactamente el artículo (1-2 frases).",
   "destinataris": "Indica de forma llana a quién o a qué se aplica el contenido del artículo (1-2 frases).",
   "aplicacio": "Explica cuál es el impacto o utilidad práctica del artículo (1-2 frases).",
-  "doctrina_jurisprudencia": "1–3 frases de comentario únicamente doctrinal basado en el artículo y la doctrina jurídica (sin incluir jurisprudencia)."
+  "doctrina_jurisprudencia": "1–3 frases de lectura constitucional basadas únicamente en el texto y los principios del artículo."
 }
 
 ⚠️ CRÍTICO: Responde ÚNICAMENTE con el JSON. El primer carácter debe ser { y el último }. Nada antes ni después. ⚠️`,
@@ -312,7 +287,7 @@ L'interprétation IA s'affiche dans la barre latérale avec les sections suivant
 3. **FINALITAT** ("Ce que cela permet / limite"): Explique clairement ce que cet article permet de faire ou quelle limitation/interdiction il établit expressément au quotidien (1-2 phrases).
 4. **DESTINATARIS** ("Champ d'application"): À qui ou à quoi s'applique cet article (ex. tous les citoyens, pouvoirs publics, coprinces, etc.) en 1-2 phrases.
 5. **APLICACIO** ("Impact pratique"): Explique quel est l'impact pratique immédiat ou l'utilité directe de cet article pour les personnes ou la société (1-2 phrases).
-6. **DOCTRINE**: Commentaire doctrinal (1-3 phrases) sur les principes juridiques et fondements de l'article, sans référence à des décisions de justice spécifiques.
+6. **LECTURE CONSTITUTIONNELLE**: Commentaire de 1-3 phrases sur les principes constitutionnels directement déduits de l'article, sans doctrine ni jurisprudence externe.
 
 Réponds en format JSON avec cette structure EXACTE (rien avant ni après; commence par { et finis par }):
 {
@@ -324,7 +299,7 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
   "finalitat": "Explique de manière simple ce que l'article permet ou limite exactement (1-2 phrases).",
   "destinataris": "Indique de manière simple à qui ou à quoi s'applique le contenu de l'article (1-2 phrases).",
   "aplicacio": "Explique quel est l'impact ou l'utilité pratique de l'article (1-2 phrases).",
-  "doctrina_jurisprudencia": "1–3 phrases de commentaire uniquement doctrinal basé sur l'article et la doctrine juridique (sans inclure de jurisprudence)."
+  "doctrina_jurisprudencia": "1–3 phrases de lecture constitutionnelle basées uniquement sur le texte et les principes de l'article."
 }
 
 
@@ -394,10 +369,12 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
     // Reduïm la complexitat del JSON per evitar errors de sintaxi del model.
 
     const systemPromptBase = idioma === 'ca'
-      ? `Ets un assistent jurídic expert en dret andorrà. La teva única funció és analitzar articles de la Constitució i generar fitxes explicatives en format JSON simplificat. La teva resposta (resum, exemples, finalitat, destinataris, aplicacio, doctrina_jurisprudencia) ha de ser íntegrament en català. Respon NOMÉS en català.`
+      ? `Ets un assistent jurídic expert en dret constitucional andorrà. La teva única funció és analitzar articles de la Constitució i generar fitxes explicatives en format JSON simplificat. La resposta ha de basar-se únicament en el text i els principis constitucionals de l'article, sense doctrina ni jurisprudència. Respon NOMÉS en català.`
       : idioma === 'es'
-        ? `Eres un asistente experto en derecho andorrano. Tu única función es analizar artículos de la Constitución y generar fichas explicativas en formato JSON simplificado. Tu respuesta (resum, exemples, finalitat, destinataris, aplicacio, doctrina_jurisprudencia) debe ser íntegramente en castellano. Responde SOLO en castellano.`
-        : `Tu es un assistant expert en droit andorran. Ta seule fonction est d'analyser des articles de la Constitution et de générer des fiches explicatives en format JSON simplifié. Ta réponse (resum, exemples, finalitat, destinataris, aplicacio, doctrina_jurisprudencia) doit être entièrement en français. Réponds UNIQUEMENT en français.`;
+        ? `Eres un asistente experto en derecho constitucional andorrano. Tu única función es analizar artículos de la Constitución y generar fichas explicativas en formato JSON simplificado. La respuesta debe basarse únicamente en el texto y los principios constitucionales del artículo, sin doctrina ni jurisprudencia. Responde SOLO en castellano.`
+        : `Tu es un assistant expert en droit constitutionnel andorran. Ta seule fonction est d'analyser des articles de la Constitution et de générer des fiches explicatives en format JSON simplifié. La réponse doit être fondée uniquement sur le texte et les principes constitutionnels de l'article, sans doctrine ni jurisprudence. Réponds UNIQUEMENT en français.`;
+
+    const interlocutorInstructions = buildInterlocutorInstructions(profile, idioma);
 
     // Exemple One-Shot 1 (Article 2) - EXEMPLES COM A STRINGS SIMPLES
     const exampleUser = idioma === 'ca'
@@ -454,7 +431,7 @@ Contexte Supplémentaire (s'il y en a):
 ${ragContext}`;
 
     const messages = [
-      { role: 'system', content: systemPromptBase },
+      { role: 'system', content: `${systemPromptBase}${interlocutorInstructions}` },
       { role: 'user', content: exampleUser },
       { role: 'assistant', content: exampleAssistant },
       { role: 'user', content: exampleUser2 },
@@ -708,7 +685,7 @@ ${ragContext}`;
           : `${prompt}\n\n⚠️ ATTENTION: Ta réponse précédente N'ÉTAIT PAS un JSON valide. Réponds UNIQUEMENT avec le JSON demandé. Le premier caractère doit être { et le dernier }. Rien avant ni après. ⚠️`;
 
       const retryMessages = [
-        { role: 'system', content: systemPromptBase },
+        { role: 'system', content: `${systemPromptBase}${interlocutorInstructions}` },
         { role: 'user', content: retryPrompt },
       ];
 
@@ -737,7 +714,7 @@ ${ragContext}`;
             : `${prompt}\n\n⚠️ IMPORTANT: Ta réponse précédente copiait des phrases modèle.\n- INTERDIT d'utiliser littéralement les instructions ou placeholders (\"Résumé descriptif...\", \"situation concrète\", \"...\").\n- Écris un contenu SPÉCIFIQUE à cet article: résumé descriptif (2–5 phrases) + 2–3 exemples réalistes + finalitat + destinataris + aplicació + doctrine.\nRéponds UNIQUEMENT avec le JSON.`;
 
       const fixMessages = [
-        { role: 'system', content: systemPromptBase },
+        { role: 'system', content: `${systemPromptBase}${interlocutorInstructions}` },
         { role: 'user', content: fixPrompt },
       ];
 
@@ -778,7 +755,7 @@ ${ragContext}`;
               : `Réécris UNIQUEMENT ces champs pour l'ARTICLE ${numeracio}:\n\n- "exemples": Tableau de 2 ou 3 exemples pratiques.\n- "finalitat": 1-2 phrases (ce que cela permet/limite).\n- "destinataris": 1-2 phrases (champ d'application).\n- "aplicacio": 1-2 phrases (impact pratique).\n- "doctrina_jurisprudencia": 1–3 phrases de commentaire uniquement doctrinal.\n\nRéponds UNIQUEMENT avec un JSON valide:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Exemple appliqué: ...", "Exemple appliqué: ..."],\n  "finalitat": "${coalesceString(parsedObj0.finalitat)}",\n  "destinataris": "${coalesceString(parsedObj0.destinataris)}",\n  "aplicacio": "${coalesceString(parsedObj0.aplicacio)}",\n  "doctrina_jurisprudencia": "..."\n}`;
 
         const fix2Messages = [
-          { role: 'system', content: systemPromptBase },
+          { role: 'system', content: `${systemPromptBase}${interlocutorInstructions}` },
           { role: 'user', content: `${prompt}\n\n---\n\n${fix2}` },
         ];
 

@@ -28,12 +28,6 @@ try {
   }
 }
 
-// Carregar doctrina (només si no tenim el corpus unificat, per evitar duplicats i permetre fallback)
-// Nota: El corpus unificat JA inclou la doctrina processada.
-// Hem eliminat la càrrega legacy de '20-anys.json' per evitar errors de build si no existeix.
-let doctrinaKnowledge: any = [];
-let doctrinaEmbeddings: any = [];
-
 interface NormalizedEmbedding extends EmbeddingEntry {
   norm: number;
 }
@@ -44,10 +38,10 @@ interface CorpusData {
   embeddings: NormalizedEmbedding[];
 }
 
-// Carregar Constitució i Doctrina
+// Carregar únicament articles de la Constitució.
 const corpus: CorpusData = loadCorpus(
-  [...(constitucioKnowledge as KnowledgeEntry[]), ...(doctrinaKnowledge as KnowledgeEntry[])],
-  [...(constitucioEmbeddings as EmbeddingEntry[]), ...(doctrinaEmbeddings as EmbeddingEntry[])]
+  (constitucioKnowledge as KnowledgeEntry[]).filter((entry) => entry.id.startsWith('CONST_')),
+  (constitucioEmbeddings as EmbeddingEntry[]).filter((entry) => entry.id.startsWith('CONST_'))
 );
 
 // Inicialitzar índex de cerca híbrida (BM25)
@@ -84,8 +78,7 @@ function loadCorpus(
 }
 
 export function getAvailableBooks(): string[] {
-  // Retornem també DOCTRINA si n'hi ha
-  return corpus.knowledge.length > 0 ? ['CONSTITUCIO', 'DOCTRINA'] : [];
+  return corpus.knowledge.length > 0 ? ['CONSTITUCIO'] : [];
 }
 
 export function getKnowledgeEntries(): KnowledgeEntry[] {
@@ -102,82 +95,17 @@ export interface CorpusDocumentSummary {
 
 /**
  * Retorna la llista de documents/fonts que el RAG pot consultar abans de contestar.
- * Útil per mostrar a l’usuari què hi ha al corpus (Constitució, doctrina, etc.).
+ * Útil per mostrar a l’usuari l’única font que pot consultar el RAG.
  */
 export function getCorpusDocumentsList(): CorpusDocumentSummary[] {
-  const constitution: KnowledgeEntry[] = [];
-  const tc: KnowledgeEntry[] = [];
-  const doctrina: KnowledgeEntry[] = [];
-
-  for (const entry of corpus.knowledge) {
-    const isDoctrina =
-      entry.id.startsWith('DOCTRINA_') ||
-      entry.id.startsWith('DOC_') ||
-      entry.category === 'Doctrina' ||
-      entry.category === 'doctrina' ||
-      entry.category === 'Jurisprudència' ||
-      entry.category === 'jurisprudència';
-    const isTC =
-      entry.id.startsWith('TC_') ||
-      entry.category?.includes('Tribunal Constitucional');
-
-    if (isDoctrina) {
-      doctrina.push(entry);
-    } else if (isTC) {
-      tc.push(entry);
-    } else {
-      constitution.push(entry);
-    }
-  }
-
-  const result: CorpusDocumentSummary[] = [];
-
-  if (constitution.length > 0) {
-    const hasPreamb = constitution.some(e => e.id === 'CONST_PREAMB');
-    const articles = constitution.filter(e => e.id !== 'CONST_PREAMB');
-    const nums = articles
-      .map(e => {
-        const m = e.id.match(/^CONST_(\d+)$/);
-        return m ? parseInt(m[1], 10) : null;
-      })
-      .filter((n): n is number => n !== null);
-    const minArt = nums.length ? Math.min(...nums) : 0;
-    const maxArt = nums.length ? Math.max(...nums) : 0;
-    const desc =
-      hasPreamb && nums.length
-        ? `Preàmbul i articles 1–${maxArt}`
-        : hasPreamb
-          ? 'Preàmbul'
-          : nums.length
-            ? `Articles ${minArt}–${maxArt}`
-            : 'Constitució';
-    result.push({
+  return [
+    {
       id: 'CONSTITUCIO',
       name: "Constitució d'Andorra",
-      description: desc,
-      count: constitution.length
-    });
-  }
-
-  if (tc.length > 0) {
-    result.push({
-      id: 'TRIBUNAL_CONSTITUCIONAL',
-      name: 'Llei del Tribunal Constitucional',
-      description: 'Llei 21/2023 de text consolidat del Tribunal Constitucional',
-      count: tc.length
-    });
-  }
-
-  if (doctrina.length > 0) {
-    result.push({
-      id: 'DOCTRINA',
-      name: 'Doctrina i jurisprudència',
-      description: 'Textos doctrinaris, comentaris i jurisprudència relacionada',
-      count: doctrina.length
-    });
-  }
-
-  return result;
+      description: 'Preàmbul i articles 1–98',
+      count: 99,
+    },
+  ];
 }
 
 /**

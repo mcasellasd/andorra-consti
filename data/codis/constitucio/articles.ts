@@ -1,7 +1,6 @@
 /**
  * Articles de la Constitució d'Andorra
- * Generat automàticament des de data/rag/constitucio.json
- * Data de generació: 2025-11-27T17:30:45.752Z
+ * Sincronitzats des de data/rag/constitucio.json; les metadades enriquides es preserven.
  */
 
 import { ArticleAndorra } from '../types';
@@ -77,7 +76,7 @@ export const articlesConstitucio: ArticleAndorra[] = [
     "llibre": "CONST",
     "titol": "Títol I - Sobirania d'Andorra",
     "capitol": null,
-    "text_oficial": "1. La present Constitució, que és la norma suprema de l'ordenament jurídic, vincula tots els poders públics i els ciutadans.\n2. La Constitució garanteix els principis de legalitat, de jerarquia, de publicitat de les normes jurídiques, de no retroactivitat de les",
+    "text_oficial": "1. La present Constitució, que és la norma suprema de l'ordenament jurídic, vincula tots els poders públics i els ciutadans.\n2. La Constitució garanteix els principis de legalitat, de jerarquia, de publicitat de les normes jurídiques, de no retroactivitat de les disposicions restrictives de drets individuals o que comportin un efecte o estableixin una sanció desfavorables, de seguretat jurídica, de responsabilitat dels poders públics i d'interdicció de tota arbitrarietat.\n3. Andorra incorpora al seu ordenament els principis de dret internacional públic universalment reconeguts.\n4. Els tractats i acords internacionals s'integren en l'ordenament jurídic a partir de la seva publicació en el Butlletí Oficial del Principat d'Andorra, i no poden ésser modificats o derogats per les lleis.",
     "vigencia": "1993-05-04",
     "modificacions": [],
     "enllacos": [],
@@ -87,7 +86,7 @@ export const articlesConstitucio: ArticleAndorra[] = [
     ],
     "idiomes": {
       "es": "1. La presente Constitución, que es la norma suprema del ordenamiento jurídico, vincula a todos los poderes públicos y los ciudadanos.\n2. La Constitución garantiza los principios de legalidad, de jerarquía, de publicidad de las normas jurídicas, de no retroactividad de las",
-      "ca": "1. La present Constitució, que és la norma suprema de l'ordenament jurídic, vincula tots els poders públics i els ciutadans.\n2. La Constitució garanteix els principis de legalitat, de jerarquia, de publicitat de les normes jurídiques, de no retroactivitat de les"
+      "ca": "1. La present Constitució, que és la norma suprema de l'ordenament jurídic, vincula tots els poders públics i els ciutadans.\n2. La Constitució garanteix els principis de legalitat, de jerarquia, de publicitat de les normes jurídiques, de no retroactivitat de les disposicions restrictives de drets individuals o que comportin un efecte o estableixin una sanció desfavorables, de seguretat jurídica, de responsabilitat dels poders públics i d'interdicció de tota arbitrarietat.\n3. Andorra incorpora al seu ordenament els principis de dret internacional públic universalment reconeguts.\n4. Els tractats i acords internacionals s'integren en l'ordenament jurídic a partir de la seva publicació en el Butlletí Oficial del Principat d'Andorra, i no poden ésser modificats o derogats per les lleis."
     }
   },
   {
@@ -193,7 +192,7 @@ export const articlesConstitucio: ArticleAndorra[] = [
     "llibre": "CONST",
     "titol": "Títol II - Drets i llibertats",
     "capitol": null,
-    "text_oficial": "1. Totes les persones tenen dret a la llibertat i a la seguretat i només en poden ésser privades per les causes i d'acord amb els procediments establerts a la Constitució i les lleis.\n2. La detenció governativa no pot durar més del temps necessari per dur a terme les indagacions tendents a l'esclariment del cas i mai no pot excedir de quaranta-vuit hores sense que el detingut sigui posat a",
+    "text_oficial": "1. Totes les persones tenen dret a la llibertat i a la seguretat i només en poden ésser privades per les causes i d'acord amb els procediments establerts a la Constitució i les lleis.\n2. La detenció governativa no pot durar més del temps necessari per dur a terme les indagacions tendents a l'esclariment del cas i mai no pot excedir de quaranta-vuit hores sense que el detingut sigui posat a disposició de l'autoritat judicial.\n3. La llei establirà un procediment perquè tot detingut pugui acudir a un òrgan judicial, a fi que aquest es pronunciï sobre la legalitat de la seva detenció. Així mateix, crearà el procediment per restablir els drets fonamentals lesionats de tota persona privada de llibertat.\n4. Ningú no pot ésser condemnat o sancionat per accions o omissions que en el moment de produir-se no constitueixin delicte, falta o infracció administrativa.",
     "vigencia": "1993-05-04",
     "modificacions": [],
     "enllacos": [],
@@ -202,7 +201,30 @@ export const articlesConstitucio: ArticleAndorra[] = [
       "article"
     ],
     "idiomes": {
-      "ca": "1. Totes les persones tenen dret a la llibertat i a la seguretat i només en poden ésser privades per les causes i d'acord amb els procediments establerts a la Constitució i les lleis.\n2. La detenció governativa no pot durar més del temps necessari per dur a terme les indagacions tendents a l'esclariment del cas i mai no pot excedir de quaranta-vuit hores sense que el detingut sigui posat a"
+      "ca": "1. Totes les persones tenen dret a la llibertat i a la seguretat i només en poden ésser privades per les causes i d'acord amb els procediments establerts a la Constitució i les lleis.\n2. La detenció governativa no pot durar més del temps necessari per dur a terme les indagacions tendents a l'esclariment del cas i mai no pot excedir de quaranta-vuit hores sense que el detingut sigui posat a disposició de l'autoritat judicial.\n3. La llei establirà un procediment perquè tot detingut pugui acudir a un òrgan judicial, a fi que aquest es pronunciï sobre la legalitat de la seva detenció. Així mateix, crearà el procediment per restablir els drets fonamentals lesionats de tota persona privada de llibertat.\n4. Ningú no pot ésser condemnat o sancionat per accions o omissions que en el moment de produir-se no constitueixin delicte, falta o infracció administrativa."
+    },
+    "norma": "Constitució del Principat d'Andorra",
+    "rang": "Suprema",
+    "ambit": "Drets Fonamentals",
+    "dimensions_comprensio": {
+      "dogmatica": {
+        "concepte_clau": "La llibertat necessita garanties",
+        "ratio_legis": "Evitar privacions arbitràries de llibertat i sotmetre-les a causes, procediments i control judicial",
+        "jurisprudencia_clau": "El contingut editorial preexistent no incorporava una referència jurisprudencial concreta."
+      },
+      "simplificacio_supervisada": {
+        "nivell_planer": "La llibertat no es pot limitar de qualsevol manera. Qualsevol detenció ha de tenir una base legal, seguir un procediment i estar sotmesa al control d’una autoritat judicial.",
+        "termes_clau": [
+          "Llibertat",
+          "Seguretat",
+          "Detenció",
+          "Control judicial"
+        ]
+      },
+      "aplicabilitat_residencia": {
+        "subjectivitat": "Totes les persones.",
+        "ajuda_practica": "Si una detenció supera el termini legal, cal activar el control judicial previst per comprovar-ne la legalitat."
+      }
     }
   },
   {
@@ -909,7 +931,7 @@ export const articlesConstitucio: ArticleAndorra[] = [
     "llibre": "CONST",
     "titol": "Títol III - Els Coprínceps",
     "capitol": null,
-    "text_oficial": "1. Els coprínceps, amb la contrasignatura del cap de Govern o, en el seu cas, del síndic general, que n'assumeixen la responsabilitat política:\na) Convoquen les eleccions generals d'acord amb la Constitució.\nb) Convoquen referèndum d'acord amb els articles 76 i 106 de la Constitució.\nc) Nomenen el cap de Govern segons el procediment previst en la Constitució.\nd) Signen el decret de dissolució del Consell General segons el procediment de l'article 71 de la Constitució.\ne) Acrediten els representants diplomàtics d'Andorra a l'estranger, i els representants estrangers a Andorra s'acrediten davant de cadascun d'ells.\nf) Nomenen els titulars de les altres institucions de l'Estat d'acord amb la Constitució i les lleis.\ng) Sancionen i promulguen les lleis segons l'article 63 de la present Constitució.\nh) Manifesten el consentiment de l'Estat per a obligar-se per mitjà dels tractats internacionals, en els termes previstos en el capítol III del Títol IV de la Constitució.\ni) Realitzen els altres actes que expressament els atribueix la Constitució.\n2. Les",
+    "text_oficial": "1. Els coprínceps, amb la contrasignatura del cap de Govern o, en el seu cas, del síndic general, que n'assumeixen la responsabilitat política:\na) Convoquen les eleccions generals d'acord amb la Constitució.\nb) Convoquen referèndum d'acord amb els articles 76 i 106 de la Constitució.\nc) Nomenen el cap de Govern segons el procediment previst en la Constitució.\nd) Signen el decret de dissolució del Consell General segons el procediment de l'article 71 de la Constitució.\ne) Acrediten els representants diplomàtics d'Andorra a l'estranger, i els representants estrangers a Andorra s'acrediten davant de cadascun d'ells.\nf) Nomenen els titulars de les altres institucions de l'Estat d'acord amb la Constitució i les lleis.\ng) Sancionen i promulguen les lleis segons l'article 63 de la present Constitució.\nh) Manifesten el consentiment de l'Estat per a obligar-se per mitjà dels tractats internacionals, en els termes previstos en el capítol III del Títol IV de la Constitució.\ni) Realitzen els altres actes que expressament els atribueix la Constitució.\n2. Les disposicions previstes en els apartats g) i h) d'aquest article han d'ésser presentades simultàniament a un i altre copríncep que han de sancionar-les i promulgar-les o manifestar el consentiment de l'Estat segons el cas, i n'han d'ordenar la publicació no abans de vuit dies i no més tard de quinze. En aquest període els coprínceps, conjuntament o separadament, poden adreçar-se al Tribunal Constitucional amb missatge raonat a fi que aquest es pronunciï sobre la seva constitucionalitat. Si la resolució fos positiva l'acte pot ésser sancionat amb la signatura d'almenys d'un dels coprínceps.\n3. Quan concorrin circumstàncies que impedeixin per part d'un dels coprínceps la formalització dels actes enumerats en l'apartat 1 del present article dins dels terminis constitucionalment previstos, el seu representant ho ha de notificar al síndic general o, en el seu cas, al cap de Govern. En aquest supòsit, els actes, normes o decisions afectats entraran en vigor transcorreguts els dits terminis amb la signatura de l'altre copríncep i la contrasignatura del cap de Govern o, en el seu cas, del síndic general.",
     "vigencia": "1993-05-04",
     "modificacions": [],
     "enllacos": [],
@@ -918,7 +940,7 @@ export const articlesConstitucio: ArticleAndorra[] = [
       "article"
     ],
     "idiomes": {
-      "ca": "1. Els coprínceps, amb la contrasignatura del cap de Govern o, en el seu cas, del síndic general, que n'assumeixen la responsabilitat política:\na) Convoquen les eleccions generals d'acord amb la Constitució.\nb) Convoquen referèndum d'acord amb els articles 76 i 106 de la Constitució.\nc) Nomenen el cap de Govern segons el procediment previst en la Constitució.\nd) Signen el decret de dissolució del Consell General segons el procediment de l'article 71 de la Constitució.\ne) Acrediten els representants diplomàtics d'Andorra a l'estranger, i els representants estrangers a Andorra s'acrediten davant de cadascun d'ells.\nf) Nomenen els titulars de les altres institucions de l'Estat d'acord amb la Constitució i les lleis.\ng) Sancionen i promulguen les lleis segons l'article 63 de la present Constitució.\nh) Manifesten el consentiment de l'Estat per a obligar-se per mitjà dels tractats internacionals, en els termes previstos en el capítol III del Títol IV de la Constitució.\ni) Realitzen els altres actes que expressament els atribueix la Constitució.\n2. Les"
+      "ca": "1. Els coprínceps, amb la contrasignatura del cap de Govern o, en el seu cas, del síndic general, que n'assumeixen la responsabilitat política:\na) Convoquen les eleccions generals d'acord amb la Constitució.\nb) Convoquen referèndum d'acord amb els articles 76 i 106 de la Constitució.\nc) Nomenen el cap de Govern segons el procediment previst en la Constitució.\nd) Signen el decret de dissolució del Consell General segons el procediment de l'article 71 de la Constitució.\ne) Acrediten els representants diplomàtics d'Andorra a l'estranger, i els representants estrangers a Andorra s'acrediten davant de cadascun d'ells.\nf) Nomenen els titulars de les altres institucions de l'Estat d'acord amb la Constitució i les lleis.\ng) Sancionen i promulguen les lleis segons l'article 63 de la present Constitució.\nh) Manifesten el consentiment de l'Estat per a obligar-se per mitjà dels tractats internacionals, en els termes previstos en el capítol III del Títol IV de la Constitució.\ni) Realitzen els altres actes que expressament els atribueix la Constitució.\n2. Les disposicions previstes en els apartats g) i h) d'aquest article han d'ésser presentades simultàniament a un i altre copríncep que han de sancionar-les i promulgar-les o manifestar el consentiment de l'Estat segons el cas, i n'han d'ordenar la publicació no abans de vuit dies i no més tard de quinze. En aquest període els coprínceps, conjuntament o separadament, poden adreçar-se al Tribunal Constitucional amb missatge raonat a fi que aquest es pronunciï sobre la seva constitucionalitat. Si la resolució fos positiva l'acte pot ésser sancionat amb la signatura d'almenys d'un dels coprínceps.\n3. Quan concorrin circumstàncies que impedeixin per part d'un dels coprínceps la formalització dels actes enumerats en l'apartat 1 del present article dins dels terminis constitucionalment previstos, el seu representant ho ha de notificar al síndic general o, en el seu cas, al cap de Govern. En aquest supòsit, els actes, normes o decisions afectats entraran en vigor transcorreguts els dits terminis amb la signatura de l'altre copríncep i la contrasignatura del cap de Govern o, en el seu cas, del síndic general."
     }
   },
   {
@@ -1270,7 +1292,7 @@ export const articlesConstitucio: ArticleAndorra[] = [
     "llibre": "CONST",
     "titol": "Títol IV - El Consell General",
     "capitol": null,
-    "text_oficial": "1. Els tractats internacionals han d'ésser aprovats pel Consell General per majoria absoluta de la Cambra en els casos següents:\na) Tractats que vinculin l'Estat a una organització internacional.\nb) Tractats relatius a la seguretat interior i a la defensa.\nc) Tractats relatius al territori d'Andorra.\nd) Tractats que afectin els drets fonamentals de la persona regulats al Títol II.\ne) Tractats que impliquin la creació de noves obligacions per a la Hisenda Pública.\nf) Tractats que creïn o modifiquin",
+    "text_oficial": "1. Els tractats internacionals han d'ésser aprovats pel Consell General per majoria absoluta de la Cambra en els casos següents:\na) Tractats que vinculin l'Estat a una organització internacional.\nb) Tractats relatius a la seguretat interior i a la defensa.\nc) Tractats relatius al territori d'Andorra.\nd) Tractats que afectin els drets fonamentals de la persona regulats al Títol II.\ne) Tractats que impliquin la creació de noves obligacions per a la Hisenda Pública.\nf) Tractats que creïn o modifiquin disposicions de naturalesa legislativa o que requereixin mesures legislatives per a llur execució.\ng)Tractats que versin sobre representació diplomàtica o funcions consulars, sobre cooperació judicial o penitenciària.\n2. El Govern informarà el Consell General i els Coprínceps de la conclusió dels altres acords internacionals.\n3. Per a la denúncia dels tractats internacionals que afectin les matèries enumerades a l'epígraf 1 també caldrà l'aprovació prèvia de la majoria absoluta de la Cambra.",
     "vigencia": "1993-05-04",
     "modificacions": [],
     "enllacos": [],
@@ -1279,7 +1301,7 @@ export const articlesConstitucio: ArticleAndorra[] = [
       "article"
     ],
     "idiomes": {
-      "ca": "1. Els tractats internacionals han d'ésser aprovats pel Consell General per majoria absoluta de la Cambra en els casos següents:\na) Tractats que vinculin l'Estat a una organització internacional.\nb) Tractats relatius a la seguretat interior i a la defensa.\nc) Tractats relatius al territori d'Andorra.\nd) Tractats que afectin els drets fonamentals de la persona regulats al Títol II.\ne) Tractats que impliquin la creació de noves obligacions per a la Hisenda Pública.\nf) Tractats que creïn o modifiquin"
+      "ca": "1. Els tractats internacionals han d'ésser aprovats pel Consell General per majoria absoluta de la Cambra en els casos següents:\na) Tractats que vinculin l'Estat a una organització internacional.\nb) Tractats relatius a la seguretat interior i a la defensa.\nc) Tractats relatius al territori d'Andorra.\nd) Tractats que afectin els drets fonamentals de la persona regulats al Títol II.\ne) Tractats que impliquin la creació de noves obligacions per a la Hisenda Pública.\nf) Tractats que creïn o modifiquin disposicions de naturalesa legislativa o que requereixin mesures legislatives per a llur execució.\ng)Tractats que versin sobre representació diplomàtica o funcions consulars, sobre cooperació judicial o penitenciària.\n2. El Govern informarà el Consell General i els Coprínceps de la conclusió dels altres acords internacionals.\n3. Per a la denúncia dels tractats internacionals que afectin les matèries enumerades a l'epígraf 1 també caldrà l'aprovació prèvia de la majoria absoluta de la Cambra."
     }
   },
   {
@@ -1947,7 +1969,6 @@ export const articlesConstitucio: ArticleAndorra[] = [
       "ca": "1. Poden interposar recurs d'inconstitucionalitat contra les lleis i els decrets legislatius una cinquena part dels membres del Consell General, el cap de Govern i tres Comuns. Una cinquena part dels membres del Consell General pot interposar recurs d'inconstitucionalitat contra el reglament de la cambra. El termini d'interposició de la demanda és de trenta dies des de la data de publicació de la norma.\n2. La interposició del recurs no suspèn la vigència de la norma impugnada. El Tribunal haurà de dictar sentència en el termini màxim de dos mesos."
     }
   },
-
   {
     "id": "CONST_100",
     "codi": "constitucio",
@@ -1993,7 +2014,7 @@ export const articlesConstitucio: ArticleAndorra[] = [
     "llibre": "CONST",
     "titol": "Títol VIII - Tribunal Constitucional",
     "capitol": null,
-    "text_oficial": "Contra els actes dels poders públics que lesionin drets fonamentals, estan legitimats per demanar empara davant el Tribunal Constitucional:\na) Els qui hagin estat part o siguin coadjuvants en el procés judicial previ al que es refereix l'article 41.2 d'aquesta Constitució.\nb) Els qui tinguin un interès legítim en relació a",
+    "text_oficial": "Contra els actes dels poders públics que lesionin drets fonamentals, estan legitimats per demanar empara davant el Tribunal Constitucional:\na) Els qui hagin estat part o siguin coadjuvants en el procés judicial previ al que es refereix l'article 41.2 d'aquesta Constitució.\nb) Els qui tinguin un interès legítim en relació a disposicions o actes sense força de llei del Consell General.\nc) El Ministeri Fiscal en cas de violació del dret fonamental a la jurisdicció.",
     "vigencia": "1993-05-04",
     "modificacions": [],
     "enllacos": [],
@@ -2002,7 +2023,7 @@ export const articlesConstitucio: ArticleAndorra[] = [
       "article"
     ],
     "idiomes": {
-      "ca": "Contra els actes dels poders públics que lesionin drets fonamentals, estan legitimats per demanar empara davant el Tribunal Constitucional:\na) Els qui hagin estat part o siguin coadjuvants en el procés judicial previ al que es refereix l'article 41.2 d'aquesta Constitució.\nb) Els qui tinguin un interès legítim en relació a"
+      "ca": "Contra els actes dels poders públics que lesionin drets fonamentals, estan legitimats per demanar empara davant el Tribunal Constitucional:\na) Els qui hagin estat part o siguin coadjuvants en el procés judicial previ al que es refereix l'article 41.2 d'aquesta Constitució.\nb) Els qui tinguin un interès legítim en relació a disposicions o actes sense força de llei del Consell General.\nc) El Ministeri Fiscal en cas de violació del dret fonamental a la jurisdicció."
     }
   },
   {

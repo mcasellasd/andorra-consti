@@ -1,501 +1,78 @@
 import React from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
 import Layout from '../components/Layout';
+import { ArticleInterpretacioDemo } from '../components/article/ArticleInterpretacioDemo';
 
-const ComEstaFetPage: React.FC = () => {
-  return (
-    <>
-      <Head>
-        <title>Com està fet · dretplaner</title>
-        <meta
-          name="description"
-          content="Com funciona dretplaner: capacitats, arquitectura, models d'IA i metodologia d'implementació."
-        />
-      </Head>
-      <Layout>
-        <div className="page-container">
-          <article className="legal-card">
-            <header className="legal-header">
-              <h1>Com està fet</h1>
-              <p className="legal-subtitle">
-                Descripció accessible sobre com funciona dretplaner: capacitats, arquitectura, models d'IA i metodologia d'implementació.
-              </p>
-            </header>
+const ComEstaFetPage: React.FC = () => (
+  <>
+    <Head>
+      <title>Dret Planer · Infografia de la recerca</title>
+      <meta name="description" content="Infografia sobre claredat constitucional, integració jurídica i intel·ligència artificial consultiva al Principat d’Andorra." />
+    </Head>
+    <Layout>
+      <div className="dp-infografia">
+        <div className="dp-topline" />
+        <nav className="dp-nav" aria-label="Navegació de la infografia">
+          <a href="#inici" className="dp-brand"><span className="dp-mark">D</span><span>Dret Planer</span></a>
+          <div className="dp-navlinks"><a href="#pregunta">Pregunta</a><a href="#perque">Per què?</a><a href="#claredat">Claredat</a><a href="#disseny">Disseny</a><a href="#prototip">Prototip</a><a href="#fronteres">IA</a><a href="#limits">Límits</a></div>
+        </nav>
 
-            <section className="legal-section">
-              <h2>1. Visió general: com funciona el sistema</h2>
-              <p>
-                dretplaner utilitza intel·ligència artificial per ajudar a comprendre la constitució andorrana.
-                El sistema funciona de manera similar a un assistent que ha llegit tots els textos els articles, doctrina i jurisprudència i pot
-                explicar-los en un llenguatge més accessible. L'eina no dona consell legal, ni respòn a qüestons personals. La seva tasca es limita a la interpretació de la llei i la generació d'explicacions en llenguatge planer.
-              </p>
-              <p>
-                El xat del sistema, anomenat <strong>Hermes</strong>, et permet fer preguntes en llenguatge natural i rebre la resposta en l'¡idioma de l'usuari.
-                Quan fas una pregunta o sol·licites una interpretació d&apos;un article, el sistema:
-              </p>
-              <ol>
-                <li><strong>Cerca</strong> la informació rellevant als documents legals disponibles</li>
-                <li><strong>Selecciona</strong> els articles i fragments més relacionats amb la teva consulta</li>
-                <li><strong>Genera</strong> una explicació accessible basada en aquesta informació</li>
-                <li><strong>Presenta</strong> el resultat amb referències clares als articles utilitzats</li>
-              </ol>
-            </section>
+        <main>
+          <section className="dp-hero" id="inici">
+            <div><p className="dp-eyebrow">Claredat constitucional · Principat d’Andorra</p><h1>Comprendre el dret és entrar en el món jurídic.</h1><p className="dp-lede">Infografia-resum del manuscrit <strong>«Claredat constitucional i integració jurídica al Principat d’Andorra»</strong>: una recerca sobre hermenèutica, dret a comprendre i intel·ligència artificial consultiva.</p></div>
+            <div className="dp-orbit-art" aria-label="Relació entre font, mediació i persona"><div className="dp-orbit"><span /><span /><span /><b>font<br />·<br />persona</b></div></div>
+          </section>
 
-            <section className="legal-section" style={{ background: 'linear-gradient(to right, #1e3a8a, #0369a1)', color: '#ffffff', margin: '2rem -1rem', padding: '2rem 1rem', borderRadius: '0.5rem' }}>
-              <h2 style={{ color: '#ffffff', marginBottom: '0.5rem' }}>Sobirania, Claredat i IA</h2>
-              <p style={{ color: '#e0f2fe', fontStyle: 'italic', marginBottom: '1rem', fontSize: '1.05rem' }}>
-                L&apos;arquitectura del coneixement jurídic andorrà
-              </p>
-              <p style={{ maxWidth: '48rem', margin: '0 auto', fontSize: '1.05rem', color: '#ffffff', lineHeight: 1.6 }}>
-                Andorra transita cap a una <strong style={{ color: '#ffffff' }}>sobirania digital</strong> basada en la veracitat documental. El sistema <strong style={{ color: '#ffffff' }}>Dret Planer</strong> no només automatitza, sinó que protegeix la integritat de la norma mitjançant una arquitectura RAG (<em>Retrieval-Augmented Generation</em>) alimentada per un corpus d&apos;alta qualitat, des dels Pariatges fins a la jurisprudència de 2024.
-              </p>
-            </section>
+          <section className="dp-section dp-dark" id="pregunta"><div className="dp-section-head"><div><p className="dp-eyebrow">01 · El problema</p><h2>La norma pot ser vàlida i continuar sent difícil d’entendre.</h2></div><p>La recerca parteix d’una tensió: l’accés formal a la Constitució no garanteix que la persona pugui comprendre el seu llenguatge, context, institucions i vies de protecció.</p></div><p className="dp-question">Pot una IA consultiva facilitar la comprensió de la Constitució i contribuir a la <em>integració jurídica</em> sense substituir l’autonomia ni el judici humà?</p></section>
 
-            <section className="legal-section">
-              <h2>El legat històric</h2>
-              <p style={{ marginBottom: '1.5rem' }}>
-                L&apos;estabilitat andorrana es fonamenta en la resistència a la modernització política desestructurada, mantenint una línia clara des de la consuetud medieval fins a l&apos;Estat de Dret (Soler Parício).
-              </p>
-              <div style={{ position: 'relative', paddingLeft: '2rem', borderLeft: '4px solid #cbd5e1' }}>
-                <div style={{ marginBottom: '2rem' }}>
-                  <div style={{ fontWeight: 800, fontSize: '1.25rem', color: '#1e3a8a' }}>1278 – 1288 · Pariatges de Pau</div>
-                  <div style={{ marginTop: '0.5rem', padding: '1rem', background: '#f0f9ff', borderRadius: '0.5rem', borderLeft: '4px solid #0ea5e9', fontStyle: 'italic', fontSize: '0.9rem' }}>
-                    &quot;Sols resto l&apos;única filla de l&apos;imperi Carlemany&quot;. La sobirania compartida com a mecanisme de supervivència davant veïns gegantins.
-                  </div>
-                </div>
-                <div style={{ marginBottom: '2rem' }}>
-                  <div style={{ fontWeight: 800, fontSize: '1.25rem', color: '#1e3a8a' }}>1748 · Manual Digest</div>
-                  <div style={{ marginTop: '0.5rem', padding: '1rem', background: '#ecfeff', borderRadius: '0.5rem', borderLeft: '4px solid #22d3ee', fontStyle: 'italic', fontSize: '0.9rem' }}>
-                    Antoni Fiter i Rossell sistematitza el dret propi. Primer intent de fer accessible el dret que regia la vida dels ciutadans.
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontWeight: 800, fontSize: '1.25rem', color: '#1e3a8a' }}>1993 · Regla de Reconeixement</div>
-                  <div style={{ marginTop: '0.5rem', padding: '1rem', background: '#fefce8', borderRadius: '0.5rem', borderLeft: '4px solid #eab308', fontStyle: 'italic', fontSize: '0.9rem' }}>
-                    La Constitució fixa l&apos;estructura institucional i els drets fonamentals. La sobirania resideix plenament en el poble.
-                  </div>
-                </div>
-              </div>
-            </section>
+          <section className="dp-section" id="andorra"><div className="dp-section-head"><div><p className="dp-eyebrow">02 · El cas andorrà</p><h2>Una societat plural necessita una entrada comprensible al dret compartit.</h2></div><p>La pregunta no és només qui pot votar. És qui viu sota normes, utilitza institucions, assumeix obligacions i necessita saber com protegir els seus drets.</p></div><div className="dp-stat-grid"><article className="dp-stat"><div className="dp-number">≈55<sup>%</sup></div><small>resident amb nacionalitat estrangera</small><p>Xifra de treball del manuscrit, pendent d’actualització estadística abans de publicar-la com a dada vigent.</p></article><article className="dp-stat"><h3>Subjecte de drets</h3><p>La persona resident és destinatària de l’ordenament i pot trobar-se davant de normes, procediments i institucions.</p></article><article className="dp-stat"><h3>No és assimilació</h3><p>La integració jurídica ofereix eines per comprendre i defensar la pròpia posició jurídica.</p></article></div></section>
 
-            <section className="legal-section">
-              <h2>2. Arquitectura RAG: com troba la informació</h2>
-              <p>
-                El sistema utilitza una tècnica anomenada <strong>RAG</strong> (Retrieval-Augmented Generation),
-                que combina dues capacitats principals:
-              </p>
+          <section className="dp-section dp-dark" id="perque"><div className="dp-section-head"><div><p className="dp-eyebrow">03 · Per què?</p><h2>Perquè el dret també apareix en les decisions petites del dia a dia.</h2></div><p>Dret Planer pot servir com una primera orientació perquè la persona entengui què està llegint, quina pregunta ha de formular i quin és el pas següent.</p></div><div className="dp-cards dp-cards-3">{[['Entendre','Quan reps una notificació','Identificar què t’estan comunicant, quina norma hi apareix i què cal aclarir abans d’actuar.'],['Preparar','Abans d’anar a una institució','Arribar amb una pregunta més concreta, saber quina administració pot ser competent i localitzar la font oficial.'],['Comparar','Quan trobes una explicació en línia','Contrastar una resposta senzilla amb el text jurídic original i detectar si falta context.'],['Decidir','Quan no saps si necessites ajuda','Obtenir una orientació inicial i reconèixer quan cal acudir a un professional.'],['Aprendre','Quan vols entendre el sistema','Relacionar drets, obligacions, institucions i procediments.'],['Autonomia','No rebre només una resposta','Aprendre a preguntar millor i seguir les fonts sense delegar el propi judici.']].map(([tag, title, text]) => <article className="dp-card" key={title}><span>{tag}</span><h3>{title}</h3><p>{text}</p></article>)}</div><p className="dp-disclaimer">Serveix per orientar i preparar-se; no substitueix l’assessorament jurídic, la decisió d’una institució ni la revisió del cas concret.</p></section>
 
-              <p style={{ marginTop: '1rem' }}>
-                Per evitar al·lucinacions en la intel·ligència artificial jurídica, el sistema <strong>Dret Planer</strong> s&apos;alimenta d&apos;un corpus jerarquitzat que garanteix la veracitat (Dantart). Aquest procés d&apos;optimització RAG permet que cada resposta de la IA estigui ancorada en documents oficials i doctrina validada.
-              </p>
+          <section className="dp-section dp-soft" id="marc"><div className="dp-section-head"><div><p className="dp-eyebrow">04 · Tres dimensions teòriques</p><h2>La Constitució és realitat, cultura i pla jurídic compartit.</h2></div><p>Heller, Häberle i Shapiro permeten passar de la teoria a criteris de disseny per a una mediació comprensible.</p></div><div className="dp-cards dp-cards-3">{[['01 / Heller','Realitat històrica i institucional','La norma pren sentit dins d’una trajectòria, unes institucions, unes pràctiques i una experiència col·lectiva.'],['02 / Häberle','Cultura oberta d’intèrprets','La societat també necessita eines per preguntar, interpretar i situar-se.'],['03 / Shapiro','Planificació social','El dret coordina una comunitat mitjançant un pla jurídic compartit que ha de poder ser conegut i comprès.']].map(([tag, title, text]) => <article className="dp-card" key={title}><span>{tag}</span><h3>{title}</h3><p>{text}</p></article>)}</div></section>
 
-              <h4 style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#1e3a8a', marginTop: '1.5rem', marginBottom: '0.75rem' }}>Capes de context per a la veracitat</h4>
-              <ul style={{ listStyle: 'none', padding: 0 }}>
-                <li style={{ padding: '0.75rem', background: '#f9fafb', borderRadius: '0.5rem', border: '1px solid #e5e7eb', marginBottom: '0.5rem' }}>
-                  <strong style={{ color: '#1e3a8a' }}>Normativa Suprema</strong> · Constitució del Principat d&apos;Andorra (corpus principal).
-                </li>
-                <li style={{ padding: '0.75rem', background: '#f9fafb', borderRadius: '0.5rem', border: '1px solid #e5e7eb', marginBottom: '0.5rem' }}>
-                  <strong style={{ color: '#1e3a8a' }}>Jurisprudència</strong> · Memòria del Tribunal Constitucional i Balanç de 20 anys (Pastor Vilanova).
-                </li>
-                <li style={{ padding: '0.75rem', background: '#f9fafb', borderRadius: '0.5rem', border: '1px solid #e5e7eb', marginBottom: '0.5rem' }}>
-                  <strong style={{ color: '#1e3a8a' }}>Doctrina tècnica</strong> · IA jurídica i veracitat (Dantart); prevenció d&apos;al·lucinacions.
-                </li>
-                <li style={{ padding: '0.75rem', background: '#f9fafb', borderRadius: '0.5rem', border: '1px solid #e5e7eb' }}>
-                  <strong style={{ color: '#1e3a8a' }}>Context sociolingüístic</strong> · Alta complexitat demogràfica (Serra); impacte del multilingüisme en la comprensió del dret.
-                </li>
-              </ul>
+          <section className="dp-section" id="claredat"><div className="dp-section-head"><div><p className="dp-eyebrow">05 · Dret a comprendre</p><h2>La claredat constitucional té tres capes.</h2></div><p>Fer planer el dret no és només simplificar frases: és conservar la font, fer intel·ligible l’estructura i explicar el context.</p></div><div className="dp-cards dp-cards-3">{[['Accés','Cognoscibilitat','Arribar a la norma, identificar-la i consultar-ne la font original.'],['Llenguatge','Intel·ligibilitat','Entendre el vocabulari, la sintaxi i l’estructura del text jurídic.'],['Context','Contextualització','Relacionar la norma amb institucions, procediments, drets i situacions.']].map(([tag, title, text]) => <article className="dp-card" key={title}><span>{tag}</span><h3>{title}</h3><p>{text}</p></article>)}</div><div className="dp-document"><div><span>Font jurídica original</span><h3>La norma conserva la seva autoritat.</h3><p>Text, versió, jerarquia i referència verificable.</p></div><div><span>Explicació plana</span><h3>La mediació redueix barreres cognitives.</h3><p>Traducció, simplificació, explicació i context, sense dissoldre la font.</p></div></div></section>
 
-              <h3>Diagrama: l&apos;arquitectura RAG</h3>
-              <figure style={{ margin: '1.5rem 0', textAlign: 'center' }}>
-                <img
-                  src="/images/dret-planer-rag-arquitectura.png"
-                  alt="Dret Planer: diagrama del flux RAG — consulta de l'usuari, vectorització, corpus tancat (Constitució 1993 + doctrina), recuperació semàntica, model generatiu i explicació planera"
-                  style={{ maxWidth: '100%', height: 'auto', borderRadius: '0.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}
-                />
-                <figcaption style={{ marginTop: '0.75rem', fontSize: '0.9rem', color: '#6b7280' }}>
-                  <strong>Dret Planer: L&apos;arquitectura RAG per a la claredat constitucional.</strong> El flux mostra com la consulta es vectoritza, es busca en el corpus tancat i es condiciona la generació per garantir traçabilitat i evitar al·lucinacions.
-                </figcaption>
-              </figure>
-              <p>
-                El diagrama resumeix el <strong>flux de processament RAG</strong>: (1) la <strong>consulta de l&apos;usuari</strong> es transforma en vectors (<em>vectorització</em>); (2) el sistema fa <strong>recuperació semàntica</strong> sobre un <strong>corpus de dades tancat</strong> (Constitució 1993 i doctrina jurídica), sense reentrenar la IA; (3) els fragments rellevants alimenten el <strong>model generatiu</strong>, que elabora l&apos;explicació limitant-se estrictament al context recuperat; (4) cada resposta inclou <strong>referències directes</strong> als articles per permetre la verificació humana; (5) un <strong>filtre de validació de qualitat</strong> detecta si la resposta se separa del text original o conté errors factuals. Això reflecteix una <strong>IA d&apos;ús restringit</strong> (domini jurídic tancat) i <strong>governança tècnica</strong> orientada a la veracitat.
-              </p>
+          <section className="dp-section" id="disseny"><div className="dp-section-head"><div><p className="dp-eyebrow">06 · De la teoria al disseny</p><h2>L’hermenèutica es converteix en una mediació visible.</h2></div><p>El prototip no és una caixa negra: cada part de la seva arquitectura respon a una exigència de comprensió i integració jurídica.</p></div><div className="dp-cards dp-cards-2">{[['Comprensió','De la norma al significat','El sistema parteix d’un corpus controlat i ajuda a entendre què diu la font i en quin context jurídic opera.'],['Context','La norma dins del sistema','Constitució, jurisprudència, doctrina i història no es barregen: es relacionen i es distingeixen.'],['Integració','Participar sense quedar fora','La mediació ajuda a comprendre i formular preguntes; no substitueix el judici ni la decisió humana.'],['Responsabilitat','Fer visible d’on surt','La resposta conserva la relació amb els documents recuperats, la versió del corpus i els seus límits.']].map(([tag, title, text]) => <article className="dp-card" key={title}><span>{tag}</span><h3>{title}</h3><p>{text}</p></article>)}</div></section>
 
-              <h3>2.1. Recuperació intel·ligent (Retrieval)</h3>
-              <p>
-                En lloc de buscar simplement paraules clau, el sistema entén el <em>significat</em> de la teva pregunta.
-                És com tenir un bibliotecari que no només busca per títols, sinó que també entén què estàs buscant.
-              </p>
-              <p>
-                Aquest procés funciona gràcies als <strong>embeddings</strong>: representacions numèriques del text que
-                capturen el seu significat semàntic. Això permet trobar articles relacionats fins i tot quan utilitzen
-                paraules diferents però tracten el mateix tema.
-              </p>
+          <section className="dp-section dp-dark" id="prototip"><div className="dp-section-head"><div><p className="dp-eyebrow">07 · Del principi al prototip</p><h2>Una rampa cognitiva, no un oracle.</h2></div><p>El sistema recupera, ordena i explica. La persona conserva la capacitat de preguntar, contrastar i decidir.</p></div><div className="dp-flow">{[['Pregunta','La persona formula una qüestió en llenguatge natural.'],['Recuperació','El sistema cerca en fonts jurídiques delimitades.'],['Context','Distingeix norma, doctrina, jurisprudència i context.'],['Explicació','Construeix una resposta plana i traçable.'],['Abstenció','Mostra incertesa i deriva quan no pot respondre amb seguretat.']].map(([title, text]) => <div key={title}><strong>{title}</strong><small>{text}</small></div>)}</div></section>
 
-              <h3>2.2. Generació adaptada (Generation)</h3>
-              <p>
-                Un cop s&apos;ha trobat la informació rellevant, el sistema la transforma en una explicació clara i accessible.
-                El model d&apos;IA no s&apos;entrena amb els textos legals; opera per recuperació i condicionament (RAG) i està configurat per:
-              </p>
-              <ul>
-                <li>Mantenir la fidelitat al text original</li>
-                <li>Utilitzar llenguatge planer i comprensible</li>
-                <li>Incloure referències als articles utilitzats</li>
-                <li>Proporcionar context i exemples pràctics</li>
-              </ul>
-            </section>
+          <div id="interpretacio-article-2"><ArticleInterpretacioDemo /></div>
 
-            <section className="legal-section">
-              <h2>3. Interpretació assistida: què inclou</h2>
-              <p>
-                Quan actives la interpretació assistida d&apos;un article, el sistema genera una explicació completa que inclou:
-              </p>
+          <section className="dp-section dp-dark" id="fronteres"><div className="dp-section-head"><div><p className="dp-eyebrow">08 · IA generativa / noves fronteres</p><h2>La IA també participa en la construcció de la recerca.</h2></div><p>La IA no només és objecte d’estudi o motor del prototip: també intervé en la programació i en la transformació de les idees en estructures digitals.</p></div><div className="dp-cards dp-cards-3">{[['01 / Instrument','La IA produeix','Genera codi, estructures, síntesis i variants que acceleren el prototip.'],['02 / Recerca','El prompt orienta','Les instruccions incorporen criteris jurídics i converteixen la teoria en comportaments examinables.'],['03 / Responsabilitat','La persona decideix','La selecció de fonts, l’avaluació i les conclusions continuen sota control humà.']].map(([tag, title, text]) => <article className="dp-card" key={title}><span>{tag}</span><h3>{title}</h3><p>{text}</p></article>)}</div><div className="dp-long-copy"><p>Aquesta participació no elimina l’autoria investigadora. La desplaça cap a una activitat de <strong>definició, selecció, supervisió i verificació</strong>.</p><p>Els prompts no són simples ordres: són <strong>instruments d’investigació</strong>. Tradueixen una hipòtesi jurídica en una instrucció operativa.</p><p>La nova frontera no consisteix a afirmar que la IA pensa jurídicament, sinó a explorar què pot fer la recerca jurídica mantenint la responsabilitat crítica en la persona investigadora.</p></div></section>
 
-              <h3>3.1. Resum</h3>
-              <p>
-                Una explicació en 3-4 frases que explica de manera clara què diu l&apos;article i què regula,
-                utilitzant llenguatge planer diferent del text jurídic formal.
-              </p>
+          <section className="dp-section dp-soft" id="limits"><div className="dp-section-head"><div><p className="dp-eyebrow">09 · Condicions de responsabilitat</p><h2>Integrar no vol dir substituir.</h2></div><p>La tecnologia només és defensable si deixa visibles les seves fonts, els seus límits i la responsabilitat humana.</p></div><ul className="dp-limits"><li>No és autoritat interpretativa.</li><li>No substitueix juristes, tribunals ni institucions.</li><li>No converteix doctrina en dret positiu.</li><li>No prova per si sola que hi hagi comprensió.</li></ul><div className="dp-cards dp-cards-3 dp-evaluation">{[['01 / Tècnica','Recuperació','La font recuperada és pertinent, completa i identificable?'],['02 / Jurídica','Fidelitat','La resposta respecta el text, la jerarquia i el context?'],['03 / Empírica','Comprensió','La persona entén millor el dret? Això exigeix proves específiques.']].map(([tag, title, text]) => <article className="dp-card" key={title}><span>{tag}</span><h3>{title}</h3><p>{text}</p></article>)}</div></section>
 
-              <h3>3.2. Exemples pràctics</h3>
-              <p>
-                Situacions reals que il·lustren com s&apos;aplica l&apos;article en la pràctica, facilitant la comprensió
-                del seu abast i conseqüències.
-              </p>
-
-              <h3>3.3. Conceptes clau</h3>
-              <p>
-                Els termes jurídics més importants que apareixen a l&apos;article, per poder seguir la lectura i
-                entendre millor el contingut.
-              </p>
-
-              <h3>3.4. Finalitat i destinataris</h3>
-              <p>
-                Informació sobre per a què serveix la norma i a qui va dirigida (ciutadans, administracions,
-                empreses, etc.), ajudant a contextualitzar l&apos;àmbit d&apos;aplicació.
-              </p>
-
-              <h3>3.5. Aplicació pràctica</h3>
-              <p>
-                Detalls sobre com s&apos;aplica l&apos;article en la pràctica: procediments, requisits i efectes pràctics,
-                facilitant la comprensió del seu funcionament real.
-              </p>
-
-              <h3>3.6. Doctrina i jurisprudència</h3>
-              <p>
-                Quan està disponible, informació sobre com han interpretat l&apos;article els tribunals i la doctrina
-                acadèmica, oferint una perspectiva més àmplia i contextualitzada.
-              </p>
-            </section>
-
-            <section className="legal-section">
-              <h2>4. Models d&apos;intel·ligència artificial utilitzats</h2>
-              <p>
-                El sistema utilitza models sobirans i contextualment adequats (Projecte AINA per embeddings, Llama 70B via Groq per generació),
-                seleccionats per a la seva funció específica i per evitar biaixos hermenèutics externs:
-              </p>
-
-              <h3>4.1. Models d&apos;embeddings</h3>
-              <p>
-                <strong>Fase 1 (actual)</strong>: <strong>XLM-RoBERTa-base</strong>, model multilingüe que s&apos;executa localment
-                per a la recuperació semàntica (representacions vectorials de 768 dimensions). Oferix privacitat i control total sobre les dades.
-              </p>
-              <p style={{ marginTop: '0.5rem' }}>
-                <strong>Fase 2 (prevista)</strong>: Migració al model <strong>roberta-base-ca-v2</strong> del <strong>Projecte AINA</strong>,
-                entrenat específicament per al català amb un corpus que inclou documents governamentals i jurídics, per millorar la qualitat
-                de la cerca semàntica en text jurídic català.
-              </p>
-
-              <h3>4.2. Models de generació de text</h3>
-              <p>
-                <strong>Llama 70B</strong> (Llama-3.3-70B-Versatile via <strong>Groq</strong>): Genera les explicacions accessibles, resums i respostes del xat (Hermes).
-                Es va provar inicialment Salamandra-7b-instruct (BSC), però no va resultar viable per a producció; en l&apos;estat actual s&apos;utilitza Llama 70B mitjançant l&apos;API de Groq, amb latència baixa i qualitat adequada per al català, castellà i francès.
-              </p>
-              <p style={{ marginTop: '0.5rem' }}>
-                L&apos;ús de models com Llama 70B (Groq) i AINA (embeddings previstos) permet mantenir la qualitat de la generació en català i complir amb l&apos;AI Act i els principis d&apos;adequació tecnològica del projecte.
-              </p>
-            </section>
-
-            <section className="legal-section">
-              <h2>5. Tecnologies i infraestructura</h2>
-              <p>
-                El projecte s&apos;ha desenvolupat utilitzant un stack tecnològic modern que prioritza
-                el rendiment, l&apos;accessibilitat i l&apos;escalabilitat:
-              </p>
-
-              <ul>
-                <li>
-                  <strong>Next.js</strong>: Framework React que permet el renderitzat híbrid i una experiència d&apos;usuari fluida.
-                </li>
-                <li>
-                  <strong>Tailwind CSS</strong>: Framework d&apos;estils que permet un disseny net, responsive i altament personalitzable.
-                </li>
-                <li>
-                  <strong>TypeScript</strong>: Aporta tipatge estàtic al codi, reduint errors i millorant la mantenibilitat del sistema.
-                </li>
-                <li>
-                  <strong>Vercel</strong>: Infraestructura al núvol que assegura un desplegament global d&apos;alta disponibilitat.
-                </li>
-                <li>
-                  <strong>Llama 70B</strong> (Groq): Model de llenguatge per a la generació de text (explicacions, resums, xat). Via API Groq (Llama-3.3-70B-Versatile).
-                </li>
-                <li>
-                  <strong>XLM-RoBERTa-base</strong>: Model d&apos;embeddings multilingüe executat localment (fase 1). Fase 2: <strong>Projecte AINA</strong> (roberta-base-ca-v2) per al català.
-                </li>
-              </ul>
-            </section>
-
-            <section className="legal-section">
-              <h2>6. Corpus i dades</h2>
-              <p>
-                La base de coneixement del sistema (corpus unificat) està formada per la Constitució d&apos;Andorra com a corpus pilot,
-                complementada amb doctrina jurídica seleccionada:
-              </p>
-
-              <ul>
-                <li>
-                  <strong>Constitució d&apos;Andorra (1993)</strong>: Preàmbul i 107 articles estructurats per títols i capítols, amb navegació
-                  jeràrquica completa. Aquest és el corpus pilot del projecte, escollit per la seva importància com a Regla de
-                  Reconeixement del sistema jurídic andorrà.
-                </li>
-                <li>
-                  <strong>Doctrina jurídica</strong>: Fragments seleccionats de les <em>XIX Jornades de la Societat Andorrana de Ciències</em> (2015)
-                  i altres fonts acadèmiques que aporten context interpretatiu sobre el sistema jurídic andorrà, la seva complexitat
-                  i la necessitat d&apos;accessibilitat.
-                </li>
-              </ul>
-
-              <p style={{ marginTop: '1rem' }}>
-                El corpus s&apos;indexa mitjançant <strong>inferència</strong>: no s&apos;entrena cap xarxa neuronal amb els textos jurídics;
-                els embeddings es generen amb un model preentrenat (XLM-RoBERTa) i es desen en un índex unificat. En temps d&apos;execució,
-                la consulta es compara amb aquest índex per similitud semàntica i els fragments més rellevants es passen al model generatiu com a context.
-              </p>
-              <p style={{ marginTop: '0.75rem' }}>
-                El sistema de validació amb <strong>preguntes de control</strong> permet comprovar que el prototip identifica correctament
-                els articles rellevants i genera explicacions coherents, d&apos;acord amb una lògica de qualitat controlada.
-              </p>
-            </section>
-
-            <section className="legal-section" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }}>
-              <div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, textTransform: 'uppercase', color: '#1e3a8a', marginBottom: '0.5rem' }}>Balanç de 20 anys de Constitució</h3>
-                <p style={{ fontSize: '0.9rem', fontStyle: 'italic', color: '#4b5563', marginBottom: '1rem' }}>
-                  Segons Pere Pastor Vilanova, la jurisprudència constitucional ha estat la clau per &quot;aterrar&quot; els principis de 1993 a la realitat quotidiana, especialment en drets fonamentals.
-                </p>
-              </div>
-              <div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, textTransform: 'uppercase', color: '#1e3a8a', marginBottom: '0.75rem' }}>Jerarquia de veracitat RAG</h3>
-                <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '1rem' }}>
-                  El sistema prioritza les fonts segons la seva funció dins l&apos;arquitectura de generació de respostes jurídiques.
-                </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <div style={{ flex: 1, height: '1rem', background: '#e5e7eb', borderRadius: '9999px', overflow: 'hidden' }}>
-                      <div style={{ width: '100%', height: '100%', background: '#1e3a8a' }} />
-                    </div>
-                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#1e3a8a', whiteSpace: 'nowrap' }}>Constitució (100%)</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <div style={{ flex: 1, height: '1rem', background: '#e5e7eb', borderRadius: '9999px', overflow: 'hidden' }}>
-                      <div style={{ width: '80%', height: '100%', background: '#0891b2' }} />
-                    </div>
-                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#0891b2', whiteSpace: 'nowrap' }}>Jurisprudència (80%)</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <div style={{ flex: 1, height: '1rem', background: '#e5e7eb', borderRadius: '9999px', overflow: 'hidden' }}>
-                      <div style={{ width: '65%', height: '100%', background: '#eab308' }} />
-                    </div>
-                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#b45309', whiteSpace: 'nowrap' }}>Doctrina (65%)</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <div style={{ flex: 1, height: '1rem', background: '#e5e7eb', borderRadius: '9999px', overflow: 'hidden' }}>
-                      <div style={{ width: '50%', height: '100%', background: '#9ca3af' }} />
-                    </div>
-                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#6b7280', whiteSpace: 'nowrap' }}>Context social (50%)</span>
-                  </div>
-                </div>
-                <p style={{ fontSize: '0.75rem', color: '#9ca3af', fontStyle: 'italic', marginTop: '1rem', textAlign: 'center' }}>
-                  Mecanismes de validació basats en els principis d&apos;integració responsable (Dantart).
-                </p>
-              </div>
-            </section>
-
-            <section className="legal-section" style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid #e5e7eb', textAlign: 'center' }}>
-              <p style={{ fontSize: '0.85rem', fontWeight: 600, color: '#6b7280', marginBottom: '0.5rem' }}>Fonts doctrinals integrades</p>
-              <p style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
-                López Burniol (2023) · Dantart (informe tècnic RAG) · Pastor Vilanova (jurisprudència) · Soler Parício (evolució històrica) · Serra (sociologia)
-              </p>
-              <p style={{ fontSize: '0.7rem', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '1rem' }}>
-                Dret Planer — Garantint la veracitat del dret en l&apos;era digital
-              </p>
-            </section>
-
-            <section className="legal-section">
-              <h2>7. Compliment legal i principis ètics</h2>
-              <p>
-                El projecte implementa les millors pràctiques en matèria de regulació d&apos;IA i accessibilitat jurídica:
-              </p>
-
-              <h3>7.1. Marc normatiu</h3>
-              <ul>
-                <li>
-                  <strong>AI Act (Reglament UE 2024/1689)</strong>: Sistema de risc limitat amb obligacions de transparència.
-                  Sempre s&apos;indica que les respostes són generades per IA.
-                </li>
-                <li>
-                  <strong>Llei 6/2024 (Andorra)</strong>: Llenguatge institucional accessible, acurat i comprensible.
-                  El projecte explora com fer operatiu aquest mandat.
-                </li>
-                <li>
-                  <strong>Sobirania tecnològica</strong>: Embeddings locals (XLM-RoBERTa), models oberts (Llama 70B),
-                  control total sobre les dades.
-                </li>
-              </ul>
-
-              <h3>7.2. Principis ètics</h3>
-              <ul>
-                <li>
-                  <strong>Transparència total</strong>: Sempre es citen les fonts originals i s&apos;indica el funcionament del sistema.
-                </li>
-                <li>
-                  <strong>Traçabilitat</strong>: Arquitectura RAG que permet verificar cada resposta amb les fonts.
-                </li>
-                <li>
-                  <strong>Control humà</strong>: La IA assisteix, no substitueix el criteri jurídic professional.
-                </li>
-                <li>
-                  <strong>No és font de dret</strong>: Com adverteix Iago Andreu (2015), &quot;un manual pot acabar convertit en
-                  codi per la porta del darrere&quot;. Per això, aquest projecte és una eina pedagògica, no una font legal.
-                </li>
-              </ul>
-
-              <h3>7.3. Limitacions</h3>
-              <ul>
-                <li>
-                  <strong>Eina de suport</strong>: Aquest sistema està dissenyat per facilitar la recerca i la comprensió,
-                  però <strong>no substitueix</strong> el criteri d&apos;un professional del dret.
-                </li>
-                <li>
-                  <strong>Possibles al·lucinacions</strong>: Tot i els controls, els models de llenguatge poden ocasionalment
-                  generar informació inexacta. Sempre cal verificar les fonts originals (enllaçades a cada resposta).
-                </li>
-                <li>
-                  <strong>Informació no vinculant</strong>: Les interpretacions generades no tenen validesa jurídica oficial.
-                </li>
-                <li>
-                  <strong>Projecte acadèmic</strong>: Desenvolupat per un estudiant de Dret, no per un advocat col·legiat.
-                </li>
-              </ul>
-            </section>
-
-            <section className="legal-section">
-              <h2>8. Estat del projecte i roadmap</h2>
-              
-              <h3>8.1. Fase 1 completada (v1.0 - Constitució PoC)</h3>
-              <ul>
-                <li>✅ Preàmbul i 107 articles de la Constitució processats i estructurats</li>
-                <li>✅ Sistema RAG complet amb embeddings XLM-RoBERTa</li>
-                <li>✅ Chatbot funcional amb Llama 70B (Groq)</li>
-                <li>✅ Interfície multilingüe (català, castellà, francès)</li>
-                <li>✅ Paper acadèmic integrat amb bibliografia APA 7</li>
-                <li>✅ Sistema de control de qualitat amb preguntes de validació</li>
-              </ul>
-
-              <h3>8.2. Fase 2 en desenvolupament</h3>
-              <ul>
-                <li>Expansió a altres codis (Codi Civil, Penal)</li>
-                <li>Sistema de jurisprudència del Tribunal Constitucional</li>
-                <li>Millores en la cerca semàntica i optimització de prompts</li>
-                <li>Validació amb professionals del dret</li>
-              </ul>
-
-              <h3>8.3. Fase 3 futura</h3>
-              <ul>
-                <li>Comparador de sistemes legals (Andorra vs Catalunya vs Espanya)</li>
-                <li>API pública per a desenvolupadors</li>
-                <li>Guies especialitzades per a expatriats i emprenedors</li>
-                <li>Sistema d&apos;usuaris i subscripcions professionals</li>
-              </ul>
-            </section>
-
-            <section className="legal-section" style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid #e5e7eb' }}>
-              <h2>Sobre el projecte i l&apos;autor</h2>
-              <p>
-                Aquest projecte és desenvolupat per <strong>Marc Casellas</strong>, estudiant de Dret a la UOC (Universitat Oberta de Catalunya) i pre-matrícula ala Universitat d&apos;Andorra,
-                com a part d&apos;una recerca sobre intel·ligència artificial i accessibilitat jurídica.
-              </p>
-              <p style={{ marginTop: '1rem' }}>
-                Per conèixer els detalls metodològics i el marc teòric complet, podeu accedir al paper acadèmic:
-                <br />
-                <strong>&quot;Dret Planer: Intel·ligència Artificial d&apos;Ús Restringit per a la Claredat Constitucional al Principat d&apos;Andorra&quot;</strong>
-              </p>
-              <div style={{ marginTop: '1.5rem' }}>
-                <Link href="/paper" className="com-esta-fet-paper-cta">
-                  📄 Llegir el paper acadèmic
-                </Link>
-              </div>
-              <p style={{ marginTop: '1.5rem', fontSize: '0.9em', color: '#6b7280' }}>
-                També pots consultar l&apos;{' '}
-                <a
-                  href="/disclaimer"
-                  style={{ color: '#2563eb', textDecoration: 'underline' }}
-                >
-                  avís legal i política de privacitat
-                </a>
-                {' '}o el{' '}
-                <a
-                  href="https://github.com/mcasellasd/andorra-consti"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ color: '#2563eb', textDecoration: 'underline' }}
-                >
-                  codi font a GitHub
-                </a>.
-              </p>
-            </section>
-          </article>
-        </div>
+          <section className="dp-closing"><p className="dp-eyebrow">Idea central</p><h2>La tecnologia és la mediació. La integració jurídica és la finalitat.</h2><p>El projecte explora si una IA consultiva pot fer més cognoscible, intel·ligible i contextual la Constitució andorrana, preservant l’autonomia de la persona i la responsabilitat humana.</p></section>
+        </main>
 
         <style jsx>{`
-          .com-esta-fet-paper-cta {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.6rem 1.2rem;
-            font-weight: 600;
-            font-size: 0.95rem;
-            color: #ffffff;
-            background: #2563eb;
-            border: 2px solid #2563eb;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: background 0.2s, color 0.2s, transform 0.2s;
-          }
-          .com-esta-fet-paper-cta:hover {
-            background: #1d4ed8;
-            border-color: #1d4ed8;
-            transform: translateY(-1px);
-          }
-          .com-esta-fet-paper-cta-secondary {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.6rem 1.2rem;
-            font-weight: 600;
-            font-size: 0.95rem;
-            color: #2563eb;
-            background: #ffffff;
-            border: 2px solid #2563eb;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: background 0.2s, color 0.2s, transform 0.2s;
-          }
-          .com-esta-fet-paper-cta-secondary:hover {
-            background: #eff6ff;
-            transform: translateY(-1px);
-          }
+          .dp-infografia { --ink:#172622; --muted:#66756e; --paper:#f5f1e9; --paper2:#e7eee8; --line:#d4ddd4; --forest:#143d33; --green:#2d7a5d; --mint:#bcdccb; --orange:#db794d; --yellow:#efc861; --white:#fffdf8; color:var(--ink); background:var(--paper); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; line-height:1.5; margin:0 -1rem; }
+          .dp-topline { height:8px; background:linear-gradient(90deg,var(--orange) 0 25%,var(--yellow) 25% 50%,var(--green) 50% 75%,var(--forest) 75%); }
+          .dp-nav { position:sticky; top:0; z-index:20; display:flex; justify-content:space-between; align-items:center; gap:18px; padding:15px clamp(22px,5vw,70px); background:rgba(245,241,233,.94); border-bottom:1px solid var(--line); backdrop-filter:blur(12px); }
+          .dp-brand { display:flex; align-items:center; gap:10px; color:var(--forest); font-size:.8rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+          .dp-mark { display:grid; place-items:center; width:30px; height:30px; border-radius:50%; color:var(--white); background:var(--forest); font-family:Georgia,serif; font-size:1.1rem; box-shadow:8px -5px 0 var(--yellow); }
+          .dp-navlinks { display:flex; gap:15px; color:var(--muted); font-size:.75rem; }
+          .dp-navlinks a:hover { color:var(--forest); }
+          .dp-hero,.dp-section { padding:86px clamp(22px,8vw,110px); }
+          .dp-hero { display:grid; grid-template-columns:1.05fr .95fr; gap:7vw; align-items:center; background:var(--white); }
+          .dp-eyebrow { margin:0 0 15px; color:var(--orange); font-size:.7rem; font-weight:850; letter-spacing:.16em; text-transform:uppercase; }
+          .dp-dark .dp-eyebrow { color:var(--yellow); }
+          .dp-hero h1,.dp-section h2,.dp-closing h2 { margin:0; font:400 clamp(2.7rem,5vw,5.8rem)/.94 Georgia,'Times New Roman',serif; letter-spacing:-.055em; }
+          .dp-lede { max-width:650px; margin:28px 0 0; color:#4f5e57; font-size:1.12rem; }
+          .dp-orbit-art { display:grid; place-items:center; min-height:410px; }
+          .dp-orbit { position:relative; width:min(34vw,390px); aspect-ratio:1; border:1px solid #9cc0aa; border-radius:50%; background:radial-gradient(circle at 50% 44%,var(--mint) 0 28%,transparent 28.5%),radial-gradient(circle,transparent 0 48%,#dbe9df 48.5% 49%,transparent 49.5%); }
+          .dp-orbit:before,.dp-orbit:after { content:''; position:absolute; inset:13%; border:1px dashed #80ae96; border-radius:50%; }.dp-orbit:after { inset:29%; border-style:solid; border-color:var(--orange); }
+          .dp-orbit span { position:absolute; width:15px; height:15px; border-radius:50%; background:var(--orange); top:-8px; left:calc(50% - 8px); }.dp-orbit span:nth-child(2){top:auto;left:auto;right:2%;bottom:11%;background:var(--yellow)}.dp-orbit span:nth-child(3){top:25%;left:4%;background:var(--green)}
+          .dp-orbit b { position:absolute; inset:0; display:grid; place-content:center; text-align:center; color:var(--forest); font:400 1.45rem/1.05 Georgia,serif; }
+          .dp-dark { color:var(--white); background:var(--forest); }.dp-soft { background:var(--paper2); }.dp-section-head { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(240px,.85fr); gap:7vw; align-items:end; margin-bottom:45px; }.dp-section-head > p { margin:0; color:var(--muted); font-size:1rem; }.dp-dark .dp-section-head > p,.dp-dark .dp-disclaimer,.dp-dark .dp-long-copy { color:#c2d5ca; }
+          .dp-question { margin:0; padding:28px 0 5px; border-top:1px solid currentColor; border-bottom:1px solid currentColor; font:400 clamp(1.7rem,3.2vw,3.5rem)/1.04 Georgia,serif; }.dp-question em{color:var(--orange);font-style:normal}
+          .dp-stat-grid,.dp-cards { display:grid; gap:14px; }.dp-stat-grid,.dp-cards-3 { grid-template-columns:repeat(3,1fr); }.dp-cards-2 { grid-template-columns:repeat(2,1fr); }.dp-stat,.dp-card { padding:27px; border:1px solid var(--line); background:rgba(255,253,248,.78); }.dp-dark .dp-card { background:rgba(8,40,32,.55); border-color:rgba(255,255,255,.24); }.dp-card span { color:var(--orange); font-size:.7rem; font-weight:850; letter-spacing:.12em; text-transform:uppercase; }.dp-dark .dp-card span{color:var(--yellow)}.dp-stat h3,.dp-card h3{margin:17px 0 11px;font:400 1.45rem/1.02 Georgia,serif;letter-spacing:-.03em}.dp-card p,.dp-stat p{margin:0;color:#56655e}.dp-dark .dp-card h3,.dp-dark .dp-card p{color:var(--white)}.dp-dark .dp-card p{color:#c2d5ca}.dp-number{margin-bottom:20px;color:var(--orange);font:400 clamp(4.8rem,9vw,9rem)/.7 Georgia,serif;letter-spacing:-.1em}.dp-stat small{color:var(--muted);font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.dp-stat > p{margin-top:18px;font-size:.78rem}.dp-disclaimer{margin:22px 0 0;font-size:.78rem}.dp-document{display:grid;grid-template-columns:1fr 1fr;margin-top:42px;border:1px solid var(--forest)}.dp-document > div{min-height:220px;padding:30px}.dp-document > div:first-child{color:var(--white);background:var(--forest)}.dp-document > div:last-child{background:var(--yellow)}.dp-document span{font-size:.7rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase}.dp-document h3{margin:16px 0 10px;font:400 1.8rem/1.02 Georgia,serif}.dp-document p{margin:0}.dp-flow{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid rgba(255,255,255,.3);border-bottom:1px solid rgba(255,255,255,.3)}.dp-flow > div{min-height:190px;padding:25px 18px;border-right:1px solid rgba(255,255,255,.24)}.dp-flow > div:last-child{border-right:0}.dp-flow strong{display:block;margin-bottom:68px;color:var(--yellow);font:400 1.45rem/1 Georgia,serif}.dp-flow small{color:#c2d5ca}.dp-long-copy{max-width:900px;margin-top:40px;font-size:1.05rem}.dp-long-copy strong{color:var(--yellow)}.dp-limits{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0;padding:0;list-style:none}.dp-limits li{min-height:130px;padding:20px;background:var(--white);border-top:4px solid var(--orange);font-weight:750}.dp-evaluation{margin-top:45px}.dp-closing{padding:95px clamp(22px,8vw,110px);color:var(--white);text-align:center;background:var(--orange)}.dp-closing .dp-eyebrow{color:var(--white)}.dp-closing h2{max-width:850px;margin:0 auto}.dp-closing > p:last-child{max-width:700px;margin:25px auto 0;color:#fff2e9;font-size:1.08rem}
+          @media(max-width:850px){.dp-navlinks{display:none}.dp-hero,.dp-section{padding:65px 7vw}.dp-hero{grid-template-columns:1fr}.dp-orbit-art{min-height:300px}.dp-orbit{width:min(70vw,350px)}.dp-section-head{display:block}.dp-section-head > p{margin-top:22px}.dp-stat-grid,.dp-cards-3,.dp-cards-2,.dp-limits{grid-template-columns:1fr}.dp-document{grid-template-columns:1fr}.dp-flow{grid-template-columns:1fr}.dp-flow > div{min-height:auto;border-right:0;border-bottom:1px solid rgba(255,255,255,.24)}.dp-flow strong{margin-bottom:12px}.dp-limits{gap:10px}}
         `}</style>
-      </Layout>
-    </>
-  );
-};
+      </div>
+    </Layout>
+  </>
+);
 
 export default ComEstaFetPage;
