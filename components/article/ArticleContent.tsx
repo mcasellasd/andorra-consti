@@ -50,6 +50,7 @@ export function ArticleContent({
   const fonts = interpretacio?.fonts ?? [];
   const lecturesAlternatives = interpretacio?.lectures_alternatives ?? [];
   const limits = interpretacio?.limits;
+  const hasDoctrinalContext = Boolean(interpretacio?.doctrina_jurisprudencia?.trim());
   const interpretacioPrincipal = interpretacio?.interpretacio_principal || interpretacio?.resum?.[idioma] || '';
   const resumVisible = interpretacio?.resum?.[idioma] || article.dimensions_comprensio?.simplificacio_supervisada?.nivell_planer || '';
   const mostraInterpretacioPrincipal = Boolean(interpretacioPrincipal) &&
@@ -411,10 +412,12 @@ export function ArticleContent({
                   isGenerating={isGenerating}
                 />
 
-                <div className="article-card article-guidance-card">
-                  <h3>{copy.doctrinal}</h3>
-                  <p>{interpretacio?.doctrina_jurisprudencia || copy.noDisponible}</p>
-                </div>
+                {!hasDoctrinalContext && (
+                  <div className="article-card article-guidance-card">
+                    <h3>{copy.doctrinal}</h3>
+                    <p>{copy.noDisponible}</p>
+                  </div>
+                )}
 
                 <div className="article-card article-guidance-card" data-testid="context-historic">
                   <h3>{copy.historic}</h3>
