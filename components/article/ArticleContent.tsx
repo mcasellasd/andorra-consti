@@ -50,6 +50,10 @@ export function ArticleContent({
   const fonts = interpretacio?.fonts ?? [];
   const lecturesAlternatives = interpretacio?.lectures_alternatives ?? [];
   const limits = interpretacio?.limits;
+  const interpretacioPrincipal = interpretacio?.interpretacio_principal || interpretacio?.resum?.[idioma] || '';
+  const resumVisible = interpretacio?.resum?.[idioma] || article.dimensions_comprensio?.simplificacio_supervisada?.nivell_planer || '';
+  const mostraInterpretacioPrincipal = Boolean(interpretacioPrincipal) &&
+    interpretacioPrincipal.trim() !== resumVisible.trim();
 
   const copy = {
     interpretacio: idioma === 'ca' ? 'Interpretació' : idioma === 'es' ? 'Interpretación' : 'Interprétation',
@@ -326,10 +330,12 @@ export function ArticleContent({
                   isGenerating={isGenerating}
                 />
 
-                <div className="article-card article-guidance-card">
-                  <h3>{copy.lecturaPrincipal}</h3>
-                  <p>{interpretacio?.interpretacio_principal || interpretacio?.resum?.[idioma] || copy.noDisponible}</p>
-                </div>
+                {mostraInterpretacioPrincipal && (
+                  <div className="article-card article-guidance-card">
+                    <h3>{copy.lecturaPrincipal}</h3>
+                    <p>{interpretacioPrincipal}</p>
+                  </div>
+                )}
 
                 {lecturesAlternatives.length > 0 && (
                   <div className="article-card article-guidance-card">
