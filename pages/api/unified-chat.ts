@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { generateText } from '../../lib/llm';
 import { checkAIActCompliance, getAIActCompliancePrompt } from '../../lib/rag/quality-assessment';
 import { validateResponseQuality } from '../../lib/rag/response-quality';
-import { generateEmbedding, getEmbeddingProvider } from '../../lib/embeddings';
 import { retrieveTopMatches, getArticleById } from '../../lib/rag/corpus';
 import { RetrievedContext } from '../../lib/rag/types';
 import { detectArticleReference, detectArticleByKeywords, detectComplexity } from '../../lib/rag/detect-complexity';
@@ -161,27 +160,14 @@ export default async function handler(
     const matchesMap = new Map<string, RetrievedContext>();
 
     if (process.env.RAG_ENABLED === 'true') {
-      const provider = getEmbeddingProvider();
-      const openaiApiKey = process.env.OPENAI_API_KEY;
-      
-      // ⚠️ VERCEL WORKAROUND: Si no hi ha OPENAI_API_KEY, RAG es desactiva automàticament
-      if (!openaiApiKey && provider === 'xlm-roberta') {
-        console.warn('⚠️ RAG desactivat: No hi ha OPENAI_API_KEY a Vercel. Usant només mode sense context.');
-      } else {
-        try {
-          console.log('🔍 Generant embedding i cercant context RAG...');
-          const queryEmbedding = await generateEmbedding(message, provider, openaiApiKey);
-          const topK = Math.max(5, complexity.suggestedTopK);
-          
-          // Qualsevol pregunta es porta al marc constitucional; el corpus ja
-          // està filtrat perquè només contingui entrades CONST_*.
-          const retrievedMatches = retrieveTopMatches(queryEmbedding, topK, ['CONSTITUCIO'], true);
-          retrievedMatches.forEach(match => matchesMap.set(match.entry.id, match));
-        } catch (ragError: any) {
-          // Si RAG falla (ex: out of memory, API error), continuar sense context
-          console.error('❌ Error RAG (continuar sense context):', ragError?.message || ragError);
-          // matchesMap es queda buit, el chat continuarà sense context del RAG
-        }
+      try {
+        console.log('🔍 Cercant context RAG...');
+        const topK = Math.max(5, complexity.suggestedTopK);
+        const retrievedMatches = await retrieveTopMatches(message, topK, ['CONSTITUCIO'], true);
+        retrievedMatches.forEach(match => matchesMap.set(match.entry.id, match));
+      } catch (ragError: any) {
+        // Si RAG falla (ex: API error), continuar sense context
+        console.error('❌ Error RAG (continuar sense context):', ragError?.message || ragError);
       }
     }
 
