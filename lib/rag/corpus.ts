@@ -150,7 +150,7 @@ function fuseRankedResults(resultLists: RetrievedContext[][], topK: number): Ret
     });
   }
 
-  return [...fused.values()]
+  return Array.from(fused.values())
     .sort((left, right) => right.score - left.score)
     .slice(0, topK)
     .map(({ item, score }) => ({ ...item, score }));
