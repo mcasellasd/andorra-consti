@@ -12,7 +12,9 @@ import { ArticleHeader } from '../../../../components/article/ArticleHeader';
 import { ArticleContent } from '../../../../components/article/ArticleContent';
 import { ArticleForcaNormativa } from '../../../../components/article/ArticleForcaNormativa';
 import { useInterlocutorProfile } from '../../../../components/InterlocutorProfileSelector';
-import { getInterlocutorProfileKey } from '../../../../lib/interlocutor-profile';
+import { DEFAULT_INTERLOCUTOR_PROFILE, getInterlocutorProfileKey } from '../../../../lib/interlocutor-profile';
+
+const DEFAULT_PROFILE_KEY = getInterlocutorProfileKey(DEFAULT_INTERLOCUTOR_PROFILE);
 
 function hasCompleteInterpretacioForIdioma(interpretacio: InterpretacioIAType | null, idioma: Idioma): boolean {
   if (!interpretacio?.resum?.[idioma]?.trim()) return false;
@@ -30,6 +32,36 @@ function hasCompleteInterpretacioForIdioma(interpretacio: InterpretacioIAType | 
   );
 }
 
+function mergeInterpretacioByIdioma(
+  existing: InterpretacioIAType | null,
+  incoming: InterpretacioIAType,
+  idioma: Idioma,
+): InterpretacioIAType {
+  if (!existing) return incoming;
+
+  return {
+    ...incoming,
+    resum: {
+      ca: incoming.resum?.ca ?? existing.resum?.ca ?? '',
+      es: incoming.resum?.es ?? existing.resum?.es ?? '',
+      fr: incoming.resum?.fr ?? existing.resum?.fr ?? '',
+    },
+    exemples: [
+      ...(existing.exemples || []).filter((e) => e.idioma !== idioma),
+      ...(incoming.exemples || []),
+    ],
+    finalitat: incoming.finalitat ?? existing.finalitat,
+    destinataris: incoming.destinataris ?? existing.destinataris,
+    aplicacio: incoming.aplicacio ?? existing.aplicacio,
+    doctrina_jurisprudencia: incoming.doctrina_jurisprudencia ?? existing.doctrina_jurisprudencia,
+    interpretacio_principal: incoming.interpretacio_principal ?? existing.interpretacio_principal,
+    lectures_alternatives: incoming.lectures_alternatives ?? existing.lectures_alternatives,
+    fonts: incoming.fonts ?? existing.fonts,
+    limits: incoming.limits ?? existing.limits,
+    context_historic: incoming.context_historic ?? existing.context_historic,
+  };
+}
+
 const ArticleConstitucioPage: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -42,7 +74,8 @@ const ArticleConstitucioPage: React.FC = () => {
   const [doctrina, setDoctrina] = useState<DoctrinaCase[]>([]);
   const { profile, updateProfile, resetProfile } = useInterlocutorProfile();
   const profileKey = getInterlocutorProfileKey(profile);
-  const activeInterpretacio = interpretacionsByProfile[profileKey] ?? interpretacionsByProfile.__legacy__ ?? null;
+  const activeInterpretacio = interpretacionsByProfile[profileKey]
+    ?? (profileKey === DEFAULT_PROFILE_KEY ? interpretacionsByProfile.__legacy__ ?? null : null);
 
   useEffect(() => {
     setIdioma(getIdiomaActual());
@@ -130,6 +163,7 @@ const ArticleConstitucioPage: React.FC = () => {
 
   const handleGenerateAssistencia = async () => {
     if (!article) return;
+    const requestProfile = profile;
     const requestProfileKey = profileKey;
     const requestInterpretacio = interpretacionsByProfile[requestProfileKey] ?? null;
 
@@ -154,7 +188,7 @@ const ArticleConstitucioPage: React.FC = () => {
           idioma: idioma,
           text_oficial: article.text_oficial,
           numeracio: article.numeracio,
-          profile,
+          profile: requestProfile,
         }),
       });
 
@@ -213,29 +247,7 @@ const ArticleConstitucioPage: React.FC = () => {
 
       const data: InterpretacioIAType = await resposta.json();
 
-      const merged: InterpretacioIAType = requestInterpretacio
-        ? {
-            ...data,
-            resum: {
-              ca: data.resum?.ca ?? requestInterpretacio.resum?.ca ?? '',
-              es: data.resum?.es ?? requestInterpretacio.resum?.es ?? '',
-              fr: data.resum?.fr ?? requestInterpretacio.resum?.fr ?? '',
-            },
-            exemples: [
-              ...(requestInterpretacio.exemples || []).filter((e) => e.idioma !== idioma),
-              ...(data.exemples || []),
-            ],
-            finalitat: data.finalitat ?? requestInterpretacio.finalitat,
-            destinataris: data.destinataris ?? requestInterpretacio.destinataris,
-            aplicacio: data.aplicacio ?? requestInterpretacio.aplicacio,
-            doctrina_jurisprudencia: data.doctrina_jurisprudencia ?? requestInterpretacio.doctrina_jurisprudencia,
-            interpretacio_principal: data.interpretacio_principal ?? requestInterpretacio.interpretacio_principal,
-            lectures_alternatives: data.lectures_alternatives ?? requestInterpretacio.lectures_alternatives,
-            fonts: data.fonts ?? requestInterpretacio.fonts,
-            limits: data.limits ?? requestInterpretacio.limits,
-            context_historic: data.context_historic ?? requestInterpretacio.context_historic,
-          }
-        : data;
+      const merged = mergeInterpretacioByIdioma(requestInterpretacio, data, idioma);
 
       const mergedWithProfile: InterpretacioIAType = {
         ...merged,
