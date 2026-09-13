@@ -26,7 +26,7 @@ const ArticleConstitucioPage: React.FC = () => {
   const [doctrina, setDoctrina] = useState<DoctrinaCase[]>([]);
   const { profile, updateProfile, resetProfile } = useInterlocutorProfile();
   const profileKey = getInterlocutorProfileKey(profile);
-  const activeInterpretacio = interpretacionsByProfile[profileKey] ?? null;
+  const activeInterpretacio = interpretacionsByProfile[profileKey] ?? interpretacionsByProfile.__legacy__ ?? null;
 
   useEffect(() => {
     setIdioma(getIdiomaActual());
@@ -66,7 +66,7 @@ const ArticleConstitucioPage: React.FC = () => {
             const maybeSingle = cached as Partial<InterpretacioIAType>;
             if (typeof maybeSingle.article_id === 'string') {
               if (maybeSingle.article_id === articleTrobat.id) {
-                const key = maybeSingle.profile_key || profileKey;
+                const key = maybeSingle.profile_key || '__legacy__';
                 byProfile[key] = maybeSingle as InterpretacioIAType;
               }
             } else {
@@ -89,7 +89,7 @@ const ArticleConstitucioPage: React.FC = () => {
       }
       setLoading(false);
     }
-  }, [id, profileKey]);
+  }, [id]);
 
   // Carregar doctrina relacionada
   useEffect(() => {
@@ -220,20 +220,20 @@ const ArticleConstitucioPage: React.FC = () => {
         : data;
 
       merged.profile_key = profileKey;
-
-      const updatedInterpretacions = {
-        ...interpretacionsByProfile,
-        [profileKey]: merged,
-      };
-      setInterpretacionsByProfile(updatedInterpretacions);
-
-      try {
-        if (typeof window !== 'undefined') {
-          sessionStorage.setItem(`${SESSION_STORAGE_KEY}_${article.id}`, JSON.stringify(updatedInterpretacions));
+      setInterpretacionsByProfile((previousInterpretacions) => {
+        const updatedInterpretacions = {
+          ...previousInterpretacions,
+          [profileKey]: merged,
+        };
+        try {
+          if (typeof window !== 'undefined') {
+            sessionStorage.setItem(`${SESSION_STORAGE_KEY}_${article.id}`, JSON.stringify(updatedInterpretacions));
+          }
+        } catch {
+          // sessionStorage pot fallar (p. ex. mode privat)
         }
-      } catch {
-        // sessionStorage pot fallar (p. ex. mode privat)
-      }
+        return updatedInterpretacions;
+      });
     } catch (error) {
       console.error('Error generant Assistencia:', error);
       setGenerationError(
