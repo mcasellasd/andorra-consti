@@ -246,14 +246,13 @@ const ArticleConstitucioPage: React.FC = () => {
       }
 
       const data: InterpretacioIAType = await resposta.json();
-
-      const merged = mergeInterpretacioByIdioma(requestInterpretacio, data, idioma);
-
-      const mergedWithProfile: InterpretacioIAType = {
-        ...merged,
-        profile_key: requestProfileKey,
-      };
       setInterpretacionsByProfile((previousInterpretacions) => {
+        const latestInterpretacio = previousInterpretacions[requestProfileKey] ?? requestInterpretacio;
+        const merged = mergeInterpretacioByIdioma(latestInterpretacio, data, idioma);
+        const mergedWithProfile: InterpretacioIAType = {
+          ...merged,
+          profile_key: requestProfileKey,
+        };
         const updatedInterpretacions = {
           ...previousInterpretacions,
           [requestProfileKey]: mergedWithProfile,
