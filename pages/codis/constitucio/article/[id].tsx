@@ -219,11 +219,14 @@ const ArticleConstitucioPage: React.FC = () => {
           }
         : data;
 
-      merged.profile_key = profileKey;
+      const mergedWithProfile: InterpretacioIAType = {
+        ...merged,
+        profile_key: profileKey,
+      };
       setInterpretacionsByProfile((previousInterpretacions) => {
         const updatedInterpretacions = {
           ...previousInterpretacions,
-          [profileKey]: merged,
+          [profileKey]: mergedWithProfile,
         };
         try {
           if (typeof window !== 'undefined') {
