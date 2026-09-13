@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Layout from '../../../../components/Layout';
@@ -12,7 +12,47 @@ import { ArticleHeader } from '../../../../components/article/ArticleHeader';
 import { ArticleContent } from '../../../../components/article/ArticleContent';
 import { ArticleForcaNormativa } from '../../../../components/article/ArticleForcaNormativa';
 import { useInterlocutorProfile } from '../../../../components/InterlocutorProfileSelector';
-import { getInterlocutorProfileKey } from '../../../../lib/interlocutor-profile';
+import { DEFAULT_INTERLOCUTOR_PROFILE, getInterlocutorProfileKey } from '../../../../lib/interlocutor-profile';
+
+const DEFAULT_PROFILE_KEY = getInterlocutorProfileKey(DEFAULT_INTERLOCUTOR_PROFILE);
+
+function hasCompleteInterpretacioForIdioma(interpretacio: InterpretacioIAType | null, idioma: Idioma): boolean {
+  if (!interpretacio?.resum?.[idioma]?.trim()) return false;
+
+  return (interpretacio.exemples || []).some(
+    (exemple) => exemple.idioma === idioma && Boolean(exemple.cas?.trim()),
+  );
+}
+
+function mergeInterpretacioByIdioma(
+  existing: InterpretacioIAType | null,
+  incoming: InterpretacioIAType,
+  idioma: Idioma,
+): InterpretacioIAType {
+  if (!existing) return incoming;
+
+  return {
+    ...incoming,
+    resum: {
+      ca: incoming.resum?.ca ?? existing.resum?.ca ?? '',
+      es: incoming.resum?.es ?? existing.resum?.es ?? '',
+      fr: incoming.resum?.fr ?? existing.resum?.fr ?? '',
+    },
+    exemples: [
+      ...(existing.exemples || []).filter((e) => e.idioma !== idioma),
+      ...(incoming.exemples || []),
+    ],
+    finalitat: incoming.finalitat ?? existing.finalitat,
+    destinataris: incoming.destinataris ?? existing.destinataris,
+    aplicacio: incoming.aplicacio ?? existing.aplicacio,
+    doctrina_jurisprudencia: incoming.doctrina_jurisprudencia ?? existing.doctrina_jurisprudencia,
+    interpretacio_principal: incoming.interpretacio_principal ?? existing.interpretacio_principal,
+    lectures_alternatives: incoming.lectures_alternatives ?? existing.lectures_alternatives,
+    fonts: incoming.fonts ?? existing.fonts,
+    limits: incoming.limits ?? existing.limits,
+    context_historic: incoming.context_historic ?? existing.context_historic,
+  };
+}
 
 const ArticleConstitucioPage: React.FC = () => {
   const router = useRouter();
@@ -21,11 +61,14 @@ const ArticleConstitucioPage: React.FC = () => {
   const [idioma, setIdioma] = useState<Idioma>('ca');
   const [loading, setLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [interpretacio, setInterpretacio] = useState<InterpretacioIAType | null>(null);
+  const [generationError, setGenerationError] = useState<string | null>(null);
+  const [interpretacionsByProfile, setInterpretacionsByProfile] = useState<Record<string, InterpretacioIAType>>({});
   const [doctrina, setDoctrina] = useState<DoctrinaCase[]>([]);
+  const latestGenerationByProfileRef = useRef<Record<string, string>>({});
   const { profile, updateProfile, resetProfile } = useInterlocutorProfile();
   const profileKey = getInterlocutorProfileKey(profile);
-  const activeInterpretacio = interpretacio?.profile_key === profileKey ? interpretacio : null;
+  const activeInterpretacio = interpretacionsByProfile[profileKey]
+    ?? (profileKey === DEFAULT_PROFILE_KEY ? interpretacionsByProfile.__legacy__ ?? null : null);
 
   useEffect(() => {
     setIdioma(getIdiomaActual());
@@ -58,10 +101,32 @@ const ArticleConstitucioPage: React.FC = () => {
         // Carregar interpretació des de la memòria de sessió si n'hi ha
         try {
           const raw = typeof window !== 'undefined' && sessionStorage.getItem(`${SESSION_STORAGE_KEY}_${articleTrobat.id}`);
-          const cached = raw ? (JSON.parse(raw) as InterpretacioIAType) : null;
-          setInterpretacio(cached?.article_id === articleTrobat.id ? cached : null);
+          const cached = raw ? (JSON.parse(raw) as unknown) : null;
+          const byProfile: Record<string, InterpretacioIAType> = {};
+
+          if (cached && typeof cached === 'object' && !Array.isArray(cached)) {
+            const maybeSingle = cached as Partial<InterpretacioIAType>;
+            if (typeof maybeSingle.article_id === 'string') {
+              if (maybeSingle.article_id === articleTrobat.id) {
+                const key = maybeSingle.profile_key || '__legacy__';
+                byProfile[key] = maybeSingle as InterpretacioIAType;
+              }
+            } else {
+              for (const [key, value] of Object.entries(cached as Record<string, unknown>)) {
+                if (
+                  value
+                  && typeof value === 'object'
+                  && (value as InterpretacioIAType).article_id === articleTrobat.id
+                ) {
+                  byProfile[key] = value as InterpretacioIAType;
+                }
+              }
+            }
+          }
+
+          setInterpretacionsByProfile(byProfile);
         } catch {
-          setInterpretacio(null);
+          setInterpretacionsByProfile({});
         }
       }
       setLoading(false);
@@ -91,14 +156,21 @@ const ArticleConstitucioPage: React.FC = () => {
 
   const handleGenerateAssistencia = async () => {
     if (!article) return;
+    const requestProfile = profile;
+    const requestProfileKey = profileKey;
+    const requestInterpretacio = interpretacionsByProfile[requestProfileKey] ?? null;
+    const requestToken = `${requestProfileKey}:${idioma}:${Date.now()}`;
+    latestGenerationByProfileRef.current[requestProfileKey] = requestToken;
 
-    // Comprovar si ja tenim el resum per aquest idioma
-    if (activeInterpretacio?.resum?.[idioma]) {
+    // Comprovar si ja tenim la fitxa completa per aquest idioma i perfil
+    if (hasCompleteInterpretacioForIdioma(requestInterpretacio, idioma)) {
+      setGenerationError(null);
       setIsGenerating(false);
       return;
     }
 
     setIsGenerating(true);
+    setGenerationError(null);
 
     try {
       const resposta = await fetch('/api/unified-chat', {
@@ -111,50 +183,102 @@ const ArticleConstitucioPage: React.FC = () => {
           idioma: idioma,
           text_oficial: article.text_oficial,
           numeracio: article.numeracio,
-          profile,
+          profile: requestProfile,
         }),
       });
 
+      const quotaLimitHeader = resposta.headers.get('x-session-quota-limit');
+      const quotaRemainingHeader = resposta.headers.get('x-session-quota-remaining');
+      const quotaResetHeader = resposta.headers.get('x-session-quota-reset');
+      const quotaLimit = Number(quotaLimitHeader);
+      const quotaRemaining = Number(quotaRemainingHeader);
+      const quotaReset = Number(quotaResetHeader);
+      if (
+        quotaLimitHeader &&
+        quotaRemainingHeader &&
+        quotaResetHeader &&
+        Number.isFinite(quotaLimit) &&
+        Number.isFinite(quotaRemaining) &&
+        Number.isFinite(quotaReset) &&
+        typeof window !== 'undefined'
+      ) {
+        sessionStorage.setItem('dretplaner.chat.sessionQuota', JSON.stringify({
+          limit: quotaLimit,
+          remaining: Math.max(0, quotaRemaining),
+          reset: quotaReset,
+        }));
+      }
+
       if (!resposta.ok) {
-        throw new Error('Error al generar la interpretació');
+        let apiMessage = '';
+        try {
+          const errorBody = await resposta.json() as { error?: unknown };
+          if (typeof errorBody.error === 'string') apiMessage = errorBody.error;
+        } catch {
+          // La resposta pot no ser JSON (per exemple, un error del proxy).
+        }
+
+        const fallback =
+          resposta.status === 429
+            ? idioma === 'es'
+              ? 'Has alcanzado el límite de consultas. Inténtalo más tarde.'
+              : idioma === 'fr'
+                ? 'Vous avez atteint la limite de requêtes. Réessayez plus tard.'
+                : 'Has arribat al límit de consultes. Torna-ho a provar més tard.'
+            : resposta.status >= 500
+              ? idioma === 'es'
+                ? 'El servicio de interpretación no está disponible. Comprueba la configuración del proveedor de IA.'
+                : idioma === 'fr'
+                  ? "Le service d'interprétation n'est pas disponible. Vérifiez la configuration du fournisseur d'IA."
+                  : 'El servei d’interpretació no està disponible. Comprova la configuració del proveïdor d’IA.'
+              : idioma === 'es'
+                ? `La petición no es válida (HTTP ${resposta.status}).`
+                : idioma === 'fr'
+                  ? `La requête n'est pas valide (HTTP ${resposta.status}).`
+                  : `La petició no és vàlida (HTTP ${resposta.status}).`;
+
+        throw new Error(apiMessage || fallback);
       }
 
       const data: InterpretacioIAType = await resposta.json();
+      if (latestGenerationByProfileRef.current[requestProfileKey] !== requestToken) return;
 
-      const merged: InterpretacioIAType = activeInterpretacio
-        ? {
-            ...data,
-            resum: {
-              ca: data.resum?.ca ?? activeInterpretacio.resum?.ca ?? '',
-              es: data.resum?.es ?? activeInterpretacio.resum?.es ?? '',
-              fr: data.resum?.fr ?? activeInterpretacio.resum?.fr ?? '',
-            },
-            exemples: [
-              ...(activeInterpretacio.exemples || []).filter((e) => e.idioma !== idioma),
-              ...(data.exemples || []),
-            ],
-            finalitat: data.finalitat ?? activeInterpretacio.finalitat,
-            destinataris: data.destinataris ?? activeInterpretacio.destinataris,
-            aplicacio: data.aplicacio ?? activeInterpretacio.aplicacio,
-            doctrina_jurisprudencia: data.doctrina_jurisprudencia ?? activeInterpretacio.doctrina_jurisprudencia,
+      setInterpretacionsByProfile((previousInterpretacions) => {
+        const latestInterpretacio = previousInterpretacions[requestProfileKey] ?? requestInterpretacio;
+        const merged = mergeInterpretacioByIdioma(latestInterpretacio, data, idioma);
+        const mergedWithProfile: InterpretacioIAType = {
+          ...merged,
+          profile_key: requestProfileKey,
+        };
+        const updatedInterpretacions = {
+          ...previousInterpretacions,
+          [requestProfileKey]: mergedWithProfile,
+        };
+        try {
+          if (typeof window !== 'undefined') {
+            sessionStorage.setItem(`${SESSION_STORAGE_KEY}_${article.id}`, JSON.stringify(updatedInterpretacions));
           }
-        : data;
-
-      merged.profile_key = profileKey;
-
-      setInterpretacio(merged);
-
-      try {
-        if (typeof window !== 'undefined') {
-          sessionStorage.setItem(`${SESSION_STORAGE_KEY}_${article.id}`, JSON.stringify(merged));
+        } catch {
+          // sessionStorage pot fallar (p. ex. mode privat)
         }
-      } catch {
-        // sessionStorage pot fallar (p. ex. mode privat)
-      }
+        return updatedInterpretacions;
+      });
     } catch (error) {
+      if (latestGenerationByProfileRef.current[requestProfileKey] !== requestToken) return;
       console.error('Error generant Assistencia:', error);
+      setGenerationError(
+        error instanceof Error
+          ? error.message
+          : idioma === 'es'
+            ? 'No se ha podido generar la interpretación.'
+            : idioma === 'fr'
+              ? "L'interprétation n'a pas pu être générée."
+              : 'No s’ha pogut generar la interpretació.',
+      );
     } finally {
-      setIsGenerating(false);
+      if (latestGenerationByProfileRef.current[requestProfileKey] === requestToken) {
+        setIsGenerating(false);
+      }
     }
   };
 
@@ -209,6 +333,15 @@ const ArticleConstitucioPage: React.FC = () => {
             onGenerateAssistencia={handleGenerateAssistencia}
             isGenerating={isGenerating}
           />
+
+          {generationError && (
+            <div
+              role="alert"
+              className="mx-auto mt-4 w-full max-w-7xl px-4 text-sm text-destructive sm:px-6 lg:px-8"
+            >
+              {generationError}
+            </div>
+          )}
 
           {/* Main content area */}
           <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">

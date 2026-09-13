@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { articlesConstitucio } from '@/data/codis/constitucio/articles-template';
 import { retrieveTopMatches } from '@/lib/rag/corpus';
 import type { RetrievedContext } from '@/lib/rag/types';
-import { generateEmbedding, getEmbeddingProvider } from '@/lib/embeddings';
 
 interface SearchRequestBody {
   query?: string;
@@ -44,10 +43,8 @@ export default async function handler(
     if (process.env.RAG_ENABLED !== 'true') {
       return res.status(200).json({ results: [] });
     }
-    const provider = getEmbeddingProvider();
-    const queryEmbedding = await generateEmbedding(query, provider);
-    const matches = retrieveTopMatches(
-      queryEmbedding,
+    const matches = await retrieveTopMatches(
+      query,
       Math.max(1, Math.min(topK, 24)),
       undefined,
       false
