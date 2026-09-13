@@ -70,6 +70,8 @@ export interface Modificacio {
 
 export interface InterpretacioIA {
   article_id: string;
+  /** Perfil explícit que va determinar aquesta explicació dinàmica. */
+  profile_key?: string;
   resum: {
     ca: string;
     es: string;

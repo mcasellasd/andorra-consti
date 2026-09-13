@@ -11,6 +11,8 @@ import { getDoctrinaByArticleId, type DoctrinaCase } from '../../../../data/doct
 import { ArticleHeader } from '../../../../components/article/ArticleHeader';
 import { ArticleContent } from '../../../../components/article/ArticleContent';
 import { ArticleForcaNormativa } from '../../../../components/article/ArticleForcaNormativa';
+import { useInterlocutorProfile } from '../../../../components/InterlocutorProfileSelector';
+import { getInterlocutorProfileKey } from '../../../../lib/interlocutor-profile';
 
 const ArticleConstitucioPage: React.FC = () => {
   const router = useRouter();
@@ -22,6 +24,9 @@ const ArticleConstitucioPage: React.FC = () => {
   const [generationError, setGenerationError] = useState<string | null>(null);
   const [interpretacio, setInterpretacio] = useState<InterpretacioIAType | null>(null);
   const [doctrina, setDoctrina] = useState<DoctrinaCase[]>([]);
+  const { profile, updateProfile, resetProfile } = useInterlocutorProfile();
+  const profileKey = getInterlocutorProfileKey(profile);
+  const activeInterpretacio = interpretacio?.profile_key === profileKey ? interpretacio : null;
 
   useEffect(() => {
     setIdioma(getIdiomaActual());
@@ -89,7 +94,7 @@ const ArticleConstitucioPage: React.FC = () => {
     if (!article) return;
 
     // Comprovar si ja tenim el resum per aquest idioma
-    if (interpretacio?.resum?.[idioma]) {
+    if (activeInterpretacio?.resum?.[idioma]) {
       setIsGenerating(false);
       return;
     }
@@ -108,6 +113,7 @@ const ArticleConstitucioPage: React.FC = () => {
           idioma: idioma,
           text_oficial: article.text_oficial,
           numeracio: article.numeracio,
+          profile,
         }),
       });
 
@@ -166,29 +172,31 @@ const ArticleConstitucioPage: React.FC = () => {
 
       const data: InterpretacioIAType = await resposta.json();
 
-      const merged: InterpretacioIAType = interpretacio
+      const merged: InterpretacioIAType = activeInterpretacio
         ? {
             ...data,
             resum: {
-              ca: data.resum?.ca ?? interpretacio.resum?.ca ?? '',
-              es: data.resum?.es ?? interpretacio.resum?.es ?? '',
-              fr: data.resum?.fr ?? interpretacio.resum?.fr ?? '',
+              ca: data.resum?.ca ?? activeInterpretacio.resum?.ca ?? '',
+              es: data.resum?.es ?? activeInterpretacio.resum?.es ?? '',
+              fr: data.resum?.fr ?? activeInterpretacio.resum?.fr ?? '',
             },
             exemples: [
-              ...(interpretacio.exemples || []).filter((e) => e.idioma !== idioma),
+              ...(activeInterpretacio.exemples || []).filter((e) => e.idioma !== idioma),
               ...(data.exemples || []),
             ],
-            finalitat: data.finalitat ?? interpretacio.finalitat,
-            destinataris: data.destinataris ?? interpretacio.destinataris,
-            aplicacio: data.aplicacio ?? interpretacio.aplicacio,
-            doctrina_jurisprudencia: data.doctrina_jurisprudencia ?? interpretacio.doctrina_jurisprudencia,
-            interpretacio_principal: data.interpretacio_principal ?? interpretacio.interpretacio_principal,
-            lectures_alternatives: data.lectures_alternatives ?? interpretacio.lectures_alternatives,
-            fonts: data.fonts ?? interpretacio.fonts,
-            limits: data.limits ?? interpretacio.limits,
-            context_historic: data.context_historic ?? interpretacio.context_historic,
+            finalitat: data.finalitat ?? activeInterpretacio.finalitat,
+            destinataris: data.destinataris ?? activeInterpretacio.destinataris,
+            aplicacio: data.aplicacio ?? activeInterpretacio.aplicacio,
+            doctrina_jurisprudencia: data.doctrina_jurisprudencia ?? activeInterpretacio.doctrina_jurisprudencia,
+            interpretacio_principal: data.interpretacio_principal ?? activeInterpretacio.interpretacio_principal,
+            lectures_alternatives: data.lectures_alternatives ?? activeInterpretacio.lectures_alternatives,
+            fonts: data.fonts ?? activeInterpretacio.fonts,
+            limits: data.limits ?? activeInterpretacio.limits,
+            context_historic: data.context_historic ?? activeInterpretacio.context_historic,
           }
         : data;
+
+      merged.profile_key = profileKey;
 
       setInterpretacio(merged);
 
@@ -286,12 +294,15 @@ const ArticleConstitucioPage: React.FC = () => {
             <ArticleContent
               article={article}
               idioma={idioma}
-              interpretacio={interpretacio}
+              interpretacio={activeInterpretacio}
               doctrina={doctrina}
               previousArticle={previousArticle}
               nextArticle={nextArticle}
               onGenerateAssistencia={handleGenerateAssistencia}
               isGenerating={isGenerating}
+              profile={profile}
+              onProfileChange={updateProfile}
+              onProfileReset={resetProfile}
             />
           </main>
         </div>

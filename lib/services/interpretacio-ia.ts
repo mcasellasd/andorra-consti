@@ -21,12 +21,14 @@ import { getArticleById } from '../article-helpers';
 import { getDoctrinaByArticleId } from '../../data/doctrina';
 import { generateText } from '../llm';
 import { interpretacioRequestSchema } from '../api/schemas';
+import { buildInterlocutorInstructions, parseInterlocutorProfile, type InterlocutorProfile } from '../interlocutor-profile';
 
 export interface InterpretacioRequest {
   article_id: string;
   text_oficial: string;
   numeracio: string;
   idioma: 'ca' | 'es' | 'fr';
+  profile?: InterlocutorProfile;
 }
 
 export class InterpretacioRequestError extends Error {
@@ -55,8 +57,8 @@ export async function interpretacioIAHandler(
   try {
     const parsed = interpretacioRequestSchema.safeParse(req.body);
     if (!parsed.success) return res.status(400).json({ error: 'Petició d’interpretació no vàlida.' });
-
     const { article_id, idioma } = parsed.data;
+    const profile = parseInterlocutorProfile((req.body as InterpretacioRequest).profile);
     const dateString = new Date().toISOString().split('T')[0];
 
     // Obtenir l'article complet per obtenir metadades
@@ -495,6 +497,8 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
         ? `Eres un asistente experto en derecho andorrano. Tu única función es analizar artículos de la Constitución y generar fichas explicativas en formato JSON simplificado. Tu respuesta (resum, exemples, finalitat, destinataris, aplicacio, doctrina_jurisprudencia) debe ser íntegramente en castellano. Responde SOLO en castellano.`
         : `Tu es un assistant expert en droit andorran. Ta seule fonction est d'analyser des articles de la Constitution et de générer des fiches explicatives en format JSON simplifié. Ta réponse (resum, exemples, finalitat, destinataris, aplicacio, doctrina_jurisprudencia) doit être entièrement en français. Réponds UNIQUEMENT en français.`;
 
+    const interlocutorInstructions = buildInterlocutorInstructions(profile, idioma);
+
     // Exemple One-Shot 1 (Article 2) - EXEMPLES COM A STRINGS SIMPLES
     const exampleUser = idioma === 'ca'
       ? `Analitza l'ARTICLE 2: "1. La llengua oficial de l'Estat és el català.\n2. L'himne nacional, la bandera i l'escut d'Andorra són els tradicionals.\n3. Andorra la Vella és la capital de l'Estat."\n\nContext: (buit)`
@@ -595,7 +599,7 @@ ${historicPrompt}
 ${estructuraInterpretacio}`;
 
     const messages = [
-      { role: 'system', content: systemPromptBase },
+      { role: 'system', content: `${systemPromptBase}${interlocutorInstructions}` },
       { role: 'user', content: exampleUser },
       { role: 'assistant', content: exampleAssistant },
       { role: 'user', content: exampleUser2 },
@@ -910,7 +914,7 @@ ${estructuraInterpretacio}`;
           : `${prompt}\n\n⚠️ ATTENTION: Ta réponse précédente N'ÉTAIT PAS un JSON valide. Réponds UNIQUEMENT avec le JSON demandé. Le premier caractère doit être { et le dernier }. Rien avant ni après. ⚠️`;
 
       const retryMessages = [
-        { role: 'system', content: systemPromptBase },
+        { role: 'system', content: `${systemPromptBase}${interlocutorInstructions}` },
         { role: 'user', content: retryPrompt },
       ];
 
@@ -939,7 +943,7 @@ ${estructuraInterpretacio}`;
             : `${prompt}\n\n⚠️ IMPORTANT: Ta réponse précédente copiait des phrases modèle.\n- INTERDIT d'utiliser littéralement les instructions ou placeholders (\"Résumé descriptif...\", \"situation concrète\", \"...\").\n- Écris un contenu SPÉCIFIQUE à cet article: résumé descriptif (2–5 phrases) + 2–3 exemples réalistes + finalitat + destinataris + aplicació + doctrine.\nRéponds UNIQUEMENT avec le JSON.`;
 
       const fixMessages = [
-        { role: 'system', content: systemPromptBase },
+        { role: 'system', content: `${systemPromptBase}${interlocutorInstructions}` },
         { role: 'user', content: fixPrompt },
       ];
 
@@ -980,7 +984,7 @@ ${estructuraInterpretacio}`;
               : `Réécris UNIQUEMENT ces champs pour l'ARTICLE ${numeracio}:\n\n- "exemples": Tableau de 2 ou 3 exemples pratiques.\n- "finalitat": 1-2 phrases (ce que cela permet/limite).\n- "destinataris": 1-2 phrases (champ d'application).\n- "aplicacio": 1-2 phrases (impact pratique).\n- "doctrina_jurisprudencia": 1–3 phrases de commentaire uniquement doctrinal.\n\nRéponds UNIQUEMENT avec un JSON valide:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Exemple appliqué: ...", "Exemple appliqué: ..."],\n  "finalitat": "${coalesceString(parsedObj0.finalitat)}",\n  "destinataris": "${coalesceString(parsedObj0.destinataris)}",\n  "aplicacio": "${coalesceString(parsedObj0.aplicacio)}",\n  "doctrina_jurisprudencia": "..."\n}`;
 
         const fix2Messages = [
-          { role: 'system', content: systemPromptBase },
+          { role: 'system', content: `${systemPromptBase}${interlocutorInstructions}` },
           { role: 'user', content: `${prompt}\n\n---\n\n${fix2}` },
         ];
 
