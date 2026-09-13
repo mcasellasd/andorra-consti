@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Layout from '../../../../components/Layout';
@@ -19,16 +19,8 @@ const DEFAULT_PROFILE_KEY = getInterlocutorProfileKey(DEFAULT_INTERLOCUTOR_PROFI
 function hasCompleteInterpretacioForIdioma(interpretacio: InterpretacioIAType | null, idioma: Idioma): boolean {
   if (!interpretacio?.resum?.[idioma]?.trim()) return false;
 
-  const hasExamplesInIdioma = (interpretacio.exemples || []).some(
+  return (interpretacio.exemples || []).some(
     (exemple) => exemple.idioma === idioma && Boolean(exemple.cas?.trim()),
-  );
-  if (!hasExamplesInIdioma) return false;
-
-  return Boolean(
-    interpretacio.interpretacio_principal?.trim()
-    || interpretacio.finalitat?.trim()
-    || interpretacio.aplicacio?.trim()
-    || interpretacio.doctrina_jurisprudencia?.trim(),
   );
 }
 
@@ -72,6 +64,7 @@ const ArticleConstitucioPage: React.FC = () => {
   const [generationError, setGenerationError] = useState<string | null>(null);
   const [interpretacionsByProfile, setInterpretacionsByProfile] = useState<Record<string, InterpretacioIAType>>({});
   const [doctrina, setDoctrina] = useState<DoctrinaCase[]>([]);
+  const latestGenerationByProfileRef = useRef<Record<string, string>>({});
   const { profile, updateProfile, resetProfile } = useInterlocutorProfile();
   const profileKey = getInterlocutorProfileKey(profile);
   const activeInterpretacio = interpretacionsByProfile[profileKey]
@@ -166,6 +159,8 @@ const ArticleConstitucioPage: React.FC = () => {
     const requestProfile = profile;
     const requestProfileKey = profileKey;
     const requestInterpretacio = interpretacionsByProfile[requestProfileKey] ?? null;
+    const requestToken = `${requestProfileKey}:${idioma}:${Date.now()}`;
+    latestGenerationByProfileRef.current[requestProfileKey] = requestToken;
 
     // Comprovar si ja tenim la fitxa completa per aquest idioma i perfil
     if (hasCompleteInterpretacioForIdioma(requestInterpretacio, idioma)) {
@@ -246,6 +241,8 @@ const ArticleConstitucioPage: React.FC = () => {
       }
 
       const data: InterpretacioIAType = await resposta.json();
+      if (latestGenerationByProfileRef.current[requestProfileKey] !== requestToken) return;
+
       setInterpretacionsByProfile((previousInterpretacions) => {
         const latestInterpretacio = previousInterpretacions[requestProfileKey] ?? requestInterpretacio;
         const merged = mergeInterpretacioByIdioma(latestInterpretacio, data, idioma);
@@ -267,6 +264,7 @@ const ArticleConstitucioPage: React.FC = () => {
         return updatedInterpretacions;
       });
     } catch (error) {
+      if (latestGenerationByProfileRef.current[requestProfileKey] !== requestToken) return;
       console.error('Error generant Assistencia:', error);
       setGenerationError(
         error instanceof Error
@@ -278,7 +276,9 @@ const ArticleConstitucioPage: React.FC = () => {
               : 'No s’ha pogut generar la interpretació.',
       );
     } finally {
-      setIsGenerating(false);
+      if (latestGenerationByProfileRef.current[requestProfileKey] === requestToken) {
+        setIsGenerating(false);
+      }
     }
   };
 
