@@ -22,11 +22,11 @@ const ArticleConstitucioPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationError, setGenerationError] = useState<string | null>(null);
-  const [interpretacio, setInterpretacio] = useState<InterpretacioIAType | null>(null);
+  const [interpretacionsByProfile, setInterpretacionsByProfile] = useState<Record<string, InterpretacioIAType>>({});
   const [doctrina, setDoctrina] = useState<DoctrinaCase[]>([]);
   const { profile, updateProfile, resetProfile } = useInterlocutorProfile();
   const profileKey = getInterlocutorProfileKey(profile);
-  const activeInterpretacio = interpretacio?.profile_key === profileKey ? interpretacio : null;
+  const activeInterpretacio = interpretacionsByProfile[profileKey] ?? null;
 
   useEffect(() => {
     setIdioma(getIdiomaActual());
@@ -59,15 +59,37 @@ const ArticleConstitucioPage: React.FC = () => {
         // Carregar interpretació des de la memòria de sessió si n'hi ha
         try {
           const raw = typeof window !== 'undefined' && sessionStorage.getItem(`${SESSION_STORAGE_KEY}_${articleTrobat.id}`);
-          const cached = raw ? (JSON.parse(raw) as InterpretacioIAType) : null;
-          setInterpretacio(cached?.article_id === articleTrobat.id ? cached : null);
+          const cached = raw ? (JSON.parse(raw) as unknown) : null;
+          const byProfile: Record<string, InterpretacioIAType> = {};
+
+          if (cached && typeof cached === 'object' && !Array.isArray(cached)) {
+            const maybeSingle = cached as Partial<InterpretacioIAType>;
+            if (typeof maybeSingle.article_id === 'string') {
+              if (maybeSingle.article_id === articleTrobat.id) {
+                const key = maybeSingle.profile_key || profileKey;
+                byProfile[key] = maybeSingle as InterpretacioIAType;
+              }
+            } else {
+              for (const [key, value] of Object.entries(cached as Record<string, unknown>)) {
+                if (
+                  value
+                  && typeof value === 'object'
+                  && (value as InterpretacioIAType).article_id === articleTrobat.id
+                ) {
+                  byProfile[key] = value as InterpretacioIAType;
+                }
+              }
+            }
+          }
+
+          setInterpretacionsByProfile(byProfile);
         } catch {
-          setInterpretacio(null);
+          setInterpretacionsByProfile({});
         }
       }
       setLoading(false);
     }
-  }, [id]);
+  }, [id, profileKey]);
 
   // Carregar doctrina relacionada
   useEffect(() => {
@@ -95,6 +117,7 @@ const ArticleConstitucioPage: React.FC = () => {
 
     // Comprovar si ja tenim el resum per aquest idioma
     if (activeInterpretacio?.resum?.[idioma]) {
+      setGenerationError(null);
       setIsGenerating(false);
       return;
     }
@@ -198,11 +221,15 @@ const ArticleConstitucioPage: React.FC = () => {
 
       merged.profile_key = profileKey;
 
-      setInterpretacio(merged);
+      const updatedInterpretacions = {
+        ...interpretacionsByProfile,
+        [profileKey]: merged,
+      };
+      setInterpretacionsByProfile(updatedInterpretacions);
 
       try {
         if (typeof window !== 'undefined') {
-          sessionStorage.setItem(`${SESSION_STORAGE_KEY}_${article.id}`, JSON.stringify(merged));
+          sessionStorage.setItem(`${SESSION_STORAGE_KEY}_${article.id}`, JSON.stringify(updatedInterpretacions));
         }
       } catch {
         // sessionStorage pot fallar (p. ex. mode privat)
