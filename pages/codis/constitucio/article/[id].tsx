@@ -14,6 +14,22 @@ import { ArticleForcaNormativa } from '../../../../components/article/ArticleFor
 import { useInterlocutorProfile } from '../../../../components/InterlocutorProfileSelector';
 import { getInterlocutorProfileKey } from '../../../../lib/interlocutor-profile';
 
+function hasCompleteInterpretacioForIdioma(interpretacio: InterpretacioIAType | null, idioma: Idioma): boolean {
+  if (!interpretacio?.resum?.[idioma]?.trim()) return false;
+
+  const hasExamplesInIdioma = (interpretacio.exemples || []).some(
+    (exemple) => exemple.idioma === idioma && Boolean(exemple.cas?.trim()),
+  );
+  if (!hasExamplesInIdioma) return false;
+
+  return Boolean(
+    interpretacio.interpretacio_principal?.trim()
+    || interpretacio.finalitat?.trim()
+    || interpretacio.aplicacio?.trim()
+    || interpretacio.doctrina_jurisprudencia?.trim(),
+  );
+}
+
 const ArticleConstitucioPage: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -114,9 +130,11 @@ const ArticleConstitucioPage: React.FC = () => {
 
   const handleGenerateAssistencia = async () => {
     if (!article) return;
+    const requestProfileKey = profileKey;
+    const requestInterpretacio = interpretacionsByProfile[requestProfileKey] ?? null;
 
-    // Comprovar si ja tenim el resum per aquest idioma
-    if (activeInterpretacio?.resum?.[idioma]) {
+    // Comprovar si ja tenim la fitxa completa per aquest idioma i perfil
+    if (hasCompleteInterpretacioForIdioma(requestInterpretacio, idioma)) {
       setGenerationError(null);
       setIsGenerating(false);
       return;
@@ -195,38 +213,38 @@ const ArticleConstitucioPage: React.FC = () => {
 
       const data: InterpretacioIAType = await resposta.json();
 
-      const merged: InterpretacioIAType = activeInterpretacio
+      const merged: InterpretacioIAType = requestInterpretacio
         ? {
             ...data,
             resum: {
-              ca: data.resum?.ca ?? activeInterpretacio.resum?.ca ?? '',
-              es: data.resum?.es ?? activeInterpretacio.resum?.es ?? '',
-              fr: data.resum?.fr ?? activeInterpretacio.resum?.fr ?? '',
+              ca: data.resum?.ca ?? requestInterpretacio.resum?.ca ?? '',
+              es: data.resum?.es ?? requestInterpretacio.resum?.es ?? '',
+              fr: data.resum?.fr ?? requestInterpretacio.resum?.fr ?? '',
             },
             exemples: [
-              ...(activeInterpretacio.exemples || []).filter((e) => e.idioma !== idioma),
+              ...(requestInterpretacio.exemples || []).filter((e) => e.idioma !== idioma),
               ...(data.exemples || []),
             ],
-            finalitat: data.finalitat ?? activeInterpretacio.finalitat,
-            destinataris: data.destinataris ?? activeInterpretacio.destinataris,
-            aplicacio: data.aplicacio ?? activeInterpretacio.aplicacio,
-            doctrina_jurisprudencia: data.doctrina_jurisprudencia ?? activeInterpretacio.doctrina_jurisprudencia,
-            interpretacio_principal: data.interpretacio_principal ?? activeInterpretacio.interpretacio_principal,
-            lectures_alternatives: data.lectures_alternatives ?? activeInterpretacio.lectures_alternatives,
-            fonts: data.fonts ?? activeInterpretacio.fonts,
-            limits: data.limits ?? activeInterpretacio.limits,
-            context_historic: data.context_historic ?? activeInterpretacio.context_historic,
+            finalitat: data.finalitat ?? requestInterpretacio.finalitat,
+            destinataris: data.destinataris ?? requestInterpretacio.destinataris,
+            aplicacio: data.aplicacio ?? requestInterpretacio.aplicacio,
+            doctrina_jurisprudencia: data.doctrina_jurisprudencia ?? requestInterpretacio.doctrina_jurisprudencia,
+            interpretacio_principal: data.interpretacio_principal ?? requestInterpretacio.interpretacio_principal,
+            lectures_alternatives: data.lectures_alternatives ?? requestInterpretacio.lectures_alternatives,
+            fonts: data.fonts ?? requestInterpretacio.fonts,
+            limits: data.limits ?? requestInterpretacio.limits,
+            context_historic: data.context_historic ?? requestInterpretacio.context_historic,
           }
         : data;
 
       const mergedWithProfile: InterpretacioIAType = {
         ...merged,
-        profile_key: profileKey,
+        profile_key: requestProfileKey,
       };
       setInterpretacionsByProfile((previousInterpretacions) => {
         const updatedInterpretacions = {
           ...previousInterpretacions,
-          [profileKey]: mergedWithProfile,
+          [requestProfileKey]: mergedWithProfile,
         };
         try {
           if (typeof window !== 'undefined') {
