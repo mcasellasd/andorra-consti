@@ -10,6 +10,7 @@ import { InterpretacioIA } from '../../data/codis/types';
 import { generateInterpretacioIA, type InterpretacioRequest } from '../../lib/services/interpretacio-ia';
 import { appendTraceabilityLog, buildRagContextFingerprint } from '../../lib/traceability/audit-log';
 import { buildInterlocutorInstructions, parseInterlocutorProfile, type InterlocutorProfile } from '../../lib/interlocutor-profile';
+import { blocContextPrompt, getContextConstitucional } from '../../lib/prompts/context-constitucional';
 
 // ============================================================================
 // RAG ACTIVAT - Recuperació de context de la Constitució d'Andorra
@@ -190,10 +191,10 @@ export default async function handler(
     // Si es detecten articles per paraules clau, afegir-los també
     articleKeywords.forEach(articleId => {
       const specificArticle = getArticleById(articleId);
-      if (specificArticle && !matchesMap.has(articleId)) {
+      if (specificArticle) {
         const articleContext: RetrievedContext = {
           entry: specificArticle,
-          score: 0.95, // Score alt per assegurar que s'inclou
+          score: 1.0, // Les coincidències constitucionals deterministes prevalen sobre resultats menys específics.
           bookId: 'CONSTITUCIO'
         };
         matchesMap.set(articleId, articleContext);
@@ -210,6 +211,14 @@ export default async function handler(
 
     // Construir bloc de context
     const contextBlock = buildContextBlock(matches);
+    const constitutionalStatusBlock = matches
+      .filter((match) => /^CONST_\d{3}$/.test(match.entry.id))
+      .map((match) => {
+        const constitutionalContext = getContextConstitucional(match.entry.id);
+        return constitutionalContext ? blocContextPrompt(constitutionalContext) : '';
+      })
+      .filter(Boolean)
+      .join('\n\n');
 
     // Per locale es/fr: bloc amb el text oficial en català de cada article del context, per citar literalment (no traduir)
     const constitutionArticlesInContext = matches
@@ -266,7 +275,10 @@ Si no saps la resposta, digues-ho honestament.
 
 ${aiActPrompt}
 
-IMPORTANT: Utilitza ÚNICAMENT la informació constitucional del context proporcionat. NO inventis articles ni lleis.
+IMPORTANT: Basa les afirmacions jurídiques en el text constitucional oficial i en el context recuperat. NO inventis articles ni lleis.
+L’absència d’un article entre els fragments recuperats no prova que un dret o una regla no aparegui a la Constitució. Si la pregunta demana si la Constitució reconeix un dret, comprova el text de l’article pertinent abans de respondre. Si no s’ha recuperat ni verificat el precepte pertinent, digues que no ho pots confirmar amb el context disponible; no responguis que el dret no existeix.
+Quan sigui rellevant, distingeix entre el reconeixement del dret, la seva ubicació constitucional i el seu règim d’aplicació o invocació. Fes servir el bloc de context estructural que segueix; no qualifiquis tots els drets constitucionals com a drets fonamentals ni dedueixis una prestació individual que el text no estableix.
+Si la pregunta només demana si un dret hi apareix, respon-ho directament i cita l’article; explica’n el règim jurídic només quan sigui necessari per evitar una qualificació errònia o quan l’usuari ho pregunti.
 Si la pregunta tracta un altre àmbit, explica com es pot entendre des dels principis constitucionals i indica clarament què no resol la Constitució.
 No utilitzis doctrina, jurisprudència, lleis ordinàries ni altres fonts com a base de la resposta.
 
@@ -292,7 +304,10 @@ Exemple: "La sobirania resideix en el poble andorrà [[CONST_003]]."
 ${interlocutorInstructions}
 
 Context constitucional:
-${contextBlock}`;
+${contextBlock}
+
+Context estructural i règim constitucional dels articles recuperats:
+${constitutionalStatusBlock || 'No s’ha pogut determinar automàticament la classificació estructural dels articles recuperats.'}`;
 
     // Construïm la llista final de missatges
     const finalMessages = [
@@ -502,7 +517,7 @@ export const config = {
 function isInterpretacioRequest(body: UnifiedRequest): body is InterpretacioRequest {
   const candidate = body as Partial<InterpretacioRequest>;
   const validIdioma = candidate.idioma === 'ca' || candidate.idioma === 'es' || candidate.idioma === 'fr';
-  return !!candidate.article_id && !!candidate.text_oficial && !!candidate.numeracio && validIdioma;
+  return !!candidate.article_id && validIdioma;
 }
 
 const articleIndex = buildArticleIndex();

@@ -22,11 +22,12 @@ import { getDoctrinaByArticleId } from '../../data/doctrina';
 import { generateText } from '../llm';
 import { interpretacioRequestSchema } from '../api/schemas';
 import { buildInterlocutorInstructions, parseInterlocutorProfile, type InterlocutorProfile } from '../interlocutor-profile';
+import { blocContextPrompt, getContextConstitucional } from '../prompts/context-constitucional';
 
 export interface InterpretacioRequest {
   article_id: string;
-  text_oficial: string;
-  numeracio: string;
+  text_oficial?: string;
+  numeracio?: string;
   idioma: 'ca' | 'es' | 'fr';
   profile?: InterlocutorProfile;
 }
@@ -69,6 +70,12 @@ export async function interpretacioIAHandler(
     // provenen sempre del corpus local per evitar prompt injection normativa.
     const text_oficial = article.text_oficial;
     const numeracio = article.numeracio;
+    const constitutionalContext = article.codi === 'constitucio'
+      ? getContextConstitucional(numeracio)
+      : null;
+    const constitutionalContextPrompt = constitutionalContext
+      ? `${blocContextPrompt(constitutionalContext)}\n\n`
+      : '';
 
     // Obtenir jurisprudència relacionada
     const jurisprudencia = getJurisprudenciaForArticle(article_id);
@@ -257,17 +264,18 @@ export async function interpretacioIAHandler(
 PRIORITAT ABSOLUTA: Primer interpreta el **text literal** de l’article en llenguatge planer. La jurisprudència/doctrina és **opcional** i només s'ha d'usar si apareix al context. Encara que NO hi hagi jurisprudència/doctrina, has de generar igualment la interpretació completa basada en el text de l'article.
 
 **ARTICLE ${numeracio} A INTERPRETAR:**
-"${text_oficial}"${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
+"${text_oficial}"
+${constitutionalContextPrompt}${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
 
 ⚠️ PROHIBICIONS ABSOLUTES ⚠️
 - NO inventis informació comercial, noms de persones, advocats, despatxos o empreses.
 - NO afegeixis despedides, salutacions ni informació de contacte.
-- NO parlis de temes que NO estiguin explícitament a l'article proporcionat.
+- No inventis doctrina, jurisprudència, efectes jurídics ni fonts. Pots explicar la ubicació i el règim constitucional indicats al context, però separa'ls del contingut literal de l'article.
 - NO escriguis res fora del JSON. Cap text abans ni després.
 - NO copiïs ni reutilitzis frases d'exemple/plantilla del prompt (p. ex. "Resum descriptiu...", "situació concreta...", "...").
 - NO diguis que “no pots” donar exemples o comentari per manca de jurisprudència/doctrina.
 
-REGLA FONAMENTAL: Només pots parlar del que diu aquest article. Si l'article NO menciona residència, immigració, procediments administratius o altres temes, NO en parlis.
+REGLA DE FONTS: El text de l'article és la font principal. Pots explicar-ne la ubicació i el règim constitucional a partir del bloc de context normatiu i contextualitzar-lo amb les fonts recuperades, però separa clarament què diu l'article i què aporta el context. No inventis doctrina, jurisprudència, efectes jurídics ni fonts. Si el context no permet sostenir una afirmació, indica el límit o omet-la.
 
 IMPORTANT: NO repeteixis el text literal de l'article. Adapta el contingut utilitzant llenguatge natural i planer, explicant amb les teves pròpies paraules què significa i què regula l'article.
 
@@ -309,7 +317,8 @@ INTERPRETACIÓN COMPLETA: Debes interpretar la norma **en conjunto** (sentido ge
 PRIORIDAD ABSOLUTA: Primero interpreta el **texto literal** del artículo en lenguaje llano. Aunque NO haya doctrina previa, debes generar igualmente la interpretación completa basada en el texto del artículo.
 
 **ARTÍCULO ${numeracio} A INTERPRETAR:**
-"${text_oficial}"${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
+"${text_oficial}"
+${constitutionalContextPrompt}${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
 
 ⚠️ REGLA ABSOLUTA SOBRE IDIOMA Y TRADUCCIÓN ⚠️
 - El texto literal del artículo está en catalán (idioma oficial) y NUNCA debe traducirse.
@@ -319,12 +328,12 @@ PRIORIDAD ABSOLUTA: Primero interpreta el **texto literal** del artículo en len
 ⚠️ PROHIBICIONES ABSOLUTAS ⚠️
 - NO inventes información comercial, nombres de personas, abogados, despachos o empresas.
 - NO añadas despedidas, saludos ni información de contacto.
-- NO hables de temas que NO estén explícitamente en el artículo proporcionado.
+- No inventes doctrina, jurisprudencia, efectos jurídicos ni fuentes. Puedes explicar la ubicación y el régimen constitucional indicados en el contexto, pero sepáralos del contenido literal del artículo.
 - NO escribas nada fuera del JSON. Nada antes ni después.
 - NO copies ni dejes frases plantilla del prompt (p. ej. "Resumen descriptivo...", "situación concreta...", "...").
 - NO digas que “no puedes” dar ejemplos o comentario por falta de doctrina.
 
-REGLA FUNDAMENTAL: Solo puedes hablar de lo que dice este artículo. Si el artículo NO menciona residencia, inmigración, procedimientos administrativos u otros temas, NO hables de ellos.
+REGLA DE FUENTES: El texto del artículo es la fuente principal. Puedes explicar su ubicación y régimen constitucional usando el bloque de contexto normativo y contextualizarlo con las fuentes recuperadas, pero separa claramente lo que dice el artículo de lo que aporta el contexto. No inventes doctrina, jurisprudencia, efectos jurídicos ni fuentes. Si el contexto no permite sostener una afirmación, indica el límite u omítela.
 
 IMPORTANTE: NO repitas el texto literal del artículo. Adapta el contenido utilizando lenguaje natural y llano, explicando con tus propias palabras qué significa y qué regula el artículo.
 
@@ -366,7 +375,8 @@ INTERPRÉTATION COMPLÈTE: Tu dois interpréter la norme **dans son ensemble** (
 PRIORITÉ ABSOLUTE: Interprète d'abord le **texte littéral** de l'article en langage simple. Même s'il n'y a PAS de doctrine préalable, tu dois quand même générer la fiche d'interprétation complète basée sur le texte de l'article.
 
 **ARTICLE ${numeracio} À INTERPRÉTER:**
-"${text_oficial}"${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
+"${text_oficial}"
+${constitutionalContextPrompt}${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
 
 ⚠️ RÈGLE ABSOLUTE SUR LA LANGUE ET LA TRADUCTION ⚠️
 - Le texte littéral de l'article est en catalan (langue officielle) et ne doit JAMAIS être traduit.
@@ -376,12 +386,12 @@ PRIORITÉ ABSOLUTE: Interprète d'abord le **texte littéral** de l'article en l
 ⚠️ INTERDICTIONS ABSOLUES ⚠️
 - N'invente PAS d'information commerciale, de noms de personnes, d'avocats, de cabinets ou d'entreprises.
 - N'ajoute PAS de formules de politesse, de salutations ni d'informations de contact.
-- Ne parle PAS de sujets qui NE sont PAS explicitement dans l'article fourni.
+- N'invente ni doctrine, ni jurisprudence, ni effets juridiques, ni sources. Tu peux expliquer la place et le régime constitutionnels indiqués dans le contexte, mais distingue-les du contenu littéral de l'article.
 - N'écris RIEN en dehors du JSON. Rien avant ni après.
 - Ne copie pas / ne réutilise pas les phrases modèle du prompt (p. ex. "Résumé descriptif...", "situation concrète...", "...").
 - Ne dis pas que tu “ne peux pas” donner des exemples ou un commentaire faute de doctrine.
 
-RÈGLE FONDAMENTALE: Tu ne peux parler que de ce que dit cet article. Si l'article NE mentionne PAS la résidence, l'immigration, les procédures administratives ou d'autres sujets, N'en parle PAS.
+RÈGLE RELATIVE AUX SOURCES: Le texte de l'article est la source principale. Tu peux expliquer sa place et son régime constitutionnels à partir du bloc de contexte normatif et le contextualiser avec les sources récupérées, mais distingue clairement le contenu de l'article de celui du contexte. N'invente ni doctrine, ni jurisprudence, ni effets juridiques, ni sources. Si le contexte ne permet pas d'étayer une affirmation, indique cette limite ou omets-la.
 
 IMPORTANT: NE répète PAS le texte littéral de l'article. Adapte le contenu en utilisant un langage naturel et simple, expliquant avec tes propres mots ce que signifie et ce que régit l'article.
 
@@ -492,10 +502,10 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
     // Reduïm la complexitat del JSON per evitar errors de sintaxi del model.
 
     const systemPromptBase = idioma === 'ca'
-      ? `Ets un assistent jurídic expert en dret andorrà. La teva única funció és analitzar articles de la Constitució i generar fitxes explicatives en format JSON simplificat. La teva resposta (resum, exemples, finalitat, destinataris, aplicacio, doctrina_jurisprudencia) ha de ser íntegrament en català. Respon NOMÉS en català.`
+      ? `Ets un assistent acadèmic que genera fitxes explicatives d'articles de la Constitució d'Andorra en JSON. Basa't primer en el text oficial i el context normatiu proporcionat; diferencia el contingut de l'article de la seva interpretació. No inventis doctrina, jurisprudència ni conseqüències jurídiques. Respecta la classificació i el règim indicats en el context constitucional. Respon íntegrament en català.`
       : idioma === 'es'
-        ? `Eres un asistente experto en derecho andorrano. Tu única función es analizar artículos de la Constitución y generar fichas explicativas en formato JSON simplificado. Tu respuesta (resum, exemples, finalitat, destinataris, aplicacio, doctrina_jurisprudencia) debe ser íntegramente en castellano. Responde SOLO en castellano.`
-        : `Tu es un assistant expert en droit andorran. Ta seule fonction est d'analyser des articles de la Constitution et de générer des fiches explicatives en format JSON simplifié. Ta réponse (resum, exemples, finalitat, destinataris, aplicacio, doctrina_jurisprudencia) doit être entièrement en français. Réponds UNIQUEMENT en français.`;
+        ? `Eres un asistente académico que genera fichas explicativas de artículos de la Constitución de Andorra en JSON. Basa la respuesta primero en el texto oficial y el contexto normativo proporcionado; distingue el contenido del artículo de su interpretación. No inventes doctrina, jurisprudencia ni consecuencias jurídicas. Respeta la clasificación y el régimen indicados en el contexto constitucional. Responde íntegramente en castellano.`
+        : `Tu es un assistant académique qui génère des fiches explicatives d'articles de la Constitution d'Andorre en JSON. Fonde d'abord la réponse sur le texte officiel et le contexte normatif fourni; distingue le contenu de l'article de son interprétation. N'invente ni doctrine, ni jurisprudence, ni conséquences juridiques. Respecte la classification et le régime indiqués dans le contexte constitutionnel. Réponds entièrement en français.`;
 
     const interlocutorInstructions = buildInterlocutorInstructions(profile, idioma);
 
@@ -569,6 +579,7 @@ TASCA ACTUAL: Analitza l'ARTICLE ${numeracio} (i cap altre).
 TEXT DE L'ARTICLE: "${text_oficial}"
 
 Genera el JSON exclusivament per a l'Article ${numeracio}.
+${constitutionalContextPrompt}
 Si hi ha context històric recuperat, afegeix el camp "context_historic": {"resum": "..."}; explica només antecedents rellevants i no els tractis com a normes vigents.
 Context Addicional (si n'hi ha):
 ${ragContext}
@@ -581,6 +592,7 @@ TAREA ACTUAL: Analiza el ARTÍCULO ${numeracio} (y ningún otro).
 TEXTO DEL ARTÍCULO: "${text_oficial}"
 
 Genera el JSON exclusivamente para el Artículo ${numeracio}.
+${constitutionalContextPrompt}
 Si existe contexto histórico recuperado, añade el campo "context_historic": {"resum": "..."}; explica solo antecedentes relevantes y no los trates como normas vigentes.
 Contexto Adicional (si hay):
 ${ragContext}
@@ -592,18 +604,16 @@ TÂCHE ACTUELLE: Analyse l'ARTICLE ${numeracio} (et aucun autre).
 TEXTE DE L'ARTICLE: "${text_oficial}"
 
 Génère le JSON exclusivement pour l'Article ${numeracio}.
+${constitutionalContextPrompt}
 Si un contexte historique est récupéré, ajoute le champ "context_historic": {"resum": "..."}; explique uniquement les antécédents pertinents et ne les traite pas comme des normes en vigueur.
 Contexte Supplémentaire (s'il y en a):
 ${ragContext}
 ${historicPrompt}
 ${estructuraInterpretacio}`;
 
+    // Els few-shots antics introdueixen doctrina no recolzada per les fonts.
     const messages = [
       { role: 'system', content: `${systemPromptBase}${interlocutorInstructions}` },
-      { role: 'user', content: exampleUser },
-      { role: 'assistant', content: exampleAssistant },
-      { role: 'user', content: exampleUser2 },
-      { role: 'assistant', content: exampleAssistant2 },
       { role: 'user', content: promptReal }
     ];
 
