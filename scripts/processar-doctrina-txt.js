@@ -11,6 +11,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('child_process');
 
 const DOCS_DIR = path.join(__dirname, '../docs');
 const OUTPUT_DIR = path.join(__dirname, '../data/rag/doctrina');
@@ -211,6 +212,26 @@ const DOCUMENTS = {
     date: '1993',
     category: 'doctrina',
     codi: 'constitucio'
+  },
+  'moments-delicats-sobirania': {
+    file: '/Users/marccasellas/Downloads/ciencies andorra/PRH_11_interior_68c9336063.pdf',
+    title: 'Moments delicats en la sobirania d’Andorra',
+    author: 'Societat Andorrana de Ciències (ed.)',
+    publication: 'Papers de recerca històrica, 11',
+    date: '2023',
+    category: 'història constitucional',
+    sourceType: 'historia_constitucional',
+    codi: 'constitucio'
+  },
+  'historia-economica-andorra': {
+    file: '/Users/marccasellas/Desktop/docus2024/DRET UOC/SISÈ SEMESTRE/HISTORIA ANDORRA/HISTÒRIA_ECONÒMICA_D__ANDORRA.pdf',
+    title: 'Història econòmica d’Andorra, segles XX-XXI',
+    author: 'M. Jesús Lluelles Larrosa i Eva Garcia Lluelles',
+    publication: 'Universitat d’Andorra',
+    date: '2018',
+    category: 'història constitucional',
+    sourceType: 'historia_constitucional',
+    codi: 'constitucio'
   }
 };
 
@@ -300,7 +321,9 @@ function isAlreadyProcessed(docId) {
 }
 
 function processDocument(docId, docInfo) {
-  const inputPath = path.join(DOCS_DIR, docInfo.file);
+  const inputPath = path.isAbsolute(docInfo.file)
+    ? docInfo.file
+    : path.join(DOCS_DIR, docInfo.file);
   
   if (!fs.existsSync(inputPath)) {
     console.error(`❌ No s'ha trobat el fitxer: ${inputPath}`);
@@ -314,7 +337,9 @@ function processDocument(docId, docInfo) {
   
   console.log(`📄 Processant: ${docInfo.file}...`);
   
-  const text = fs.readFileSync(inputPath, 'utf8');
+  const text = path.extname(inputPath).toLowerCase() === '.pdf'
+    ? execFileSync('pdftotext', ['-layout', inputPath, '-'], { encoding: 'utf8', maxBuffer: 50 * 1024 * 1024 })
+    : fs.readFileSync(inputPath, 'utf8');
   
   // Netejar el text (eliminar headers, footers, etc.)
   let cleanedText = text
@@ -340,7 +365,7 @@ function processDocument(docId, docInfo) {
       keyConcepts: keyConcepts,
       legalReference: docInfo.title,
       source: docInfo.publication,
-      sourceType: 'doctrina',
+      sourceType: docInfo.sourceType || 'doctrina',
       year: docInfo.date.split('-')[0],
       author: docInfo.author,
       codi: docInfo.codi

@@ -2,25 +2,41 @@
  * API endpoint per generar interpretació assistida per IA
  * Segons el briefing tècnic de dretplaner.ad
  * 
- * Utilitza Groq (Llama-3.3-70B) o Hugging Face per generar resums, exemples i doctrina
+ * Utilitza Groq (model configurable) o Hugging Face per generar resums, exemples i doctrina
  */
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { GUIA_CATALA_JURIDIC } from '../prompts/guia-catala-juridic';
 import { ASPECTES_JURISPRUDENCIA_ANDORRANA } from '../prompts/aspectes-jurisprudencia-andorra';
-import { InterpretacioIA, Exemple } from '../../data/codis/types';
+import {
+  InterpretacioIA,
+  Exemple,
+  InterpretacioFont,
+  InterpretacioLecturaAlternativa,
+  InterpretacioLimits,
+  InterpretacioContextHistoric,
+} from '../../data/codis/types';
 import { getJurisprudenciaForArticle } from '../../data/jurisprudencia-andorra';
 import { getArticleById } from '../article-helpers';
 import { getDoctrinaByArticleId } from '../../data/doctrina';
 import { generateText } from '../llm';
+import { interpretacioRequestSchema } from '../api/schemas';
 import { buildInterlocutorInstructions, parseInterlocutorProfile, type InterlocutorProfile } from '../interlocutor-profile';
+import { blocContextPrompt, getContextConstitucional } from '../prompts/context-constitucional';
 
 export interface InterpretacioRequest {
   article_id: string;
-  text_oficial: string;
-  numeracio: string;
+  text_oficial?: string;
+  numeracio?: string;
   idioma: 'ca' | 'es' | 'fr';
   profile?: InterlocutorProfile;
+}
+
+export class InterpretacioRequestError extends Error {
+  constructor(public readonly statusCode: 400 | 404, message: string) {
+    super(message);
+    this.name = 'InterpretacioRequestError';
+  }
 }
 
 // Configurar timeout màxim per Vercel (Pro: 300s, Hobby: 10s -> 60s amb config)
@@ -40,15 +56,26 @@ export async function interpretacioIAHandler(
   }
 
   try {
-    const { article_id, text_oficial, numeracio, idioma, profile: rawProfile }: InterpretacioRequest = req.body;
-    const profile = parseInterlocutorProfile(rawProfile);
-
-    if (!article_id || !text_oficial || !numeracio || !idioma) {
-      return res.status(400).json({ error: 'Paràmetres incomplets' });
-    }
+    const parsed = interpretacioRequestSchema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ error: 'Petició d’interpretació no vàlida.' });
+    const { article_id, idioma } = parsed.data;
+    const profile = parseInterlocutorProfile((req.body as InterpretacioRequest).profile);
+    const dateString = new Date().toISOString().split('T')[0];
 
     // Obtenir l'article complet per obtenir metadades
     const article = getArticleById(article_id);
+    if (!article) return res.status(404).json({ error: 'Article no trobat.' });
+
+    // El client només identifica l'article. El text i la numeració canònics
+    // provenen sempre del corpus local per evitar prompt injection normativa.
+    const text_oficial = article.text_oficial;
+    const numeracio = article.numeracio;
+    const constitutionalContext = article.codi === 'constitucio'
+      ? getContextConstitucional(numeracio)
+      : null;
+    const constitutionalContextPrompt = constitutionalContext
+      ? `${blocContextPrompt(constitutionalContext)}\n\n`
+      : '';
 
     // Obtenir jurisprudència relacionada
     const jurisprudencia = getJurisprudenciaForArticle(article_id);
@@ -123,27 +150,37 @@ export async function interpretacioIAHandler(
     }
 
     // ============================================================================
-    // RAG FLOW: Recuperació de context amb XLM-RoBERTa (opcional, desactivat per defecte)
-    // Activa amb RAG_ENABLED=true al .env.local si vols context addicional (carrega XLM-RoBERTa, pot trigar)
+    // RAG FLOW: recuperació híbrida gestionada per Upstash Vector.
     // ============================================================================
 
     let ragContext = '';
+    let doctrinaRagContext = '';
+    let contextHistoric = '';
+    let contextHistoricSummary = '';
+    let contextHistoricFonts: InterpretacioFont[] = [];
 
-    if (process.env.RAG_ENABLED === 'true') {
+    if (process.env.RAG_BACKEND === 'upstash' || process.env.RAG_ENABLED === 'true') {
       try {
         const runRag = async () => {
-          const { generateEmbedding } = await import('../embeddings/index');
-          const { retrieveTopMatches } = await import('../rag/corpus');
-          console.log(`🧠 Generant embedding RAG per a article ${article_id} amb XLM-RoBERTa...`);
-          const embedding = await generateEmbedding(`${article?.titol || ''} ${text_oficial}`, 'xlm-roberta');
-          return retrieveTopMatches(embedding, 5);
+          const { retrieveTopMatches, retrieveHybridMatches, retrieveHistoricalMatches } = await import('../rag/corpus');
+          const query = `${article?.titol || ''} ${article?.capitol || ''} ${text_oficial}`;
+          const constitutional = await retrieveTopMatches(query, 5, undefined, true);
+          const doctrinal = (await retrieveHybridMatches(query, 8, false))
+            .filter((match) => match.entry.sourceType === 'doctrina');
+          const historicalRelevant = /sobir|copr|consell|instituc|sufr|nacional|territor|relaci[oó]ns internacionals|llengua|capital|estat|origen|evoluci/i.test(
+            `${article?.titol || ''} ${article?.capitol || ''} ${text_oficial}`,
+          );
+          const historical = historicalRelevant ? await retrieveHistoricalMatches(query, 8) : [];
+          console.log(`📚 RAG històric: rellevant=${historicalRelevant} resultats=${historical.length}`);
+          return { constitutional, doctrinal, historical };
         };
-        const timeoutPromise = new Promise<any[]>((_, reject) =>
+        const timeoutPromise = new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('RAG Timeout (limite excedit)')), 15000)
         );
-        const matches = await Promise.race([runRag(), timeoutPromise]);
+        const ragResult = await Promise.race([runRag(), timeoutPromise]);
+        const matches = ragResult.constitutional;
         if (matches && matches.length > 0) {
-          ragContext = `\n\nCONTEXT ADDICIONAL RECUPERAT (RAG - XLM-RoBERTa):\nUtilitza aquest context per enriquir l'explicació, però prioritza el text oficial de l'article.\n`;
+          ragContext = `\n\nCONTEXT ADDICIONAL RECUPERAT (RAG):\nUtilitza aquest context per enriquir l'explicació, però prioritza el text oficial de l'article.\n`;
           matches.forEach((m: any) => {
             if (m.entry.id !== article_id) {
               ragContext += `- [${m.entry.category}] ${m.entry.topic}: ${m.entry.content.substring(0, 300)}...\n`;
@@ -152,10 +189,63 @@ export async function interpretacioIAHandler(
               }
             }
           });
+          doctrinaRagContext = matches
+            .filter((m: any) => m.entry.id !== article_id && m.entry.sourceType === 'doctrina')
+            .slice(0, 3)
+            .map((m: any) => `${m.entry.topic || m.entry.source || 'Doctrina acadèmica'}: ${m.entry.content.substring(0, 700)}`)
+            .join('\n');
+          if (ragResult.doctrinal.length > 0) {
+            doctrinaRagContext = ragResult.doctrinal
+              .slice(0, 3)
+              .map((m: any) => `${m.entry.topic || m.entry.source || 'Doctrina acadèmica'}: ${m.entry.content.substring(0, 700)}`)
+              .join('\n');
+          }
           console.log(`✅ RAG: ${matches.length} contextos recuperats`);
+        }
+        if (ragResult.historical.length > 0) {
+          contextHistoric = ragResult.historical
+            .map((m: any) => `- ${m.entry.topic}: ${m.entry.content.substring(0, 650)}`)
+            .join('\n');
+          contextHistoricFonts = ragResult.historical.map((m: any) => ({
+            id: m.entry.id,
+            titol: m.entry.source || m.entry.topic,
+            tipus: 'historia_constitucional' as const,
+            funcio: idioma === 'ca'
+              ? 'Context històric, no font normativa vigent'
+              : idioma === 'es'
+                ? 'Contexto histórico, no fuente normativa vigente'
+                : 'Contexte historique, pas une source normative en vigueur',
+            ...(m.entry.year ? { vigencia: m.entry.year } : {}),
+          }));
+          contextHistoricFonts = contextHistoricFonts.filter((font, index, all) =>
+            all.findIndex((candidate) => candidate.titol === font.titol) === index,
+          );
         }
       } catch (ragError) {
         console.error('⚠️ RAG Omesa (Error o Timeout):', ragError instanceof Error ? ragError.message : ragError);
+      }
+    }
+
+    const historicPrompt = contextHistoric
+      ? `\n\nCONTEXT HISTÒRIC RECUPERAT (NO NORMATIU):\nAquest context només explica antecedents històrics. No pot modificar el significat del text constitucional vigent ni convertir pràctiques, privilegis o interpretacions històriques en normes actuals. Resumeix-lo només si és rellevant i limita't al material següent:\n${contextHistoric}\n`
+      : '';
+
+    if (contextHistoric) {
+      try {
+        const summaryLanguage = idioma === 'es' ? 'castellà' : idioma === 'fr' ? 'francès' : 'català';
+        contextHistoricSummary = await generateText([
+          {
+            role: 'system',
+            content: 'Ets un historiador rigorós. No inventis dades ni facis afirmacions normatives actuals.',
+          },
+          {
+            role: 'user',
+            content: `Resumeix en 2 o 3 frases, en ${summaryLanguage}, el context històric següent. Explica només els antecedents que es desprenen dels fragments i indica la relació amb l’article constitucional. No copiïs fragments, no parlis de normes vigents i no afegeixis informació externa.\n\n${contextHistoric}`,
+          },
+        ], { maxTokens: 360, temperature: 0.1, dateString });
+        contextHistoricSummary = contextHistoricSummary.trim();
+      } catch (error) {
+        console.warn('⚠️ No s’ha pogut resumir el context històric:', error instanceof Error ? error.message : error);
       }
     }
 
@@ -174,17 +264,18 @@ export async function interpretacioIAHandler(
 PRIORITAT ABSOLUTA: Primer interpreta el **text literal** de l’article en llenguatge planer. La jurisprudència/doctrina és **opcional** i només s'ha d'usar si apareix al context. Encara que NO hi hagi jurisprudència/doctrina, has de generar igualment la interpretació completa basada en el text de l'article.
 
 **ARTICLE ${numeracio} A INTERPRETAR:**
-"${text_oficial}"${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
+"${text_oficial}"
+${constitutionalContextPrompt}${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
 
 ⚠️ PROHIBICIONS ABSOLUTES ⚠️
 - NO inventis informació comercial, noms de persones, advocats, despatxos o empreses.
 - NO afegeixis despedides, salutacions ni informació de contacte.
-- NO parlis de temes que NO estiguin explícitament a l'article proporcionat.
+- No inventis doctrina, jurisprudència, efectes jurídics ni fonts. Pots explicar la ubicació i el règim constitucional indicats al context, però separa'ls del contingut literal de l'article.
 - NO escriguis res fora del JSON. Cap text abans ni després.
 - NO copiïs ni reutilitzis frases d'exemple/plantilla del prompt (p. ex. "Resum descriptiu...", "situació concreta...", "...").
 - NO diguis que “no pots” donar exemples o comentari per manca de jurisprudència/doctrina.
 
-REGLA FONAMENTAL: Només pots parlar del que diu aquest article. Si l'article NO menciona residència, immigració, procediments administratius o altres temes, NO en parlis.
+REGLA DE FONTS: El text de l'article és la font principal. Pots explicar-ne la ubicació i el règim constitucional a partir del bloc de context normatiu i contextualitzar-lo amb les fonts recuperades, però separa clarament què diu l'article i què aporta el context. No inventis doctrina, jurisprudència, efectes jurídics ni fonts. Si el context no permet sostenir una afirmació, indica el límit o omet-la.
 
 IMPORTANT: NO repeteixis el text literal de l'article. Adapta el contingut utilitzant llenguatge natural i planer, explicant amb les teves pròpies paraules què significa i què regula l'article.
 
@@ -226,7 +317,8 @@ INTERPRETACIÓN COMPLETA: Debes interpretar la norma **en conjunto** (sentido ge
 PRIORIDAD ABSOLUTA: Primero interpreta el **texto literal** del artículo en lenguaje llano. Aunque NO haya doctrina previa, debes generar igualmente la interpretación completa basada en el texto del artículo.
 
 **ARTÍCULO ${numeracio} A INTERPRETAR:**
-"${text_oficial}"${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
+"${text_oficial}"
+${constitutionalContextPrompt}${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
 
 ⚠️ REGLA ABSOLUTA SOBRE IDIOMA Y TRADUCCIÓN ⚠️
 - El texto literal del artículo está en catalán (idioma oficial) y NUNCA debe traducirse.
@@ -236,12 +328,12 @@ PRIORIDAD ABSOLUTA: Primero interpreta el **texto literal** del artículo en len
 ⚠️ PROHIBICIONES ABSOLUTAS ⚠️
 - NO inventes información comercial, nombres de personas, abogados, despachos o empresas.
 - NO añadas despedidas, saludos ni información de contacto.
-- NO hables de temas que NO estén explícitamente en el artículo proporcionado.
+- No inventes doctrina, jurisprudencia, efectos jurídicos ni fuentes. Puedes explicar la ubicación y el régimen constitucional indicados en el contexto, pero sepáralos del contenido literal del artículo.
 - NO escribas nada fuera del JSON. Nada antes ni después.
 - NO copies ni dejes frases plantilla del prompt (p. ej. "Resumen descriptivo...", "situación concreta...", "...").
 - NO digas que “no puedes” dar ejemplos o comentario por falta de doctrina.
 
-REGLA FUNDAMENTAL: Solo puedes hablar de lo que dice este artículo. Si el artículo NO menciona residencia, inmigración, procedimientos administrativos u otros temas, NO hables de ellos.
+REGLA DE FUENTES: El texto del artículo es la fuente principal. Puedes explicar su ubicación y régimen constitucional usando el bloque de contexto normativo y contextualizarlo con las fuentes recuperadas, pero separa claramente lo que dice el artículo de lo que aporta el contexto. No inventes doctrina, jurisprudencia, efectos jurídicos ni fuentes. Si el contexto no permite sostener una afirmación, indica el límite u omítela.
 
 IMPORTANTE: NO repitas el texto literal del artículo. Adapta el contenido utilizando lenguaje natural y llano, explicando con tus propias palabras qué significa y qué regula el artículo.
 
@@ -283,7 +375,8 @@ INTERPRÉTATION COMPLÈTE: Tu dois interpréter la norme **dans son ensemble** (
 PRIORITÉ ABSOLUTE: Interprète d'abord le **texte littéral** de l'article en langage simple. Même s'il n'y a PAS de doctrine préalable, tu dois quand même générer la fiche d'interprétation complète basée sur le texte de l'article.
 
 **ARTICLE ${numeracio} À INTERPRÉTER:**
-"${text_oficial}"${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
+"${text_oficial}"
+${constitutionalContextPrompt}${contextNormatiu}${jurisprudenciaContext}${doctrinaContext}${ragContext}
 
 ⚠️ RÈGLE ABSOLUTE SUR LA LANGUE ET LA TRADUCTION ⚠️
 - Le texte littéral de l'article est en catalan (langue officielle) et ne doit JAMAIS être traduit.
@@ -293,12 +386,12 @@ PRIORITÉ ABSOLUTE: Interprète d'abord le **texte littéral** de l'article en l
 ⚠️ INTERDICTIONS ABSOLUES ⚠️
 - N'invente PAS d'information commerciale, de noms de personnes, d'avocats, de cabinets ou d'entreprises.
 - N'ajoute PAS de formules de politesse, de salutations ni d'informations de contact.
-- Ne parle PAS de sujets qui NE sont PAS explicitement dans l'article fourni.
+- N'invente ni doctrine, ni jurisprudence, ni effets juridiques, ni sources. Tu peux expliquer la place et le régime constitutionnels indiqués dans le contexte, mais distingue-les du contenu littéral de l'article.
 - N'écris RIEN en dehors du JSON. Rien avant ni après.
 - Ne copie pas / ne réutilise pas les phrases modèle du prompt (p. ex. "Résumé descriptif...", "situation concrète...", "...").
 - Ne dis pas que tu “ne peux pas” donner des exemples ou un commentaire faute de doctrine.
 
-RÈGLE FONDAMENTALE: Tu ne peux parler que de ce que dit cet article. Si l'article NE mentionne PAS la résidence, l'immigration, les procédures administratives ou d'autres sujets, N'en parle PAS.
+RÈGLE RELATIVE AUX SOURCES: Le texte de l'article est la source principale. Tu peux expliquer sa place et son régime constitutionnels à partir du bloc de contexte normatif et le contextualiser avec les sources récupérées, mais distingue clairement le contenu de l'article de celui du contexte. N'invente ni doctrine, ni jurisprudence, ni effets juridiques, ni sources. Si le contexte ne permet pas d'étayer une affirmation, indique cette limite ou omets-la.
 
 IMPORTANT: NE répète PAS le texte littéral de l'article. Adapte le contenu en utilisant un langage naturel et simple, expliquant avec tes propres mots ce que signifie et ce que régit l'article.
 
@@ -347,11 +440,15 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 - La teva resposta HA DE SER ÚNICAMENT un objecte JSON vàlid. CAP text abans ni després.
 - El primer caràcter HA DE SER { i l'últim HA DE SER }. Sense introduccions, conclusions, enllaços, preguntes, explicacions ni "Espero haver ajudat".
 - NO escriguis res fora del JSON. NO afegeixis comentaris ni explicacions.
-- Mantén cada camp clar: resum 2 a 5 frases; exemples és un array d'exemples pràctics reals de l'article; finalitat (què et permet/limita) en 1-2 frases; destinataris (àmbit d'aplicació) en 1-2 frases; aplicacio (impacte pràctic) en 1-2 frases; doctrina_jurisprudencia en 1-3 frases de comentari doctrinal.
+- Mantén cada camp clar: resum 2 a 5 frases; exemples és un array d'exemples pràctics reals de l'article; interpretacio_principal és una lectura provisional justificada; lectures_alternatives és un array d'objectes; fonts és un array jerarquitzat; limits és un objecte amb permet, noPermet i incertesa; finalitat (què et permet/limita) en 1-2 frases; destinataris (àmbit d'aplicació) en 1-2 frases; aplicacio (impacte pràctic) en 1-2 frases; doctrina_jurisprudencia en 1-3 frases de comentari doctrinal.
 - EXEMPLE DE FORMAT CORRECTE (copia aquesta estructura exacta):
 {
   "resum": "...",
   "exemples": [{"cas": "Exemple aplicat: ...", "idioma": "ca"}],
+  "interpretacio_principal": "...",
+  "lectures_alternatives": [{"titol": "...", "explicacio": "...", "base": "..."}],
+  "fonts": [{"id": "...", "titol": "...", "tipus": "constitucio", "funcio": "...", "vigencia": "..."}],
+  "limits": {"permet": "...", "noPermet": "...", "incertesa": "..."},
   "finalitat": "...",
   "destinataris": "...",
   "aplicacio": "...",
@@ -364,11 +461,15 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 - Tu respuesta DEBE SER ÚNICAMENTE un objeto JSON válido. NADA antes ni después.
 - El primer carácter DEBE SER { y el último DEBE SER }. Sin introducciones, conclusiones, enlaces, preguntas, explicaciones ni "Espero haber ayudado".
 - NO escribas nada fuera del JSON. NO añadas comentarios ni explicaciones.
-- Mantén cada campo claro: resumen 2 a 5 frases; exemples es un array de ejemplos prácticos reales del artículo; finalitat (qué permite/limita) en 1-2 frases; destinataris (ámbito de aplicación) en 1-2 frases; aplicacio (impacto práctico) en 1-2 frases; doctrina_jurisprudencia en 1-3 frases de comentario doctrinal.
+- Mantén cada campo claro: resumen 2 a 5 frases; exemples es un array de ejemplos prácticos reales del artículo; interpretacio_principal es una lectura provisional justificada; lectures_alternatives es un array de objetos; fonts es un array jerarquizado; limits es un objeto con permet, noPermet e incertesa; finalitat (qué permite/limita) en 1-2 frases; destinataris (ámbito de aplicación) en 1-2 frases; aplicacio (impacto práctico) en 1-2 frases; doctrina_jurisprudencia en 1-3 frases de comentario doctrinal.
 - EJEMPLO DE FORMATO CORRECTO (copia esta estructura exacta):
 {
   "resum": "...",
   "exemples": [{"cas": "Ejemplo aplicado: ...", "idioma": "es"}],
+  "interpretacio_principal": "...",
+  "lectures_alternatives": [{"titol": "...", "explicacio": "...", "base": "..."}],
+  "fonts": [{"id": "...", "titol": "...", "tipus": "constitucio", "funcio": "...", "vigencia": "..."}],
+  "limits": {"permet": "...", "noPermet": "...", "incertesa": "..."},
   "finalitat": "...",
   "destinataris": "...",
   "aplicacio": "...",
@@ -381,11 +482,15 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 - Ta réponse DOIT ÊTRE UNIQUEMENT un objet JSON valide. Rien avant ni après.
 - Le premier caractère DOIT ÊTRE { et le dernier DOIT ÊTRE }. Pas d'introduction, conclusion, liens, questions ni "J'espère vous avoir aidé".
 - N'écris RIEN en dehors du JSON. N'ajoute PAS de commentaires ni d'explications.
-- Garde chaque champ clair: résumé 2 à 5 phrases; exemples est un tableau d'exemples pratiques réels de l'article; finalitat (ce que cela permet/limite) en 1-2 phrases; destinataris (champ d'application) en 1-2 phrases; aplicacio (impact pratique) en 1-2 phrases; doctrina_jurisprudencia en 1-3 phrases de commentaire doctrinal.
+- Garde chaque champ clair: résumé 2 à 5 phrases; exemples est un tableau d'exemples pratiques réels de l'article; interpretacio_principal est une lecture provisoire justifiée; lectures_alternatives est un tableau d'objets; fonts est un tableau hiérarchisé; limits est un objet avec permet, noPermet et incertesa; finalitat (ce que cela permet/limite) en 1-2 phrases; destinataris (champ d'application) en 1-2 phrases; aplicacio (impact pratique) en 1-2 phrases; doctrina_jurisprudencia en 1-3 phrases de commentaire doctrinal.
 - EXEMPLE DE FORMAT CORRECT (copie cette structure exacte):
 {
   "resum": "...",
   "exemples": [{"cas": "Exemple appliqué: ...", "idioma": "fr"}],
+  "interpretacio_principal": "...",
+  "lectures_alternatives": [{"titol": "...", "explicacio": "...", "base": "..."}],
+  "fonts": [{"id": "...", "titol": "...", "tipus": "constitucio", "funcio": "...", "vigencia": "..."}],
+  "limits": {"permet": "...", "noPermet": "...", "incertesa": "..."},
   "finalitat": "...",
   "destinataris": "...",
   "aplicacio": "...",
@@ -397,10 +502,10 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
     // Reduïm la complexitat del JSON per evitar errors de sintaxi del model.
 
     const systemPromptBase = idioma === 'ca'
-      ? `Ets un assistent jurídic expert en dret andorrà. La teva única funció és analitzar articles de la Constitució i generar fitxes explicatives en format JSON simplificat. La teva resposta (resum, exemples, finalitat, destinataris, aplicacio, doctrina_jurisprudencia) ha de ser íntegrament en català. Respon NOMÉS en català.`
+      ? `Ets un assistent acadèmic que genera fitxes explicatives d'articles de la Constitució d'Andorra en JSON. Basa't primer en el text oficial i el context normatiu proporcionat; diferencia el contingut de l'article de la seva interpretació. No inventis doctrina, jurisprudència ni conseqüències jurídiques. Respecta la classificació i el règim indicats en el context constitucional. Respon íntegrament en català.`
       : idioma === 'es'
-        ? `Eres un asistente experto en derecho andorrano. Tu única función es analizar artículos de la Constitución y generar fichas explicativas en formato JSON simplificado. Tu respuesta (resum, exemples, finalitat, destinataris, aplicacio, doctrina_jurisprudencia) debe ser íntegramente en castellano. Responde SOLO en castellano.`
-        : `Tu es un assistant expert en droit andorran. Ta seule fonction est d'analyser des articles de la Constitution et de générer des fiches explicatives en format JSON simplifié. Ta réponse (resum, exemples, finalitat, destinataris, aplicacio, doctrina_jurisprudencia) doit être entièrement en français. Réponds UNIQUEMENT en français.`;
+        ? `Eres un asistente académico que genera fichas explicativas de artículos de la Constitución de Andorra en JSON. Basa la respuesta primero en el texto oficial y el contexto normativo proporcionado; distingue el contenido del artículo de su interpretación. No inventes doctrina, jurisprudencia ni consecuencias jurídicas. Respeta la clasificación y el régimen indicados en el contexto constitucional. Responde íntegramente en castellano.`
+        : `Tu es un assistant académique qui génère des fiches explicatives d'articles de la Constitution d'Andorre en JSON. Fonde d'abord la réponse sur le texte officiel et le contexte normatif fourni; distingue le contenu de l'article de son interprétation. N'invente ni doctrine, ni jurisprudence, ni conséquences juridiques. Respecte la classification et le régime indiqués dans le contexte constitutionnel. Réponds entièrement en français.`;
 
     const interlocutorInstructions = buildInterlocutorInstructions(profile, idioma);
 
@@ -430,6 +535,42 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
         ? `{"resum":"Se reconoce el derecho a la vida como derecho fundamental inviolable y se prohíbe absolutamente la pena de muerte y la tortura.","exemples":["Un prisionero denuncia maltratos físicos; la Constitución lo prohíbe terminantemente.","El debate sobre el aborto se basa en la protección de la vida en sus diferentes fases."],"finalitat":"Garantiza el derecho de cualquier persona a vivir de forma segura y prohíbe cualquier acción que atente contra su integridad física.","destinataris":"Afecta a todas las personas que se encuentren en Andorra, así como a los poderes públicos y fuerzas de seguridad del Estado.","aplicacio":"Ninguna ley ni autoridad puede aplicar la pena de muerte ni permitir maltratos a detenidos o ciudadanos.","doctrina_jurisprudencia":"La doctrina jurídica configura el derecho a la vida como el valor supremo del sistema constitucional, del que derivan los demás derechos fundamentales y la prohibición absoluta de la pena de muerte."}`
         : `{"resum":"Le droit à la vie est reconnu comme un droit fondamental inviolable et la peine de mort ainsi que la torture sont absolument interdites.","exemples":["Un prisonnier dénonce des mauvais traitements physiques; la Constitution l'interdit formellement.","Le débat sur l'avortement repose sur la protection de la vie dans ses différentes phases."],"finalitat":"Garantit le droit de toute personne à vivre en sécurité et interdit toute action portant atteinte à son intégrité physique.","destinataris":"Concerne toutes les personnes se trouvant en Andorre, ainsi que les pouvoirs publics et les forces de sécurité de l'État.","aplicacio":"Aucune loi ni autorité ne peut appliquer la peine de mort ni autoriser la maltraitance des détenus ou des citoyens.","doctrina_jurisprudencia":"La doctrine juridique formule le droit à la vie comme la valeur suprême du système constitutionnel, dont découlent les autres droits fondamentaux et l'interdiction absolue de la peine de mort."}`;
 
+    const estructuraInterpretacio = idioma === 'ca'
+      ? `
+ORDRE HERMENÈUTIC OBLIGATORI:
+1. Identifica el problema jurídic que planteja l'article.
+2. Explica la lectura literal sense copiar el text oficial.
+3. Situa l'article en el seu context normatiu i institucional.
+4. Formula una interpretació principal provisional i justifica-la.
+5. Exposa fins a 2 lectures alternatives si són jurídicament plausibles.
+6. Explica una aplicació genèrica, sense convertir-la en assessorament individual.
+7. Declara els límits, la incertesa i què exigiria revisió professional.
+
+Retorna també aquests camps: "interpretacio_principal" (text), "lectures_alternatives" (array d'objectes amb titol, explicacio i base opcional), "fonts" (array d'objectes amb id, titol, tipus, funcio i vigencia opcional) i "limits" (objecte amb permet, noPermet i incertesa opcional). Les fonts han de reflectir només el context rebut; no inventis identificadors, sentències ni enllaços.`
+      : idioma === 'es'
+        ? `
+ORDEN HERMENÉUTICO OBLIGATORIO:
+1. Identifica el problema jurídico que plantea el artículo.
+2. Explica la lectura literal sin copiar el texto oficial.
+3. Sitúa el artículo en su contexto normativo e institucional.
+4. Formula una interpretación principal provisional y justifícala.
+5. Expón hasta 2 lecturas alternativas si son jurídicamente plausibles.
+6. Explica una aplicación genérica, sin convertirla en asesoramiento individual.
+7. Declara los límites, la incertidumbre y qué exigiría revisión profesional.
+
+Devuelve también estos campos: "interpretacio_principal", "lectures_alternatives" (array de objetos con titol, explicacio y base opcional), "fonts" (array de objetos con id, titol, tipus, funcio y vigencia opcional) y "limits" (objeto con permet, noPermet e incertesa opcional). Las fuentes deben reflejar solo el contexto recibido; no inventes identificadores, sentencias ni enlaces.`
+        : `
+ORDRE HERMÉNEUTIQUE OBLIGATOIRE:
+1. Identifie le problème juridique posé par l'article.
+2. Explique la lecture littérale sans copier le texte officiel.
+3. Situe l'article dans son contexte normatif et institutionnel.
+4. Formule une interprétation principale provisoire et justifie-la.
+5. Présente jusqu'à 2 lectures alternatives si elles sont juridiquement plausibles.
+6. Explique une application générique, sans donner de conseil individuel.
+7. Déclare les limites, l'incertitude et ce qui exige une révision professionnelle.
+
+Retourne aussi les champs "interpretacio_principal", "lectures_alternatives", "fonts" et "limits". Les sources doivent refléter uniquement le contexte reçu; n'invente pas d'identifiants, de décisions ni de liens.`;
+
     // Prompt Real - Reforçat per evitar copiar exemples
     const promptReal = idioma === 'ca'
       ? `---
@@ -438,8 +579,12 @@ TASCA ACTUAL: Analitza l'ARTICLE ${numeracio} (i cap altre).
 TEXT DE L'ARTICLE: "${text_oficial}"
 
 Genera el JSON exclusivament per a l'Article ${numeracio}.
+${constitutionalContextPrompt}
+Si hi ha context històric recuperat, afegeix el camp "context_historic": {"resum": "..."}; explica només antecedents rellevants i no els tractis com a normes vigents.
 Context Addicional (si n'hi ha):
-${ragContext}`
+${ragContext}
+${historicPrompt}
+${estructuraInterpretacio}`
       : idioma === 'es'
         ? `---
 AHORA ES TU TURNO.
@@ -447,23 +592,28 @@ TAREA ACTUAL: Analiza el ARTÍCULO ${numeracio} (y ningún otro).
 TEXTO DEL ARTÍCULO: "${text_oficial}"
 
 Genera el JSON exclusivamente para el Artículo ${numeracio}.
+${constitutionalContextPrompt}
+Si existe contexto histórico recuperado, añade el campo "context_historic": {"resum": "..."}; explica solo antecedentes relevantes y no los trates como normas vigentes.
 Contexto Adicional (si hay):
-${ragContext}`
-        : `---
+${ragContext}
+${historicPrompt}
+${estructuraInterpretacio}`
+      : `---
 C'EST TON TOUR.
 TÂCHE ACTUELLE: Analyse l'ARTICLE ${numeracio} (et aucun autre).
 TEXTE DE L'ARTICLE: "${text_oficial}"
 
 Génère le JSON exclusivement pour l'Article ${numeracio}.
+${constitutionalContextPrompt}
+Si un contexte historique est récupéré, ajoute le champ "context_historic": {"resum": "..."}; explique uniquement les antécédents pertinents et ne les traite pas comme des normes en vigueur.
 Contexte Supplémentaire (s'il y en a):
-${ragContext}`;
+${ragContext}
+${historicPrompt}
+${estructuraInterpretacio}`;
 
+    // Els few-shots antics introdueixen doctrina no recolzada per les fonts.
     const messages = [
       { role: 'system', content: `${systemPromptBase}${interlocutorInstructions}` },
-      { role: 'user', content: exampleUser },
-      { role: 'assistant', content: exampleAssistant },
-      { role: 'user', content: exampleUser2 },
-      { role: 'assistant', content: exampleAssistant2 },
       { role: 'user', content: promptReal }
     ];
 
@@ -472,7 +622,6 @@ ${ragContext}`;
     console.log(`📤 Article inclòs al prompt: ${prompt.includes(text_oficial.substring(0, 50)) ? '✅ SÍ' : '❌ NO'}`);
 
     let answer: string;
-    const dateString = new Date().toISOString().split('T')[0];
 
     const coalesceString = (...values: Array<unknown>): string => {
       for (const v of values) {
@@ -532,6 +681,58 @@ ${ragContext}`;
         rawObj.jurisprudencia,
         rawObj.jurisprudència
       );
+    };
+
+    const normalizeAlternatives = (raw: unknown): InterpretacioLecturaAlternativa[] => {
+      if (!Array.isArray(raw)) return [];
+      return raw.slice(0, 2).flatMap((item) => {
+        if (!item || typeof item !== 'object') return [];
+        const obj = item as Record<string, unknown>;
+        const titol = coalesceString(obj.titol, obj.título, obj.title, obj.label);
+        const explicacio = coalesceString(obj.explicacio, obj.explicación, obj.explication, obj.explanation, obj.text);
+        const base = coalesceString(obj.base, obj.fonament, obj.fundamento, obj.basis);
+        return titol && explicacio ? [{ titol, explicacio, ...(base ? { base } : {}) }] : [];
+      });
+    };
+
+    const normalizeLimits = (raw: unknown): InterpretacioLimits | undefined => {
+      if (!raw || typeof raw !== 'object') return undefined;
+      const obj = raw as Record<string, unknown>;
+      const permet = coalesceString(obj.permet, obj.permite, obj.allows);
+      const noPermet = coalesceString(obj.noPermet, obj.no_permet, obj.noPermite, obj.prohibits);
+      const incertesa = coalesceString(obj.incertesa, obj.incertidumbre, obj.uncertainty);
+      return permet || noPermet || incertesa
+        ? { permet, noPermet, ...(incertesa ? { incertesa } : {}) }
+        : undefined;
+    };
+
+    const normalizeHistoricSummary = (raw: unknown): string => {
+      if (!raw || typeof raw !== 'object') return '';
+      const obj = raw as Record<string, unknown>;
+      return coalesceString(obj.resum, obj.summary, obj.resumen, obj.resume);
+    };
+
+    const fontsPerDefecte = (): InterpretacioFont[] => {
+      const fonts: InterpretacioFont[] = [{
+        id: article_id,
+        titol: idioma === 'ca' ? 'Constitució del Principat d’Andorra' : idioma === 'es' ? 'Constitución del Principado de Andorra' : 'Constitution de la Principauté d’Andorre',
+        tipus: 'constitucio',
+        funcio: idioma === 'ca' ? 'Font normativa principal' : idioma === 'es' ? 'Fuente normativa principal' : 'Source normative principale',
+        ...(article.vigencia ? { vigencia: article.vigencia } : {}),
+      }];
+      if (jurisprudencia.length > 0) fonts.push({
+        id: `jurisprudencia-${article_id}`,
+        titol: idioma === 'ca' ? 'Jurisprudència relacionada' : idioma === 'es' ? 'Jurisprudencia relacionada' : 'Jurisprudence liée',
+        tipus: 'jurisprudencia',
+        funcio: idioma === 'ca' ? 'Context interpretatiu' : idioma === 'es' ? 'Contexto interpretativo' : 'Contexte interprétatif',
+      });
+      if (doctrinaRelacionada.length > 0) fonts.push({
+        id: `doctrina-${article_id}`,
+        titol: idioma === 'ca' ? 'Doctrina relacionada' : idioma === 'es' ? 'Doctrina relacionada' : 'Doctrine liée',
+        tipus: 'doctrina',
+        funcio: idioma === 'ca' ? 'Context doctrinal, no font normativa' : idioma === 'es' ? 'Contexto doctrinal, no fuente normativa' : 'Contexte doctrinal, pas une source normative',
+      });
+      return fonts;
     };
 
     const extractFromPlainText = (text: string, idiomaActual: 'ca' | 'es' | 'fr') => {
@@ -625,6 +826,16 @@ ${ragContext}`;
       return null;
     };
 
+    const extractJsonStringField = (text: string, field: string): string => {
+      const match = text.match(new RegExp(`"${field}"\\s*:\\s*"((?:\\\\.|[^"\\\\])*)"`));
+      if (!match) return '';
+      try {
+        return JSON.parse(`"${match[1]}"`) as string;
+      } catch {
+        return match[1].replace(/\\n/g, '\n').replace(/\\"/g, '"');
+      }
+    };
+
     // Intento 1: Generació inicial
     try {
       answer = await generateText(messages, {
@@ -634,7 +845,7 @@ ${ragContext}`;
       });
     } catch (error: any) {
       console.error('Error LLM API:', error);
-      return res.status(500).json({ error: `Error al generar la interpretació: ${error.message}` });
+      return res.status(500).json({ error: 'No s’ha pogut generar la interpretació.' });
     }
 
     if (!answer) {
@@ -810,13 +1021,22 @@ ${ragContext}`;
       const rawResum = answer.length > 6000 ? answer.slice(0, 5997) + '...' : answer;
 
       const extracted = extractFromPlainText(rawResum, idioma);
+      const jsonResum = extractJsonStringField(rawResum, 'resum');
+      const fallbackResum = jsonResum || extracted.resum || rawResum;
+      const fallbackDoctrina = extracted.doctrina || doctrinaRelacionada
+        .slice(0, 3)
+        .map((doc) => `${doc.title}: ${doc.summary}`)
+        .join(' ') || doctrinaRagContext;
+      const fallbackHistoricSummary = contextHistoricFonts.length > 0
+        ? (contextHistoricSummary || 'Context històric recuperat de les fonts indicades; consulteu els fragments i les fonts per al detall.')
+        : '';
 
       const interpretacio: InterpretacioIA = {
         article_id,
         resum: {
-          ca: idioma === 'ca' ? (extracted.resum || rawResum) : '',
-          es: idioma === 'es' ? (extracted.resum || rawResum) : '',
-          fr: idioma === 'fr' ? (extracted.resum || rawResum) : '',
+          ca: idioma === 'ca' ? fallbackResum : '',
+          es: idioma === 'es' ? fallbackResum : '',
+          fr: idioma === 'fr' ? fallbackResum : '',
         },
         exemples: extracted.exemples,
         conceptes_clau: [],
@@ -827,7 +1047,27 @@ ${ragContext}`;
         finalitat: '',
         destinataris: '',
         aplicacio: '',
-        doctrina_jurisprudencia: extracted.doctrina,
+        doctrina_jurisprudencia: fallbackDoctrina,
+        interpretacio_principal: fallbackResum,
+        lectures_alternatives: [],
+        fonts: [...fontsPerDefecte(), ...contextHistoricFonts],
+        limits: {
+          permet: idioma === 'ca' ? 'Facilita la comprensió inicial de l’article.' : idioma === 'es' ? 'Facilita la comprensión inicial del artículo.' : 'Facilite la compréhension initiale de l’article.',
+          noPermet: idioma === 'ca' ? 'No substitueix la font oficial ni l’assessorament jurídic.' : idioma === 'es' ? 'No sustituye la fuente oficial ni el asesoramiento jurídico.' : 'Ne remplace ni la source officielle ni le conseil juridique.',
+        },
+        ...(fallbackHistoricSummary
+          ? {
+              context_historic: {
+                resum: fallbackHistoricSummary,
+                fonts: contextHistoricFonts,
+                advertiment: idioma === 'ca'
+                  ? 'Context històric orientatiu; no és una font normativa vigent.'
+                  : idioma === 'es'
+                    ? 'Contexto histórico orientativo; no es una fuente normativa vigente.'
+                    : 'Contexte historique indicatif; il ne constitue pas une source normative en vigueur.',
+              },
+            }
+          : {}),
       };
       return res.status(200).json(interpretacio);
     }
@@ -846,6 +1086,16 @@ ${ragContext}`;
     );
     const conceptesArr = Array.isArray(parsedContent.conceptes_clau) ? (parsedContent.conceptes_clau as string[]) : [];
 
+    const modelHistoricSummary = normalizeHistoricSummary(
+      parsedObj.context_historic ?? parsedObj.contexto_historico ?? parsedObj.contexte_historique,
+    );
+    // El camp és opcional per al model, però no hem d'amagar fonts històriques
+    // recuperades només perquè el model no l'hagi inclòs en el JSON. El fallback
+    // es limita literalment als fragments del RAG i continua sent no normatiu.
+    const historicSummary = modelHistoricSummary || contextHistoricSummary || (contextHistoricFonts.length > 0
+      ? 'Context històric recuperat de les fonts indicades; consulteu les fonts per al detall.'
+      : '');
+
     const interpretacio: InterpretacioIA = {
       article_id,
       resum: {
@@ -862,14 +1112,51 @@ ${ragContext}`;
       finalitat: String(parsedObj.finalitat ?? ''),
       destinataris: String(parsedObj.destinataris ?? ''),
       aplicacio: String(parsedObj.aplicacio ?? ''),
-      doctrina_jurisprudencia: normalizeDoctrine(parsedObj),
+      doctrina_jurisprudencia: normalizeDoctrine(parsedObj) || doctrinaRelacionada
+        .slice(0, 3)
+        .map((doc) => `${doc.title}: ${doc.summary}`)
+        .join(' ') || doctrinaRagContext,
+      interpretacio_principal: coalesceString(
+        parsedObj.interpretacio_principal,
+        parsedObj.interpretacion_principal,
+        parsedObj.interpretation_principale,
+        resumStr,
+      ),
+      lectures_alternatives: normalizeAlternatives(
+        parsedObj.lectures_alternatives ?? parsedObj.lecturas_alternativas ?? parsedObj.lecturesAlternatives,
+      ),
+      // Les fonts exposades són canòniques i es construeixen a partir del corpus local;
+      // no es confia en identificadors inventats pel model.
+      fonts: [...fontsPerDefecte(), ...contextHistoricFonts],
+      limits: normalizeLimits(parsedObj.limits ?? parsedObj.limites),
+      ...(contextHistoricFonts.length > 0 && historicSummary
+        ? {
+            context_historic: {
+              resum: historicSummary,
+              fonts: contextHistoricFonts,
+              advertiment: idioma === 'ca'
+                ? 'Context històric orientatiu; no és una font normativa vigent.'
+                : idioma === 'es'
+                  ? 'Contexto histórico orientativo; no es una fuente normativa vigente.'
+                  : 'Contexte historique indicatif; il ne constitue pas une source normative en vigueur.',
+            },
+          }
+        : {}),
     };
+
+    if (!interpretacio.fonts?.length) interpretacio.fonts = fontsPerDefecte();
+    if (!interpretacio.limits) {
+      interpretacio.limits = {
+        permet: interpretacio.finalitat || (idioma === 'ca' ? 'Facilita la comprensió inicial de l’article.' : idioma === 'es' ? 'Facilita la comprensión inicial del artículo.' : 'Facilite la compréhension initiale de l’article.'),
+        noPermet: idioma === 'ca' ? 'No substitueix la font oficial ni l’assessorament jurídic.' : idioma === 'es' ? 'No sustituye la fuente oficial ni el asesoramiento jurídico.' : 'Ne remplace ni la source officielle ni le conseil juridique.',
+      };
+    }
 
     return res.status(200).json(interpretacio);
   } catch (error) {
     console.error('Error en interpretacio-ia:', error);
     return res.status(500).json({
-      error: error instanceof Error ? error.message : 'Error desconegut',
+      error: 'No s’ha pogut generar la interpretació.',
     });
   }
 }
@@ -901,7 +1188,10 @@ export async function generateInterpretacioIA(payload: InterpretacioRequest): Pr
 
   if (statusCode >= 400) {
     const errorMessage = (responseBody as { error?: string } | null)?.error || 'Error al generar la interpretació';
-    throw new Error(errorMessage);
+    if (statusCode === 400 || statusCode === 404) {
+      throw new InterpretacioRequestError(statusCode, errorMessage);
+    }
+    throw new Error('No s’ha pogut generar la interpretació.');
   }
 
   if (!responseBody || 'error' in responseBody) {
