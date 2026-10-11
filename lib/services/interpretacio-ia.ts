@@ -583,6 +583,13 @@ ${constitutionalContextPrompt}
 Si hi ha context històric recuperat, afegeix el camp "context_historic": {"resum": "..."}; explica només antecedents rellevants i no els tractis com a normes vigents.
 Context Addicional (si n'hi ha):
 ${ragContext}
+
+REGLA PRIORITÀRIA — RESUM FIDEL I LLENGUATGE PLANER:
+- Presenta primer la idea principal, amb ordre directe i una idea per frase. Fes servir paraules quotidianes; conserva els termes jurídics necessaris i explica'ls breument.
+- Escriu frases curtes i evita passives, nominalitzacions, incisos llargs i repeticions.
+- El camp «resum» només ha de descriure allò que l'article estableix expressament. Cobreix tots els apartats, però no hi afegeixis finalitats, conseqüències ni efectes pràctics inferits.
+- Omple exemples, finalitat, destinataris i aplicació només quan els fonamenti el text o una font identificada del context. Si no, indica que les fonts no permeten concretar-ho.
+- Inclou doctrina només si el context aporta una font doctrinal identificable. No inventis doctrina ni afirmacions jurídiques.
 ${historicPrompt}
 ${estructuraInterpretacio}`
       : idioma === 'es'
@@ -596,6 +603,13 @@ ${constitutionalContextPrompt}
 Si existe contexto histórico recuperado, añade el campo "context_historic": {"resum": "..."}; explica solo antecedentes relevantes y no los trates como normas vigentes.
 Contexto Adicional (si hay):
 ${ragContext}
+
+REGLA PRIORITARIA — RESUMEN FIEL Y LENGUAJE CLARO:
+- Presenta primero la idea principal, con orden directo y una idea por frase. Usa palabras cotidianas; conserva los términos jurídicos necesarios y explícalos brevemente.
+- Escribe frases cortas y evita pasivas, nominalizaciones, incisos largos y repeticiones.
+- El campo «resum» solo debe describir lo que el artículo establece expresamente. Cubre todos sus apartados, pero no añadas finalidades, consecuencias ni efectos prácticos inferidos.
+- Completa ejemplos, finalidad, destinatarios y aplicación solo cuando los fundamente el texto o una fuente identificada del contexto. Si no, indica que las fuentes no permiten concretarlo.
+- Incluye doctrina solo si el contexto aporta una fuente doctrinal identificable. No inventes doctrina ni afirmaciones jurídicas.
 ${historicPrompt}
 ${estructuraInterpretacio}`
       : `---
@@ -608,6 +622,13 @@ ${constitutionalContextPrompt}
 Si un contexte historique est récupéré, ajoute le champ "context_historic": {"resum": "..."}; explique uniquement les antécédents pertinents et ne les traite pas comme des normes en vigueur.
 Contexte Supplémentaire (s'il y en a):
 ${ragContext}
+
+RÈGLE PRIORITAIRE — RÉSUMÉ FIDÈLE ET LANGAGE CLAIR :
+- Présente d'abord l'idée principale, dans l'ordre direct et avec une idée par phrase. Emploie des mots courants; conserve les termes juridiques nécessaires et explique-les brièvement.
+- Écris des phrases courtes et évite les tournures passives, les nominalisations, les longues incises et les répétitions.
+- Le champ «resum» doit décrire uniquement ce que l'article établit expressément. Couvre tous ses paragraphes, sans ajouter de finalités, de conséquences ni d'effets pratiques déduits.
+- Ne complète les exemples, la finalité, les destinataires et l'application que si le texte ou une source identifiée du contexte les étaye. Sinon, indique que les sources ne permettent pas de le préciser.
+- N'inclus une doctrine que si le contexte fournit une source doctrinale identifiable. N'invente pas de doctrine ni d'affirmation juridique.
 ${historicPrompt}
 ${estructuraInterpretacio}`;
 
@@ -947,11 +968,10 @@ ${estructuraInterpretacio}`;
 
       const fixPrompt =
         idioma === 'ca'
-          ? `${prompt}\n\n⚠️ IMPORTANT: La teva resposta anterior copiava frases plantilla.\n- PROHIBIT usar literalment instruccions o placeholders (\"Resum descriptiu...\", \"situació concreta\", \"...\").\n- Escriu contingut ESPECÍFIC d'aquest article: resum descriptiu (2–5 frases) + 2–3 exemples realistes + finalitat + destinataris + aplicació + doctrina.\nRespon ÚNICAMENT amb el JSON.`
+          ? `${prompt}\n\nLa resposta anterior contenia text de plantilla. Torna a generar el JSON. El camp "resum" només ha de descriure allò que diu expressament el text constitucional, en llenguatge planer i sense inferències. Omple exemples, finalitat, destinataris, aplicació i doctrina només si els fonamenta el text o una font identificada del context; si no, indica que les fonts no permeten concretar-ho. No inventis doctrina. Respon només amb JSON vàlid.`
           : idioma === 'es'
-            ? `${prompt}\n\n⚠️ IMPORTANTE: Tu respuesta anterior copiaba frases plantilla.\n- PROHIBIDO usar literalmente instrucciones o placeholders (\"Resumen descriptivo...\", \"situación concreta\", \"...\").\n- Escribe contenido ESPECÍFICO de este artículo: resumen descriptivo (2–5 frases) + 2–3 ejemplos realistas + finalitat + destinataris + aplicació + doctrina.\nResponde ÚNICAMENTE con el JSON.`
-            : `${prompt}\n\n⚠️ IMPORTANT: Ta réponse précédente copiait des phrases modèle.\n- INTERDIT d'utiliser littéralement les instructions ou placeholders (\"Résumé descriptif...\", \"situation concrète\", \"...\").\n- Écris un contenu SPÉCIFIQUE à cet article: résumé descriptif (2–5 phrases) + 2–3 exemples réalistes + finalitat + destinataris + aplicació + doctrine.\nRéponds UNIQUEMENT avec le JSON.`;
-
+            ? `${prompt}\n\nLa respuesta anterior contenía texto de plantilla. Genera de nuevo el JSON. El campo "resum" solo debe describir lo que dice expresamente el texto constitucional, en lenguaje claro y sin inferencias. Completa ejemplos, finalidad, destinatarios, aplicación y doctrina solo si los fundamenta el texto o una fuente identificada del contexto; si no, indica que las fuentes no permiten concretarlo. No inventes doctrina. Responde solo con JSON válido.`
+            : `${prompt}\n\nLa réponse précédente contenait du texte de modèle. Génère à nouveau le JSON. Le champ "resum" doit décrire uniquement ce que dit expressément le texte constitutionnel, en langage clair et sans inférences. Ne complète les exemples, la finalité, les destinataires, l'application et la doctrine que si le texte ou une source identifiée du contexte les étaye; sinon, indique que les sources ne permettent pas de le préciser. N'invente pas de doctrine. Réponds uniquement avec un JSON valide.`;
       const fixMessages = [
         { role: 'system', content: `${systemPromptBase}${interlocutorInstructions}` },
         { role: 'user', content: fixPrompt },
@@ -988,11 +1008,10 @@ ${estructuraInterpretacio}`;
 
         const fix2 =
           idioma === 'ca'
-            ? `Reescriu NOMÉS aquests camps per a l'ARTICLE ${numeracio} (sense repetir el text literal):\n\n- "exemples": Array de 2 o 3 exemples pràctics (NO placeholders).\n- "finalitat": 1-2 frases explicant què permet/limita l'article.\n- "destinataris": 1-2 frases explicant a qui/què s'aplica.\n- "aplicacio": 1-2 frases explicant l'impacte pràctic.\n- "doctrina_jurisprudencia": 1–3 frases de comentari únicament doctrinal.\n\nRespon ÚNICAMENT amb un JSON vàlid:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Exemple aplicat: ...", "Exemple aplicat: ..."],\n  "finalitat": "${coalesceString(parsedObj0.finalitat)}",\n  "destinataris": "${coalesceString(parsedObj0.destinataris)}",\n  "aplicacio": "${coalesceString(parsedObj0.aplicacio)}",\n  "doctrina_jurisprudencia": "..."\n}`
+            ? `Revisa els camps incomplets de l'ARTICLE ${numeracio}. No inventis contingut: completa exemples, finalitat, destinataris, aplicació o doctrina només si els fonamenta el text constitucional o una font identificada del context; si no, indica que les fonts no permeten concretar-ho. El resum ha de ser fidel al text i cobrir tots els apartats sense inferències. Conserva els camps correctes i respon només amb JSON vàlid.`
             : idioma === 'es'
-              ? `Reescribe SOLO estos campos para el ARTÍCULO ${numeracio}:\n\n- "exemples": Array de 2 o 3 ejemplos prácticos.\n- "finalitat": 1-2 frases explicando qué permite/limita el artículo.\n- "destinataris": 1-2 frases explicando a quién/qué se aplica.\n- "aplicacio": 1-2 frases explicando el impacto práctico.\n- "doctrina_jurisprudencia": 1–3 frases de comentario únicamente doctrinal.\n\nResponde ÚNICAMENTE con un JSON válido:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Ejemplo aplicado: ...", "Ejemplo aplicado: ..."],\n  "finalitat": "${coalesceString(parsedObj0.finalitat)}",\n  "destinataris": "${coalesceString(parsedObj0.destinataris)}",\n  "aplicacio": "${coalesceString(parsedObj0.aplicacio)}",\n  "doctrina_jurisprudencia": "..."\n}`
-              : `Réécris UNIQUEMENT ces champs pour l'ARTICLE ${numeracio}:\n\n- "exemples": Tableau de 2 ou 3 exemples pratiques.\n- "finalitat": 1-2 phrases (ce que cela permet/limite).\n- "destinataris": 1-2 phrases (champ d'application).\n- "aplicacio": 1-2 phrases (impact pratique).\n- "doctrina_jurisprudencia": 1–3 phrases de commentaire uniquement doctrinal.\n\nRéponds UNIQUEMENT avec un JSON valide:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Exemple appliqué: ...", "Exemple appliqué: ..."],\n  "finalitat": "${coalesceString(parsedObj0.finalitat)}",\n  "destinataris": "${coalesceString(parsedObj0.destinataris)}",\n  "aplicacio": "${coalesceString(parsedObj0.aplicacio)}",\n  "doctrina_jurisprudencia": "..."\n}`;
-
+              ? `Revisa los campos incompletos del ARTÍCULO ${numeracio}. No inventes contenido: completa ejemplos, finalidad, destinatarios, aplicación o doctrina solo si los fundamenta el texto constitucional o una fuente identificada del contexto; si no, indica que las fuentes no permiten concretarlo. El resumen debe ser fiel al texto y cubrir todos los apartados sin inferencias. Conserva los campos correctos y responde solo con JSON válido.`
+              : `Révise les champs incomplets de l'ARTICLE ${numeracio}. N'invente pas de contenu : ne complète les exemples, la finalité, les destinataires, l'application ou la doctrine que si le texte constitutionnel ou une source identifiée du contexte les étaye; sinon, indique que les sources ne permettent pas de le préciser. Le résumé doit rester fidèle au texte et couvrir tous les paragraphes sans inférences. Conserve les champs corrects et réponds uniquement avec un JSON valide.`;
         const fix2Messages = [
           { role: 'system', content: `${systemPromptBase}${interlocutorInstructions}` },
           { role: 'user', content: `${prompt}\n\n---\n\n${fix2}` },
