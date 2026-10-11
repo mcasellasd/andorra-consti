@@ -252,7 +252,7 @@ export const articlesConstitucio: ArticleAndorra[] = [
         "jurisprudencia_clau": "Sentències del TC sobre el dret a la defensa i el termini raonable"
       },
       "simplificacio_supervisada": {
-        "nivell_planer": "Tens dret a que un jutge escolti el teu cas, a tenir un advocat i a que el judici no s'allargui sense motiu.",
+        "nivell_planer": "L’article reconeix el dret a acudir als tribunals, a defensar-te amb assistència lletrada i a tenir un judici de durada raonable. En els processos penals, també reconeix el dret a recórrer. La llei ha de regular quan la justícia és gratuïta per garantir la igualtat.",
         "termes_clau": [
           "Jurisdicció",
           "Lletrat",

@@ -404,32 +404,6 @@ Réponds en format JSON avec cette structure EXACTE (rien avant ni après; comme
 
     const interlocutorInstructions = buildInterlocutorInstructions(profile, idioma);
 
-    // Exemple One-Shot 1 (Article 2) - EXEMPLES COM A STRINGS SIMPLES
-    const exampleUser = idioma === 'ca'
-      ? `Analitza l'ARTICLE 2: "1. La llengua oficial de l'Estat és el català.\n2. L'himne nacional, la bandera i l'escut d'Andorra són els tradicionals.\n3. Andorra la Vella és la capital de l'Estat."\n\nContext: (buit)`
-      : idioma === 'es'
-        ? `Analiza el ARTÍCULO 2: "1. La lengua oficial del Estado es el catalán..."\n\nContexto: (vacío)`
-        : `Analyse l'ARTICLE 2: "1. La langue officielle de l'État est le catalan..."\n\nContexte: (vide)`;
-
-    const exampleAssistant = idioma === 'ca'
-      ? `{"resum":"Aquest article defineix els símbols d'identitat d'Andorra: el català com a única llengua oficial i els símbols tradicionals. També fixa la capitalitat a Andorra la Vella.","exemples":["Un ciutadà vol presentar una sol·licitud al Govern i té dret a ser atès en català.","En un acte oficial internacional, s'ha d'utilitzar la bandera i l'escut tradicionals d'Andorra."],"finalitat":"Permet l'ús oficial del català com a llengua de l'Estat i estableix oficialment els símbols nacionals.","destinataris":"S'aplica a totes les administracions públiques, institucions, ciutadans d'Andorra i actes oficials de l'Estat.","aplicacio":"Els tràmits oficials s'han de fer en català i les institucions han d'utilitzar exclusivament els símbols oficials definits.","doctrina_jurisprudencia":"La doctrina constitucional considera el català com a eix vertebrador de la identitat nacional andorrana i principi rector de l'activitat de totes les institucions públiques."}`
-      : idioma === 'es'
-        ? `{"resum":"Este artículo define los símbolos de identidad de Andorra: el catalán como única lengua oficial y los símbolos tradicionales. También fija la capitalidad en Andorra la Vella.","exemples":["Un ciudadano quiere presentar una solicitud al Gobierno y tiene derecho a ser atendido en catalán.","En un acto oficial internacional, se debe utilizar la bandera y el escudo tradicionales de Andorra."],"finalitat":"Permite el uso oficial del catalán como lengua del Estado y establece oficialmente los símbolos nacionales.","destinataris":"Se aplica a todas las administraciones públicas, instituciones, ciudadanos de Andorra y actos oficiales del Estado.","aplicacio":"Los trámites oficiales deben realizarse en catalán y las instituciones deben usar exclusivamente los símbolos oficiales definidos.","doctrina_jurisprudencia":"La doctrina constitucional considera el catalán como eje vertebrador de la identidad nacional andorrana y principio rector de la actividad de las instituciones públicas."}`
-        : `{"resum":"Cet article définit les symboles d'identité de l'Andorre : le catalan comme seule langue officielle et les symboles traditionnels. Il fixe également la capitale à Andorre-la-Vieille.","exemples":["Un citoyen souhaite soumettre une demande au Gouvernement et a le droit d'être servi en catalan.","Lors d'une cérémonie officielle internationale, le drapeau et les armoiries traditionnels doivent être utilisés."],"finalitat":"Permet l'usage officiel du catalan comme langue de l'État et établit officiellement les symboles nationaux.","destinataris":"S'applique à toutes les administrations publiques, institutions, citoyens d'Andorre et actes officiels de l'État.","aplicacio":"Les démarches officielles doivent être effectuées en catalan et les institutions doivent utiliser exclusivement les symboles officiels définis.","doctrina_jurisprudencia":"La doctrine constitutionnelle considère le catalan comme l'axe vertébrateur de l'identité nationale andorrane et le principe directeur des institutions publiques."}`;
-
-    // Exemple One-Shot 2 (Article 8) - EXEMPLES COM A STRINGS SIMPLES
-    const exampleUser2 = idioma === 'ca'
-      ? `Analitza l'ARTICLE 8: "1. La Constitució reconeix el dret a la vida..."\n\nContext: (buit)`
-      : idioma === 'es'
-        ? `Analiza el ARTÍCULO 8: "1. La Constitución reconoce el derecho a la vida..."\n\nContexto: (vacío)`
-        : `Analyse l'ARTICLE 8: "1. La Constitution reconnaît le droit à la vie..."\n\nContexte: (vide)`;
-
-    const exampleAssistant2 = idioma === 'ca'
-      ? `{"resum":"Es reconeix el dret a la vida com a dret fonamental inviolable i es prohibeix absolutament la pena de mort i la tortura.","exemples":["Un presoner denuncia maltractaments físics; la Constitució ho prohibeix terminantment.","El debat sobre l'avortament es basa en la protecció de la vida en les seves diferents fases."],"finalitat":"Garanteix el dret de qualsevol persona a viure de forma segura i prohibeix qualsevol acció que atempti contra la seva integritat física.","destinataris":"Afecta totes les persones que es trobin a Andorra, així com els poders públics i forces de seguretat de l'Estat.","aplicacio":"Cap llei ni autoritat pot aplicar la pena de mort ni permetre maltractaments a detinguts o ciutadans.","doctrina_jurisprudencia":"La doctrina jurídica configura el dret a la vida com el valor suprem del sistema constitucional, del qual deriven la resta de drets fonamentals i la prohibició absoluta de la pena de mort."}`
-      : idioma === 'es'
-        ? `{"resum":"Se reconoce el derecho a la vida como derecho fundamental inviolable y se prohíbe absolutamente la pena de muerte y la tortura.","exemples":["Un prisionero denuncia maltratos físicos; la Constitución lo prohíbe terminantemente.","El debate sobre el aborto se basa en la protección de la vida en sus diferentes fases."],"finalitat":"Garantiza el derecho de cualquier persona a vivir de forma segura y prohíbe cualquier acción que atente contra su integridad física.","destinataris":"Afecta a todas las personas que se encuentren en Andorra, así como a los poderes públicos y fuerzas de seguridad del Estado.","aplicacio":"Ninguna ley ni autoridad puede aplicar la pena de muerte ni permitir maltratos a detenidos o ciudadanos.","doctrina_jurisprudencia":"La doctrina jurídica configura el derecho a la vida como el valor supremo del sistema constitucional, del que derivan los demás derechos fundamentales y la prohibición absoluta de la pena de muerte."}`
-        : `{"resum":"Le droit à la vie est reconnu comme un droit fondamental inviolable et la peine de mort ainsi que la torture sont absolument interdites.","exemples":["Un prisonnier dénonce des mauvais traitements physiques; la Constitution l'interdit formellement.","Le débat sur l'avortement repose sur la protection de la vie dans ses différentes phases."],"finalitat":"Garantit le droit de toute personne à vivre en sécurité et interdit toute action portant atteinte à son intégrité physique.","destinataris":"Concerne toutes les personnes se trouvant en Andorre, ainsi que les pouvoirs publics et les forces de sécurité de l'État.","aplicacio":"Aucune loi ni autorité ne peut appliquer la peine de mort ni autoriser la maltraitance des détenus ou des citoyens.","doctrina_jurisprudencia":"La doctrine juridique formule le droit à la vie comme la valeur suprême du système constitutionnel, dont découlent les autres droits fondamentaux et l'interdiction absolue de la peine de mort."}`;
-
     // Prompt Real - Reforçat per evitar copiar exemples
     const promptReal = idioma === 'ca'
       ? `---
@@ -439,7 +413,14 @@ TEXT DE L'ARTICLE: "${text_oficial}"
 
 Genera el JSON exclusivament per a l'Article ${numeracio}.
 Context Addicional (si n'hi ha):
-${ragContext}`
+${ragContext}
+
+REGLA PRIORITÀRIA — RESUM FIDEL I LLENGUATGE PLANER:
+- Presenta primer la idea principal, amb ordre directe i una idea per frase. Fes servir paraules quotidianes; conserva els termes jurídics necessaris i explica'ls breument.
+- Escriu frases curtes i evita passives, nominalitzacions, incisos llargs i repeticions.
+- El camp «resum» només ha de descriure allò que l'article estableix expressament. Cobreix tots els apartats, però no hi afegeixis finalitats, conseqüències ni efectes pràctics inferits.
+- Omple exemples, finalitat, destinataris i aplicació només quan els fonamenti el text o una font identificada del context. Si no, indica que les fonts no permeten concretar-ho.
+- Inclou doctrina només si el context aporta una font doctrinal identificable. No inventis doctrina ni afirmacions jurídiques.`
       : idioma === 'es'
         ? `---
 AHORA ES TU TURNO.
@@ -448,7 +429,14 @@ TEXTO DEL ARTÍCULO: "${text_oficial}"
 
 Genera el JSON exclusivamente para el Artículo ${numeracio}.
 Contexto Adicional (si hay):
-${ragContext}`
+${ragContext}
+
+REGLA PRIORITARIA — RESUMEN FIEL Y LENGUAJE CLARO:
+- Presenta primero la idea principal, con orden directo y una idea por frase. Usa palabras cotidianas; conserva los términos jurídicos necesarios y explícalos brevemente.
+- Escribe frases cortas y evita pasivas, nominalizaciones, incisos largos y repeticiones.
+- El campo «resum» solo debe describir lo que el artículo establece expresamente. Cubre todos sus apartados, pero no añadas finalidades, consecuencias ni efectos prácticos inferidos.
+- Completa ejemplos, finalidad, destinatarios y aplicación solo cuando los fundamente el texto o una fuente identificada del contexto. Si no, indica que las fuentes no permiten concretarlo.
+- Incluye doctrina solo si el contexto aporta una fuente doctrinal identificable. No inventes doctrina ni afirmaciones jurídicas.`
         : `---
 C'EST TON TOUR.
 TÂCHE ACTUELLE: Analyse l'ARTICLE ${numeracio} (et aucun autre).
@@ -456,17 +444,19 @@ TEXTE DE L'ARTICLE: "${text_oficial}"
 
 Génère le JSON exclusivement pour l'Article ${numeracio}.
 Contexte Supplémentaire (s'il y en a):
-${ragContext}`;
+${ragContext}
+
+RÈGLE PRIORITAIRE — RÉSUMÉ FIDÈLE ET LANGAGE CLAIR :
+- Présente d'abord l'idée principale, dans l'ordre direct et avec une idée par phrase. Emploie des mots courants; conserve les termes juridiques nécessaires et explique-les brièvement.
+- Écris des phrases courtes et évite les tournures passives, les nominalisations, les longues incises et les répétitions.
+- Le champ «resum» doit décrire uniquement ce que l'article établit expressément. Couvre tous ses paragraphes, sans ajouter de finalités, de conséquences ni d'effets pratiques déduits.
+- Ne complète les exemples, la finalité, les destinataires et l'application que si le texte ou une source identifiée du contexte les étaye. Sinon, indique que les sources ne permettent pas de le préciser.
+- N'inclus une doctrine que si le contexte fournit une source doctrinale identifiable. N'invente pas de doctrine ni d'affirmation juridique.`;
 
     const messages = [
       { role: 'system', content: `${systemPromptBase}${interlocutorInstructions}` },
-      { role: 'user', content: exampleUser },
-      { role: 'assistant', content: exampleAssistant },
-      { role: 'user', content: exampleUser2 },
-      { role: 'assistant', content: exampleAssistant2 },
       { role: 'user', content: promptReal }
     ];
-
     // Debug: Log del prompt per veure què s'està enviant
     console.log(`📤 Prompt length: ${prompt.length} chars`);
     console.log(`📤 Article inclòs al prompt: ${prompt.includes(text_oficial.substring(0, 50)) ? '✅ SÍ' : '❌ NO'}`);
@@ -736,10 +726,10 @@ ${ragContext}`;
 
       const fixPrompt =
         idioma === 'ca'
-          ? `${prompt}\n\n⚠️ IMPORTANT: La teva resposta anterior copiava frases plantilla.\n- PROHIBIT usar literalment instruccions o placeholders (\"Resum descriptiu...\", \"situació concreta\", \"...\").\n- Escriu contingut ESPECÍFIC d'aquest article: resum descriptiu (2–5 frases) + 2–3 exemples realistes + finalitat + destinataris + aplicació + doctrina.\nRespon ÚNICAMENT amb el JSON.`
+          ? `${prompt}\n\nLa resposta anterior contenia text de plantilla. Torna a generar el JSON. El camp "resum" només ha de descriure allò que diu expressament el text constitucional, en llenguatge planer i sense inferències. Omple exemples, finalitat, destinataris, aplicació i doctrina només si els fonamenta el text o una font identificada del context; si no, indica que les fonts no permeten concretar-ho. No inventis doctrina. Respon només amb JSON vàlid.`
           : idioma === 'es'
-            ? `${prompt}\n\n⚠️ IMPORTANTE: Tu respuesta anterior copiaba frases plantilla.\n- PROHIBIDO usar literalmente instrucciones o placeholders (\"Resumen descriptivo...\", \"situación concreta\", \"...\").\n- Escribe contenido ESPECÍFICO de este artículo: resumen descriptivo (2–5 frases) + 2–3 ejemplos realistas + finalitat + destinataris + aplicació + doctrina.\nResponde ÚNICAMENTE con el JSON.`
-            : `${prompt}\n\n⚠️ IMPORTANT: Ta réponse précédente copiait des phrases modèle.\n- INTERDIT d'utiliser littéralement les instructions ou placeholders (\"Résumé descriptif...\", \"situation concrète\", \"...\").\n- Écris un contenu SPÉCIFIQUE à cet article: résumé descriptif (2–5 phrases) + 2–3 exemples réalistes + finalitat + destinataris + aplicació + doctrine.\nRéponds UNIQUEMENT avec le JSON.`;
+            ? `${prompt}\n\nLa respuesta anterior contenía texto de plantilla. Genera de nuevo el JSON. El campo "resum" solo debe describir lo que dice expresamente el texto constitucional, en lenguaje claro y sin inferencias. Completa ejemplos, finalidad, destinatarios, aplicación y doctrina solo si los fundamenta el texto o una fuente identificada del contexto; si no, indica que las fuentes no permiten concretarlo. No inventes doctrina. Responde solo con JSON válido.`
+            : `${prompt}\n\nLa réponse précédente contenait du texte de modèle. Génère à nouveau le JSON. Le champ "resum" doit décrire uniquement ce que dit expressément le texte constitutionnel, en langage clair et sans inférences. Ne complète les exemples, la finalité, les destinataires, l'application et la doctrine que si le texte ou une source identifiée du contexte les étaye; sinon, indique que les sources ne permettent pas de le préciser. N'invente pas de doctrine. Réponds uniquement avec un JSON valide.`;
 
       const fixMessages = [
         { role: 'system', content: `${systemPromptBase}${interlocutorInstructions}` },
@@ -777,10 +767,10 @@ ${ragContext}`;
 
         const fix2 =
           idioma === 'ca'
-            ? `Reescriu NOMÉS aquests camps per a l'ARTICLE ${numeracio} (sense repetir el text literal):\n\n- "exemples": Array de 2 o 3 exemples pràctics (NO placeholders).\n- "finalitat": 1-2 frases explicant què permet/limita l'article.\n- "destinataris": 1-2 frases explicant a qui/què s'aplica.\n- "aplicacio": 1-2 frases explicant l'impacte pràctic.\n- "doctrina_jurisprudencia": 1–3 frases de comentari únicament doctrinal.\n\nRespon ÚNICAMENT amb un JSON vàlid:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Exemple aplicat: ...", "Exemple aplicat: ..."],\n  "finalitat": "${coalesceString(parsedObj0.finalitat)}",\n  "destinataris": "${coalesceString(parsedObj0.destinataris)}",\n  "aplicacio": "${coalesceString(parsedObj0.aplicacio)}",\n  "doctrina_jurisprudencia": "..."\n}`
+            ? `Revisa els camps incomplets de l'ARTICLE ${numeracio}. No inventis contingut: completa exemples, finalitat, destinataris, aplicació o doctrina només si els fonamenta el text constitucional o una font identificada del context; si no, indica que les fonts no permeten concretar-ho. El resum ha de ser fidel al text i cobrir tots els apartats sense inferències. Conserva els camps correctes i respon només amb JSON vàlid.`
             : idioma === 'es'
-              ? `Reescribe SOLO estos campos para el ARTÍCULO ${numeracio}:\n\n- "exemples": Array de 2 o 3 ejemplos prácticos.\n- "finalitat": 1-2 frases explicando qué permite/limita el artículo.\n- "destinataris": 1-2 frases explicando a quién/qué se aplica.\n- "aplicacio": 1-2 frases explicando el impacto práctico.\n- "doctrina_jurisprudencia": 1–3 frases de comentario únicamente doctrinal.\n\nResponde ÚNICAMENTE con un JSON válido:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Ejemplo aplicado: ...", "Ejemplo aplicado: ..."],\n  "finalitat": "${coalesceString(parsedObj0.finalitat)}",\n  "destinataris": "${coalesceString(parsedObj0.destinataris)}",\n  "aplicacio": "${coalesceString(parsedObj0.aplicacio)}",\n  "doctrina_jurisprudencia": "..."\n}`
-              : `Réécris UNIQUEMENT ces champs pour l'ARTICLE ${numeracio}:\n\n- "exemples": Tableau de 2 ou 3 exemples pratiques.\n- "finalitat": 1-2 phrases (ce que cela permet/limite).\n- "destinataris": 1-2 phrases (champ d'application).\n- "aplicacio": 1-2 phrases (impact pratique).\n- "doctrina_jurisprudencia": 1–3 phrases de commentaire uniquement doctrinal.\n\nRéponds UNIQUEMENT avec un JSON valide:\n{\n  "resum": "${coalesceString(parsedObj0.resum)}",\n  "exemples": ["Exemple appliqué: ...", "Exemple appliqué: ..."],\n  "finalitat": "${coalesceString(parsedObj0.finalitat)}",\n  "destinataris": "${coalesceString(parsedObj0.destinataris)}",\n  "aplicacio": "${coalesceString(parsedObj0.aplicacio)}",\n  "doctrina_jurisprudencia": "..."\n}`;
+              ? `Revisa los campos incompletos del ARTÍCULO ${numeracio}. No inventes contenido: completa ejemplos, finalidad, destinatarios, aplicación o doctrina solo si los fundamenta el texto constitucional o una fuente identificada del contexto; si no, indica que las fuentes no permiten concretarlo. El resumen debe ser fiel al texto y cubrir todos los apartados sin inferencias. Conserva los campos correctos y responde solo con JSON válido.`
+              : `Révise les champs incomplets de l'ARTICLE ${numeracio}. N'invente pas de contenu : ne complète les exemples, la finalité, les destinataires, l'application ou la doctrine que si le texte constitutionnel ou une source identifiée du contexte les étaye; sinon, indique que les sources ne permettent pas de le préciser. Le résumé doit rester fidèle au texte et couvrir tous les paragraphes sans inférences. Conserve les champs corrects et réponds uniquement avec un JSON valide.`;
 
         const fix2Messages = [
           { role: 'system', content: `${systemPromptBase}${interlocutorInstructions}` },
