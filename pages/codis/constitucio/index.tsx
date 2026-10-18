@@ -142,6 +142,7 @@ const ConstitucioPage: React.FC = () => {
             </div>
           ) : (
             <>
+              {estructura['Preàmbul'] && renderTitol('Preàmbul')}
               {(['dogmatica', 'organica'] as const).map((part) => {
                 const titolsPart = ordenarTitols(Object.keys(estructura).filter((titol) => getPartConstitucio(titol) === part));
                 if (!titolsPart.length) return null;
@@ -156,7 +157,7 @@ const ConstitucioPage: React.FC = () => {
                   </section>
                 );
               })}
-              {ordenarTitols(Object.keys(estructura).filter((titol) => titol === 'Preàmbul' || !getPartConstitucio(titol))).map(renderTitol)}
+              {ordenarTitols(Object.keys(estructura).filter((titol) => titol !== 'Preàmbul' && !getPartConstitucio(titol))).map(renderTitol)}
             </>
           )}
         </div>
