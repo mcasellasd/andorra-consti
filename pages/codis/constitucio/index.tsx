@@ -10,7 +10,7 @@ import { getIdiomaActual } from '../../../lib/i18n';
 import { articlesConstitucio } from '../../../data/codis/constitucio/articles-template';
 
 const getCapitolConstitucio = (titol: string, articleId: string, idioma: string): string => {
-  const articleNumber = Number(articleId.match(/^CONST_(\\d+)$/)?.[1]);
+  const articleNumber = Number(articleId.match(/^CONST_(\d+)$/)?.[1]);
   const chapters: Record<string, Array<{ from: number; to: number; ca: string; es: string; fr: string }>> = {
     'Títol II - Drets i llibertats': [
       { from: 4, to: 6, ca: 'I. Principis generals', es: 'I. Principios generales', fr: 'I. Principes généraux' },
@@ -28,8 +28,15 @@ const getCapitolConstitucio = (titol: string, articleId: string, idioma: string)
       { from: 68, to: 71, ca: 'IV. De les relacions del Consell General amb el Govern', es: 'IV. De las relaciones del Consejo General con el Gobierno', fr: 'IV. Des relations du Conseil général avec le Gouvernement' },
     ],
   };
-  const chapter = chapters[titol]?.find(({ from, to }) => articleNumber >= from && articleNumber <= to);
+  const chapterGroup = Object.entries(chapters).find(([title]) => titol.trim().startsWith(title.split(' - ')[0]));
+  const chapter = chapterGroup?.[1].find(({ from, to }) => articleNumber >= from && articleNumber <= to);
   return chapter ? chapter[idioma as 'ca' | 'es' | 'fr'] || chapter.ca : 'Sense capítol';
+};
+
+const getPartConstitucio = (titol: string): 'dogmatica' | 'organica' | null => {
+  if (/^Títol\s+(I|II)\b/i.test(titol.trim())) return 'dogmatica';
+  if (/^Títol\s+(III|IV|V|VI|VII|VIII|IX)\b/i.test(titol.trim())) return 'organica';
+  return null;
 };
 
 const ConstitucioPage: React.FC = () => {
@@ -71,6 +78,43 @@ const ConstitucioPage: React.FC = () => {
     return preambul ? [preambul, ...altresOrdenats] : altresOrdenats;
   };
 
+  const renderTitol = (titol: string) => {
+    const capitols = estructura[titol];
+    return (
+      <section key={titol} className="constitution-section-card">
+        <header className="constitution-title-heading">
+          <span className="constitution-title-mark" aria-hidden="true">§</span>
+          <h2>{titol}</h2>
+          <span className="constitution-title-count">
+            {Object.values(capitols).reduce((total, articles) => total + articles.length, 0)} {idioma === 'ca' ? 'articles' : idioma === 'es' ? 'artículos' : 'articles'}
+          </span>
+        </header>
+        {Object.keys(capitols).map((capitol) => {
+          const articles = capitols[capitol];
+          return (
+            <div key={capitol} className="constitution-chapter-card">
+              {capitol !== 'Sense capítol' && (
+                <header className="constitution-chapter-heading">
+                  <span className="constitution-chapter-label">{idioma === 'ca' ? 'CAPÍTOL' : idioma === 'es' ? 'CAPÍTULO' : 'CHAPITRE'}</span>
+                  <h3>{capitol}</h3>
+                  <span className="constitution-chapter-count">{articles.length} {idioma === 'ca' ? 'articles' : idioma === 'es' ? 'artículos' : 'articles'}</span>
+                </header>
+              )}
+              <div className="constitution-article-grid">
+                {articles.map((article) => (
+                  <Link key={article.id} href={`/codis/constitucio/article/${article.id}`} className="constitution-article-card">
+                    <span className="constitution-article-number">{article.numeracio}</span>
+                    {article.text_oficial && <p>{article.text_oficial.substring(0, 140)}...</p>}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </section>
+    );
+  };
+
   return (
     <>
       <Head>
@@ -97,42 +141,23 @@ const ConstitucioPage: React.FC = () => {
               <p>{idioma === 'ca' ? 'Encara no hi ha articles processats.' : idioma === 'es' ? 'Aún no hay artículos procesados.' : 'Aucun article n\'a encore été traité.'}</p>
             </div>
           ) : (
-            ordenarTitols(Object.keys(estructura)).map((titol) => {
-              const capitols = estructura[titol];
-              return (
-                <section key={titol} className="constitution-section-card">
-                  <header className="constitution-title-heading">
-                    <span className="constitution-title-mark" aria-hidden="true">§</span>
-                    <h2>{titol}</h2>
-                    <span className="constitution-title-count">
-                      {Object.values(capitols).reduce((total, articles) => total + articles.length, 0)} {idioma === 'ca' ? 'articles' : idioma === 'es' ? 'artículos' : 'articles'}
-                    </span>
-                  </header>
-                  {Object.keys(capitols).map((capitol) => {
-                    const articles = capitols[capitol];
-                    return (
-                      <div key={capitol} className="constitution-chapter-card">
-                        {capitol !== 'Sense capítol' && (
-                          <header className="constitution-chapter-heading">
-                            <span className="constitution-chapter-label">{idioma === 'ca' ? 'CAPÍTOL' : idioma === 'es' ? 'CAPÍTULO' : 'CHAPITRE'}</span>
-                            <h3>{capitol}</h3>
-                            <span className="constitution-chapter-count">{articles.length} {idioma === 'ca' ? 'articles' : idioma === 'es' ? 'artículos' : 'articles'}</span>
-                          </header>
-                        )}
-                        <div className="constitution-article-grid">
-                          {articles.map((article) => (
-                            <Link key={article.id} href={`/codis/constitucio/article/${article.id}`} className="constitution-article-card">
-                              <span className="constitution-article-number">{article.numeracio}</span>
-                              {article.text_oficial && <p>{article.text_oficial.substring(0, 140)}...</p>}
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </section>
-              );
-            })
+            <>
+              {(['dogmatica', 'organica'] as const).map((part) => {
+                const titolsPart = ordenarTitols(Object.keys(estructura).filter((titol) => getPartConstitucio(titol) === part));
+                if (!titolsPart.length) return null;
+                return (
+                  <section key={part} className={`constitution-part constitution-part-${part}`}>
+                    <h2 className="constitution-part-heading">
+                      {part === 'dogmatica'
+                        ? (idioma === 'ca' ? 'Part dogmàtica' : idioma === 'es' ? 'Parte dogmática' : 'Partie dogmatique')
+                        : (idioma === 'ca' ? 'Part orgànica' : idioma === 'es' ? 'Parte orgánica' : 'Partie organique')}
+                    </h2>
+                    {titolsPart.map(renderTitol)}
+                  </section>
+                );
+              })}
+              {ordenarTitols(Object.keys(estructura).filter((titol) => titol === 'Preàmbul' || !getPartConstitucio(titol))).map(renderTitol)}
+            </>
           )}
         </div>
       </Layout>

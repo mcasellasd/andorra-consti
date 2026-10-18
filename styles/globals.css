@@ -5788,6 +5788,10 @@ details[open].toc-accordion .toc-accordion-summary {
 
 
 /* La jerarquia de navegacio posa els capitols al centre de cada titol. */
+.constitution-part { margin: 1.5rem 0 2rem; }
+.constitution-part-heading { display:flex; align-items:center; gap:.7rem; margin:0 0 .85rem; padding:.7rem .9rem; border-left:5px solid #1e293b; color:#1e293b; background:#e9eef5; border-radius:0 12px 12px 0; font-size:.9rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.constitution-part-organica .constitution-part-heading { border-left-color:#b68a3a; background:#fbf7ed; }
+
 .constitution-section-card {
   padding: 1.35rem;
   border-color: rgba(15, 23, 42, 0.09);
