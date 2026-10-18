@@ -9,6 +9,29 @@ import Layout from '../../../components/Layout';
 import { getIdiomaActual } from '../../../lib/i18n';
 import { articlesConstitucio } from '../../../data/codis/constitucio/articles-template';
 
+const getCapitolConstitucio = (titol: string, articleId: string, idioma: string): string => {
+  const articleNumber = Number(articleId.match(/^CONST_(\\d+)$/)?.[1]);
+  const chapters: Record<string, Array<{ from: number; to: number; ca: string; es: string; fr: string }>> = {
+    'Títol II - Drets i llibertats': [
+      { from: 4, to: 6, ca: 'I. Principis generals', es: 'I. Principios generales', fr: 'I. Principes généraux' },
+      { from: 7, to: 7, ca: 'II. De la nacionalitat andorrana', es: 'II. De la nacionalidad andorrana', fr: 'II. De la nationalité andorrane' },
+      { from: 8, to: 23, ca: 'III. Dels drets fonamentals de la persona i de les llibertats públiques', es: 'III. De los derechos fundamentales de la persona y de las libertades públicas', fr: 'III. Des droits fondamentaux de la personne et des libertés publiques' },
+      { from: 24, to: 26, ca: 'IV. Dels drets polítics dels andorrans', es: 'IV. De los derechos políticos de los andorranos', fr: 'IV. Des droits politiques des Andorrans' },
+      { from: 27, to: 36, ca: 'V. Dels drets i principis econòmics, socials i culturals', es: 'V. De los derechos y principios económicos, sociales y culturales', fr: 'V. Des droits et principes économiques, sociaux et culturels' },
+      { from: 37, to: 38, ca: 'VI. Dels deures dels andorrans i dels estrangers', es: 'VI. De los deberes de los andorranos y de los extranjeros', fr: 'VI. Des devoirs des Andorrans et des étrangers' },
+      { from: 39, to: 42, ca: 'VII. De les garanties dels drets i llibertats', es: 'VII. De las garantías de los derechos y libertades', fr: 'VII. Des garanties des droits et libertés' },
+    ],
+    'Títol IV - El Consell General': [
+      { from: 50, to: 57, ca: 'I. De l’organització del Consell General', es: 'I. De la organización del Consejo General', fr: 'I. De l’organisation du Conseil général' },
+      { from: 58, to: 63, ca: 'II. Del procediment legislatiu', es: 'II. Del procedimiento legislativo', fr: 'II. De la procédure législative' },
+      { from: 64, to: 67, ca: 'III. Dels tractats internacionals', es: 'III. De los tratados internacionales', fr: 'III. Des traités internationaux' },
+      { from: 68, to: 71, ca: 'IV. De les relacions del Consell General amb el Govern', es: 'IV. De las relaciones del Consejo General con el Gobierno', fr: 'IV. Des relations du Conseil général avec le Gouvernement' },
+    ],
+  };
+  const chapter = chapters[titol]?.find(({ from, to }) => articleNumber >= from && articleNumber <= to);
+  return chapter ? chapter[idioma as 'ca' | 'es' | 'fr'] || chapter.ca : 'Sense capítol';
+};
+
 const ConstitucioPage: React.FC = () => {
   const idioma = getIdiomaActual();
   const totalArticles = articlesConstitucio.filter(art => art.id !== 'CONST_PREAMB').length;
@@ -18,8 +41,8 @@ const ConstitucioPage: React.FC = () => {
       ? article.titol
       : article.idiomes?.titol?.[idioma] || article.titol;
     const capitol = idioma === 'ca'
-      ? article.capitol || 'Sense capítol'
-      : article.idiomes?.capitol?.[idioma] || article.capitol || (idioma === 'es' ? 'Sin capítulo' : 'Sans chapitre');
+      ? article.capitol || getCapitolConstitucio(article.titol, article.id, idioma)
+      : article.idiomes?.capitol?.[idioma] || article.capitol || getCapitolConstitucio(article.titol, article.id, idioma);
 
     if (!acc[titol]) {
       acc[titol] = {};
