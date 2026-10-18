@@ -78,12 +78,24 @@ const ConstitucioPage: React.FC = () => {
               const capitols = estructura[titol];
               return (
                 <section key={titol} className="constitution-section-card">
-                  <h2>{titol}</h2>
+                  <header className="constitution-title-heading">
+                    <span className="constitution-title-mark" aria-hidden="true">§</span>
+                    <h2>{titol}</h2>
+                    <span className="constitution-title-count">
+                      {Object.values(capitols).reduce((total, articles) => total + articles.length, 0)} {idioma === 'ca' ? 'articles' : idioma === 'es' ? 'artículos' : 'articles'}
+                    </span>
+                  </header>
                   {Object.keys(capitols).map((capitol) => {
                     const articles = capitols[capitol];
                     return (
                       <div key={capitol} className="constitution-chapter-card">
-                        {capitol !== 'Sense capítol' && <h3>{capitol}</h3>}
+                        {capitol !== 'Sense capítol' && (
+                          <header className="constitution-chapter-heading">
+                            <span className="constitution-chapter-label">{idioma === 'ca' ? 'CAPÍTOL' : idioma === 'es' ? 'CAPÍTULO' : 'CHAPITRE'}</span>
+                            <h3>{capitol}</h3>
+                            <span className="constitution-chapter-count">{articles.length} {idioma === 'ca' ? 'articles' : idioma === 'es' ? 'artículos' : 'articles'}</span>
+                          </header>
+                        )}
                         <div className="constitution-article-grid">
                           {articles.map((article) => (
                             <Link key={article.id} href={`/codis/constitucio/article/${article.id}`} className="constitution-article-card">
