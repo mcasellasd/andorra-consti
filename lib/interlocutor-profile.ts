@@ -18,6 +18,14 @@ export const DEFAULT_INTERLOCUTOR_PROFILE: InterlocutorProfile = {
   objective: 'entendre',
 };
 
+export const RESPONSE_STYLE_PROFILES = {
+  clear: { legalLevel: 'planer', context: 'ciutadania', objective: 'entendre' },
+  'step-by-step': { legalLevel: 'general', context: 'ciutadania', objective: 'entendre' },
+  'legal-detail': { legalLevel: 'general', context: 'ciutadania', objective: 'aprofundir' },
+} satisfies Record<string, InterlocutorProfile>;
+
+export type ResponseStyleId = keyof typeof RESPONSE_STYLE_PROFILES;
+
 const isOneOf = <T extends readonly string[]>(value: unknown, values: T): value is T[number] =>
   typeof value === 'string' && values.includes(value);
 
@@ -33,6 +41,17 @@ export function isInterlocutorProfile(value: unknown): value is InterlocutorProf
 
 export function parseInterlocutorProfile(value: unknown): InterlocutorProfile {
   return isInterlocutorProfile(value) ? value : DEFAULT_INTERLOCUTOR_PROFILE;
+}
+
+export function getResponseStyleId(value: unknown): ResponseStyleId {
+  const profile = parseInterlocutorProfile(value);
+  if (profile.legalLevel === 'planer') return 'clear';
+  if (profile.legalLevel === 'professional' || profile.objective === 'aprofundir') return 'legal-detail';
+  return 'step-by-step';
+}
+
+export function normalizeResponseStyleProfile(value: unknown): InterlocutorProfile {
+  return RESPONSE_STYLE_PROFILES[getResponseStyleId(value)];
 }
 
 export function getInterlocutorProfileKey(value: unknown): string {
@@ -66,7 +85,7 @@ const PROFILE_GUIDANCE: Record<ProfileLocale, ProfileGuidance> = {
   ca: {
     legalLevel: {
       planer: 'Utilitza frases curtes i vocabulari quotidià. Defineix cada terme jurídic abans d’utilitzar-lo, explica la regla en passos i inclou un exemple proper sense donar res per sabut.',
-      general: 'Utilitza vocabulari jurídic explicat amb claredat. Distingeix regla, excepcions i efectes pràctics, amb una profunditat intermèdia i exemples suficients per entendre el raonament.',
+      general: 'Ordena la resposta en passos clars. Explica els conceptes jurídics necessaris, diferencia la regla de les excepcions i afegeix context i exemples quan ajudin a seguir el raonament.',
       professional: 'Utilitza terminologia jurídica precisa i una estructura analítica. Identifica elements, límits, excepcions, fonts i qüestions interpretatives, sense eliminar matisos per fer el text més senzill.',
     },
     context: {
@@ -84,7 +103,7 @@ const PROFILE_GUIDANCE: Record<ProfileLocale, ProfileGuidance> = {
   es: {
     legalLevel: {
       planer: 'Utiliza frases cortas y vocabulario cotidiano. Define cada término jurídico antes de usarlo, explica la regla por pasos e incluye un ejemplo cercano sin dar nada por sabido.',
-      general: 'Utiliza vocabulario jurídico explicado con claridad. Distingue regla, excepciones y efectos prácticos, con una profundidad intermedia y ejemplos suficientes para entender el razonamiento.',
+      general: 'Ordena la respuesta en pasos claros. Explica los conceptos jurídicos necesarios, diferencia la regla de las excepciones y añade contexto y ejemplos cuando ayuden a seguir el razonamiento.',
       professional: 'Utiliza terminología jurídica precisa y una estructura analítica. Identifica elementos, límites, excepciones, fuentes y cuestiones interpretativas, sin eliminar matices para simplificar el texto.',
     },
     context: {
@@ -102,7 +121,7 @@ const PROFILE_GUIDANCE: Record<ProfileLocale, ProfileGuidance> = {
   fr: {
     legalLevel: {
       planer: 'Utilise des phrases courtes et un vocabulaire courant. Définis chaque terme juridique avant de l’employer, explique la règle par étapes et donne un exemple proche sans rien présupposer.',
-      general: 'Utilise un vocabulaire juridique expliqué clairement. Distingue la règle, les exceptions et les effets pratiques, avec une profondeur intermédiaire et des exemples suffisants pour comprendre le raisonnement.',
+      general: 'Organise la réponse en étapes claires. Explique les notions juridiques nécessaires, distingue la règle des exceptions et ajoute du contexte et des exemples lorsqu’ils facilitent le raisonnement.',
       professional: 'Utilise une terminologie juridique précise et une structure analytique. Identifie les éléments, limites, exceptions, sources et questions d’interprétation, sans supprimer les nuances pour simplifier le texte.',
     },
     context: {
