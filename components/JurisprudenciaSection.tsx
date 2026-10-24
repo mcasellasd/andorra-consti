@@ -8,7 +8,6 @@ import React, { useState, useEffect } from 'react';
 // bundle del navegador. Es demana per API a /api/jurisprudencia/[articleId].
 // Només s'importa el TIPUS, que desapareix en compilar.
 import type { SentenciaAndorra } from '../data/jurisprudencia-andorra';
-import { getContextConstitucional } from '../lib/prompts/context-constitucional';
 import { t, type Idioma } from '../lib/i18n';
 
 interface JurisprudenciaSectionProps {
@@ -25,13 +24,18 @@ const JurisprudenciaSection: React.FC<JurisprudenciaSectionProps> = ({
   const [sentencies, setSentencies] = useState<SentenciaAndorra[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [carregant, setCarregant] = useState(true);
+  const [errorConsulta, setErrorConsulta] = useState(false);
 
   useEffect(() => {
     let cancellat = false;
     setCarregant(true);
+    setErrorConsulta(false);
 
     fetch(`/api/jurisprudencia/${encodeURIComponent(articleId)}`)
-      .then((r) => (r.ok ? r.json() : { sentencies: [] }))
+      .then((r) => {
+        if (!r.ok) throw new Error(`Jurisprudence API returned ${r.status}`);
+        return r.json();
+      })
       .then((d) => {
         if (cancellat) return;
         const trobades: SentenciaAndorra[] = d.sentencies ?? [];
@@ -39,7 +43,10 @@ const JurisprudenciaSection: React.FC<JurisprudenciaSectionProps> = ({
         if (trobades.length > 0) setIsOpen(true);
       })
       .catch(() => {
-        if (!cancellat) setSentencies([]);
+        if (!cancellat) {
+          setSentencies([]);
+          setErrorConsulta(true);
+        }
       })
       .finally(() => {
         if (!cancellat) setCarregant(false);
@@ -74,18 +81,20 @@ const JurisprudenciaSection: React.FC<JurisprudenciaSectionProps> = ({
     );
   }
 
-  // Estat buit explicat. Abans es retornava null i quedava una capsa amb títol i
-  // res a dins. 31 dels 107 articles no tenen cap causa al TC, i saber-ho és
-  // informació sobre l'article: sense via d'empara, difícilment hi arriben.
+  // No confonem una fallada de consulta amb un resultat buit ni un índex parcial
+  // amb la inexistència de jurisprudència sobre l'article.
   if (sentencies.length === 0) {
+    if (errorConsulta) {
+      return (
+        <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground, #6b7280)', margin: 0, lineHeight: 1.6 }}>
+          Ara mateix no es pot consultar la base de jurisprudència. Torna-ho a provar més tard.
+        </p>
+      );
+    }
     // Només per a la Constitució: un id com «cc-art-001» donaria un context erroni.
-    const ctx = /^CONST_/i.test(articleId) ? getContextConstitucional(articleId) : null;
-    const motiu = ctx && !ctx.empara
-      ? ' És el que sol passar amb els articles que no tenen via de recurs d’empara: rarament arriben a l’alt tribunal.'
-      : '';
     return (
       <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground, #6b7280)', margin: 0, lineHeight: 1.6 }}>
-        Cap resolució del Tribunal Constitucional del corpus (1994-2026) invoca aquest article.{motiu}
+        No hi ha resolucions indexades per a aquest article en la base de dades consultada.
       </p>
     );
   }

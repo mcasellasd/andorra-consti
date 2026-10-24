@@ -4,6 +4,7 @@
  */
 
 import { jurisprudenciaImportedTC } from './jurisprudencia-tc-imported';
+import { jurisprudenciaTCDataLakeArticle9 } from './jurisprudencia-tc-datalake';
 
 export interface SentenciaAndorra {
   id: string; // Ex: "TSA-2023-045"
@@ -33,6 +34,7 @@ export interface SentenciaAndorra {
 
 export const jurisprudenciaDatabase: SentenciaAndorra[] = [
   ...jurisprudenciaImportedTC,
+  ...jurisprudenciaTCDataLakeArticle9,
   // Afegir més sentències manualment aquí si cal (sentències no TC, altre tribunal, etc.)
 ];
 
