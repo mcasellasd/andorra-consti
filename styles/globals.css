@@ -5785,3 +5785,33 @@ details[open].toc-accordion .toc-accordion-summary {
     padding: 1rem;
   }
 }
+
+
+.article-speech-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0 0 1.1rem;
+}
+
+.article-speech-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.65rem 1rem;
+  border: 1px solid rgba(75, 71, 201, 0.28);
+  border-radius: 12px;
+  background: rgba(75, 71, 201, 0.07);
+  color: #3730a3;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.article-speech-button:hover { background: rgba(75, 71, 201, 0.13); }
+.article-speech-button:focus-visible { outline: 3px solid #6366f1; outline-offset: 3px; }
+.article-speech-status { color: #475569; font-size: 0.9rem; }
