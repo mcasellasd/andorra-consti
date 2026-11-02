@@ -18,6 +18,25 @@ export const DEFAULT_INTERLOCUTOR_PROFILE: InterlocutorProfile = {
   objective: 'entendre',
 };
 
+export const RESPONSE_STYLE_PROFILES = {
+  clear: { legalLevel: 'planer', context: 'ciutadania', objective: 'entendre' },
+  'step-by-step': { legalLevel: 'general', context: 'ciutadania', objective: 'entendre' },
+  'legal-detail': { legalLevel: 'general', context: 'ciutadania', objective: 'aprofundir' },
+} satisfies Record<string, InterlocutorProfile>;
+
+export type ResponseStyleId = keyof typeof RESPONSE_STYLE_PROFILES;
+
+export function getResponseStyleId(value: unknown): ResponseStyleId {
+  const profile = parseInterlocutorProfile(value);
+  if (profile.legalLevel === 'planer') return 'clear';
+  if (profile.legalLevel === 'professional' || profile.objective === 'aprofundir') return 'legal-detail';
+  return 'step-by-step';
+}
+
+export function normalizeResponseStyleProfile(value: unknown): InterlocutorProfile {
+  return RESPONSE_STYLE_PROFILES[getResponseStyleId(value)];
+}
+
 const isOneOf = <T extends readonly string[]>(value: unknown, values: T): value is T[number] =>
   typeof value === 'string' && values.includes(value);
 
