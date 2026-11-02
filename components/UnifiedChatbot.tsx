@@ -218,7 +218,6 @@ export default function UnifiedChatbot({
         autoSubmit?: boolean;
       }>;
       setIsOpen(true);
-      setPrivacyAccepted(true);
 
       // Enviar pregunta si hi ha
       if (customEvent.detail?.question && customEvent.detail.question.trim()) {
