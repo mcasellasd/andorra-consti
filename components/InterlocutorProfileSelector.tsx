@@ -4,6 +4,10 @@ import { useEffect, useState } from 'react';
 import type { Idioma } from '../lib/i18n';
 import {
   DEFAULT_INTERLOCUTOR_PROFILE,
+  getResponseStyleId,
+  isInterlocutorProfile,
+  normalizeResponseStyleProfile,
+  RESPONSE_STYLE_PROFILES,
   type InterlocutorProfile,
 } from '../lib/interlocutor-profile';
 
@@ -52,17 +56,24 @@ export function useInterlocutorProfile() {
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
       if (!stored) return;
-      const parsed = JSON.parse(stored) as Partial<InterlocutorProfile>;
-      if (
-        (parsed.legalLevel === 'planer' || parsed.legalLevel === 'general' || parsed.legalLevel === 'professional') &&
-        (parsed.context === 'ciutadania' || parsed.context === 'estudi' || parsed.context === 'consulta' || parsed.context === 'professional') &&
-        (parsed.objective === 'entendre' || parsed.objective === 'preparar-consulta' || parsed.objective === 'aprofundir')
-      ) {
-        setProfile(parsed as InterlocutorProfile);
+      const parsed = JSON.parse(stored) as unknown;
+      if (isInterlocutorProfile(parsed)) {
+        const normalized = normalizeResponseStyleProfile(parsed);
+        setProfile(normalized);
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
       }
     } catch {
       // El perfil per defecte és suficient si el navegador bloqueja l'emmagatzematge.
     }
+  }, []);
+
+  useEffect(() => {
+    const handleProfileChange = (event: Event) => {
+      const nextProfile = (event as CustomEvent<unknown>).detail;
+      if (isInterlocutorProfile(nextProfile)) setProfile(nextProfile);
+    };
+    window.addEventListener('dretplaner:interlocutor-profile-changed', handleProfileChange);
+    return () => window.removeEventListener('dretplaner:interlocutor-profile-changed', handleProfileChange);
   }, []);
 
   const updateProfile = (next: InterlocutorProfile) => {
@@ -72,6 +83,7 @@ export function useInterlocutorProfile() {
     } catch {
       // La selecció continua activa durant la sessió.
     }
+    window.dispatchEvent(new CustomEvent('dretplaner:interlocutor-profile-changed', { detail: next }));
   };
 
   const resetProfile = () => {
@@ -102,71 +114,50 @@ export function InterlocutorProfileSelector({
   compact = false,
 }: InterlocutorProfileSelectorProps) {
   const copy = COPY[idioma];
-
-  if (compact) {
-    const presets = [
-      { id: 'planer', label: idioma === 'ca' ? 'Llenguatge planer' : idioma === 'es' ? 'Lenguaje sencillo' : 'Langage simple', profile: { legalLevel: 'planer', context: 'ciutadania', objective: 'entendre' } as InterlocutorProfile },
-      { id: 'resident', label: idioma === 'ca' ? 'Resident / ciutadà' : idioma === 'es' ? 'Residente / ciudadano' : 'Résident / citoyen', profile: { legalLevel: 'general', context: 'ciutadania', objective: 'preparar-consulta' } as InterlocutorProfile },
-      { id: 'no-resident', label: idioma === 'ca' ? 'No-resident' : idioma === 'es' ? 'No residente' : 'Non-résident', profile: { legalLevel: 'planer', context: 'consulta', objective: 'entendre' } as InterlocutorProfile },
-    ];
-    const activePreset = presets.find((preset) => preset.profile.legalLevel === profile.legalLevel && preset.profile.context === profile.context && preset.profile.objective === profile.objective)?.id;
-
-    return (
-      <div className="interlocutor-profile-presets" aria-label={copy.title}>
-        {presets.map((preset) => (
-          <button key={preset.id} type="button" className={`interlocutor-profile-preset${activePreset === preset.id ? ' interlocutor-profile-preset--active' : ''}`} onClick={() => onChange(preset.profile)} aria-pressed={activePreset === preset.id}>
-            {preset.label}
-          </button>
-        ))}
-      </div>
-    );
-  }
+  const presets = [
+    {
+      id: 'clear' as const,
+      label: idioma === 'ca' ? 'Breu i planera' : idioma === 'es' ? 'Breve y sencilla' : 'Bref et simple',
+      description: idioma === 'ca' ? 'La idea principal, amb paraules quotidianes.' : idioma === 'es' ? 'La idea principal, con palabras cotidianas.' : 'L’idée principale, avec des mots du quotidien.',
+      profile: RESPONSE_STYLE_PROFILES.clear,
+    },
+    {
+      id: 'step-by-step' as const,
+      label: idioma === 'ca' ? 'Pas a pas' : idioma === 'es' ? 'Paso a paso' : 'Étape par étape',
+      description: idioma === 'ca' ? 'Una explicació ordenada, amb context quan ajuda.' : idioma === 'es' ? 'Una explicación ordenada, con contexto cuando ayuda.' : 'Une explication ordonnée, avec du contexte si nécessaire.',
+      profile: RESPONSE_STYLE_PROFILES['step-by-step'],
+    },
+    {
+      id: 'legal-detail' as const,
+      label: idioma === 'ca' ? 'Més detall jurídic' : idioma === 'es' ? 'Más detalle jurídico' : 'Plus de détails juridiques',
+      description: idioma === 'ca' ? 'Més conceptes i referències disponibles.' : idioma === 'es' ? 'Más conceptos y referencias disponibles.' : 'Davantage de notions et de références disponibles.',
+      profile: RESPONSE_STYLE_PROFILES['legal-detail'],
+    },
+  ];
+  const activePreset = getResponseStyleId(profile);
 
   return (
-    <details className={`interlocutor-profile${compact ? ' interlocutor-profile-compact' : ''}`}>
-      <summary>{copy.title}</summary>
-      <div className="interlocutor-profile-body">
-        <p className="interlocutor-profile-help">{copy.help}</p>
-        <div className="interlocutor-profile-grid">
-          <label>
-            <span>{copy.level}</span>
-            <select
-              value={profile.legalLevel}
-              onChange={(event) => onChange({ ...profile, legalLevel: event.target.value as InterlocutorProfile['legalLevel'] })}
-            >
-              <option value="planer">{copy.levels.planer}</option>
-              <option value="general">{copy.levels.general}</option>
-              <option value="professional">{copy.levels.professional}</option>
-            </select>
-          </label>
-          <label>
-            <span>{copy.context}</span>
-            <select
-              value={profile.context}
-              onChange={(event) => onChange({ ...profile, context: event.target.value as InterlocutorProfile['context'] })}
-            >
-              <option value="ciutadania">{copy.contexts.ciutadania}</option>
-              <option value="estudi">{copy.contexts.estudi}</option>
-              <option value="consulta">{copy.contexts.consulta}</option>
-              <option value="professional">{copy.contexts.professional}</option>
-            </select>
-          </label>
-          <label>
-            <span>{copy.objective}</span>
-            <select
-              value={profile.objective}
-              onChange={(event) => onChange({ ...profile, objective: event.target.value as InterlocutorProfile['objective'] })}
-            >
-              <option value="entendre">{copy.objectives.entendre}</option>
-              <option value="preparar-consulta">{copy.objectives['preparar-consulta']}</option>
-              <option value="aprofundir">{copy.objectives.aprofundir}</option>
-            </select>
-          </label>
-        </div>
-        <button type="button" className="interlocutor-profile-reset" onClick={onReset}>
-          {copy.reset}
+    <div className={`interlocutor-profile-presets${compact ? ' interlocutor-profile-presets-compact' : ' interlocutor-profile-presets-chat'}`} role="group" aria-label={copy.title}>
+      {!compact && (
+        <>
+          <p className="interlocutor-profile-title">{copy.title}</p>
+          <p className="interlocutor-profile-help">{copy.help}</p>
+        </>
+      )}
+      {presets.map((preset) => (
+        <button
+          key={preset.id}
+          type="button"
+          className={`interlocutor-profile-preset${activePreset === preset.id ? ' interlocutor-profile-preset--active' : ''}`}
+          onClick={() => onChange(preset.profile)}
+          aria-pressed={activePreset === preset.id}
+        >
+          <strong>{preset.label}</strong>
+          {!compact && <small>{preset.description}</small>}
         </button>
-      </div>
-    </details>
+      ))}
+      {!compact && <button type="button" className="interlocutor-profile-reset" onClick={onReset}>{copy.reset}</button>}
+    </div>
   );
+}
 }

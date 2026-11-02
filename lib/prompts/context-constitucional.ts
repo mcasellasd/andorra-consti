@@ -91,11 +91,11 @@ const PERFIL: Record<ForcaNormativa, Omit<ContextConstitucional,
     fonament: ['39.1', '41.1', '41.2'],
   },
   'principi-rector': {
-    etiqueta: 'Principi rector · no invocable directament',
+    etiqueta: 'Dret o principi social · règim de l’article 39.3',
     quePucFer:
-      'Aquest article obliga l’Estat i orienta la seva actuació, però no es pot invocar directament davant ' +
-      'd’un tribunal com si fos un dret fonamental: només es pot fer valer en els termes que fixin les lleis ' +
-      'que el desenvolupin. En la pràctica, la via sol ser la llei sectorial corresponent, no el recurs d’empara.',
+      'Aquest article estableix un mandat als poders públics. Segons l’article 39.3, els drets del capítol V ' +
+      'conformen la legislació i l’acció pública i només poden invocar-se en els termes fixats per l’ordenament. ' +
+      'Per determinar què es pot reclamar en un cas concret, cal consultar també la legislació aplicable.',
     empara: false,
     fonament: ['39.3'],
   },
@@ -189,11 +189,12 @@ export function blocContextPrompt(ctx: ContextConstitucional): string {
         '(art. 39.1) i està protegit per la tutela preferent dels tribunals ordinaris i pel recurs d’empara ' +
         'davant el Tribunal Constitucional (art. 41).'
       : ctx.forca === 'principi-rector'
-      ? 'ATENCIÓ — NO és un dret fonamental. És un PRINCIPI RECTOR del capítol V. Segons l’article 39.3, ' +
+      ? 'ATENCIÓ — No és un dret fonamental dels capítols III o IV: pertany al capítol V. Segons l’article 39.3, ' +
         'els drets del capítol V «conformen la legislació i l’acció dels poders públics, però només poden ' +
-        'ésser invocats en els termes fixats per l’ordenament jurídic». NO gaudeix d’aplicació directa ' +
-        '(art. 39.1, limitat als capítols III i IV) ni de recurs d’empara (art. 41). No l’anomenis mai ' +
-        '«dret fonamental».'
+        'ésser invocats en els termes fixats per l’ordenament jurídic». L’article 39.1 atribueix aplicació ' +
+        'directa als drets dels capítols III i IV; l’article 41 regula la tutela i l’empara per a aquests drets. ' +
+        'Explica aquest règim sense afirmar que l’article del capítol V sigui absolutament inexigible o que, ' +
+        'per si sol, permeti reclamar una prestació concreta.'
       : ctx.forca === 'deure'
       ? 'És un DEURE constitucional, no un dret reclamable.'
       : ctx.forca === 'garantia'
