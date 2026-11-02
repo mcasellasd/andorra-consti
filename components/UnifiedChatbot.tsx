@@ -223,7 +223,7 @@ export default function UnifiedChatbot({
       if (customEvent.detail?.question && customEvent.detail.question.trim()) {
         const question = customEvent.detail.question;
         setTimeout(() => {
-          if (customEvent.detail.autoSubmit) {
+          if (customEvent.detail.autoSubmit && privacyAccepted) {
             handleSend(question);
           } else {
             setInput(question);
