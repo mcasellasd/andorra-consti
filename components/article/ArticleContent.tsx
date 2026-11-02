@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ExternalLink, Tag } from 'lucide-react';
+import { ExternalLink, Pause, Play, Tag } from 'lucide-react';
 import { ArticleAndorra, InterpretacioIA as InterpretacioIAType } from '../../data/codis/types';
 import { type DoctrinaCase } from '../../data/doctrina';
 import { type Idioma, t } from '../../lib/i18n';
@@ -42,6 +42,8 @@ export function ArticleContent({
   const [splitPct, setSplitPct] = useState(52);
   const [isDraggingSplit, setIsDraggingSplit] = useState(false);
   const [activeApartat, setActiveApartat] = useState<number | null>(null);
+  const [speechState, setSpeechState] = useState<'idle' | 'speaking' | 'paused'>('idle');
+  const [speechUnavailable, setSpeechUnavailable] = useState(false);
   const [activeInterpretacioTab, setActiveInterpretacioTab] = useState<'essencial' | 'aplicacio' | 'context' | 'aprendre'>('essencial');
 
   const exemplesEnIdioma = interpretacio?.exemples?.filter((e) => e.idioma === idioma) ?? [];
@@ -55,6 +57,48 @@ export function ArticleContent({
   const articlesRelacionats = Array.from(
     new Set([...(interpretacio?.articles_relacionats ?? []), ...(article.enllacos ?? [])])
   ).slice(0, 8);
+
+  const speechCopy = idioma === 'ca'
+    ? { play: 'Escolta el text', pause: 'Posa en pausa', resume: 'Continua la lectura', unavailable: 'La lectura en veu alta no està disponible en aquest navegador.', speaking: 'S’està llegint el text oficial.', paused: 'Lectura en pausa.' }
+    : idioma === 'es'
+      ? { play: 'Escuchar el texto', pause: 'Pausar lectura', resume: 'Continuar lectura', unavailable: 'La lectura en voz alta no está disponible en este navegador.', speaking: 'Se está leyendo el texto oficial.', paused: 'Lectura en pausa.' }
+      : { play: 'Écouter le texte', pause: 'Mettre en pause', resume: 'Reprendre la lecture', unavailable: 'La lecture à voix haute n’est pas disponible dans ce navigateur.', speaking: 'Lecture du texte officiel en cours.', paused: 'Lecture en pause.' };
+
+  useEffect(() => {
+    setSpeechState('idle');
+    return () => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, [article.id]);
+
+  const toggleSpeech = () => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      setSpeechUnavailable(true);
+      return;
+    }
+
+    const synthesis = window.speechSynthesis;
+    if (speechState === 'speaking') {
+      synthesis.pause();
+      setSpeechState('paused');
+      return;
+    }
+    if (speechState === 'paused') {
+      synthesis.resume();
+      setSpeechState('speaking');
+      return;
+    }
+
+    synthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(articleText.replace(/\n+/g, ' '));
+    utterance.lang = 'ca-AD';
+    utterance.onstart = () => setSpeechState('speaking');
+    utterance.onend = () => setSpeechState('idle');
+    utterance.onerror = () => setSpeechState('idle');
+    synthesis.speak(utterance);
+  };
 
   const copy = {
     essencial: idioma === 'ca' ? 'Essencial' : idioma === 'es' ? 'Esencial' : 'Essentiel',
@@ -158,6 +202,21 @@ export function ArticleContent({
           <div className="article-card article-text-card">
             <div className="prose prose-lg max-w-none dark:prose-invert">
               <h2>{t(idioma, 'article.textOficial')}</h2>
+
+              <div className="article-speech-controls">
+                <button
+                  type="button"
+                  className="article-speech-button"
+                  onClick={toggleSpeech}
+                  aria-label={speechState === 'speaking' ? speechCopy.pause : speechState === 'paused' ? speechCopy.resume : speechCopy.play}
+                >
+                  {speechState === 'speaking' ? <Pause aria-hidden="true" size={18} /> : <Play aria-hidden="true" size={18} />}
+                  <span>{speechState === 'speaking' ? speechCopy.pause : speechState === 'paused' ? speechCopy.resume : speechCopy.play}</span>
+                </button>
+                {speechUnavailable && <span className="article-speech-status" role="status">{speechCopy.unavailable}</span>}
+                {speechState === 'speaking' && <span className="article-speech-status" role="status">{speechCopy.speaking}</span>}
+                {speechState === 'paused' && <span className="article-speech-status" role="status">{speechCopy.paused}</span>}
+              </div>
 
               <div className="article-text-body">
                 {articleText.split('\n').map((line, index) => {
