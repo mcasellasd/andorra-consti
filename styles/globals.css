@@ -5834,3 +5834,10 @@ details[open].toc-accordion .toc-accordion-summary {
 }
 .interlocutor-profile-presets .interlocutor-profile-preset--active small { color: #3730a3; }
 .interlocutor-profile-presets-compact { margin-top: 0; }
+
+.interlocutor-profile-presets-chat .interlocutor-profile-title,
+.interlocutor-profile-presets-chat .interlocutor-profile-help,
+.interlocutor-profile-presets-chat .interlocutor-profile-reset {
+  grid-column: 1 / -1;
+}
+.interlocutor-profile-presets-chat .interlocutor-profile-reset { justify-self: start; }
